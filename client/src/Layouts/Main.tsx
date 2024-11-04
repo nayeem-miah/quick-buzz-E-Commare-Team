@@ -7,7 +7,7 @@ const Main: React.FC = () => {
         <div>
             {/* navbar  */}
 
-            <div className='min-h-screen'>
+            <div className=''>
                 <Outlet></Outlet>
             </div>
             {/* footer */}

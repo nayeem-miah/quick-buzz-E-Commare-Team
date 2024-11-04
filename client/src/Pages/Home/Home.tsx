@@ -1,10 +1,11 @@
 import React from 'react';
+import Faq from '../../Components/Faq/Faq';
 
 const Home: React.FC = () => {
     return (
-        <div className='text-center bg-green-300 h-screen'>
-            home page
+        <div>
 
+            <Faq />
         </div>
     );
 };
