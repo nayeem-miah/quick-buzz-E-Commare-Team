@@ -1,8 +1,13 @@
 import React from 'react';
+import Navbar from '../../Shared/Navbar/Navbar';
+import Banner from './Banner/Banner';
+
 
 const Home: React.FC = () => {
     return (
-        <div className='text-center bg-green-300 h-screen'>
+        <div>
+            <Navbar></Navbar>
+            <Banner></Banner>
             home page
 
         </div>
