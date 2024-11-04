@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AdminHome: React.FC= () => {
+const AdminHome: React.FC = () => {
     return (
         <div>
             Admin Hone

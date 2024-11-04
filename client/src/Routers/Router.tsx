@@ -9,6 +9,7 @@ import Contact from "../Pages/Contact/Contact";
 import Product from "../Pages/Product/Product";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import AdminHome from "../Components/Dashboard/Admin/AdminHome";
+import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -30,17 +31,24 @@ const router = createBrowserRouter([
             {
                 path: "/product",
                 element: <Product />
-            }
+            },
         ]
     },
+    // { path: '/login', element: <Login /> },
+    // { path: '/signup', element: <SignUp /> },
     {
         path: '/dashboard',
         element: <Dashboard />,
         children: [
             {
-                path: "adminHome",
+                path: 'adminHome',
                 element: <AdminHome />
-            }
+            },
+            {
+                path: 'manageUsers',
+                element: <ManageUsers />
+            },
+
         ]
     }
 ]);
