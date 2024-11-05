@@ -6,7 +6,8 @@ import { MdOutlineAttachEmail } from "react-icons/md";
 const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
     return (
-        <div>
+        <div className=''>
+            <hr  className=''/>
             <footer className="px-4 divide-y font-bold ">
                 <div className="container flex flex-col justify-between py-10 mx-auto space-y-8 lg:flex-row lg:space-y-0">
                     <div className="lg:w-1/3">

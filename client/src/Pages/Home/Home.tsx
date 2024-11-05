@@ -7,7 +7,6 @@ const Home: React.FC = () => {
         <div className="pt-12">
             <Slider></Slider>
             <Faq></Faq>
-
         </div>
     );
 };
