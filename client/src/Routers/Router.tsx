@@ -10,10 +10,12 @@ import Product from "../Pages/Product/Product";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import AdminHome from "../Components/Dashboard/Admin/AdminHome";
 import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
+import ErrorPage from "./ErrorPage";
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: '/',
