@@ -7,13 +7,14 @@ import Navbar from '../Shared/Navbar/Navbar';
 const Main: React.FC = () => {
     return (
         <div>
-            <Navbar></Navbar>
-
+            <div className=''>
+                <Navbar></Navbar>
+            </div>
             <div className=''>
                 <Outlet></Outlet>
             </div>
             <Footer></Footer>
-            
+
         </div>
     );
 };
