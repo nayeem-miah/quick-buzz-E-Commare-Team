@@ -1,16 +1,21 @@
-import React from 'react';
-import Navbar from '../../Shared/Navbar/Navbar';
-import Banner from './Banner/Banner';
+import React from "react";
+
+import Faq from "../../Components/Faq/Faq";
+import Slider from "./Banner/Banner";
+
+
+
+
+
 
 
 const Home: React.FC = () => {
     return (
         <div>
-            <Navbar></Navbar>
-            <Banner></Banner>
-            home page section
-            Lorem ipsum dolor sit, 
-           Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla, iure!
+         
+            <Slider></Slider>
+            <Faq></Faq>
+
         </div>
     );
 };

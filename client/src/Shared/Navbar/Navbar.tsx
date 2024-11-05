@@ -1,6 +1,7 @@
 import { AiOutlineMenu } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import React from 'react';
 // Uncomment if needed: import useAuth from '../../../hooks/useAuth';
 
 // Interface for User (Uncomment if needed)
