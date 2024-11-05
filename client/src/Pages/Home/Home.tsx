@@ -1,23 +1,21 @@
-import React from 'react';
-<<<<<<< HEAD
-import Faq from '../../Components/Faq/Faq';
-=======
-import Navbar from '../../Shared/Navbar/Navbar';
-import Banner from './Banner/Banner';
+import React from "react";
 
->>>>>>> 945ac2aabb6f4b19edc899799aad5dcd73140c1d
+import Faq from "../../Components/Faq/Faq";
+import Slider from "./Banner/Banner";
+
+
+
+
+
+
 
 const Home: React.FC = () => {
     return (
         <div>
-<<<<<<< HEAD
-=======
-            <Navbar></Navbar>
-            <Banner></Banner>
-            home page
->>>>>>> 945ac2aabb6f4b19edc899799aad5dcd73140c1d
+         
+            <Slider></Slider>
+            <Faq></Faq>
 
-            <Faq />
         </div>
     );
 };
