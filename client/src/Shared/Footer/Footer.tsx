@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="py-6 text-sm text-center "> <p>© {currentYear} quickBus. All rights reserved.</p></div>
+                <div className="py-6 text-sm text-center "> <p>© {currentYear} quickBuzz. All rights reserved.</p></div>
             </footer>
         </div>
     );
