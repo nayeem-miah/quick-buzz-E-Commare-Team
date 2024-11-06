@@ -12,10 +12,15 @@ const Main: React.FC = () => {
             </div>
 
             <div className=''>
+                <Navbar></Navbar>
+            </div>
+            <div className=''>
                 <Outlet></Outlet>
             </div>
-            <Footer></Footer>
-            
+            <div className=''>
+                <Footer></Footer>
+            </div>
+
         </div>
     );
 };

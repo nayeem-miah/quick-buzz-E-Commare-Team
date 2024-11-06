@@ -1,5 +1,4 @@
 import React from "react";
-
 import Faq from "../../Components/Faq/Faq";
 import Slider from "./Banner/Banner";
 
@@ -9,13 +8,15 @@ import Slider from "./Banner/Banner";
 
 
 
+// const Home: React.FC = () => {
+//     return (
+//         <div>
+            
 const Home: React.FC = () => {
     return (
-        <div>
-            
+        <div className="pt-12">
             <Slider></Slider>
             <Faq></Faq>
-
         </div>
     );
 };

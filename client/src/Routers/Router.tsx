@@ -10,12 +10,14 @@ import Product from "../Pages/Product/Product";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import AdminHome from "../Components/Dashboard/Admin/AdminHome";
 import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
-import Signup from "../Pages/Page/Singup";
+import ErrorPage from "./ErrorPage";
 import Signin from "../Pages/Page/Singin";
+import Signup from "../Pages/Page/Singup";
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: '/',
