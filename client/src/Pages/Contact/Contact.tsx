@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaPhone } from "react-icons/fa";
 import { MdOutlineAttachEmail } from "react-icons/md";
 import { ImLocation2 } from "react-icons/im";
 const Contact: React.FC = () => {
     return (
         <div className="py-24">
+
+            <div
+                className="w-full bg-center bg-cover h-[38rem]"
+                style={{
+                    backgroundImage:
+                        "url('https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80')",
+                }}
+            >
+                <div className="flex items-center justify-center w-full h-full bg-gray-900/40">
+                    <div className="text-center">
+                        <h1 className="text-3xl font-semibold text-white lg:text-4xl">
+                            Build your new <span className="text-blue-400">SaaS</span> Project
+                        </h1>
+                        <button className="w-full px-5 py-2 mt-4 text-sm font-medium text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md lg:w-auto hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
+                            Start project
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            {/* contact cart */}
             <div className="grid grid-cols-1 gap-12 mt-10 sm:grid-cols-2 lg:grid-cols-3 max-w-screen-xl mx-auto">
                 <div className="p-4 bg-white text-black shadow-lg md:p-6 relative px-6 py-2  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
@@ -20,7 +42,7 @@ const Contact: React.FC = () => {
                 <div className="p-4  text-black shadow-lg md:p-6 relative px-6 py-2  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
                     <span className="inline-block p-3  rounded-lg text-2xl">
-                    <ImLocation2 />
+                        <ImLocation2 />
                     </span>
 
                     <h2 className="mt-4 text-lg font-semibold text-gray-900 ">Visit Us</h2>
@@ -40,8 +62,6 @@ const Contact: React.FC = () => {
                     <p className="mt-2 text-sm">+8801849317388</p>
                 </div>
             </div>
-
-
 
             {/* lets message me */}
             <div className="bg-white py-16">
