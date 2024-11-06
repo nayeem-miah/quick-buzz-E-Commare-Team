@@ -12,7 +12,7 @@ import Slider from "./Banner/Banner";
 const Home: React.FC = () => {
     return (
         <div>
-         
+            
             <Slider></Slider>
             <Faq></Faq>
 
