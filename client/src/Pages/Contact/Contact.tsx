@@ -1,6 +1,7 @@
 import React from "react";
 import { FaPhone } from "react-icons/fa";
 import { MdOutlineAttachEmail } from "react-icons/md";
+import { ImLocation2 } from "react-icons/im";
 const Contact: React.FC = () => {
     return (
         <div className="py-24">
@@ -12,16 +13,14 @@ const Contact: React.FC = () => {
                     </span>
 
                     <h2 className="mt-4 text-lg font-semibold text-gray-900 ">Chat to Sales</h2>
-                    <p className="mt-2 text-sm  ">Speak to our friendly team.</p>
-                    <p className="mt-2 text-sm  ">support@quicbus.com</p>
+                    <p className="mt-2 text-sm">Speak to our friendly team.</p>
+                    <p className="mt-2 text-sm">support@quicbus.com</p>
                 </div>
 
-                <div className="p-4 bg-white rounded-lg shadow-lg md:p-6 ">
-                    <span className="inline-block p-3  rounded-lg  ">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                        </svg>
+                <div className="p-4  text-black shadow-lg md:p-6 relative px-6 py-2  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+               border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
+                    <span className="inline-block p-3  rounded-lg text-2xl">
+                    <ImLocation2 />
                     </span>
 
                     <h2 className="mt-4 text-lg font-semibold text-gray-900 ">Visit Us</h2>
@@ -29,14 +28,16 @@ const Contact: React.FC = () => {
                     <p className="mt-2 text-sm  ">Dhaka,Bangladesh</p>
                 </div>
 
-                <div className="p-4 bg-white rounded-lg shadow-lg md:p-6 ">
-                    <span className="inline-block p-3  rounded-lg   text-2xl">
+                <div className="p-4 relative px-6 py-2 text-white bg-gradient-to-r from-green-400 to-blue-400 rounded-md transition-all duration-500 ease-in-out
+               border-2 border-transparent hover:bg-gradient-to-r hover:from-yellow-400 hover:to-red-500
+               hover:shadow-[0_0_20px_5px_rgba(255,165,0,0.8)] hover:scale-105 hover:border-yellow-400">
+                    <span className="inline-block p-3  rounded-lg text-2xl">
                         <FaPhone />
                     </span>
 
                     <h2 className="mt-4 text-lg font-semibold text-gray-900 ">Call Us</h2>
-                    <p className="mt-2 text-sm  ">Mon-Fri from 8am to 5pm.</p>
-                    <p className="mt-2 text-sm  ">+1 (555) 000-0000</p>
+                    <p className="mt-2 text-sm">24/7 Customer Support</p>
+                    <p className="mt-2 text-sm">+8801849317388</p>
                 </div>
             </div>
 
@@ -65,7 +66,8 @@ const Contact: React.FC = () => {
                             <label htmlFor="message" className="text-sm text-gray-700">Message</label>
                             <textarea id="message" placeholder="Your message" className="w-full p-3 rounded border border-gray-300 focus:border-violet-500 focus:ring focus:ring-violet-200 transition duration-300"></textarea>
                         </div>
-                        <button type="submit" className="w-full p-3 text-sm font-bold tracking-wide uppercase rounded bg-violet-600 text-white hover:bg-violet-700 transition duration-300">
+                        <button type="submit" className="relative  w-full px-6 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+               border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-1050">
                             Send Message
                         </button>
                     </form>
