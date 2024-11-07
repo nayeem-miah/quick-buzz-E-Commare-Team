@@ -15,7 +15,7 @@ import Slider from "./Banner/Banner";
 const Home: React.FC = () => {
     return (
         <div className="pt-12">
-            <Slider></Slider>
+            {/* <Slider></Slider> */}
             <Faq></Faq>
         </div>
     );
