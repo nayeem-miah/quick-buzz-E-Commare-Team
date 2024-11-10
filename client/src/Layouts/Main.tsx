@@ -7,6 +7,8 @@ import Navbar from '../Shared/Navbar/Navbar';
 const Main: React.FC = () => {
     return (
         <div>
+            
+
             <div className=''>
                 <Navbar></Navbar>
             </div>
