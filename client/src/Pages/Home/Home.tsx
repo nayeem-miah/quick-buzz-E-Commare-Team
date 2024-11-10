@@ -6,7 +6,7 @@ import Slider from "./Banner/Banner";
 
 // hr
 
-
+// dgsfbegrd
 
 // const Home: React.FC = () => {
 //     return (
