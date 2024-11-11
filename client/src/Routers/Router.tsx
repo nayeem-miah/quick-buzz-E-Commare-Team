@@ -11,7 +11,7 @@ import Dashboard from "../Pages/Dashboard/Dashboard";
 import AdminHome from "../Components/Dashboard/Admin/AdminHome";
 import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
 import ErrorPage from "./ErrorPage";
-import Signin from "../Pages/Page/Singin";
+import Signin from "../Pages/Page/Login";
 import Signup from "../Pages/Page/Singup";
 const router = createBrowserRouter([
     {
