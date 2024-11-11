@@ -13,10 +13,11 @@ const About: React.FC = () => {
         <div className="flex items-center justify-center w-full h-full bg-gray-900/40">
           <div className="text-center">
             <h1 className="text-3xl font-semibold text-white lg:text-4xl">
-              Build your new <span className="text-blue-400">SaaS</span> Project
+              About Now
             </h1>
+            <p>Our mission is to be the leading online shopping destination, delivering exceptional service, prioritizing quality, and offering unparalleled convenience to our customers, making every purchase a delightful experience</p>
             <button className="w-full px-5 py-2 mt-4 text-sm font-medium text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md lg:w-auto hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
-              Start project
+              meet our team member
             </button>
           </div>
         </div>
@@ -28,8 +29,8 @@ const About: React.FC = () => {
           "We offer a diverse range of high-quality products, backed by fast and reliable delivery. With secure payment methods and 24/7 customer support, your shopping experience is smooth and worry-free. Enjoy exclusive deals, hassle-free returns, and easy refunds, making every purchase simple and rewarding"
         }
       />
-      <div className="py-10 my-10">
-        <div className="container px-6 py-16 mx-auto bg-white text-black">
+      <div className=" my-10">
+        <div className="container px-6  mx-auto bg-white text-black">
           <div className="items-center lg:flex">
             <div className="w-full lg:w-1/2">
               <div className="lg:max-w-lg">
