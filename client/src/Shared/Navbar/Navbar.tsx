@@ -2,6 +2,12 @@ import { AiOutlineMenu } from 'react-icons/ai';
 import { useState } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
+// Uncomment if needed: import useAuth from '../../../hooks/useAuth';
+
+// Interface for User (Uncomment if needed)
+// interface User {
+//   photoURL?: string;
+// }
 import logo from '../../../src/assets/Image/logo2.png'
 
 const Navbar: React.FC = () => {

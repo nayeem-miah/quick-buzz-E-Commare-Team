@@ -5,8 +5,7 @@ import { ImLocation2 } from "react-icons/im";
 import contact from './bg.jpg'
 const Contact: React.FC = () => {
     return (
-        <div className="py-20">
-
+        <div className="">
             <div
                 className="w-full bg-center bg-cover h-[400px] md:h-[500px]"
                 style={{
@@ -25,8 +24,6 @@ const Contact: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-
             {/* contact cart */}
             <div className="grid grid-cols-1 gap-12 mt-10 sm:grid-cols-2 lg:grid-cols-3 max-w-screen-xl mx-auto">
                 <div className="p-4 bg-white text-black shadow-lg md:p-6 relative px-6 py-2  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
