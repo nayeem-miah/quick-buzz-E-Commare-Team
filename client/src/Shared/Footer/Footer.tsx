@@ -70,8 +70,8 @@ const Footer: React.FC = () => {
                         <div className="space-y-3">
                             <div className="uppercase font-bold">contact us</div>
                             <ul>
-                                <li className='flex items-center gap-2 font-bold'><MdOutlineAttachEmail />
-                                    <span>support@quicbus.com</span></li>
+                                <li className='flex items-center gap-2 font-bold sm:text-xs md:text-xl'><MdOutlineAttachEmail />
+                                    <span className='' >support.com</span></li>
                                 <li className='flex items-center gap-2 font-bold'><FaPhone/> <span>+8801849317388</span></li>
                                 <li className='flex items-center gap-2 font-bold'> <FaLocationArrow/><span>Dhaka,Bangladesh</span></li>
                             </ul>
