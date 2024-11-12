@@ -1,11 +1,22 @@
-import React from 'react';
-import Faq from '../../Components/Faq/Faq';
+import React from "react";
+import Faq from "../../Components/Faq/Faq";
+import Slider from "./Banner/Banner";
 
+
+
+// hr
+
+// dgsfbegrd
+
+// const Home: React.FC = () => {
+//     return (
+//         <div>
+            
 const Home: React.FC = () => {
     return (
-        <div>
-         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nulla quod asperiores commodi dicta, magnam modi adipisci. Itaque dolore assumenda dolores amet placeat unde, voluptatum, at quos alias adipisci ipsam atque?
-            <Faq />
+        <div className="pt-12">
+            <Slider></Slider>
+            <Faq></Faq>
         </div>
     );
 };

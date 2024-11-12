@@ -10,10 +10,14 @@ import Product from "../Pages/Product/Product";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import AdminHome from "../Components/Dashboard/Admin/AdminHome";
 import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
+import ErrorPage from "./ErrorPage";
+import Signin from "../Pages/Page/Login";
+import Signup from "../Pages/Page/Singup";
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: '/',
@@ -32,10 +36,11 @@ const router = createBrowserRouter([
                 path: "/product",
                 element: <Product />
             },
+           
         ]
     },
-    // { path: '/login', element: <Login /> },
-    // { path: '/signup', element: <SignUp /> },
+    { path: '/login', element: <Signin /> },
+    { path: '/signup', element: <Signup /> },
     {
         path: '/dashboard',
         element: <Dashboard />,
