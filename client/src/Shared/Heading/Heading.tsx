@@ -8,7 +8,7 @@ const Heading: React.FC<HeadingProps> = ({ title, subtitle }) => {
       <h3 className="text-2xl font-bold md:text-3xl lg:text-4xl text-black">
         {title}
       </h3>
-      <h3 className="text-xl font-medium md:text-2xl  text-black">{subtitle}</h3>
+      <h3 className="text-xl font-medium   text-black">{subtitle}</h3>
     </div>
   );
 };

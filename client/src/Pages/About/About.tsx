@@ -44,28 +44,17 @@ const About: React.FC = () => {
               delivering exceptional service, prioritizing quality, and offering
               unparalleled convenience to our customers.
             </p>
-            <Link to="">
-              <button className="mt-3 px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-transform duration-300 transform hover:scale-105 hover:shadow-lg">
+            <a href="#meet">
+              <button
+                className="mt-3 px-6  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+               border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-1050"
+              >
                 Meet Our Team
               </button>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
-
-      {/* Our Mission */}
-      <section className="py-12 bg-gray-50 animate-slideIn">
-        <Heading title="Our Mission" subtitle=""/>
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
-            Our mission is to redefine online shopping by offering an extensive
-            selection of quality products and a seamless shopping experience. We
-            are dedicated to customer satisfaction, providing reliable service,
-            secure payment options, and timely delivery. We strive to make every
-            interaction with our store convenient, enjoyable, and rewarding.
-          </p>
-        </div>
-      </section>
 
       {/* Our Services */}
       <section className="my-10 px-4 md:px-0">
@@ -85,7 +74,10 @@ const About: React.FC = () => {
                 every style and occasion. We bring you the latest trends with
                 uncompromised quality.
               </p>
-              <button className="px-5 py-2 text-white bg-blue-600 rounded-lg transition duration-300 transform hover:bg-blue-500 hover:scale-105">
+              <button
+                className=" px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+               border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-1050"
+              >
                 Shop Now
               </button>
             </div>
@@ -99,10 +91,42 @@ const About: React.FC = () => {
           </div>
         </div>
       </section>
+      {/* Our mission Section */}
+      <section className="my-10 px-4 md:px-0 bg-white">
+        <Heading title={"Our mission"} subtitle={""}/>
+        <div className="container mx-auto text-black py-16 flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8">
+          {/* Image on the Left */}
+          <div className="lg:w-1/2">
+            <img
+              className="w-full lg:max-w-lg rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300"
+              src="https://merakiui.com/images/components/Catalogue-pana.svg"
+              alt="Our Services Catalogue"
+            />
+          </div>
+
+          {/* Text Content on the Right */}
+          <div className="lg:w-1/2 space-y-6 text-center lg:text-left">
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
+              Discover the Best in{" "}
+              <span className="text-blue-500">Clothing</span>
+            </h2>
+            <p className="text-gray-600">
+              Explore a wide range of clothing that suits every style and
+              occasion. With our commitment to quality, enjoy the latest trends
+              with uncompromised value.
+            </p>
+            <Link to="/shop">
+              <button className="mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
+                Order Now
+              </button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Meet Our Team */}
-      <section className="bg-gray-50 py-12 animate-slideIn">
-        <Heading title="Meet Our Team" subtitle=""/>
+      <section id="meet" className="bg-gray-50 py-12 animate-slideIn">
+        <Heading title="Meet Our Team" subtitle="" />
         <div className="container mx-auto px-6 text-center">
           <div className="grid gap-8 md:grid-cols-2">
             {teamMembers.map((member, index) => (
