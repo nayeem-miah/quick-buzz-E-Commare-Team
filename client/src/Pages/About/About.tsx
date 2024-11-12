@@ -93,7 +93,12 @@ const About: React.FC = () => {
       </section>
       {/* Our mission Section */}
       <section className="my-10 px-4 md:px-0 bg-white">
-        <Heading title={"Our mission"} subtitle={""}/>
+        <Heading
+          title={"Our mission"}
+          subtitle={
+            "Our mission is to redefine online shopping by offering a curated collection of products that meet the highest standards of quality and affordability, backed by a dedication to transparency and customer care. We strive to empower our customers with an enjoyable, convenient, and secure shopping experience that keeps them returning time and again"
+          }
+        />
         <div className="container mx-auto text-black py-16 flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8">
           {/* Image on the Left */}
           <div className="lg:w-1/2">
@@ -107,14 +112,16 @@ const About: React.FC = () => {
           {/* Text Content on the Right */}
           <div className="lg:w-1/2 space-y-6 text-center lg:text-left">
             <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
-              Discover the Best in{" "}
-              <span className="text-blue-500">Clothing</span>
+              Our Mission: Delivering Excellence in Every Order
             </h2>
             <p className="text-gray-600">
-              Explore a wide range of clothing that suits every style and
-              occasion. With our commitment to quality, enjoy the latest trends
-              with uncompromised value.
+              <ul className="list-disc pl-5">
+                <li>Driven by Purpose, Focused on You</li>
+                <li>Empowering You Through Exceptional Shopping</li>
+                <li>Committed to Delivering the Best Shopping Experience</li>
+              </ul>
             </p>
+
             <Link to="/shop">
               <button className="mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
                 Order Now
