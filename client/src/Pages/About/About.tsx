@@ -66,8 +66,7 @@ const About: React.FC = () => {
           <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-6 animate-slideIn">
             <div className="lg:w-1/2 space-y-6">
               <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
-                Best place to choose your{" "}
-                <span className="text-blue-500">clothes</span>
+              Explore Our Range of Quality Services
               </h2>
               <p className="text-gray-600">
                 Discover an extensive selection of clothing, curated to fit
