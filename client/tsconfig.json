@@ -1,7 +1,28 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ES2022", 
+    "lib": ["ES2023", "dom"], 
+    "module": "ESNext",
+    "skipLibCheck": true, 
+    "jsx": "react-jsx", 
+    
+    "moduleResolution": "bundler", 
+    "allowImportingTsExtensions": true, 
+    "isolatedModules": true, 
+    "moduleDetection": "force",
+    "noEmit": true, 
+
+   
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true, // Unused parameter gulake warning dekhabe
+    "noFallthroughCasesInSwitch": true, // Switch case er error check korbe
+    
+    /* Extra React settings */
+    "esModuleInterop": true, // Default import support korar jonno
+    "allowSyntheticDefaultImports": true, // Default import simplify korar jonno
+    "forceConsistentCasingInFileNames": true // File er naming er casing maintain korbe
+  },
+  "include": ["vite.config.ts", "src"], // Vite config ebong source folder e apply korbe
+  "exclude": ["node_modules"] // Node modules exclude korchi performance baranor jonno
 }
