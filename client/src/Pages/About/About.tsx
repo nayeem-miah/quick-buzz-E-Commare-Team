@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import Heading from "../../Shared/Heading/Heading";
 import aboutImage from "../../assets/Image/about.jpg";
+import Services from "../../assets/Image/about.jpg";
+import mission from "../../assets/Image/about.jpg";
 import nayeemImage from "../../assets/Image/Nayeem.png";
+import rakibImage from "../../assets/Image/Nayeem.png";
 
 interface TeamMember {
   name: string;
@@ -18,14 +21,14 @@ const About: React.FC = () => {
       position: "MERN Stack Developer",
       image: nayeemImage,
       portfolio: "",
-      education: "B.Sc. in Computer Science",
+      education: "Diploma in Engineering in Computer Science",
     },
     {
       name: "MD Rakibul Hasan",
       position: "MERN Stack Developer",
-      image: nayeemImage,
+      image: rakibImage,
       portfolio: "",
-      education: "B.Sc. in Software Engineering",
+      education: "Diploma in Engineering in Computer Science",
     },
   ];
 
@@ -62,7 +65,7 @@ const About: React.FC = () => {
           title="Our Services"
           subtitle="We offer a diverse range of high-quality products, backed by fast and reliable delivery, secure payment methods, and 24/7 customer support. Enjoy exclusive deals, hassle-free returns, and easy refunds."
         />
-        <div className="container mx-auto bg-white text-black">
+        <div className="container mx-auto text-black py-10 flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8">
           <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-6 animate-slideIn">
             <div className="lg:w-1/2 space-y-6">
               <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
@@ -71,7 +74,7 @@ const About: React.FC = () => {
               <p className="text-gray-600">
                 Discover an extensive selection of clothing, curated to fit
                 every style and occasion. We bring you the latest trends with
-                uncompromised quality.
+                uncompressed quality.
               </p>
               <button
                 className=" px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
@@ -80,31 +83,31 @@ const About: React.FC = () => {
                 Shop Now
               </button>
             </div>
-            <div className="lg:w-1/2 mt-6 lg:mt-0">
+            <div className="lg:w-1/2">
               <img
-                className="w-full lg:max-w-3xl rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300"
-                src="https://merakiui.com/images/components/Catalogue-pana.svg"
-                alt="Catalogue"
+                className="w-full lg:max-w-lg rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300"
+                src={Services}
+                alt="Services"
               />
             </div>
           </div>
         </div>
       </section>
       {/* Our mission Section */}
-      <section className="my-10 px-4 md:px-0 bg-white">
+      <section className="my-10 px-4 md:px-0 ">
         <Heading
           title={"Our mission"}
           subtitle={
-            "Our mission is to redefine online shopping by offering a curated collection of products that meet the highest standards of quality and affordability, backed by a dedication to transparency and customer care. We strive to empower our customers with an enjoyable, convenient, and secure shopping experience that keeps them returning time and again"
+            "Our mission is to redefine online shopping by offering a curated collection of products that meet the highest standards of quality and affordability, backed by a dedication to transparency and customer care. We strive to empower our customers with an enjoyable, convenient, and secure shopping experience that keeps them returning time and again."
           }
         />
-        <div className="container mx-auto text-black py-16 flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8">
+        <div className="container mx-auto text-black py-10 flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8">
           {/* Image on the Left */}
           <div className="lg:w-1/2">
             <img
               className="w-full lg:max-w-lg rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300"
-              src="https://merakiui.com/images/components/Catalogue-pana.svg"
-              alt="Our Services Catalogue"
+              src={mission}
+              alt="Our mission"
             />
           </div>
 
@@ -114,7 +117,7 @@ const About: React.FC = () => {
               Our Mission: Delivering Excellence in Every Order
             </h2>
             <p className="text-gray-600">
-              <ul className="list-disc pl-5">
+              <ul className="list-disc pl-5 text-left">
                 <li>Driven by Purpose, Focused on You</li>
                 <li>Empowering You Through Exceptional Shopping</li>
                 <li>Committed to Delivering the Best Shopping Experience</li>
@@ -131,7 +134,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Meet Our Team */}
-      <section id="meet" className="bg-gray-50 py-12 animate-slideIn">
+      <section id="meet" className=" py-8 animate-slideIn">
         <Heading title="Meet Our Team" subtitle="" />
         <div className="container mx-auto px-6 text-center">
           <div className="grid gap-8 md:grid-cols-2">
@@ -139,10 +142,10 @@ const About: React.FC = () => {
               <Link
                 to={member.portfolio}
                 key={index}
-                className="bg-white p-6 rounded-lg shadow-lg transition-transform duration-300 hover:shadow-xl transform hover:scale-105"
+                className=" p-6 rounded-lg shadow-lg transition-transform duration-300 hover:shadow-xl transform hover:scale-105"
               >
                 <div className="flex flex-col items-center">
-                  <div className="w-24 h-24 mb-4 rounded-full overflow-hidden ring ring-offset-2 ring-blue-400">
+                  <div className="w-24 h-24 mb-4 rounded-full overflow-hidden ring ring-offset-2 ring-purple-500 bg-white  hover:shadow-[0_0_20px_5px_rgba(255,165,0,0.8)]">
                     <img
                       src={member.image}
                       alt={member.name}
