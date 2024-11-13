@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import Heading from "../../Shared/Heading/Heading";
 import aboutImage from "../../assets/Image/about.jpg";
-import Services from "../../assets/Image/about.jpg";
-import mission from "../../assets/Image/about.jpg";
+import Services from "../../assets/Image/service.jpg";
+import mission from "../../assets/Image/mission.jpg";
 import nayeemImage from "../../assets/Image/Nayeem.png";
 import rakibImage from "../../assets/Image/Nayeem.png";
 

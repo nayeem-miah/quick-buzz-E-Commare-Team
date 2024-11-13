@@ -3,7 +3,7 @@ import { FaPhone } from "react-icons/fa";
 import { MdOutlineAttachEmail } from "react-icons/md";
 import { ImLocation2 } from "react-icons/im";
 import contact from "./bg.jpg";
-import letsMessage from "./bg.jpg";
+import letsMessage from "../../assets/Image/contact.jpg";
 const Contact: React.FC = () => {
   return (
     <div className="">
