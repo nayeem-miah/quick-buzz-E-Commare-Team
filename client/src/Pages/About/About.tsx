@@ -4,7 +4,7 @@ import aboutImage from "../../assets/Image/about.jpg";
 import Services from "../../assets/Image/service.jpg";
 import mission from "../../assets/Image/mission.jpg";
 import nayeemImage from "../../assets/Image/Nayeem.png";
-import rakibImage from "../../assets/Image/Nayeem.png";
+import rakibImage from "../../assets/Image/rakib1.jpg";
 
 interface TeamMember {
   name: string;
@@ -27,13 +27,13 @@ const About: React.FC = () => {
       name: "MD Rakibul Hasan",
       position: "MERN Stack Developer",
       image: rakibImage,
-      portfolio: "",
+      portfolio: "https://github.com/rakibul561",
       education: "Diploma in Engineering in Computer Science",
     },
   ];
 
   return (
-    <div className="bg-white text-gray-800 font-sans">
+    <div className=" text-gray-800 font-sans">
       {/* Banner */}
       <div
         className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative"
@@ -145,7 +145,7 @@ const About: React.FC = () => {
                 className=" p-6 rounded-lg shadow-lg transition-transform duration-300 hover:shadow-xl transform hover:scale-105"
               >
                 <div className="flex flex-col items-center">
-                  <div className="w-24 h-24 mb-4 rounded-full overflow-hidden ring ring-offset-2 ring-purple-500 bg-white  hover:shadow-[0_0_20px_5px_rgba(255,165,0,0.8)]">
+                  <div className="w-24 h-24 mb-4 rounded-full overflow-hidden ring ring-offset-2 ring-purple-500   hover:shadow-[0_0_20px_5px_rgba(255,165,0,0.8)]">
                     <img
                       src={member.image}
                       alt={member.name}
