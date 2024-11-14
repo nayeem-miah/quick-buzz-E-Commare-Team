@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import { Toaster } from 'react-hot-toast';
 import {
   QueryClient,
   QueryClientProvider,
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
         <div className='bg-white text-black'>
       <AuthProvider>
      <RouterProvider router={router} />
+      <Toaster></Toaster>
       </AuthProvider>
       </div>
 

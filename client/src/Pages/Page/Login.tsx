@@ -1,8 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../../Hooks/UseAuth';
+import { toast } from 'react-toastify';
+import { TbFidgetSpinner } from 'react-icons/tb';
+import { Toaster } from 'react-hot-toast';
 
 const Signin: React.FC = () => {
+
+
+
+	const navigate = useNavigate()
+	const location = useLocation()
+	const from = location?.state || '/'
+	const { signInWithGoogle, signIn, loading, setLoading } =
+	  useAuth()
+	const [email, setEmail] = useState('')
+  
+	const handleSubmit = async e => {
+	  e.preventDefault()
+	  const form = e.target
+	  const email = form.email.value
+	  const password = form.password.value
+  
+	  try {
+		setLoading(true)
+		// 1. sign in user
+		await signIn(email, password)
+		navigate(from)
+		toast.success('Signup Successful')
+	  } catch (err) {
+		console.log(err)
+		toast.error(err.message)
+		setLoading(false)
+	  }
+	}
+  
+
+
+	const handleGoogleSignIn = async () => {
+		try {
+		  await signInWithGoogle()
+	
+		  navigate(from)
+		  toast.success('Signup Successful')
+		} catch (err) {
+		  console.log(err)
+		  toast.error(err.message)
+		}
+	  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return (
 		<div className='flex justify-center items-center min-h-screen'>
 		<div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -13,7 +74,7 @@ const Signin: React.FC = () => {
 			</p>
 		  </div>
 		  <form
-		
+		 onSubmit={handleSubmit}
 			action=''
 			className='space-y-6 ng-untouched ng-pristine ng-valid'
 		  >
@@ -50,14 +111,17 @@ const Signin: React.FC = () => {
 			  </div>
 			</div>
   
-			<div>
-			  <button
-				type='submit'
-				className='bg-rose-500 w-full rounded-md py-3 text-white'
-			  >
-				Continue
-			  </button>
-			</div>
+			<button
+              disabled={loading}
+              type='submit'
+              className='bg-rose-500 w-full rounded-md py-3 text-white'
+            >
+              {loading ? (
+                <TbFidgetSpinner className='animate-spin m-auto' />
+              ) : (
+                'Sign In'
+              )}
+            </button>
 		  </form>
 		  <div className='space-y-1'>
 			<button className='text-xs hover:underline hover:text-rose-500 text-gray-400'>
@@ -71,11 +135,16 @@ const Signin: React.FC = () => {
 			</p>
 			<div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
 		  </div>
-		  <div className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
-			<FcGoogle size={32} />
-  
-			<p>Continue with Google</p>
-		  </div>
+		  
+		  <button
+          disabled={loading}
+          onClick={handleGoogleSignIn}
+          className='disabled:cursor-not-allowed flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'
+        >
+          <FcGoogle size={32} />
+
+          <p>Continue with Google</p>
+        </button>
 		  <p className='px-6 text-sm text-center text-gray-400'>
 			Don&apos;t have an account yet?{' '}
 			<Link
