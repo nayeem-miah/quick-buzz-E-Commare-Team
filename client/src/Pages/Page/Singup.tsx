@@ -3,7 +3,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Provider/AuthProvider';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 import { TbFidgetSpinner } from 'react-icons/tb'; // Corrected import
 
 const Signup: React.FC = () => {
@@ -159,6 +159,7 @@ const Signup: React.FC = () => {
           </Link>.
         </p>
       </div>
+      <Toaster/>
     </div>
   );
 };
