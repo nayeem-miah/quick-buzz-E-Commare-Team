@@ -1,29 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-
 
 import { createContext, useEffect, useState, ReactNode } from 'react'
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
-
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
- 
   User,
+  updateProfile,
 } from 'firebase/auth'
+
 import auth from '../Firebase/FireBase.config'
-
-
-
 
 interface AuthContextType {
   user: User | null
   loading: boolean
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  createUser: (email: string, password: string) => Promise<any>
+  createUser: (email: string, password: string, name: string, photo: string) => Promise<any>
   signIn: (email: string, password: string) => Promise<any>
   signInWithGoogle: () => Promise<any>
   resetPassword: (email: string) => Promise<any>
@@ -32,7 +30,6 @@ interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
-
 
 const googleProvider = new GoogleAuthProvider()
 
@@ -44,9 +41,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
-  const createUser = (email: string, password: string) => {
+  const createUser = async (email: string, password: string, name: string, photo: string) => {
     setLoading(true)
-    return createUserWithEmailAndPassword(auth, email, password)
+    const result = await createUserWithEmailAndPassword(auth, email, password)
+    await updateUserProfile(name, photo)
+    setUser({ ...auth.currentUser }) 
+    return result
   }
 
   const signIn = (email: string, password: string) => {
@@ -69,7 +69,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return signOut(auth)
   }
 
-
+  const updateUserProfile = (name: string, photo: string) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photo,
+    })
+  }
 
   // onAuthStateChange
   useEffect(() => {
@@ -79,7 +84,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false)
     })
     return () => {
-      return unsubscribe()
+      unsubscribe()
     }
   }, [])
 
@@ -92,9 +97,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     signInWithGoogle,
     resetPassword,
     logOut,
-    updateUserProfile: function (name: string, photo: string): Promise<void> {
-      throw new Error('Function not implemented.')
-    }
+    updateUserProfile
   }
 
   return (
