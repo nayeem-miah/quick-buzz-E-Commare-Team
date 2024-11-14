@@ -1,96 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './banner.css';
-import './app.ts';
 
 const Slider: React.FC = () => {
-    return (
-        <div className="slider">
-            <div className="list">
-                <div className="item">
-                    <img src="https://i.ibb.co.com/MDWv1tz/img1.jpg" alt="" />
-                    <div className="content">
-                        {/* <div className="title">MAGIC SLIDER</div>
-                        <div className="type">FLOWER</div> */}
-                        {/* <div className="description">
-                            "Welcome to QuickBuzz! Discover Amazing Deals Every Day 🛒✨"
-                        </div>
-                        <div className="button">
-                            <button>SEE MORE</button>
-                        </div> */}
-                    </div>
-                </div>
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-                <div className="item">
-                    <img src="https://i.ibb.co.com/cJz3jkF/img2.jpg" alt="" />
-                    <div className="content">
-                        {/* <div className="title">MAGIC SLIDER</div>
-                        <div className="type">NATURE</div> */}
-                        {/* <div className="description">
-                            "Welcome back to CodeDevotee! Exciting content, tutorials,<br />
-                            and projects ahead. Let’s build together! 🚀💻"
-                        </div> */}
-                        {/* <div className="button">
-                            <button>SEE MORE</button>
-                        </div> */}
-                    </div>
-                </div>
+  const images = [
+    "https://i.ibb.co/MDWv1tz/img1.jpg",
+    "https://i.ibb.co/cJz3jkF/img2.jpg",
+    "https://i.ibb.co/C8qW9vT/img4.jpg",
+    "https://i.ibb.co/SvxfKhW/img3.jpg",
+  ];
 
-                <div className="item">
-                    <img src="
-                           https://i.ibb.co.com/C8qW9vT/img4.jpg" alt="" />
-                    <div className="content">
-                        {/* <div className="title">MAGIC SLIDER</div>
-                        <div className="type">PLANT</div> */}
-                        {/* <div className="description">
-                            "Welcome back to CodeDevotee! Exciting content, tutorials, <br />
-                            and projects ahead. Let’s build together! 🚀💻"
-                        </div> */}
-                        {/* <div className="button">
-                            <button>SEE MORE</button>
-                        </div> */}
-                    </div>
-                </div>
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
 
-                <div className="item">
-                    <img src="https://i.ibb.co.com/SvxfKhW/img3.jpg" alt="" />
-                    <div className="content">
-                        {/* <div className="title">MAGIC SLIDER</div>
-                        <div className="type">NATURE</div> */}
-                        {/* <div className="description">
-                            "Welcome back to CodeDevotee! Exciting content, tutorials, <br />
-                            and projects ahead. Let’s build together! 🚀💻"
-                        </div>
-                        <div className="button">
-                            <button>SEE MORE</button>
-                        </div> */}
-                    </div>
-                </div>
-            </div>
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
 
-            <div className="thumbnail">
-                <div className="item">
-                    <img src="https://i.ibb.co.com/MDWv1tz/img1.jpg" alt="" />
-                </div>
-                <div className="item">
-                    <img src="
-                        https://i.ibb.co.com/cJz3jkF/img2.jpg
-                          " alt="" />
-                </div>
-                <div className="item">
-                    <img src="
-                      https://i.ibb.co.com/C8qW9vT/img4.jpg" alt="" />
-                </div>
-                <div className="item">
-                    <img src="https://i.ibb.co.com/SvxfKhW/img3.jpg" alt="" />
-                </div>
-            </div>
-
-            <div className="nextPrevArrows">
-                <button className="prev"> &lt; </button>
-                <button className="next"> &gt; </button>
-            </div>
+  return (
+    <div className="slider">
+      <div className="list">
+        <div className="item">
+          <img src={images[currentIndex]} alt="" />
         </div>
-    );
+      </div>
+
+      <div className="thumbnail">
+        {images.map((img, index) => (
+          <div key={index} className="item">
+            <img src={img} alt="" />
+          </div>
+        ))}
+      </div>
+
+      <div className="nextPrevArrows">
+        <button className="prev" onClick={handlePrev}> &lt; </button>
+        <button className="next" onClick={handleNext}> &gt; </button>
+      </div>
+    </div>
+  );
 };
 
 export default Slider;
