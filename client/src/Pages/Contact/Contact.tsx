@@ -35,7 +35,7 @@ const Contact: React.FC = () => {
       {/* contact cart */}
       <div className="grid grid-cols-1 gap-12 mt-10 sm:grid-cols-2 lg:grid-cols-3 max-w-screen-xl mx-auto">
         <div
-          className="p-4 bg-white text-black shadow-lg md:p-6 relative px-6 py-2  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+          className="p-4  text-black shadow-lg md:p-6 relative px-6 py-2  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
         >
           <span className="inline-block p-3  rounded-lg   text-2xl">
@@ -80,7 +80,7 @@ const Contact: React.FC = () => {
       </div>
 
       {/* lets message me */}
-      <div id="letsMessage" className="bg-white py-16">
+      <div id="letsMessage" className=" py-16">
         <div className="grid max-w-screen-xl grid-cols-1 gap-8 px-8 py-16 mx-auto rounded-lg shadow-lg md:grid-cols-2 md:px-12 lg:px-16 xl:px-32">
           <div className="space-y-2">
             <div className="space-y-2">
