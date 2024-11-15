@@ -33,12 +33,17 @@ const BrowseByDestination: React.FC = () => {
     { name: "Barisal", image: Barisal },
     { name: "Khulna", image: mymenshing },
     { name: "Rajshahi", image: rajshahi },
-    { name: "Rongpur", image: rongpur }
+    { name: "Rongpur", image: rongpur },
   ];
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-       <Heading title={"Shop from Anywhere, Anytime"} subtitle={"We deliver to your doorstep across all major cities and regions. Explore our extensive network for seamless shopping and fast delivery!"}/>
+        <Heading
+          title={"Shop from Anywhere, Anytime"}
+          subtitle={
+            "We deliver to your doorstep across all major cities and regions. Explore our extensive network for seamless shopping and fast delivery!"
+          }
+        />
       </div>
 
       <Swiper
@@ -81,7 +86,7 @@ const BrowseByDestination: React.FC = () => {
 
                       <div className="flex items-center justify-between">
                         <span className="text-background/80 text-sm">
-                          {("Explore destination")}
+                          {"Explore destination"}
                         </span>
                         <div className="bg-secondary p-2 rounded-full transform translate-x-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
                           <MdArrowForward className="text-lg" />
@@ -95,11 +100,6 @@ const BrowseByDestination: React.FC = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* <style>{`
-        .swiper-wrapper {
-          margin: 20px 0;
-        }
-      `}</style> */}
     </div>
   );
 };
