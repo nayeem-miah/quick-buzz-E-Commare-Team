@@ -6,18 +6,15 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-
 const queryClient = new QueryClient()
-
 import {
-
   RouterProvider,
 } from "react-router-dom";
+
 import router from './Routers/Router';
 import AuthProvider from './Provider/AuthProvider';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    
     <QueryClientProvider client={queryClient}>
         <div className='bg-white text-black'>
       <AuthProvider>
@@ -25,9 +22,7 @@ createRoot(document.getElementById('root')!).render(
       <Toaster></Toaster>
       </AuthProvider>
       </div>
-
     </QueryClientProvider>
   </StrictMode>,
 )
-
 
