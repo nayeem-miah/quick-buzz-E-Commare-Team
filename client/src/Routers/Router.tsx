@@ -13,6 +13,8 @@ import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
 import ErrorPage from "./ErrorPage";
 import Signin from "../Pages/Page/Login";
 import Signup from "../Pages/Page/Singup";
+import PrivateRoute from "./PribetRoute";
+import Profile from "../Pages/DashboardPage/Profile";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -43,8 +45,15 @@ const router = createBrowserRouter([
     { path: '/signup', element: <Signup /> },
     {
         path: '/dashboard',
-        element: <Dashboard />,
+        element: <PrivateRoute>
+            <Dashboard />
+        </PrivateRoute>,
         children: [
+           {
+              path:'profile',
+              element:<Profile></Profile>
+
+           },
             {
                 path: 'adminHome',
                 element: <AdminHome />
