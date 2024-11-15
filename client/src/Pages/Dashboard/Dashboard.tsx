@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import {  Outlet } from 'react-router-dom';
+import Sidebar from '../../Layouts/Dashboard/Dashboard';
 
 const Dashboard: React.FC = () => {
     return (
         <div>
-            <h3>Dashboard</h3>
+            <Sidebar></Sidebar>
             <Outlet />
         </div>
     );
