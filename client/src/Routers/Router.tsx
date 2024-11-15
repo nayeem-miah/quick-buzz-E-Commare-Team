@@ -43,27 +43,27 @@ const router = createBrowserRouter([
     },
     { path: '/login', element: <Signin /> },
     { path: '/signup', element: <Signup /> },
-    {
-        path: '/dashboard',
-        element: <PrivateRoute>
-            <Dashboard />
-        </PrivateRoute>,
-        children: [
-           {
-              path:'profile',
-              element:<Profile></Profile>
+    // {
+    //     path: '/dashboard',
+    //     element: <PrivateRoute>
+    //         <Dashboard />
+    //     </PrivateRoute>,
+    //     children: [
+    //        {
+    //           path:'profile',
+    //           element:<Profile></Profile>
 
-           },
-            {
-                path: 'adminHome',
-                element: <AdminHome />
-            },
-            {
-                path: 'manageUsers',
-                element: <ManageUsers />
-            },
+    //        },
+    //         {
+    //             path: 'adminHome',
+    //             element: <AdminHome />
+    //         },
+    //         {
+    //             path: 'manageUsers',
+    //             element: <ManageUsers />
+    //         },
 
-        ]
-    }
+    //     ]
+    // }
 ]);
 export default router;

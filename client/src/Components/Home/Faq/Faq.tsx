@@ -1,14 +1,12 @@
 import React from 'react';
+import Heading from '../../../Shared/Heading/Heading';
 
 const Faq: React.FC = () => {
     return (
         <div>
-            <section className="">
+            <section>
                 <div className="container mx-auto px-4 py-12 md:px-8">
-                    <h2 className="text-3xl font-bold text-center sm:text-4xl">Frequently Asked Questions</h2>
-                    <p className="mt-4 mb-8 text-center ">
-                        Find answers to our most commonly asked questions about shopping, shipping, and returns.
-                    </p>
+                    <Heading title={'Frequently Asked Questions'} subtitle={'Find answers to our most commonly asked questions about shopping, shipping, and returns.'}/>
                     <div className="space-y-4">
                         <details className="w-full border border-gray-200 rounded-lg dark:border-gray-700">
                             <summary className="px-6 py-4 cursor-pointer text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">

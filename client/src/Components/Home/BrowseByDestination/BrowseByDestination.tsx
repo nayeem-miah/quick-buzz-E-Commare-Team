@@ -8,13 +8,15 @@ import { Autoplay } from "swiper/modules";
 
 import dhaka from "../../../assets/slider/dhaka.jpg";
 import chittagong from "../../../assets/slider/chittagong.png";
-import sylhet from "../../../assets/slider/sylet.jpg";
-import mymenshing from "../../../assets/slider/mymensingh.png";
-import rongpur from "../../../assets/slider/rongpur.png";
+import sylhet from "../../../assets/slider/sylhet.jpg";
+import mymenshing from "../../../assets/slider/mymenshing.jpg";
 import rajshahi from "../../../assets/slider/rajshahi.jpg";
+import Barisal from "../../../assets/slider/Barisal.jpg";
+import rongpur from "../../../assets/slider/rongpur.png";
 // import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { MdArrowForward, MdLocationOn } from "react-icons/md";
+import Heading from "../../../Shared/Heading/Heading";
 
 interface Destination {
   name: string;
@@ -26,20 +28,17 @@ const BrowseByDestination: React.FC = () => {
   const destinations: Destination[] = [
     { name: "Dhaka", image: dhaka },
     { name: "Chittagong", image: chittagong },
-    { name: "Rajshahi", image: rajshahi },
-    { name: "Rongpur", image: rongpur },
     { name: "Sylhet", image: sylhet },
-    { name: "Mymensingh", image: mymenshing },
+    { name: "Mymenshing", image: mymenshing },
+    { name: "Barisal", image: Barisal },
     { name: "Khulna", image: mymenshing },
-    { name: "", image: mymenshing },
+    { name: "Rajshahi", image: rajshahi },
+    { name: "Rongpur", image: rongpur }
   ];
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-text mb-3 font-serif relative inline-block">
-          {"browseByDestination"}
-          <div className="absolute  left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-secondary rounded-full"></div>
-        </h2>
+       <Heading title={"Shop from Anywhere, Anytime"} subtitle={"We deliver to your doorstep across all major cities and regions. Explore our extensive network for seamless shopping and fast delivery!"}/>
       </div>
 
       <Swiper
@@ -65,7 +64,7 @@ const BrowseByDestination: React.FC = () => {
       >
         {destinations.map((destination, index) => (
           <SwiperSlide key={index}>
-            <Link to={``} className="block group">
+            <Link to={`city/${destination?.name}`} className="block group">
               <div className="relative rounded-2xl overflow-hidden shadow-lg transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div
                   className="h-64 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
@@ -82,10 +81,10 @@ const BrowseByDestination: React.FC = () => {
 
                       <div className="flex items-center justify-between">
                         <span className="text-background/80 text-sm">
-                          {"Explore destination"}
+                          {("Explore destination")}
                         </span>
                         <div className="bg-secondary p-2 rounded-full transform translate-x-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                          <MdArrowForward className="text-background text-lg" />
+                          <MdArrowForward className="text-lg" />
                         </div>
                       </div>
                     </div>
