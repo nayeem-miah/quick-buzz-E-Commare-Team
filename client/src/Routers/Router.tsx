@@ -15,6 +15,10 @@ import Signin from "../Pages/Page/Login";
 import Signup from "../Pages/Page/Singup";
 import PrivateRoute from "./PribetRoute";
 import Profile from "../Pages/DashboardPage/Profile";
+import HostAddProduct from "../Components/Dashboard/Host/HostAddProduct";
+import HostHome from "../Components/Dashboard/Host/HostHome";
+import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
+import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -62,6 +66,24 @@ const router = createBrowserRouter([
                 path: 'manageUsers',
                 element: <ManageUsers />
             },
+            // host dashboard
+            {
+                path: 'hostHome',
+                element: <HostHome />
+            },
+            {
+                path: 'hostAddProduct',
+                element: <HostAddProduct />
+            },
+            {
+                path: 'my-host-listings',
+                element: <MyAddedProduct />
+            },
+            {
+                path: 'host-manageBooking',
+                element: <ManageBooking />
+            },
+
 
         ]
     }
