@@ -69,7 +69,7 @@ const BrowseByDestination: React.FC = () => {
       >
         {destinations.map((destination, index) => (
           <SwiperSlide key={index}>
-            <Link to={`city/${destination?.name}`} className="block group">
+            <Link to={``} className="block group">
               <div className="relative rounded-2xl overflow-hidden shadow-lg transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div
                   className="h-64 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"

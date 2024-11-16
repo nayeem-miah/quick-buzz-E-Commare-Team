@@ -3,7 +3,7 @@ import React from 'react';
 const ManageUsers: React.FC = () => {
     return (
         <div>
-            manageUsers
+            manageUsers 
         </div>
     );
 };

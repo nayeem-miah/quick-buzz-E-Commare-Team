@@ -2,7 +2,7 @@ import React from 'react';
 
 const AdminHome: React.FC = () => {
     return (
-        <div>
+        <div className=''>
             Admin Hone
         </div>
     );
