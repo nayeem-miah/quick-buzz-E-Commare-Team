@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "../../Layouts/Dashboard/Dashboard";
+import Sidebar from "../../Pages/Dashboard/Dashboard";
 
 const DashboardLayout: React.FC = () => {
   return (

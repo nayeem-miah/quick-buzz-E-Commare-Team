@@ -4,7 +4,7 @@ import Home from "../Pages/Home/Home";
 import About from "../Pages/About/About";
 import Contact from "../Pages/Contact/Contact";
 import Product from "../Pages/Product/Product";
-import DashboardLayout from "../Pages/Dashboard/DashboardLayout";
+import DashboardLayout from "../Layouts/Dashboard/DashboardLayout";
 import AdminHome from "../Components/Dashboard/Admin/AdminHome";
 import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
 import ErrorPage from "./ErrorPage";
