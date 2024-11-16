@@ -119,7 +119,7 @@ const Sidebar: React.FC = () => {
           <div>
             <hr />
 
-            {/* Profile Menu */}
+            {/* Profile Menu*/}
             <NavLink
               to="/dashboard/profile"
               className={({ isActive }) =>
@@ -237,7 +237,7 @@ const Sidebar: React.FC = () => {
           </div>
         </div>
       )}
-      {/* Sidebar  user*/}
+      {/* Sidebar  user dashboard*/}
       {role == "user" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
