@@ -4,9 +4,11 @@ import Sidebar from '../../Layouts/Dashboard/Dashboard';
 
 const Dashboard: React.FC = () => {
     return (
-        <div>
+        <div className=''>
             <Sidebar></Sidebar>
-            <Outlet />
+           <div className='mr-24'>
+           <Outlet />
+           </div>
         </div>
     );
 };

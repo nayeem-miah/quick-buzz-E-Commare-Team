@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
   const { logOut } = useAuth();
   const [isActive, setActive] = useState(false);
 
-  const role: string = "Host";
+  const role: string = "host";
   // Sidebar Responsive Handler
   const handleToggle = () => {
     setActive(!isActive);
@@ -127,7 +127,7 @@ const Sidebar: React.FC = () => {
         </div>
       )}
       {/* Sidebar  host*/}
-      {role == "Host" && (
+      {role == "host" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
@@ -146,7 +146,7 @@ const Sidebar: React.FC = () => {
               <nav>
                 {/* host Home */}
                 <NavLink
-                  to="hostHome"
+                  to="host-home"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
@@ -159,7 +159,7 @@ const Sidebar: React.FC = () => {
 
                 {/* Add Product */}
                 <NavLink
-                  to="hostAddProduct"
+                  to="host-add-product"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
@@ -171,7 +171,7 @@ const Sidebar: React.FC = () => {
                 </NavLink>
                 {/* host-manageBooking */}
                 <NavLink
-                  to="host-manageBooking"
+                  to="host-manage-booking"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"

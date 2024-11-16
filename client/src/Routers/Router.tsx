@@ -1,7 +1,4 @@
-
-import {
-    createBrowserRouter,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layouts/Main";
 import Home from "../Pages/Home/Home";
 import About from "../Pages/About/About";
@@ -20,72 +17,70 @@ import HostHome from "../Components/Dashboard/Host/HostHome";
 import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
 import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    element: <Main></Main>,
+    errorElement: <ErrorPage />,
+    children: [
+      {
         path: "/",
-        element: <Main></Main>,
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                path: '/',
-                element: <Home />
-            },
+        element: <Home />,
+      },
 
-            {
-                path: '/about',
-                element: <About />
-            },
-            {
-                path: '/contact',
-                element: <Contact />
-            },
-            {
-                path: "/product",
-                element: <Product />
-            },
-           
-        ]
-    },
-    { path: '/login', element: <Signin /> },
-    { path: '/signup', element: <Signup /> },
-    {
-        path: '/dashboard',
-        element: <PrivateRoute>
-            <Dashboard />
-        </PrivateRoute>,
-        children: [
-           {
-              path:'profile',
-              element:<Profile></Profile>
-
-           },
-            {
-                path: 'adminHome',
-                element: <AdminHome />
-            },
-            {
-                path: 'manageUsers',
-                element: <ManageUsers />
-            },
-            // host dashboard
-            {
-                path: 'hostHome',
-                element: <HostHome />
-            },
-            {
-                path: 'hostAddProduct',
-                element: <HostAddProduct />
-            },
-            {
-                path: 'my-host-listings',
-                element: <MyAddedProduct />
-            },
-            {
-                path: 'host-manageBooking',
-                element: <ManageBooking />
-            },
-
-
-        ]
-    }
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/product",
+        element: <Product />,
+      },
+    ],
+  },
+  { path: "/login", element: <Signin /> },
+  { path: "/signup", element: <Signup /> },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "profile",
+        element: <Profile></Profile>,
+      },
+      {
+        path: "adminHome",
+        element: <AdminHome />,
+      },
+      {
+        path: "manageUsers",
+        element: <ManageUsers />,
+      },
+      // host dashboard
+      {
+        path: "host-home",
+        element: <HostHome />,
+      },
+      {
+        path: "host-add-product",
+        element: <HostAddProduct />,
+      },
+      {
+        path: "my-host-listings",
+        element: <MyAddedProduct />,
+      },
+      {
+        path: "host-manage-booking",
+        element: <ManageBooking />,
+      },
+    ],
+  },
 ]);
 export default router;
