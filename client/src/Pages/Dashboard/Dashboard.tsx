@@ -10,13 +10,15 @@ import { Link } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
 import { BsGraphUp } from "react-icons/bs";
 import { FaListAlt } from "react-icons/fa";
+import { HiUsers } from "react-icons/hi2";
+import { FaHistory } from "react-icons/fa";
 import logo from "../../../src/assets/Image/logo2.png";
 
 const Sidebar: React.FC = () => {
   const { logOut } = useAuth();
   const [isActive, setActive] = useState(false);
 
-  const role: string = "host";
+  const role: string = "admin";
   // Sidebar Responsive Handler
   const handleToggle = () => {
     setActive(!isActive);
@@ -62,7 +64,7 @@ const Sidebar: React.FC = () => {
               <nav>
                 {/* Statistics */}
                 <NavLink
-                  to="adminHome"
+                  to="admin-home"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
@@ -73,29 +75,42 @@ const Sidebar: React.FC = () => {
                   <span className="mx-4 font-medium">Statistics</span>
                 </NavLink>
 
-                {/* Add Room */}
+                {/* Manage Bookings  */}
                 <NavLink
-                  to="manageUsers"
+                  to="manage-bookings"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
                     }`
                   }
                 >
+                  <TbBrandBooking className="w-5 h-5" />
+                  <span className="mx-4 font-medium">Manage Bookings</span>
+                </NavLink>
+                {/* Manage Users */}
+                <NavLink
+                  to="manage-users"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
+                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                    }`
+                  }
+                >
+                  <HiUsers className="w-5 h-5" />
                   <span className="mx-4 font-medium">Manage Users</span>
                 </NavLink>
 
                 {/* My Listing */}
                 <NavLink
-                  to="my-listings"
+                  to="all-payment-history"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
                     }`
                   }
                 >
-                  <MdHomeWork className="w-5 h-5" />
-                  <span className="mx-4 font-medium">My Listings</span>
+                  <FaHistory  className="w-5 h-5" />
+                  <span className="mx-4 font-medium">All payment history</span>
                 </NavLink>
               </nav>
             </div>
