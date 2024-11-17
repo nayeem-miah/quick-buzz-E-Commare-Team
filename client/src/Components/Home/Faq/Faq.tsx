@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
+import afk from '../../../../src/assets/Image/Group.png'
 
 interface FAQItem {
   question: string;
@@ -52,23 +53,24 @@ const Faq: React.FC = () => {
   ];
 
   return (
-    <section className="">
-      <div className="container px-6 py-12 mx-auto">
-      <Heading title={'Frequently Asked Questions'} subtitle={'Find answers to our most commonly asked questions about shopping, shipping, and returns.'}/>
-
+    <section className="flex flex-wrap w-full">
+      {/* FAQ Section */}
+      <div className="w-full lg:w-[800px] mx-auto px-6 py-12">
+        <Heading
+          title={'Frequently Asked Questions'}
+          subtitle={'Find answers to our most commonly asked questions about shopping, shipping, and returns.'}
+        />
         <div className="mt-8 space-y-8 lg:mt-12">
           {faqData.map((item, index) => (
             <div
               key={index}
-              className="p-8 rounded-lg  bg-white border border-gray-200"
+              className="p-6 lg:p-8 rounded-lg bg-white border border-gray-200"
             >
               <button
                 className="flex items-center justify-between w-full focus:outline-none"
                 onClick={() => toggleFAQ(index)}
               >
-                <h1 className="font-semibold ">
-                  {item.question}
-                </h1>
+                <h1 className="font-semibold">{item.question}</h1>
                 <span
                   className={`rounded-full p-1 ${
                     activeIndex === index ? "bg-red-500" : "bg-[#9E59F7]"
@@ -95,13 +97,16 @@ const Faq: React.FC = () => {
                 </span>
               </button>
               {activeIndex === index && (
-                <p className="mt-6 text-sm ">
-                  {item.answer}
-                </p>
+                <p className="mt-4 text-sm">{item.answer}</p>
               )}
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Image Section */}
+      <div className="w-full lg:w-1/3 flex items-center justify-center bg-base-300== p-4">
+        <img src={afk} alt="FAQ Illustration" className="max-w-full h-auto" />
       </div>
     </section>
   );

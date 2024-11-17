@@ -20,7 +20,7 @@ const About: React.FC = () => {
       name: "MD Nayeem Miah",
       position: "MERN Stack Developer",
       image: nayeemImage,
-      portfolio: "",
+      portfolio: "https://github.com/nayeem-miah",
       education: "Diploma in Engineering in Computer Science",
     },
     {
