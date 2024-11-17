@@ -18,6 +18,9 @@ import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
 import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 import AdminManageBookings from "../Components/Dashboard/Admin/AdminManageBookings";
 import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
+import UserHome from "../Components/Dashboard/User/UserHome";
+import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
+import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -57,7 +60,7 @@ const router = createBrowserRouter([
         path: "profile",
         element: <Profile></Profile>,
       },
-    //   admin dashboard
+      //   admin dashboard
       {
         path: "admin-home",
         element: <AdminHome />,
@@ -90,6 +93,19 @@ const router = createBrowserRouter([
       {
         path: "host-manage-booking",
         element: <ManageBooking />,
+      },
+      // user dashboard route
+      {
+        path: "user-home",
+        element: <UserHome />,
+      },
+      {
+        path: "my-listings",
+        element: <MyAddedCart />,
+      },
+      {
+        path: "my-payment-history",
+        element: <UserPaymentHistory />,
       },
     ],
   },
