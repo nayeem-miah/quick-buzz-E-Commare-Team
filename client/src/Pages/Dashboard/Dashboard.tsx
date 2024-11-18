@@ -13,6 +13,7 @@ import { FaListAlt } from "react-icons/fa";
 import { HiUsers } from "react-icons/hi2";
 import { FaHistory } from "react-icons/fa";
 import logo from "../../../src/assets/Image/logo2.png";
+import { MdOutlinePayment } from "react-icons/md";
 
 const Sidebar: React.FC = () => {
   const { logOut } = useAuth();
@@ -289,6 +290,7 @@ const Sidebar: React.FC = () => {
                     }`
                   }
                 >
+                  <MdOutlinePayment className="w-5 h-5" />
                   <span className="mx-4 font-medium">My payment history</span>
                 </NavLink>
               </nav>

@@ -42,7 +42,7 @@ header a:hover {
 
 /* slider section */
 .slider {
-    height: 100vh;
+    height: 90vh; /* height কমানো হয়েছে */
     margin-top: -50px;
     width: 100%;
     overflow: hidden;
@@ -211,105 +211,14 @@ header a:hover {
     animation-delay: 1s !important;
 }
 
-/* Animation for next button click */
-.slider.next .list .item:nth-child(1) img {
-    width: 150px;
-    height: 220px;
-    position: absolute;
-    bottom: 50px;
-    left: 50%;
-    border-radius: 30px;
-    animation: showImage .5s linear 1 forwards;
-}
-
-@keyframes showImage {
-    to {
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: 0;
-    }
-}
-
-.slider.next .thumbnail .item:nth-last-child(1) {
-    overflow: hidden;
-    animation: showThumbnail .5s linear 1 forwards;
-}
-
-.slider.prev .list .item img {
-    z-index: 100;
-}
-
-@keyframes showThumbnail {
-    from {
-        width: 0;
-        opacity: 0;
-    }
-}
-
-.slider.next .thumbnail {
-    animation: effectNext .5s linear 1 forwards;
-}
-
-@keyframes effectNext {
-    from {
-        transform: translateX(150px);
-    }
-}
-
-/* Animation for prev button click */
-.slider.prev .list .item:nth-child(2) {
-    z-index: 2;
-}
-
-.slider.prev .list .item:nth-child(2) img {
-    animation: outFrame 0.5s linear 1 forwards;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
-
-@keyframes outFrame {
-    to {
-        width: 150px;
-        height: 220px;
-        bottom: 50px;
-        left: 50%;
-        border-radius: 20px;
-    }
-}
-
-.slider.prev .thumbnail .item:nth-child(1) {
-    overflow: hidden;
-    opacity: 0;
-    animation: showThumbnail .5s linear 1 forwards;
-}
-
-.slider.next .nextPrevArrows button,
-.slider.prev .nextPrevArrows button {
-    pointer-events: none;
-}
-
-.slider.prev .list .item:nth-child(2) .content .title,
-.slider.prev .list .item:nth-child(2) .content .type,
-.slider.prev .list .item:nth-child(2) .content .description,
-.slider.prev .list .item:nth-child(2) .content .buttons {
-    animation: contentOut 1.5s linear 1 forwards !important;
-}
-
-@keyframes contentOut {
-    to {
-        transform: translateY(-150px);
-        filter: blur(20px);
-        opacity: 0;
-    }
-}
-
 /* Media Queries for responsiveness */
 
 /* Mobile devices */
 @media screen and (max-width: 768px) {
+    .slider {
+        height: 80vh; /* মোবাইল ডিভাইসের জন্য height */
+    }
+
     .slider .list .item .content {
         padding-right: 0;
     }
@@ -329,7 +238,7 @@ header a:hover {
 
     .thumbnail .item {
         width: 100px;
-        height: 150px;
+        height: 140px;
     }
 
     .nextPrevArrows {
@@ -346,6 +255,10 @@ header a:hover {
 
 /* Very small devices (portrait phones) */
 @media screen and (max-width: 480px) {
+    .slider {
+        height: 70vh; /* খুব ছোট ডিভাইসের জন্য height */
+    }
+
     header {
         width: 100%;
         max-width: 100%;
