@@ -4,19 +4,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Provider/AuthProvider';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { TbFidgetSpinner } from 'react-icons/tb'; // Corrected import
+import { TbFidgetSpinner } from 'react-icons/tb'; // Spinner icon
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
-  const { createUser, signInWithGoogle, setLoading, loading } = useContext(AuthContext);
+  const { createUser, signInWithGoogle, setLoading, loading } = useContext(AuthContext) || {};
 
-  // Handle Google Sign In
+  // Ensure required context methods are available
+  if (!createUser || !signInWithGoogle || !setLoading) {
+    console.error('AuthContext is not properly initialized.');
+    return null;
+  }
+
+  // Handle Google Sign-In
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      console.log('Google Sign-In successful');
-      navigate('/');
       toast.success('Google Sign-In Successful');
+      navigate('/');
     } catch (error) {
       console.error('Google Sign-In error:', error);
       toast.error('Google Sign-In Failed');
@@ -30,7 +35,7 @@ const Signup: React.FC = () => {
     const name = (form.elements.namedItem('name') as HTMLInputElement).value;
     const email = (form.elements.namedItem('email') as HTMLInputElement).value;
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-    const imageFile = (form.elements.namedItem('image') as HTMLInputElement).files?.[0] || null;
+    const imageFile = (form.elements.namedItem('image') as HTMLInputElement).files?.[0];
 
     if (!imageFile) {
       toast.error('Please select an image');
@@ -42,22 +47,22 @@ const Signup: React.FC = () => {
 
     try {
       setLoading(true);
-      // 1. Upload image and get image URL
+      // Upload image
       const { data } = await axios.post(
         `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
         formData
       );
       const imageUrl = data.data.display_url;
 
-      // 2. User Registration with name and image URL
-      const result = await createUser(email, password, name, imageUrl);
-      console.log(result);
-
-      navigate('/');
+      // Register user
+      await createUser(email, password, name, imageUrl);
       toast.success('Signup Successful');
+      navigate('/');
     } catch (err: any) {
-      console.log(err);
-      toast.error(err.message);
+      console.error('Signup error:', err);
+      toast.error(err.message || 'Signup Failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,16 +143,14 @@ const Signup: React.FC = () => {
           </div>
         </form>
         <div className='flex items-center pt-4 space-x-1'>
-          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
-          <p className='px-3 text-sm dark:text-gray-400'>
-            Signup with social accounts
-          </p>
-          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
+          <div className='flex-1 h-px sm:w-16 bg-gray-300'></div>
+          <p className='px-3 text-sm text-gray-400'>Signup with social accounts</p>
+          <div className='flex-1 h-px sm:w-16 bg-gray-300'></div>
         </div>
         <button
           disabled={loading}
           onClick={handleGoogleSignIn}
-          className='disabled:cursor-not-allowed flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'
+          className='disabled:cursor-not-allowed flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 cursor-pointer'
         >
           <FcGoogle size={32} />
           <p>Continue with Google</p>
@@ -159,7 +162,7 @@ const Signup: React.FC = () => {
           </Link>.
         </p>
       </div>
-      <Toaster/>
+      <Toaster />
     </div>
   );
 };
