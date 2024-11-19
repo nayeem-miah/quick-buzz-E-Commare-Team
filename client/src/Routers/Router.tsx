@@ -66,7 +66,7 @@ const router = createBrowserRouter([
       },
       //   admin dashboard
       {
-        path: "admin-home",
+        index: true,
         element: <AdminHome />,
       },
       {
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
       },
       // host dashboard
       {
-        path: "host-home",
+        index: true,
         element: <HostHome />,
       },
       {
@@ -100,7 +100,7 @@ const router = createBrowserRouter([
       },
       // user dashboard route
       {
-        path: "user-home",
+        index: true,
         element: <UserHome />,
       },
       {
