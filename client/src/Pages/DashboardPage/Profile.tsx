@@ -10,7 +10,7 @@ const Profile: React.FC = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  let role: string = "host";
+  let role: string = "admin";
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-100 to-gray-300">
@@ -91,7 +91,33 @@ const Profile: React.FC = () => {
                   </button>
                 </>
               }
+               {/* Role: Only for "admin" */}
+                {role === "admin" && (
+                <>
+                  <button
+                    onClick={() => navigate("/dashboard/manage-users")}
+                    className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+          border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                  >
+                    User Management
+                  </button>
+                  <button
+                    onClick={() => navigate("/dashboard/manage-bookings")}
+                    className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+          border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                  >
+                    manage Booking
+                  </button>
 
+                  <button
+                    onClick={() => navigate("dashboard/all-payment-history")}
+                    className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+          border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                  >
+                    View Order History
+                  </button>
+                </>
+              )}
               {/* Role: Only for "host" */}
               {role === "host" && (
                 <>
@@ -119,30 +145,30 @@ const Profile: React.FC = () => {
                 </>
               )}
 
-              {/* Role: Only for "admin" */}
-              {role === "admin" && (
+              {/* Role: Only for "user" */}
+              {role === "user" && (
                 <>
                   <button
-                    onClick={() => navigate("/dashboard/manage-users")}
+                    onClick={() => navigate("/dashboard/my-listings")}
                     className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
           border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                   >
-                    User Management
+                    My listings
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => navigate("/dashboard/manage-bookings")}
                     className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
           border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                   >
                     manage Booking
-                  </button>
+                  </button> */}
 
                   <button
-                    onClick={() => navigate("dashboard/all-payment-history")}
+                    onClick={() => navigate("/dashboard/my-payment-history")}
                     className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
           border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                   >
-                    View Order History
+                    payment History
                   </button>
                 </>
               )}
