@@ -44,14 +44,14 @@ const router = createBrowserRouter([
         path: "/product",
         element: <Product />,
       },
+      {
+        path: "/profile",
+        element: <Profile></Profile>,
+      },
     ],
   },
   { path: "/login", element: <Signin /> },
   { path: "/signup", element: <Signup /> },
-  {
-    path: "/profile",
-    element: <Profile></Profile>,
-  },
   {
     path: "/dashboard",
     element: (
