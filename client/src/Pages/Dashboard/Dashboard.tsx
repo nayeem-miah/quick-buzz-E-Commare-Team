@@ -28,7 +28,7 @@ const Sidebar: React.FC = () => {
   return (
     <>
       {/* Small Screen Navbar */}
-      <div className="bg-gray-100 text-gray-800 flex justify-between md:hidden">
+      <div className="bg-gray-100  text-gray-800 flex justify-between md:hidden">
         <div>
           <div className="block cursor-pointer p-4 font-bold">
             <Link to="/">
@@ -48,12 +48,12 @@ const Sidebar: React.FC = () => {
       {/* Sidebar  admin*/}
       {role == "admin" && (
         <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
+          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
           } md:translate-x-0 transition duration-200 ease-in-out`}
         >
           <div>
-            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-rose-100 mx-auto">
+            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-[#4270B5] mx-auto">
               <Link to="/">
                 <img src={logo} alt="logo" width={100} height={100} />
               </Link>
@@ -145,12 +145,12 @@ const Sidebar: React.FC = () => {
       {/* Sidebar  host*/}
       {role == "host" && (
         <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
+          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
           } md:translate-x-0 transition duration-200 ease-in-out`}
         >
           <div>
-            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-rose-100 mx-auto">
+            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-[#4270B5] mx-auto">
               <Link to="/">
                 <img src={logo} alt="logo" width={100} height={100} />
               </Link>
@@ -241,12 +241,12 @@ const Sidebar: React.FC = () => {
       {/* Sidebar  user dashboard*/}
       {role == "user" && (
         <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
+          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
           } md:translate-x-0 transition duration-200 ease-in-out`}
         >
           <div>
-            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-rose-100 mx-auto">
+            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-[#4270B5] mx-auto">
               <Link to="/">
                 <img src={logo} alt="logo" width={100} height={100} />
               </Link>
