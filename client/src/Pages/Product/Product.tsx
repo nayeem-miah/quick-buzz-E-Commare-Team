@@ -35,7 +35,7 @@ const Product: React.FC = () => {
       {cards.map((card) => (
         <div
           key={card.id}
-          className="flex flex-col items-center justify-center w-full max-w-sm mx-auto"
+          className="flex flex-col items-center justify-center "
         >
           <div
             className="w-full h-64 bg-gray-300 bg-center bg-cover rounded-lg shadow-md"
