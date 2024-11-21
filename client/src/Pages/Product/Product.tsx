@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LoadingSpinner from '../../Shared/Loading';
 
+
 interface Card {
   id: number;
   name: string;
@@ -32,6 +33,7 @@ const Product: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+     
       {cards.map((card) => (
         <div
           key={card.id}
