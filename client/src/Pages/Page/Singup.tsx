@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Provider/AuthProvider';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { TbFidgetSpinner } from 'react-icons/tb'; // Spinner icon
+import usePublic from '../../Hooks/UsePublic';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const axiosPublic = usePublic();
   const { createUser, signInWithGoogle, setLoading, loading } = useContext(AuthContext) || {};
 
   // Ensure required context methods are available
@@ -19,12 +22,19 @@ const Signup: React.FC = () => {
   // Handle Google Sign-In
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
-      toast.success('Google Sign-In Successful');
+      const result = await signInWithGoogle(); 
+      const userInfo = {
+        email: result.user?.email,
+        name: result.user?.displayName,
+        photo: result.user?.photoURL,
+        role: 'user',
+      };
+      axiosPublic.post('/users', userInfo);
       navigate('/');
-    } catch (error) {
-      console.error('Google Sign-In error:', error);
-      toast.error('Google Sign-In Failed');
+      toast.success('Google Sign-In Successful');
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message);
     }
   };
 
@@ -36,6 +46,8 @@ const Signup: React.FC = () => {
     const email = (form.elements.namedItem('email') as HTMLInputElement).value;
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
     const imageFile = (form.elements.namedItem('image') as HTMLInputElement).files?.[0];
+
+   
 
     if (!imageFile) {
       toast.error('Please select an image');
@@ -56,8 +68,19 @@ const Signup: React.FC = () => {
 
       // Register user
       await createUser(email, password, name, imageUrl);
-      toast.success('Signup Successful');
-      navigate('/');
+      toast.success("user Create successfully");
+      const userInfo = {
+        name: name,
+        email: email,
+        photo: imageUrl,
+        role: "user"
+      };
+      axiosPublic.post("/users", userInfo).then(res => {
+        if (res.data.insertedId) {
+          // setSuccess("User created successfully");
+          navigate(location?.state ? location.state : "/");
+        }
+      });
     } catch (err: any) {
       console.error('Signup error:', err);
       toast.error(err.message || 'Signup Failed');
