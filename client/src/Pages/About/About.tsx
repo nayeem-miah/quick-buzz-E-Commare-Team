@@ -15,13 +15,6 @@ interface TeamMember {
 }
 
 const About: React.FC = () => {
-<<<<<<< HEAD
-    return (
-        <div className='py-24'>
-            About page
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo magnam harum saepe molestias sed? Placeat vitae unde corrupti saepe pariatur vel laborum fugiat facere! Illo recusandae beatae laborum sapiente placeat ut repudiandae perspiciatis corrupti commodi quod illum dolor possimus voluptas maxime quidem id, ratione alias eius neque amet vero, ducimus, porro doloremque? Ab id nesciunt, suscipit deserunt dolorem neque incidunt molestiae reiciendis. Eos, omnis id. Eos dolorem culpa, magni veniam asperiores voluptas dolores alias perferendis quibusdam officia deleniti aperiam fugiat, saepe a porro pariatur ratione enim accusamus quaerat explicabo nobis sapiente. Veritatis iusto aperiam laborum. Explicabo voluptates laboriosam omnis nulla.
-            work on nayeem 2g   
-=======
   const teamMembers: TeamMember[] = [
     {
       name: "MD Nayeem Miah",
@@ -38,7 +31,6 @@ const About: React.FC = () => {
       education: "Diploma in Engineering in Computer Science",
     },
   ];
->>>>>>> 44ff896c6679842e9f9567846fd4b4e012976992
 
   return (
     <div className=" text-gray-800 font-sans">
@@ -77,7 +69,7 @@ const About: React.FC = () => {
           <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-6 animate-slideIn">
             <div className="lg:w-1/2 space-y-6">
               <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
-              Explore Our Range of Quality Services
+                Explore Our Range of Quality Services
               </h2>
               <p className="text-gray-600">
                 Discover an extensive selection of clothing, curated to fit
