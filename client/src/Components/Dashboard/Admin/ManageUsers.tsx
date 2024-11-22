@@ -1,9 +1,10 @@
 import React from 'react';
+import UserTable from './Table/UserTable';
 
 const ManageUsers: React.FC = () => {
     return (
         <div>
-            manageUsers 
+         <UserTable/>
         </div>
     );
 };

@@ -10,7 +10,7 @@ const Profile: React.FC = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  let role: string = "user";
+  let role: string = "admin";
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-100 to-gray-300">
