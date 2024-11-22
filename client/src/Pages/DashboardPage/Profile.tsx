@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from "react";
 import useAuth from "../../Hooks/UseAuth";
 import { Link, useNavigate } from "react-router-dom";
+import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
+import LoadingSpinner from "../../Shared/Loading";
 
 const Profile: React.FC = () => {
   const { user, logOut } = useAuth();
@@ -10,7 +13,23 @@ const Profile: React.FC = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  let role: string = "admin";
+ 
+  if (!user?.email) {
+    return <h1>User email not available</h1>;
+}
+
+  const { singleUser, loading } = useFetchSingleUser(user?.email);
+  console.log(singleUser);
+
+  if (loading) {
+    return <LoadingSpinner></LoadingSpinner>;
+}
+  
+
+
+
+
+
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-100 to-gray-300">
@@ -48,13 +67,13 @@ const Profile: React.FC = () => {
             {displayName || "Anonymous User"}
             <br />
             {
-              role=="admin" && <h3 className="text-xl font-bold text-gray-500">*Admin*</h3>
+               singleUser?.role==="admin" && <h3 className="text-xl font-bold text-gray-500">*Admin*</h3>
             }
             {
-              role=="host" && <h3 className="text-xl font-bold text-gray-500">*Host*</h3>
+              singleUser?.role==="Host" && <h3 className="text-xl font-bold text-gray-500">*Host*</h3>
             }
             {
-              role=="user" && <h3 className="text-xl font-bold text-gray-500">*User*</h3>
+              singleUser?.role==="user" && <h3 className="text-xl font-bold text-gray-500">*User*</h3>
             }
           </h2>
           <p className="text-sm text-gray-600">
