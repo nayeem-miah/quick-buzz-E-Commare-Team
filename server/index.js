@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb"); // Import MongoClient and ServerApiVersion
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb"); // Import MongoClient and ServerApiVersion
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,6 +28,41 @@ async function run() {
     await client.connect();
 
 
+
+    // get all users
+    app.get('/alluser', async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result)
+      console.log(result);
+      
+  })
+   
+
+  // patch all user
+
+  app.patch('/alluser/admin/:id', async (req, res) => {
+    const { role } = req.body;
+    const id = req.params.id;
+    console.log(role);
+    
+    const filter = { _id: new ObjectId(id) };
+    const updatedDoc = {
+        $set: {
+            role: role,
+        }
+    };
+    try {
+        const result = await userCollection.updateOne(filter, updatedDoc);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send({ message: 'Failed to update role', error });
+    }
+});
+ 
+
+
+
+  //  post all data 
     app.post("/users", async (req, res) => {
       // console.log("Request received for /users:", req.body); 
       const user = req.body;
