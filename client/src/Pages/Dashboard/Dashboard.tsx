@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import { GrLogout } from "react-icons/gr";
 import { FcSettings } from "react-icons/fc";
@@ -14,12 +15,33 @@ import { HiUsers } from "react-icons/hi2";
 import { FaHistory } from "react-icons/fa";
 import logo from "../../../src/assets/Image/logo2.png";
 import { MdOutlinePayment } from "react-icons/md";
+import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
+import LoadingSpinner from "../../Shared/Loading";
 
 const Sidebar: React.FC = () => {
-  const { logOut } = useAuth();
+  const { logOut, user } = useAuth();
   const [isActive, setActive] = useState(false);
+  
+  if (!user?.email) {
+      return <h1>User email not available</h1>;
+  }
+  
+  const { singleUser, loading } = useFetchSingleUser(user?.email);
+  console.log(singleUser);
+  
+  
+  if (loading) {
+      return <LoadingSpinner></LoadingSpinner>;
+  }
+  
+  if (!singleUser) {
+      return <h1>User not Found</h1>;
+  }
+  
+console.log(singleUser.role);
 
-  const role: string = "admin";
+
+  // const role: string = "admin";
   // Sidebar Responsive Handler
   const handleToggle = () => {
     setActive(!isActive);
@@ -28,7 +50,7 @@ const Sidebar: React.FC = () => {
   return (
     <>
       {/* Small Screen Navbar */}
-      <div className="bg-gray-100  text-gray-800 flex justify-between md:hidden">
+      <div className="  flex justify-between md:hidden">
         <div>
           <div className="block cursor-pointer p-4 font-bold">
             <Link to="/">
@@ -46,7 +68,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Sidebar  admin*/}
-      {role == "admin" && (
+      { singleUser?.role === "admin" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
@@ -143,7 +165,7 @@ const Sidebar: React.FC = () => {
         </div>
       )}
       {/* Sidebar  host*/}
-      {role == "host" && (
+      { singleUser?.role === "Host" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
@@ -157,7 +179,7 @@ const Sidebar: React.FC = () => {
             </div>
 
             {/* Nav Items */}
-            <div className="flex flex-col justify-between flex-1 mt-6">
+            <div className="flex flex-col  justify-between flex-1 mt-6">
               {/* Menu Items */}
               <nav>
                 {/* host Home */}
@@ -165,7 +187,7 @@ const Sidebar: React.FC = () => {
                   to="/dashboard"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "text-white" : "text-gray-600"
                     }`
                   }
                 >
@@ -178,7 +200,7 @@ const Sidebar: React.FC = () => {
                   to="host-add-product"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "text-white" : "text-gray-600"
                     }`
                   }
                 >
@@ -190,7 +212,7 @@ const Sidebar: React.FC = () => {
                   to="host-manage-booking"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "text-white" : "text-gray-600"
                     }`
                   }
                 >
@@ -202,7 +224,7 @@ const Sidebar: React.FC = () => {
                   to="my-host-listings"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "text-white" : "text-gray-600"
                     }`
                   }
                 >
@@ -220,8 +242,8 @@ const Sidebar: React.FC = () => {
             <NavLink
               to="/dashboard/profile"
               className={({ isActive }) =>
-                `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                  isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform ${
+                  isActive ? "text-white" : " text-white"
                 }`
               }
             >
@@ -239,7 +261,7 @@ const Sidebar: React.FC = () => {
         </div>
       )}
       {/* Sidebar  user dashboard*/}
-      {role == "user" && (
+      { singleUser?.role === "user" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""

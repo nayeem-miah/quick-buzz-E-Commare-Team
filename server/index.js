@@ -36,10 +36,40 @@ async function run() {
       console.log(result);
       
   })
+
+
+
+  app.get("/single-user/:email", async (req, res) => {
+    const { email } = req.params;
+       console.log('all data is a ohk ',email);
+    const user = await userCollection.findOne({ email })
+    if (!user) {
+        return res.status(404).send({ error: "User not found with this email" });
+    }
+    res.status(200).send(user)
+    console.log(user);
+    
+})
+
    
 
-  // patch all user
+  //  post all data 
+    app.post("/users", async (req, res) => {
+      // console.log("Request received for /users:", req.body); 
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ message: "user already exist", insertedId: null });
+      }
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+   
+      
+    });
 
+
+      // patch all user
   app.patch('/alluser/admin/:id', async (req, res) => {
     const { role } = req.body;
     const id = req.params.id;
@@ -60,22 +90,6 @@ async function run() {
 });
  
 
-
-
-  //  post all data 
-    app.post("/users", async (req, res) => {
-      // console.log("Request received for /users:", req.body); 
-      const user = req.body;
-      const query = { email: user.email };
-      const existingUser = await userCollection.findOne(query);
-      if (existingUser) {
-        return res.send({ message: "user already exist", insertedId: null });
-      }
-      const result = await userCollection.insertOne(user);
-      res.send(result);
-      console.log('all data is a ohk ',result);
-      
-    });
     
 
 
