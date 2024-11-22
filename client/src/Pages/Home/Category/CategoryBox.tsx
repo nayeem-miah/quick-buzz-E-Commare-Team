@@ -32,6 +32,9 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
         items-center 
         justify-center 
         gap-2
+        w-24 
+        h-24
+        rounded-full
         p-3
         border-b-2
         hover:text-neutral-800

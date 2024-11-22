@@ -4,10 +4,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../Hooks/UseAuth';
 import { toast } from 'react-toastify';
 import { TbFidgetSpinner } from 'react-icons/tb';
+import usePublic from '../../Hooks/UsePublic';
 
 const Signin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosPublic = usePublic()
   const from = location?.state || '/';
   const { signInWithGoogle, signIn, loading, setLoading } = useAuth();
 
@@ -32,7 +34,14 @@ const Signin: React.FC = () => {
   // Handle Google Sign In
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle(); 
+      const userInfo = {
+        email: result.user?.email,
+        name: result.user?.displayName,
+        photo: result.user?.photoURL,
+        role: 'user',
+      };
+      axiosPublic.post('/users', userInfo);
       navigate(from);
       toast.success('Google Sign-In Successful');
     } catch (err: any) {
@@ -40,6 +49,7 @@ const Signin: React.FC = () => {
       toast.error(err.message);
     }
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen">
