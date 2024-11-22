@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
-import afk from '../../../../src/assets/Image/Group.png'
+// import afk from '../../../../src/assets/Image/Group.png'
 
 interface FAQItem {
   question: string;
@@ -53,9 +53,9 @@ const Faq: React.FC = () => {
   ];
 
   return (
-    <section className="flex flex-wrap w-full">
+    <section className="">
       {/* FAQ Section */}
-      <div className="w-full lg:w-[800px] mx-auto px-6 py-12">
+      <div className="w-full  mx-auto px-6 py-12">
         <Heading
           title={'Frequently Asked Questions'}
           subtitle={'Find answers to our most commonly asked questions about shopping, shipping, and returns.'}
@@ -105,9 +105,9 @@ const Faq: React.FC = () => {
       </div>
 
       {/* Image Section */}
-      <div className="w-full lg:w-1/3 flex items-center justify-center bg-base-300== p-4">
+      {/* <div className="w-full lg:w-1/3 flex items-center justify-center bg-base-300== p-4">
         <img src={afk} alt="FAQ Illustration" className="max-w-full h-auto" />
-      </div>
+      </div> */}
     </section>
   );
 };
