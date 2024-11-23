@@ -1,9 +1,10 @@
 import React from 'react';
+import AddProductForm from './AddProductForm';
 
 const HostAddProduct: React.FC = () => {
     return (
         <div>
-            host add Product
+           <AddProductForm/>
         </div>
     );
 };
