@@ -20,96 +20,79 @@ const client = new MongoClient(uri, {
   },
 });
 
- const userCollection = client.db("quickBuzz").collection("alluser");
-
 async function run() {
   try {
-    // Connect the client to the server (optional starting in v4.7)
-    await client.connect();
+    const userCollection = client.db("quickBuzz").collection("alluser");
 
 
 
-    // get all users
-    app.get('/alluser', async (req, res) => {
-      const result = await userCollection.find().toArray();
-      res.send(result)
-      console.log(result);
+      // get all users
+      app.get('/alluser', async (req, res) => {
+        const result = await userCollection.find().toArray();
+        res.send(result)
+        console.log(result);
+        
+    })
+  
+  
+  
+    app.get("/single-user/:email", async (req, res) => {
+      const { email } = req.params;
+         console.log('all data is a ohk ',email);
+      const user = await userCollection.findOne({ email })
+      if (!user) {
+          return res.status(404).send({ error: "User not found with this email" });
+      }
+      res.status(200).send(user)
+      console.log(user);
       
   })
-
-
-
-  app.get("/single-user/:email", async (req, res) => {
-    const { email } = req.params;
-       console.log('all data is a ohk ',email);
-    const user = await userCollection.findOne({ email })
-    if (!user) {
-        return res.status(404).send({ error: "User not found with this email" });
-    }
-    res.status(200).send(user)
-    console.log(user);
-    
-})
-
-   
-
-  //  post all data 
-    app.post("/users", async (req, res) => {
-      // console.log("Request received for /users:", req.body); 
-      const user = req.body;
-      const query = { email: user.email };
-      const existingUser = await userCollection.findOne(query);
-      if (existingUser) {
-        return res.send({ message: "user already exist", insertedId: null });
-      }
-      const result = await userCollection.insertOne(user);
-      res.send(result);
-   
-      
-    });
-
-
-      // patch all user
-  app.patch('/alluser/admin/:id', async (req, res) => {
-    const { role } = req.body;
-    const id = req.params.id;
-    console.log(role);
-    
-    const filter = { _id: new ObjectId(id) };
-    const updatedDoc = {
-        $set: {
-            role: role,
+  
+     
+  
+    //  post all data 
+      app.post("/users", async (req, res) => {
+        // console.log("Request received for /users:", req.body); 
+        const user = req.body;
+        const query = { email: user.email };
+        const existingUser = await userCollection.findOne(query);
+        if (existingUser) {
+          return res.send({ message: "user already exist", insertedId: null });
         }
-    };
-    try {
-        const result = await userCollection.updateOne(filter, updatedDoc);
+        const result = await userCollection.insertOne(user);
         res.send(result);
-    } catch (error) {
-        res.status(500).send({ message: 'Failed to update role', error });
-    }
-});
- 
-
-    
-
-
-
-
-
-
-    // Send a ping to confirm a successful connection
+     
+        
+      });
+  
+  
+        // patch all user
+    app.patch('/alluser/admin/:id', async (req, res) => {
+      const { role } = req.body;
+      const id = req.params.id;
+      console.log(role);
+      
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+          $set: {
+              role: role,
+          }
+      };
+      try {
+          const result = await userCollection.updateOne(filter, updatedDoc);
+          res.send(result);
+      } catch (error) {
+          res.status(500).send({ message: 'Failed to update role', error });
+      }
+  });
+    // await client.connect();
     await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
     // await client.close();
   }
 }
-
 run().catch(console.dir);
-
 // Root route
 app.get("/", (req, res) => {
   res.send("Hello from the website!");
