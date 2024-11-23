@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Heading from "../../../Shared/Heading/Heading";
 
 interface FormState {
   productTitle: string;
@@ -77,27 +78,22 @@ const AddProductForm: React.FC = () => {
   };
 
   return (
-    <section className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md dark:bg-gray-800">
-      <h2 className="text-2xl font-semibold text-gray-700 capitalize dark:text-white">
-        Add New Product
-      </h2>
+    <section className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md">
+      <Heading title={"Add New Product"} subtitle={""} />
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         {/* Product Title */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            htmlFor="productTitle"
-          >
+          <label className="block text-sm font-medium" htmlFor="productTitle">
             Product Title
           </label>
           <input
             id="productTitle"
             type="text"
             placeholder="Enter product title"
-            className={`block w-full px-4 py-2 mt-2 text-gray-700 bg-white border ${
+            className={`block w-full px-4 py-2 mt-2 bg-white border ${
               errors.productTitle ? "border-red-500" : "border-gray-200"
-            } rounded-md dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-300`}
+            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
             value={formState.productTitle}
             onChange={handleChange}
           />
@@ -108,17 +104,14 @@ const AddProductForm: React.FC = () => {
 
         {/* Brand Name */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            htmlFor="brandName"
-          >
+          <label className="block text-sm font-medium" htmlFor="brandName">
             Brand Name
           </label>
           <input
             id="brandName"
             type="text"
             placeholder="Enter brand name"
-            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-300"
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             value={formState.brandName}
             onChange={handleChange}
           />
@@ -126,19 +119,16 @@ const AddProductForm: React.FC = () => {
 
         {/* Price */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            htmlFor="price"
-          >
+          <label className="block text-sm font-medium" htmlFor="price">
             Price ($)
           </label>
           <input
             id="price"
             type="number"
             placeholder="Enter product price"
-            className={`block w-full px-4 py-2 mt-2 text-gray-700 bg-white border ${
+            className={`block w-full px-4 py-2 mt-2 bg-white border ${
               errors.price ? "border-red-500" : "border-gray-200"
-            } rounded-md dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-300`}
+            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
             value={formState.price}
             onChange={handleChange}
           />
@@ -147,19 +137,51 @@ const AddProductForm: React.FC = () => {
           )}
         </div>
 
+        {/* Discount */}
+        <div>
+          <label className="block text-sm font-medium" htmlFor="discount">
+            Discount (%)
+          </label>
+          <input
+            id="discount"
+            type="number"
+            placeholder="Enter discount percentage"
+            className={`block w-full px-4 py-2 mt-2 bg-white border ${
+              errors.discount ? "border-red-500" : "border-gray-200"
+            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
+            value={formState.discount}
+            onChange={handleChange}
+          />
+          {errors.discount && (
+            <p className="mt-1 text-sm text-red-500">{errors.discount}</p>
+          )}
+        </div>
+
+        {/* Tags */}
+        <div>
+          <label className="block text-sm font-medium" htmlFor="tags">
+            Tags (Comma separated)
+          </label>
+          <input
+            id="tags"
+            type="text"
+            placeholder="Enter tags"
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
+            value={formState.tags}
+            onChange={handleChange}
+          />
+        </div>
+
         {/* Category */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            htmlFor="category"
-          >
+          <label className="block text-sm font-medium" htmlFor="category">
             Category
           </label>
           <select
             id="category"
-            className={`block w-full px-4 py-2 mt-2 text-gray-700 bg-white border ${
+            className={`block w-full px-4 py-2 mt-2 bg-white border ${
               errors.category ? "border-red-500" : "border-gray-200"
-            } rounded-md dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-300`}
+            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
             value={formState.category}
             onChange={handleChange}
           >
@@ -177,17 +199,14 @@ const AddProductForm: React.FC = () => {
 
         {/* Description */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            htmlFor="description"
-          >
+          <label className="block text-sm font-medium" htmlFor="description">
             Description
           </label>
           <textarea
             id="description"
             rows={4}
             placeholder="Enter product description"
-            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-300"
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             value={formState.description}
             onChange={handleChange}
           ></textarea>
@@ -195,17 +214,14 @@ const AddProductForm: React.FC = () => {
 
         {/* Product Image */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            htmlFor="productImage"
-          >
+          <label className="block text-sm font-medium" htmlFor="productImage">
             Product Image
           </label>
           <input
             id="productImage"
             type="file"
             accept="image/*"
-            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 focus:outline-none"
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:outline-none"
             onChange={handleChange}
           />
         </div>
@@ -214,7 +230,8 @@ const AddProductForm: React.FC = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
+            className="w-full text-black shadow-lg py-2 relative bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+            border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
           >
             Add Product
           </button>
