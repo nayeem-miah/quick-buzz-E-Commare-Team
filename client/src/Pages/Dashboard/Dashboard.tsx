@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
   }
   
   const { singleUser, loading } = useFetchSingleUser(user?.email);
-  console.log(singleUser);
+  // console.log(singleUser);
   
   
   if (loading) {
@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
       return <h1>User not Found</h1>;
   }
   
-console.log(singleUser.role);
+// console.log(singleUser.role);
 
 
   // const role: string = "admin";
@@ -70,7 +70,7 @@ console.log(singleUser.role);
       {/* Sidebar  admin*/}
       { singleUser?.role === "admin" && (
         <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
+          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
           } md:translate-x-0 transition duration-200 ease-in-out`}
         >
@@ -90,7 +90,7 @@ console.log(singleUser.role);
                   to="/dashboard"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -103,7 +103,7 @@ console.log(singleUser.role);
                   to="manage-bookings"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -115,7 +115,7 @@ console.log(singleUser.role);
                   to="manage-users"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -128,7 +128,7 @@ console.log(singleUser.role);
                   to="all-payment-history"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -147,7 +147,7 @@ console.log(singleUser.role);
               to="/dashboard/profile"
               className={({ isActive }) =>
                 `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                  isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                  isActive ? "bg-gray-300 text-gray-700" : "text-white"
                 }`
               }
             >
@@ -156,7 +156,7 @@ console.log(singleUser.role);
             </NavLink>
             <button
               onClick={logOut}
-              className="flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
+              className="flex w-full items-center px-4 py-2 mt-5 text-white hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
             >
               <GrLogout className="w-5 h-5" />
               <span className="mx-4 font-medium">Logout</span>
@@ -167,7 +167,7 @@ console.log(singleUser.role);
       {/* Sidebar  host*/}
       { singleUser?.role === "Host" && (
         <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
+          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
           } md:translate-x-0 transition duration-200 ease-in-out`}
         >
@@ -187,7 +187,7 @@ console.log(singleUser.role);
                   to="/dashboard"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-gray-600"
+                      isActive ? "text-white" : "text-white"
                     }`
                   }
                 >
@@ -200,7 +200,7 @@ console.log(singleUser.role);
                   to="host-add-product"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-gray-600"
+                      isActive ? "text-white" : "text-white"
                     }`
                   }
                 >
@@ -212,7 +212,7 @@ console.log(singleUser.role);
                   to="host-manage-booking"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-gray-600"
+                      isActive ? "text-white" : "text-white"
                     }`
                   }
                 >
@@ -224,7 +224,7 @@ console.log(singleUser.role);
                   to="my-host-listings"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-gray-600"
+                      isActive ? "text-white" : "text-white"
                     }`
                   }
                 >
@@ -252,7 +252,7 @@ console.log(singleUser.role);
             </NavLink>
             <button
               onClick={logOut}
-              className="flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
+              className="flex w-full items-center px-4 py-2 mt-5 text-white hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
             >
               <GrLogout className="w-5 h-5" />
               <span className="mx-4 font-medium">Logout</span>
@@ -263,7 +263,7 @@ console.log(singleUser.role);
       {/* Sidebar  user dashboard*/}
       { singleUser?.role === "user" && (
         <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#161B2E]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
+          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
           } md:translate-x-0 transition duration-200 ease-in-out`}
         >
@@ -283,7 +283,7 @@ console.log(singleUser.role);
                   to="/dashboard"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -296,7 +296,7 @@ console.log(singleUser.role);
                   to="my-listings"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -308,7 +308,7 @@ console.log(singleUser.role);
                   to="my-payment-history"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -327,7 +327,7 @@ console.log(singleUser.role);
               to="/dashboard/profile"
               className={({ isActive }) =>
                 `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                  isActive ? "bg-gray-300 text-gray-700" : "text-gray-600"
+                  isActive ? "bg-gray-300 text-gray-700" : "text-white"
                 }`
               }
             >
@@ -336,7 +336,7 @@ console.log(singleUser.role);
             </NavLink>
             <button
               onClick={logOut}
-              className="flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
+              className="flex w-full items-center px-4 py-2 mt-5 text-white hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
             >
               <GrLogout className="w-5 h-5" />
               <span className="mx-4 font-medium">Logout</span>
