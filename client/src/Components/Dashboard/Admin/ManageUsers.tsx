@@ -30,7 +30,7 @@ const ManageUsers: React.FC = () => {
         if (res.data.modifiedCount > 0) {
           refetch();
           Swal.fire({
-            position: "top-end",
+            position: "center",
             icon: "success",
             title: `${user.name} is now an ${role}`,
             showConfirmButton: false,
@@ -41,7 +41,7 @@ const ManageUsers: React.FC = () => {
       .catch((error) => {
         console.error(error);
         Swal.fire({
-          position: "top-end",
+          position: "center",
           icon: "error",
           title: `Failed to make ${user.name} an ${role}`,
           showConfirmButton: false,
@@ -76,7 +76,7 @@ const ManageUsers: React.FC = () => {
           .catch((error) => {
             console.error(error);
             Swal.fire({
-              position: "top-end",
+              position: "center",
               icon: "error",
               title: `Failed to delete ${user.name}`,
               showConfirmButton: false,
@@ -91,9 +91,9 @@ const ManageUsers: React.FC = () => {
     <div>
       <div className="overflow-x-auto">
         <Heading title={"Manage Users"} subtitle={""} />
-        <table className="table w-full border border-gray-200">
+        <table className="table w-full border border-gray-200 ">
           <thead>
-            <tr>
+            <tr className="bg-gray-300 text-black font-bold">
               <th></th>
               <th>Name</th>
               <th>Email</th>
@@ -104,7 +104,7 @@ const ManageUsers: React.FC = () => {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr key={user._id}>
+              <tr key={user._id} className="hover:bg-gray-50">
                 <th>{index + 1}</th>
                 <td>{user.name}</td>
                 <td>{user.email}</td>

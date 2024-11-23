@@ -31,7 +31,7 @@ const AllPaymentHistory: React.FC = () => {
       <h2 className="text-3xl font-semibold text-gray-800 mb-6">All Payment History</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-          <thead className="bg-blue-500 text-white">
+          <thead className="bg-gray-300 text-black">
             <tr>
               <th className="py-3 px-4 text-sm font-medium text-left">ID</th>
               <th className="py-3 px-4 text-sm font-medium text-left">User Name</th>
