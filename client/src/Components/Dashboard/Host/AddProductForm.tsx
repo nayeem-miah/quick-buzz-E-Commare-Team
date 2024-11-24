@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
 import useAuth from "../../../Hooks/UseAuth";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface FormState {
   productTitle: string;
@@ -20,72 +22,69 @@ interface FormState {
 
 const AddProductForm: React.FC = () => {
   const { user } = useAuth();
-  // console.log(user);
-  // console.clear();
-  const [formState, setFormState] = useState<FormState>({
-    productTitle: "",
-    brandName: "",
-    price: "",
-    discount: "",
-    category: "",
-    stockQuantity: "",
-    sku: "",
-    tags: "",
-    description: "",
-    productImage: null,
-    hostEmail: user?.email,
-    hostName: user?.displayName,
-    hostPhoto: user?.photoURL,
-  });
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  // Handle input changes
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { id, value, type } = e.target;
-
-    // Handle file inputs
-    if (type === "file") {
-      const fileInput = e.target as HTMLInputElement;
-      console.log(fileInput);
-      setFormState((prev) => ({
-        ...prev,
-        [id]: fileInput.files?.[0] || null,
-      }));
-    } else {
-      setFormState((prev) => ({
-        ...prev,
-        [id]: value,
-      }));
-    }
-
-    // Clear errors when user types
-    if (errors[id]) {
-      setErrors((prev) => ({ ...prev, [id]: "" }));
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
 
-    // Basic validation
-    const newErrors: { [key: string]: string } = {};
-    if (!formState.productTitle)
-      newErrors.productTitle = "Product title is required.";
-    if (!formState.price) newErrors.price = "Price is required.";
-    if (!formState.category) newErrors.category = "Category is required.";
+    // Extracting values for all required fields
+    const productTitle = (
+      form.elements.namedItem("productTitle") as HTMLInputElement
+    ).value;
+    const brandName = (form.elements.namedItem("brandName") as HTMLInputElement)
+      .value;
+    const price = (form.elements.namedItem("price") as HTMLInputElement).value;
+    const discount = (form.elements.namedItem("discount") as HTMLInputElement)
+      .value;
+    const tags = (form.elements.namedItem("tags") as HTMLInputElement).value;
+    const category = (form.elements.namedItem("category") as HTMLSelectElement)
+      .value;
+    const description = (
+      form.elements.namedItem("description") as HTMLTextAreaElement
+    ).value;
+    const imageFile = (
+      form.elements.namedItem("productImage") as HTMLInputElement
+    ).files?.[0];
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (!imageFile) {
+      toast.error("Please select an image");
       return;
     }
 
-    console.log("Form submitted:", formState);
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    try {
+      setLoading(true);
+      // Upload image
+      const { data } = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_IMGBB_API_KEY
+        }`,
+        formData
+      );
+      const imageUrl = data.data.display_url;
+      const productData = {
+        productTitle,
+        brandName,
+        price,
+        discount,
+        tags,
+        category,
+        description,
+        productImage: imageUrl,
+        hostEmail: user?.email,
+        hostName: user?.displayName,
+        hostPhoto: user?.photoURL,
+        adminIsApproved: "pending",
+      };
+      console.log(productData);
+      console.log(imageUrl);
+    } catch (err: any) {
+      console.log("product added failed!!!", err);
+      toast.error(err);
+    }
   };
 
   return (
@@ -100,18 +99,12 @@ const AddProductForm: React.FC = () => {
           </label>
           <input
             id="productTitle"
+            name="productTitle"
             type="text"
             placeholder="Enter product title"
-            className={`block w-full px-4 py-2 mt-2 bg-white border ${
-              errors.productTitle ? "border-red-500" : "border-gray-200"
-            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
-            value={formState.productTitle}
-            onChange={handleChange}
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             required
           />
-          {errors.productTitle && (
-            <p className="mt-1 text-sm text-red-500">{errors.productTitle}</p>
-          )}
         </div>
 
         {/* Brand Name */}
@@ -121,11 +114,10 @@ const AddProductForm: React.FC = () => {
           </label>
           <input
             id="brandName"
+            name="brandName"
             type="text"
             placeholder="Enter brand name"
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
-            value={formState.brandName}
-            onChange={handleChange}
             required
           />
         </div>
@@ -137,18 +129,12 @@ const AddProductForm: React.FC = () => {
           </label>
           <input
             id="price"
+            name="price"
             type="number"
             placeholder="Enter product price"
-            className={`block w-full px-4 py-2 mt-2 bg-white border ${
-              errors.price ? "border-red-500" : "border-gray-200"
-            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
-            value={formState.price}
-            onChange={handleChange}
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             required
           />
-          {errors.price && (
-            <p className="mt-1 text-sm text-red-500">{errors.price}</p>
-          )}
         </div>
 
         {/* Discount */}
@@ -158,18 +144,12 @@ const AddProductForm: React.FC = () => {
           </label>
           <input
             id="discount"
+            name="discount"
             type="number"
             placeholder="Enter discount percentage"
-            className={`block w-full px-4 py-2 mt-2 bg-white border ${
-              errors.discount ? "border-red-500" : "border-gray-200"
-            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
-            value={formState.discount}
-            onChange={handleChange}
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             required
           />
-          {errors.discount && (
-            <p className="mt-1 text-sm text-red-500">{errors.discount}</p>
-          )}
         </div>
 
         {/* Tags */}
@@ -179,11 +159,10 @@ const AddProductForm: React.FC = () => {
           </label>
           <input
             id="tags"
+            name="tags"
             type="text"
             placeholder="Enter tags"
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
-            value={formState.tags}
-            onChange={handleChange}
             required
           />
         </div>
@@ -195,11 +174,8 @@ const AddProductForm: React.FC = () => {
           </label>
           <select
             id="category"
-            className={`block w-full px-4 py-2 mt-2 bg-white border ${
-              errors.category ? "border-red-500" : "border-gray-200"
-            } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
-            value={formState.category}
-            onChange={handleChange}
+            name="category"
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             required
           >
             <option value="">Select category</option>
@@ -210,7 +186,7 @@ const AddProductForm: React.FC = () => {
             <option value="earphones">Earphones</option>
             <option value="cable">Cable</option>
             <option value="mouse">Mouse</option>
-            <option value="keyboard">keyboard</option>
+            <option value="keyboard">Keyboard</option>
             <option value="tshirt">Tshirt</option>
             <option value="sunGlass">SunGlass</option>
             <option value="light">Light</option>
@@ -219,9 +195,6 @@ const AddProductForm: React.FC = () => {
             <option value="airpode">Airpode</option>
             <option value="charger">Charger</option>
           </select>
-          {errors.category && (
-            <p className="mt-1 text-sm text-red-500">{errors.category}</p>
-          )}
         </div>
 
         {/* Description */}
@@ -231,11 +204,10 @@ const AddProductForm: React.FC = () => {
           </label>
           <textarea
             id="description"
+            name="description"
             rows={4}
             placeholder="Enter product description"
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
-            value={formState.description}
-            onChange={handleChange}
             required
           ></textarea>
         </div>
@@ -247,11 +219,11 @@ const AddProductForm: React.FC = () => {
           </label>
           <input
             id="productImage"
+            name="productImage"
             type="file"
             accept="image/*"
-            required
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:outline-none"
-            onChange={handleChange}
+            required
           />
         </div>
 
@@ -259,8 +231,7 @@ const AddProductForm: React.FC = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="w-full text-black shadow-lg py-2 relative bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-            border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+            className="w-full text-black shadow-lg py-2 relative bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
           >
             Add Product
           </button>

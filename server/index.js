@@ -24,33 +24,35 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const userCollection = client.db("quickBuzz").collection("alluser");
+    const productsCollection = client.db("quickBuzz").collection("allProducts");
 
 
-
+    // add product in db
+    app.post('/product', async(req, res)=>{
+      const newProduct = req.body;
+      console.log(newProduct);
+    })
       // get all users
       app.get('/alluser', async (req, res) => {
         const result = await userCollection.find().toArray();
         res.send(result)
-        console.log(result);
+        // console.log(result);
         
     })
   
-  
-  
     app.get("/single-user/:email", async (req, res) => {
       const { email } = req.params;
-         console.log('all data is a ohk ',email);
+        //  console.log('all data is a ohk ',email);
       const user = await userCollection.findOne({ email })
       if (!user) {
           return res.status(404).send({ error: "User not found with this email" });
       }
       res.status(200).send(user)
-      console.log(user);
+      // console.log(user);
       
   })
   
-     
-  
+   
     //  post all data 
       app.post("/users", async (req, res) => {
         // console.log("Request received for /users:", req.body); 
@@ -71,7 +73,7 @@ async function run() {
     app.patch('/alluser/admin/:id', async (req, res) => {
       const { role } = req.body;
       const id = req.params.id;
-      console.log(role);
+      // console.log(role);
       
       const filter = { _id: new ObjectId(id) };
       const updatedDoc = {
