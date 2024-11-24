@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
+import useAuth from "../../../Hooks/UseAuth";
 
 interface FormState {
   productTitle: string;
@@ -12,9 +13,15 @@ interface FormState {
   tags: string;
   description: string;
   productImage: File | null;
+  hostEmail: string | any;
+  hostName: string | any;
+  hostPhoto: string | any;
 }
 
 const AddProductForm: React.FC = () => {
+  const { user } = useAuth();
+  // console.log(user);
+  // console.clear();
   const [formState, setFormState] = useState<FormState>({
     productTitle: "",
     brandName: "",
@@ -26,6 +33,9 @@ const AddProductForm: React.FC = () => {
     tags: "",
     description: "",
     productImage: null,
+    hostEmail: user?.email,
+    hostName: user?.displayName,
+    hostPhoto: user?.photoURL,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -41,6 +51,7 @@ const AddProductForm: React.FC = () => {
     // Handle file inputs
     if (type === "file") {
       const fileInput = e.target as HTMLInputElement;
+      console.log(fileInput);
       setFormState((prev) => ({
         ...prev,
         [id]: fileInput.files?.[0] || null,
@@ -96,6 +107,7 @@ const AddProductForm: React.FC = () => {
             } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
             value={formState.productTitle}
             onChange={handleChange}
+            required
           />
           {errors.productTitle && (
             <p className="mt-1 text-sm text-red-500">{errors.productTitle}</p>
@@ -114,6 +126,7 @@ const AddProductForm: React.FC = () => {
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             value={formState.brandName}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -131,6 +144,7 @@ const AddProductForm: React.FC = () => {
             } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
             value={formState.price}
             onChange={handleChange}
+            required
           />
           {errors.price && (
             <p className="mt-1 text-sm text-red-500">{errors.price}</p>
@@ -151,6 +165,7 @@ const AddProductForm: React.FC = () => {
             } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
             value={formState.discount}
             onChange={handleChange}
+            required
           />
           {errors.discount && (
             <p className="mt-1 text-sm text-red-500">{errors.discount}</p>
@@ -169,6 +184,7 @@ const AddProductForm: React.FC = () => {
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             value={formState.tags}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -184,13 +200,24 @@ const AddProductForm: React.FC = () => {
             } rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300`}
             value={formState.category}
             onChange={handleChange}
+            required
           >
             <option value="">Select category</option>
-            <option value="electronics">Electronics</option>
-            <option value="fashion">Fashion</option>
-            <option value="home">Home</option>
-            <option value="books">Books</option>
-            <option value="toys">Toys</option>
+            <option value="mobile">Mobile</option>
+            <option value="laptop">Laptop</option>
+            <option value="penDrive">PenDrive</option>
+            <option value="caves">Caves</option>
+            <option value="earphones">Earphones</option>
+            <option value="cable">Cable</option>
+            <option value="mouse">Mouse</option>
+            <option value="keyboard">keyboard</option>
+            <option value="tshirt">Tshirt</option>
+            <option value="sunGlass">SunGlass</option>
+            <option value="light">Light</option>
+            <option value="speaker">Speaker</option>
+            <option value="stand">Stand</option>
+            <option value="airpode">Airpode</option>
+            <option value="charger">Charger</option>
           </select>
           {errors.category && (
             <p className="mt-1 text-sm text-red-500">{errors.category}</p>
@@ -209,6 +236,7 @@ const AddProductForm: React.FC = () => {
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-300"
             value={formState.description}
             onChange={handleChange}
+            required
           ></textarea>
         </div>
 
@@ -221,6 +249,7 @@ const AddProductForm: React.FC = () => {
             id="productImage"
             type="file"
             accept="image/*"
+            required
             className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:outline-none"
             onChange={handleChange}
           />
