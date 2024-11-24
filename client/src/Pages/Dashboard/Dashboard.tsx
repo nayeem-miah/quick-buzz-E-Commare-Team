@@ -38,6 +38,8 @@ const Sidebar: React.FC = () => {
       return <h1>User not Found</h1>;
   }
   
+  console.log(singleUser?.email);
+  
 // console.log(singleUser.role);
 
 

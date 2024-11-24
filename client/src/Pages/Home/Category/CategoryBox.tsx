@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 interface CategoryBoxProps {
   label: string;
-  icon: React.ElementType; // যেকোনো React কম্পোনেন্ট টাইপের জন্য
+  icon: React.ElementType; 
 }
 
 const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
@@ -16,7 +16,7 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
     const currentQuery = { category: label };
 
     const url = queryString.stringifyUrl({
-      url: '/',
+      url: '/product',
       query: currentQuery,
     });
 
