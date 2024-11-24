@@ -38,6 +38,7 @@ async function run() {
       const result = await productsCollection.find().toArray()
       res.send(result)
     })
+    
 
       // get all users
       app.get('/alluser', async (req, res) => {
