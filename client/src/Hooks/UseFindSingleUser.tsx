@@ -19,7 +19,7 @@ const useFetchSingleUser = (email?: string) => {
                 throw new Error("Email is required");
             }
             const res = await axiosSecure.get<User>(`/single-user/${email}`);
-            console.log("Single User Data:", singleUser);
+            // console.log("Single User Data:", singleUser);
             return res?.data;
         },
         enabled: !!email, // email না থাকলে query চলবে না

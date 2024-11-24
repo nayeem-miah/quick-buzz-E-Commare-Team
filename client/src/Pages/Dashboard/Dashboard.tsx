@@ -40,7 +40,7 @@ const Sidebar: React.FC = () => {
   
 
   
-console.log(singleUser.role);
+// console.log(singleUser.role);
 
 
   // const role: string = "admin";
