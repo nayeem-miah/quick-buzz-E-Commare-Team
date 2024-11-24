@@ -1,4 +1,4 @@
-import { TbBeach, TbMountain, TbPool } from 'react-icons/tb';
+import { TbBeach, TbDeviceAirpods, TbMountain, TbPool } from 'react-icons/tb';
 import {
   GiBarn,
   GiBoatFishing,
@@ -9,10 +9,15 @@ import {
   GiIsland,
   GiWindmill,
 } from 'react-icons/gi';
-import { FaSkiing } from 'react-icons/fa';
-import { BsSnow } from 'react-icons/bs';
+import { FaLaptop, FaLightbulb, FaMobileAlt, FaRegKeyboard, FaSkiing, FaTshirt } from 'react-icons/fa';
+import { BsEmojiSunglasses, BsFillUsbDriveFill, BsSnow } from 'react-icons/bs';
 import { IoDiamond } from 'react-icons/io5';
-import { MdOutlineVilla } from 'react-icons/md';
+import { MdOutlineCable, MdOutlineVilla } from 'react-icons/md';
+import { FaComputerMouse } from 'react-icons/fa6';
+import { RiBattery2ChargeFill } from 'react-icons/ri';
+import { SlEarphones } from 'react-icons/sl';
+import { PiGlobeStand } from 'react-icons/pi';
+import { FcSpeaker } from 'react-icons/fc';
 
 interface Category {
   label: string;
@@ -22,48 +27,48 @@ interface Category {
 
 export const categories: Category[] = [
   {
-    label: 'Phone',
-    icon: TbBeach,
-    description: 'This property is close to the Phone!',
+    label: 'Mobile',
+    icon: FaMobileAlt,
+    description: 'This property is close to the mobile!',
   },
   {
     label: 'Mouse',
-    icon: GiWindmill,
+    icon: FaComputerMouse,
     description: 'This property has Mouse!',
   },
   {
     label: 'keyboard',
-    icon: MdOutlineVilla,
+    icon: FaRegKeyboard,
     description: 'This property is keyboard!',
   },
   {
     label: 'Airpode',
-    icon: TbMountain,
+    icon: TbDeviceAirpods,
     description: 'This property is in the Airpode!',
   },
   {
     label: 'Laptop',
-    icon: TbPool,
+    icon: FaLaptop,
     description: 'This property has a beautiful Laptop!',
   },
   {
     label: 'Charger',
-    icon: GiIsland,
+    icon: RiBattery2ChargeFill,
     description: 'This property is on an Charger!',
   },
   {
     label: 'Cable',
-    icon: GiBoatFishing,
+    icon: MdOutlineCable,
     description: 'This property is near a cable!',
   },
   {
     label: 'Earphones',
-    icon: FaSkiing,
+    icon: SlEarphones,
     description: 'This property has skiing Earphones!',
   },
   {
     label: 'PenDrive',
-    icon: GiCastle,
+    icon: BsFillUsbDriveFill,
     description: 'This property is an ancient penDrive!',
   },
   {
@@ -73,27 +78,27 @@ export const categories: Category[] = [
   },
   {
     label: 'Stand',
-    icon: GiForestCamp,
+    icon: PiGlobeStand,
     description: 'This property offers camping Stand!',
   },
   {
     label: 'Speaker',
-    icon: BsSnow,
+    icon: FcSpeaker,
     description: 'This property is in an arctic Speaker!',
   },
   {
     label: 'Light',
-    icon: GiCactus,
+    icon: FaLightbulb,
     description: 'This property is in the Light!',
   },
   {
-    label: 'Pent',
-    icon: GiBarn,
-    description: 'This property is in a pent!',
+    label: 'SunGlass',
+    icon: BsEmojiSunglasses,
+    description: 'This property is in a SunGlass!',
   },
   {
     label: 'Tshirt',
-    icon: IoDiamond,
+    icon: FaTshirt,
     description: 'This property is brand new and Tshirt!',
   },
 ];

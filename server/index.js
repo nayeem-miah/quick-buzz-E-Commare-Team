@@ -92,6 +92,7 @@ async function run() {
     // await client.close();
   }
 }
+
 run().catch(console.dir);
 // Root route
 app.get("/", (req, res) => {
