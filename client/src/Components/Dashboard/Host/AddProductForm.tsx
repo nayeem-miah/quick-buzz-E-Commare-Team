@@ -87,9 +87,9 @@ const AddProductForm: React.FC = () => {
       // console.log(imageUrl);
 
       await axiosPublic.post("/product", productData).then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data.insertedId) {
-          // setSuccess("User created successfully");
+          toast.success("product added successfully")
           form.reset();
           navigate("/dashboard/my-host-listings");
         }
