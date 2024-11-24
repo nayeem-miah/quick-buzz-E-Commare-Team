@@ -30,8 +30,10 @@ async function run() {
     // add product in db
     app.post('/product', async(req, res)=>{
       const newProduct = req.body;
-      console.log(newProduct);
+      const result = await productsCollection.insertOne(newProduct)
+      res.send(result)
     })
+
       // get all users
       app.get('/alluser', async (req, res) => {
         const result = await userCollection.find().toArray();

@@ -3,6 +3,8 @@ import Heading from "../../../Shared/Heading/Heading";
 import useAuth from "../../../Hooks/UseAuth";
 import toast from "react-hot-toast";
 import axios from "axios";
+import useAxiosPublic from "../../../Hooks/UsePublic";
+import { useNavigate } from "react-router-dom";
 
 interface FormState {
   productTitle: string;
@@ -23,6 +25,8 @@ interface FormState {
 const AddProductForm: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,8 +83,17 @@ const AddProductForm: React.FC = () => {
         hostPhoto: user?.photoURL,
         adminIsApproved: "pending",
       };
-      console.log(productData);
-      console.log(imageUrl);
+      // console.log(productData);
+      // console.log(imageUrl);
+
+      await axiosPublic.post("/product", productData).then((res) => {
+        console.log(res);
+        if (res.data.insertedId) {
+          // setSuccess("User created successfully");
+          form.reset();
+          navigate("/dashboard/my-host-listings");
+        }
+      });
     } catch (err: any) {
       console.log("product added failed!!!", err);
       toast.error(err);
@@ -230,10 +243,11 @@ const AddProductForm: React.FC = () => {
         {/* Submit Button */}
         <div className="flex justify-end">
           <button
+            disabled={loading}
             type="submit"
-            className="w-full text-black shadow-lg py-2 relative bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+            className="w-full text-black shadow-lg py-2 relative disabled:cursor-not-allowed bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
           >
-            Add Product
+            {loading ? "loading..." : "Add Product"}
           </button>
         </div>
       </form>
