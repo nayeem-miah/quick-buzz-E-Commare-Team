@@ -14,15 +14,16 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
 
   const handleClick = () => {
     const currentQuery = { category: label };
-
+  
     const url = queryString.stringifyUrl({
       url: '/product',
       query: currentQuery,
     });
-
-    navigate(url);
-    console.log(label);
+  
+    console.log("Generated URL:", url); 
+    navigate(url);  // নতুন ক্যাটাগরি নির্বাচন হলে URL আপডেট হবে
   };
+  
 
   return (
     <div

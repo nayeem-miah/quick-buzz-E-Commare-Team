@@ -34,12 +34,37 @@ async function run() {
       res.send(result)
     })
     // get all products
-    app.get('/products', async(req, res)=>{
-      const result = await productsCollection.find().toArray()
-      res.send(result)
-    })
+    app.get('/products', async (req, res) => {
+      const category = req.query.category;
+      console.log("Category Received from Client:", category); 
+      
+      let query = {};
+      if (category && category !== 'all') {
+        query = { category }; 
+      }
+      const result = await productsCollection.find(query).toArray();
+      res.send(result); 
+    });
     
 
+
+  
+
+
+
+    // details page is start 
+       // Get a single room data from db using _id
+
+       app.get('/product/:id', async (req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await productsCollection.findOne(query)
+        res.send(result)
+       })
+
+
+
+      
       // get all users
       app.get('/alluser', async (req, res) => {
         const result = await userCollection.find().toArray();

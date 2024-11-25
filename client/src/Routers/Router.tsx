@@ -21,6 +21,7 @@ import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
 import UserHome from "../Components/Dashboard/User/UserHome";
 import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
+import ProductPage from "../Pages/Product/ProductDetailsPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/product",
         element: <Product />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductPage></ProductPage>
       },
       {
         path: "/profile",
