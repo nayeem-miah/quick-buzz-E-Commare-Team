@@ -51,6 +51,24 @@ async function run() {
       res.send(result)
     })
 
+
+  
+
+
+
+    // details page is start 
+       // Get a single room data from db using _id
+
+       app.get('/product/:id', async (req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await productsCollection.findOne(query)
+        res.send(result)
+       })
+
+
+
+      
       // get all users
       app.get('/alluser', async (req, res) => {
         const result = await userCollection.find().toArray();
