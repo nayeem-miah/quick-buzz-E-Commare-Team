@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '../../Hooks/UseAuth';
-import { toast } from 'react-toastify';
-import { TbFidgetSpinner } from 'react-icons/tb';
-import usePublic from '../../Hooks/UsePublic';
+import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../Hooks/UseAuth";
+import { toast } from "react-toastify";
+import usePublic from "../../Hooks/UsePublic";
+import {  ImSpinner9 } from "react-icons/im";
 
 const Signin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const axiosPublic = usePublic()
-  const from = location?.state || '/';
+  const axiosPublic = usePublic();
+  const from = location?.state || "/";
   const { signInWithGoogle, signIn, loading, setLoading } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,7 +23,7 @@ const Signin: React.FC = () => {
       setLoading(true);
       await signIn(email, password);
       navigate(from);
-      toast.success('Login Successful');
+      toast.success("Login Successful");
     } catch (err: any) {
       console.error(err);
       toast.error(err.message);
@@ -34,29 +34,30 @@ const Signin: React.FC = () => {
   // Handle Google Sign In
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithGoogle(); 
+      const result = await signInWithGoogle();
       const userInfo = {
         email: result.user?.email,
         name: result.user?.displayName,
         photo: result.user?.photoURL,
-        role: 'user',
+        role: "user",
       };
-      axiosPublic.post('/users', userInfo);
+      axiosPublic.post("/users", userInfo);
       navigate(from);
-      toast.success('Google Sign-In Successful');
+      toast.success("Google Sign-In Successful");
     } catch (err: any) {
       console.error(err);
       toast.error(err.message);
     }
   };
-  
 
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
         <div className="mb-8 text-center">
           <h1 className="my-3 text-4xl font-bold">Log In</h1>
-          <p className="text-sm text-gray-400">Sign in to access your account</p>
+          <p className="text-sm text-gray-400">
+            Sign in to access your account
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -99,12 +100,15 @@ const Signin: React.FC = () => {
           <button
             disabled={loading}
             type="submit"
-            className="bg-rose-500 w-full rounded-md py-3 text-white"
+            className=" w-full rounded-md py-3  text-black shadow-lg   bg-gradient-to-r from-purple-500 to-blue-500  transition-all duration-500 ease-in-out
+            border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105  disabled:cursor-not-allowed "
           >
+           
+
             {loading ? (
-              <TbFidgetSpinner className="animate-spin m-auto" />
+              <ImSpinner9 size={15} className="animate-spin m-auto" />
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </button>
         </form>
@@ -117,7 +121,9 @@ const Signin: React.FC = () => {
 
         <div className="flex items-center pt-4 space-x-1">
           <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
-          <p className="px-3 text-sm dark:text-gray-400">Login with social accounts</p>
+          <p className="px-3 text-sm dark:text-gray-400">
+            Login with social accounts
+          </p>
           <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
         </div>
 
@@ -131,8 +137,11 @@ const Signin: React.FC = () => {
         </button>
 
         <p className="px-6 text-sm text-center text-gray-400">
-          Don't have an account yet?{' '}
-          <Link to="/signup" className="hover:underline hover:text-rose-500 text-gray-600">
+          Don't have an account yet?{" "}
+          <Link
+            to="/signup"
+            className="hover:underline hover:text-rose-500 text-gray-600"
+          >
             Sign up
           </Link>
           .
