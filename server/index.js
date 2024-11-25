@@ -33,7 +33,7 @@ async function run() {
       const result = await productsCollection.insertOne(newProduct)
       res.send(result)
     })
-    // get all products
+    // get all products in admin dashboard
     app.get('/products', async(req, res)=>{
       const result = await productsCollection.find().toArray()
       res.send(result)
@@ -44,7 +44,7 @@ async function run() {
       const filter = {_id : new ObjectId(id)};
       const updatedDoc ={
         $set:{
-          status: "approve",
+          adminIsApproved: "approve",
         }
       }
       const result = await productsCollection.updateOne(filter, updatedDoc);
