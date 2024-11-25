@@ -110,7 +110,7 @@ const Sidebar: React.FC = () => {
                   }
                 >
                   <TbBrandBooking className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Manage Bookings</span>
+                  <span className="mx-4 font-medium">Manage products</span>
                 </NavLink>
                 {/* Manage Users */}
                 <NavLink

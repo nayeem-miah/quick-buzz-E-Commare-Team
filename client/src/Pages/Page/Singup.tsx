@@ -4,9 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { TbFidgetSpinner } from "react-icons/tb"; // Spinner icon
 import usePublic from "../../Hooks/UsePublic";
-
+import { ImSpinner9 } from "react-icons/im";
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -158,10 +157,12 @@ const Signup: React.FC = () => {
             <button
               disabled={loading}
               type="submit"
-              className="bg-rose-500 w-full rounded-md py-3 text-white"
+              className="w-full rounded-md py-3  text-black shadow-lg   bg-gradient-to-r from-purple-500 to-blue-500  transition-all duration-500 ease-in-out
+                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105  disabled:cursor-not-allowed"
             >
+              
               {loading ? (
-                <TbFidgetSpinner className="animate-spin m-auto" />
+                <ImSpinner9 size={15}  className="animate-spin m-auto" />
               ) : (
                 "Continue"
               )}

@@ -6,22 +6,6 @@ import axios from "axios";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useNavigate } from "react-router-dom";
 
-interface FormState {
-  productTitle: string;
-  brandName: string;
-  price: number | string;
-  discount: number | string;
-  category: string;
-  stockQuantity: number | string;
-  sku: string;
-  tags: string;
-  description: string;
-  productImage: File | null;
-  hostEmail: string | any;
-  hostName: string | any;
-  hostPhoto: string | any;
-}
-
 const AddProductForm: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -59,8 +43,9 @@ const AddProductForm: React.FC = () => {
 
     const formData = new FormData();
     formData.append("image", imageFile);
+
     try {
-      setLoading(true);
+      setLoading(true); // Set loading to true at the start of the submission process
       // Upload image
       const { data } = await axios.post(
         `https://api.imgbb.com/1/upload?key=${
@@ -83,20 +68,19 @@ const AddProductForm: React.FC = () => {
         hostPhoto: user?.photoURL,
         adminIsApproved: "pending",
       };
-      // console.log(productData);
-      // console.log(imageUrl);
 
       await axiosPublic.post("/product", productData).then((res) => {
-        // console.log(res);
         if (res.data.insertedId) {
-          toast.success("product added successfully")
+          toast.success("Product added successfully");
           form.reset();
           navigate("/dashboard/my-host-listings");
         }
       });
     } catch (err: any) {
-      console.log("product added failed!!!", err);
-      toast.error(err);
+      console.error("Product addition failed:", err);
+      toast.error("Failed to add product. Please try again.");
+    } finally {
+      setLoading(false); // Reset loading to false once the process completes
     }
   };
 
@@ -245,9 +229,13 @@ const AddProductForm: React.FC = () => {
           <button
             disabled={loading}
             type="submit"
-            className="w-full text-black shadow-lg py-2 relative disabled:cursor-not-allowed bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+            className={`w-full text-black shadow-lg py-2 relative ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
+            } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
           >
-            {loading ? "loading..." : "Add Product"}
+            {loading ? "Loading..." : "Add Product"}
           </button>
         </div>
       </form>
