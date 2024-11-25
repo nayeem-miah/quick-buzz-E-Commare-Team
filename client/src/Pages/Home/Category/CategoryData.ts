@@ -67,14 +67,14 @@ export const categories: Category[] = [
     description: 'This property has skiing Earphones!',
   },
   {
-    label: 'PenDrive',
+    label: 'penDrive',
     icon: BsFillUsbDriveFill,
     description: 'This property is an ancient penDrive!',
   },
   {
-    label: 'Caves',
+    label: 'caves',
     icon: GiCaveEntrance,
-    description: 'This property is in a spooky Caves!',
+    description: 'This property is in a spooky caves!',
   },
   {
     label: 'Stand',
