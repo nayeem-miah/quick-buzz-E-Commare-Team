@@ -121,7 +121,7 @@ const Profile: React.FC = () => {
                 </>
               }
                {/* Role: Only for "admin" */}
-                {role === "admin" && (
+                {singleUser?.role==="admin" && (
                 <>
                   <button
                     onClick={() => navigate("/dashboard/manage-users")}
@@ -148,7 +148,7 @@ const Profile: React.FC = () => {
                 </>
               )}
               {/* Role: Only for "host" */}
-              {role === "host" && (
+              {singleUser?.role==="Host" && (
                 <>
                   <button
                     onClick={() => navigate("/dashboard/host-add-product")}
@@ -175,7 +175,7 @@ const Profile: React.FC = () => {
               )}
 
               {/* Role: Only for "user" */}
-              {role === "user" && (
+              {singleUser?.role==="user" && (
                 <>
                   <button
                     onClick={() => navigate("/dashboard/my-listings")}
