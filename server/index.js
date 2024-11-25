@@ -38,7 +38,18 @@ async function run() {
       const result = await productsCollection.find().toArray()
       res.send(result)
     })
-    
+    // admin is approved host products
+    app.patch('/admin-product/:id', async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id : new ObjectId(id)};
+      const updatedDoc ={
+        $set:{
+          status: "approve",
+        }
+      }
+      const result = await productsCollection.updateOne(filter, updatedDoc);
+      res.send(result)
+    })
 
       // get all users
       app.get('/alluser', async (req, res) => {
@@ -72,8 +83,6 @@ async function run() {
         }
         const result = await userCollection.insertOne(user);
         res.send(result);
-     
-        
       });
   
   
