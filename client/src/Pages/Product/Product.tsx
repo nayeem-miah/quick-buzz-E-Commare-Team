@@ -27,7 +27,7 @@ const Product: React.FC = () => {
     queryKey: ["products", category],
     queryFn: async () => {
       const res = await axiosPublic.get(`/products?category=${category}`);
-      console.log("API Response:", res.data);
+      // console.log("API Response:", res.data);
       return res.data;
     },
   });
@@ -43,40 +43,41 @@ const Product: React.FC = () => {
       </div>
       <div className="grid m-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 group  gap-6">
         {products.length > 0 ? (
-          products.map((product) => (
-            <Link to={`/product/${product?._id}`}>
-              {product?.adminIsApproved === "approve" && (
-                <div
-                  key={product?._id}
-                  className="overflow-hidden bg-[#26083C] text-white rounded-lg shadow-lg dark:bg-gray-800"
-                >
-                  <div className="px-4 py-2">
-                    <h1 className="text-xl font-bold uppercase dark:text-white">
-                      {product?.brandName}
-                    </h1>
-                    <p className="mt-1 text-sm dark:text-gray-400">
-                      {product?.description}
-                    </p>
-                  </div>
+          products.map(
+            (product) =>
+              product?.adminIsApproved == "approve" && (
+                <Link to={`/product/${product?._id}`}>
+                  <div
+                    key={product._id}
+                    className="overflow-hidden bg-[#26083C] text-white rounded-lg shadow-lg dark:bg-gray-800"
+                  >
+                    <div className="px-4 py-2">
+                      <h1 className="text-xl font-bold uppercase dark:text-white">
+                        {product.brandName}
+                      </h1>
+                      <p className="mt-1 text-sm dark:text-gray-400">
+                        {product.description}
+                      </p>
+                    </div>
 
-                  <img
-                    className="object-cover w-full   group-hover:scale-110  h-48 mt-2"
-                    src={product?.productImage}
-                    alt={product?.name}
-                  />
+                    <img
+                      className="object-cover w-full   group-hover:scale-110  h-48 mt-2"
+                      src={product.productImage}
+                      alt={product.name}
+                    />
 
-                  <div className="flex items-center justify-between px-4 py-2 bg-[#F85606]">
-                    <h1 className="text-lg font-bold text-white">
-                      ${product?.price}
-                    </h1>
-                    <button className="px-2 py-1 text-xs font-semibold text-gray-900 uppercase transition-colors duration-300 transform bg-white rounded hover:bg-gray-200 focus:bg-gray-400 focus:outline-none">
-                      Add to cart
-                    </button>
+                    <div className="flex items-center justify-between px-4 py-2 bg-[#F85606]">
+                      <h1 className="text-lg font-bold text-white">
+                        ${product.price}
+                      </h1>
+                      <button className="px-2 py-1 text-xs font-semibold text-gray-900 uppercase transition-colors duration-300 transform bg-white rounded hover:bg-gray-200 focus:bg-gray-400 focus:outline-none">
+                        Add to cart
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </Link>
-          ))
+                </Link>
+              )
+          )
         ) : (
           <div className="col-span-full text-center text-gray-500 min-h-[calc(55vh-300px)]">
             <h1 className="text-3xl font-semibold text-black">
