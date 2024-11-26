@@ -64,6 +64,7 @@ const router = createBrowserRouter([
         <DashboardLayout />
       </PrivateRoute>
     ),
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "profile",
