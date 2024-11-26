@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../../Shared/Loading";
 
 interface Listing {
   _id: number;
@@ -20,15 +23,34 @@ interface Listing {
 
 const AdminManageBookings: React.FC = () => {
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
-
   const axiosPublic = useAxiosPublic();
-  const { data, isLoading, isError } = useQuery({
+  const navigate = useNavigate();
+
+  // get all product
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
       const res = await axiosPublic.get("/products");
       return res.data;
     },
   });
+
+  // admin is approved
+  const handleApproved = (product: any) => {
+    axiosPublic.patch(`/admin-product/${product._id}`).then((res) => {
+      if (res.data.modifiedCount > 0) {
+        refetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: `${product.productTitle} is approved now!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/product");
+      }
+    });
+  };
 
   const handleDetailsClick = (listing: Listing) => {
     setSelectedBooking(listing);
@@ -37,8 +59,8 @@ const AdminManageBookings: React.FC = () => {
   const closeModal = () => {
     setSelectedBooking(null);
   };
-  console.log(data);
-  if (isLoading) return <div>loading...</div>;
+
+  if (isLoading) return <LoadingSpinner />;
   if (isError) return <div>error...</div>;
 
   return (
@@ -79,7 +101,21 @@ const AdminManageBookings: React.FC = () => {
                   ${listing?.price}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
-                  {listing?.adminIsApproved}
+                  <th>
+                    {listing?.adminIsApproved === "approve" ? (
+                      "Approve"
+                    ) : (
+                      <button
+                        onClick={() => {
+                          handleApproved(listing);
+                        }}
+                        className="text-black shadow-lg  relative md:px-6 md:py-2 lg:py-2 py sm:px-4 lg:px-6  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                          border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                      >
+                        approve now
+                      </button>
+                    )}
+                  </th>
                 </td>
                 <td className="py-4 px-4 text-sm">
                   <button
