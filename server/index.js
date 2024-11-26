@@ -38,6 +38,13 @@ async function run() {
       const result = await productsCollection.find().toArray()
       res.send(result)
     })
+    // get all product in host or email ways
+  app.get('/host-product/:email', async(req, res)=>{
+    const email = req.params.email;
+    const query = {hostEmail: email};
+    const result = await productsCollection.find(query).toArray();
+    res.send(result);
+  })
     // admin is approved host products
     app.patch('/admin-product/:id', async(req, res)=>{
       const id = req.params.id;
@@ -61,10 +68,6 @@ async function run() {
     })
 
 
-  
-
-
-
     // details page is start 
        // Get a single room data from db using _id
 
@@ -76,8 +79,6 @@ async function run() {
        })
 
 
-
-      
       // get all users
       app.get('/alluser', async (req, res) => {
         const result = await userCollection.find().toArray();
