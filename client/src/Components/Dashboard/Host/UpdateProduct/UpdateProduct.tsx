@@ -79,11 +79,11 @@ const UpdateProduct: React.FC = () => {
         tags,
         category,
         description,
-        productImage: imageUrl,
+        productImage:imageUrl,
         hostEmail: user?.email,
         hostName: user?.displayName,
         hostPhoto: user?.photoURL,
-        adminIsApproved: "pending",
+        adminIsApproved: product.adminIsApproved,
       };
 
       await axiosPublic
