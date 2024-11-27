@@ -7,6 +7,7 @@ import { MdDeleteForever } from "react-icons/md";
 import useAuth from "../../../Hooks/UseAuth";
 import LoadingSpinner from "../../../Shared/Loading";
 import { Link } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
 
 interface Listing {
   _id: number;
@@ -105,6 +106,9 @@ const MyAddedProduct: React.FC = () => {
                   delete
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-left">
+                  edit
+                </th>
+                <th className="py-3 px-4 text-sm font-medium text-left">
                   Details
                 </th>
               </tr>
@@ -140,6 +144,13 @@ const MyAddedProduct: React.FC = () => {
                     >
                       <MdDeleteForever />
                     </button>
+                  </td>
+                  <td className="py-4 px-4 text-sm text-gray-600">
+                    <Link to={`/updated-product/${listing._id}`}>
+                      <button className="px-4 py-2   text-2xl rounded-lg hover:text-green-700 transition duration-300 focus:outline-none">
+                        <FaEdit />
+                      </button>
+                    </Link>
                   </td>
 
                   <td className="py-4 px-4 text-sm">
@@ -212,12 +223,7 @@ const MyAddedProduct: React.FC = () => {
                   <strong>description:</strong> {selectedBooking?.description}
                 </p>
               </div>
-              <div className="mt-6 gap-8 flex">
-                <Link to={`/updated-product/${selectedBooking._id}`}>
-                  <button className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none">
-                    edit
-                  </button>
-                </Link>
+              <div className="mt-6 text-end">
                 <button
                   onClick={closeModal}
                   className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"
