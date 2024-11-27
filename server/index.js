@@ -70,7 +70,6 @@ async function run() {
 
     // details page is start 
        // Get a single room data from db using _id
-
        app.get('/product/:id', async (req, res)=>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
@@ -78,6 +77,30 @@ async function run() {
         res.send(result)
        })
 
+      //  update single data 
+    app.patch('/product-update/:id', async(req, res)=>{
+      const productData = req.body;
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const updatedDoc ={
+      $set: {
+      productTitle: productData.productTitle,
+      brandName: productData.brandName,
+      price: productData.price,
+      discount: productData.discount,
+      tags: productData.tags,
+      category: productData.category,
+      description: productData?.description,
+      productImage:productData.productImage,
+      hostEmail: productData?.hostEmail,
+      hostName: productData?.hostName,
+      hostPhoto: productData?.hostPhoto,
+      adminIsApproved:productData.adminIsApproved
+        }
+      }
+      const result = await productsCollection.updateOne(filter,updatedDoc)
+      res.send(result)
+    })
 
       // get all users
       app.get('/alluser', async (req, res) => {

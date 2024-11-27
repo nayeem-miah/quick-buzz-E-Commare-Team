@@ -83,6 +83,7 @@ const AddProductForm: React.FC = () => {
       setLoading(false); // Reset loading to false once the process completes
     }
   };
+  
 
   return (
     <section className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md">

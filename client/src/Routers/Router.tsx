@@ -22,6 +22,7 @@ import UserHome from "../Components/Dashboard/User/UserHome";
 import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
 import ProductPage from "../Pages/Product/ProductDetailsPage";
+import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProduct";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,11 +48,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/product/:id",
-        element: <ProductPage></ProductPage>
+        element: <ProductPage></ProductPage>,
       },
       {
         path: "/profile",
         element: <Profile></Profile>,
+      },
+      {
+        path: "/updated-product/:id",
+        element: (
+          <PrivateRoute>
+            <UpdateProduct></UpdateProduct>
+          </PrivateRoute>
+        ),
       },
     ],
   },
