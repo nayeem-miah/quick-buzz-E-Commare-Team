@@ -113,13 +113,13 @@ const AdminManageBookings: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((listing: Listing, id:number) => (
+            {data?.map((listing: Listing, id: number) => (
               <tr
                 key={listing._id}
                 className="border-b hover:bg-gray-50 transition duration-300"
               >
                 <td className="py-4 px-4 text-sm text-gray-600">
-                  {id=id+1}
+                  {(id = id + 1)}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
                   {listing?.productTitle}
