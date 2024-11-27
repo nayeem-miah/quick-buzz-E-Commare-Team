@@ -5,6 +5,8 @@ import Heading from "../../../Shared/Heading/Heading";
 import Swal from "sweetalert2";
 import { MdDeleteForever } from "react-icons/md";
 import useAuth from "../../../Hooks/UseAuth";
+import LoadingSpinner from "../../../Shared/Loading";
+import { Link } from "react-router-dom";
 
 interface Listing {
   _id: number;
@@ -37,7 +39,7 @@ const MyAddedProduct: React.FC = () => {
       return res.data;
     },
   });
-  
+
   // handle delete
   const handleDelete = (id: any) => {
     Swal.fire({
@@ -64,6 +66,7 @@ const MyAddedProduct: React.FC = () => {
     });
   };
 
+  // modal code
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
   const handleDetailsClick = (listing: Listing) => {
     setSelectedBooking(listing);
@@ -71,8 +74,13 @@ const MyAddedProduct: React.FC = () => {
   const closeModal = () => {
     setSelectedBooking(null);
   };
-  if (isLoading) return <div>loading...</div>;
-  if (isError) return <div>error...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
+  if (isError) return <div>error...{isError}</div>;
   return (
     <div>
       <div className="">
@@ -205,12 +213,11 @@ const MyAddedProduct: React.FC = () => {
                 </p>
               </div>
               <div className="mt-6 gap-8 flex">
-                <button
-                  // onClick={closeModal}
-                  className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"
-                >
-                  edit
-                </button>
+                <Link to={`/updated-product/${selectedBooking._id}`}>
+                  <button className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none">
+                    edit
+                  </button>
+                </Link>
                 <button
                   onClick={closeModal}
                   className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"

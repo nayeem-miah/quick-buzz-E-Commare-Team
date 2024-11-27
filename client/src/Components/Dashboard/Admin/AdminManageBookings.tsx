@@ -97,6 +97,7 @@ const AdminManageBookings: React.FC = () => {
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
           <thead className="bg-blue-500 text-white">
             <tr>
+              <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
               <th className="py-3 px-4 text-sm font-medium text-left">Title</th>
               <th className="py-3 px-4 text-sm font-medium text-left">Image</th>
               <th className="py-3 px-4 text-sm font-medium text-left">price</th>
@@ -112,11 +113,14 @@ const AdminManageBookings: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((listing: Listing) => (
+            {data?.map((listing: Listing, id:number) => (
               <tr
                 key={listing._id}
                 className="border-b hover:bg-gray-50 transition duration-300"
               >
+                <td className="py-4 px-4 text-sm text-gray-600">
+                  {id=id+1}
+                </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
                   {listing?.productTitle}
                 </td>
