@@ -1,94 +1,172 @@
 import React, { useState } from "react";
+import Heading from "../../../Shared/Heading/Heading";
+import useAxiosPublic from "../../../Hooks/UsePublic";
+import { useQuery } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../../Shared/Loading";
+import { MdDeleteForever } from "react-icons/md";
 
-interface Booking {
-  id: number;
-  title: string;
-  image: string;
-  email: string;
-  amount: string;
+interface Listing {
+  _id: number;
+  productTitle: string;
+  productImage: string;
+  adminIsApproved: string;
+  hostPhoto: string;
+  hostName: string;
+  hostEmail: string;
+  brandName: string;
+  category: string;
+  price: number;
+  tags: string;
+  description: string;
 }
 
-const bookingData: Booking[] = [
-  {
-    id: 1,
-    title: "Luxury Villa",
-    image: "https://via.placeholder.com/80",
-    email: "customer1@example.com",
-    amount: "$500",
-  },
-  {
-    id: 2,
-    title: "Cozy Apartment",
-    image: "https://via.placeholder.com/80",
-    email: "customer2@example.com",
-    amount: "$300",
-  },
-  {
-    id: 3,
-    title: "Beachside Cottage",
-    image: "https://via.placeholder.com/80",
-    email: "customer3@example.com",
-    amount: "$450",
-  },
-];
-
 const AdminManageBookings: React.FC = () => {
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
+  const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
 
-  const handleDetailsClick = (booking: Booking) => {
-    setSelectedBooking(booking);
+  // get all product
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["allProduct"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/products");
+      return res.data;
+    },
+  });
+
+  // admin is approved
+  const handleApproved = (product: any) => {
+    axiosPublic.patch(`/admin-product/${product._id}`).then((res) => {
+      if (res.data.modifiedCount > 0) {
+        refetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: `${product.productTitle} is approved now!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/product");
+      }
+    });
+  };
+
+  // handle delete
+  const handleDelete = (id: any) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.delete(`/pro/${id}`).then((res) => {
+          if (res.data.deletedCount > 0) {
+            refetch();
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+          }
+        });
+      }
+    });
+  };
+
+  const handleDetailsClick = (listing: Listing) => {
+    setSelectedBooking(listing);
   };
 
   const closeModal = () => {
     setSelectedBooking(null);
   };
 
+  if (isLoading) return <LoadingSpinner />;
+  if (isError) return <div>error...</div>;
+
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-3xl font-semibold text-gray-800 mb-6">
-        Manage Bookings
-      </h2>
+    <div className="">
+      <Heading title={"Manage product"} subtitle={""} />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
           <thead className="bg-blue-500 text-white">
             <tr>
+              <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
               <th className="py-3 px-4 text-sm font-medium text-left">Title</th>
               <th className="py-3 px-4 text-sm font-medium text-left">Image</th>
-              <th className="py-3 px-4 text-sm font-medium text-left">Email</th>
+              <th className="py-3 px-4 text-sm font-medium text-left">price</th>
               <th className="py-3 px-4 text-sm font-medium text-left">
-                Amount
+                status
               </th>
               <th className="py-3 px-4 text-sm font-medium text-left">
-                Action
+                delete
+              </th>
+              <th className="py-3 px-4 text-sm font-medium text-left">
+                Details
               </th>
             </tr>
           </thead>
           <tbody>
-            {bookingData.map((booking) => (
+            {data?.map((listing: Listing, id: number) => (
               <tr
-                key={booking.id}
+                key={listing._id}
                 className="border-b hover:bg-gray-50 transition duration-300"
               >
                 <td className="py-4 px-4 text-sm text-gray-600">
-                  {booking.title}
+                  {(id = id + 1)}
+                </td>
+                <td className="py-4 px-4 text-sm text-gray-600">
+                  {listing?.productTitle}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
                   <img
-                    src={booking.image}
-                    alt={booking.title}
+                    src={listing?.productImage}
+                    alt={"no image founded"}
                     className="w-16 h-16 object-cover rounded-md"
                   />
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
-                  {booking.email}
+                  ${listing?.price}
+                </td>
+
+                <td className="py-4 px-4 text-sm text-gray-600">
+                  <th>
+                    {listing?.adminIsApproved === "approve" ? (
+                      "Approve"
+                    ) : (
+                      <button
+                        onClick={() => {
+                          handleApproved(listing);
+                        }}
+                        className="text-black shadow-lg  relative md:px-6 md:py-2 lg:py-2 py sm:px-4 lg:px-6  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                          border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                      >
+                        approve now
+                      </button>
+                    )}
+                  </th>
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
-                  {booking.amount}
+                  <button
+                    onClick={() => {
+                      handleDelete(listing?._id);
+                    }}
+                    className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
+                  >
+                    <MdDeleteForever />
+                  </button>
                 </td>
                 <td className="py-4 px-4 text-sm">
                   <button
-                    onClick={() => handleDetailsClick(booking)}
-                    className="px-5 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none"
+                    onClick={() => handleDetailsClick(listing)}
+                    className="  text-black shadow-lg  relative md:px-6 md:py-2 lg:py-2 py sm:px-4 lg:px-6  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                  border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                   >
                     View Details
                   </button>
@@ -104,28 +182,57 @@ const AdminManageBookings: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Booking Details
+              my added product
             </h3>
             <div className="space-y-2">
-              <p>
-                <strong>Title:</strong> {selectedBooking.title}
-              </p>
-              <p>
-                <strong>Email:</strong> {selectedBooking.email}
-              </p>
-              <p>
-                <strong>Amount:</strong> {selectedBooking.amount}
-              </p>
               <div>
                 <strong>Image:</strong>
                 <img
-                  src={selectedBooking.image}
-                  alt={selectedBooking.title}
+                  src={selectedBooking.productImage}
+                  alt={selectedBooking.productTitle}
                   className="w-full h-48 object-cover mt-2 rounded-md"
                 />
               </div>
+              <p>
+                <strong>Title:</strong> {selectedBooking?.productTitle}
+              </p>
+              <p>
+                <strong>adminIsApproved:</strong>{" "}
+                {selectedBooking?.adminIsApproved}
+              </p>
+              <p>
+                <strong>price:</strong> {selectedBooking?.price}
+              </p>
+              <p>
+                <strong>brandName:</strong> {selectedBooking?.brandName}
+              </p>
+              <p>
+                <strong>category:</strong> {selectedBooking?.category}
+              </p>
+
+              <p>
+                <strong>hostEmail:</strong> {selectedBooking?.hostEmail}
+              </p>
+              <p className="flex  items-center gap-4">
+                <strong>hostName:</strong> {selectedBooking?.hostName}
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={selectedBooking?.hostPhoto}
+                  alt=""
+                />
+              </p>
+
+              <p>
+                <strong>price:</strong> {selectedBooking?.price}
+              </p>
+              <p>
+                <strong>tags:</strong> {selectedBooking?.tags}
+              </p>
+              <p>
+                <strong>description:</strong> {selectedBooking?.description}
+              </p>
             </div>
-            <div className="mt-6 text-right">
+            <div className="mt-6 text-end">
               <button
                 onClick={closeModal}
                 className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"

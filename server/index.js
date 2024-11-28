@@ -33,28 +33,43 @@ async function run() {
       const result = await productsCollection.insertOne(newProduct)
       res.send(result)
     })
-    // get all products
-    app.get('/products', async (req, res) => {
-      const category = req.query.category;
-      console.log("Category Received from Client:", category); 
-      
-      let query = {};
-      if (category && category !== 'all') {
-        query = { category }; 
+    // get all products in admin dashboard
+    app.get('/products', async(req, res)=>{
+      const result = await productsCollection.find().toArray()
+      res.send(result)
+    })
+    // get all product in host or email ways
+  app.get('/host-product/:email', async(req, res)=>{
+    const email = req.params.email;
+    const query = {hostEmail: email};
+    const result = await productsCollection.find(query).toArray();
+    res.send(result);
+  })
+    // admin is approved host products
+    app.patch('/admin-product/:id', async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id : new ObjectId(id)};
+      const updatedDoc ={
+        $set:{
+          adminIsApproved: "approve",
+        }
       }
-      const result = await productsCollection.find(query).toArray();
-      res.send(result); 
-    });
-    
+      const result = await productsCollection.updateOne(filter, updatedDoc);
+      res.send(result)
+    })
 
 
-  
-
+    // delete product 
+    app.delete('/pro/:id', async(req, res)=>{
+      const id= req.params.id;
+      const query= {_id: new ObjectId(id)}
+      const result = await productsCollection.deleteOne(query)
+      res.send(result);
+    })
 
 
     // details page is start 
        // Get a single room data from db using _id
-
        app.get('/product/:id', async (req, res)=>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
@@ -62,9 +77,31 @@ async function run() {
         res.send(result)
        })
 
+      //  update single data 
+    app.patch('/product-update/:id', async(req, res)=>{
+      const productData = req.body;
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const updatedDoc ={
+      $set: {
+      productTitle: productData.productTitle,
+      brandName: productData.brandName,
+      price: productData.price,
+      discount: productData.discount,
+      tags: productData.tags,
+      category: productData.category,
+      description: productData?.description,
+      productImage:productData.productImage,
+      hostEmail: productData?.hostEmail,
+      hostName: productData?.hostName,
+      hostPhoto: productData?.hostPhoto,
+      adminIsApproved:productData.adminIsApproved
+        }
+      }
+      const result = await productsCollection.updateOne(filter,updatedDoc)
+      res.send(result)
+    })
 
-
-      
       // get all users
       app.get('/alluser', async (req, res) => {
         const result = await userCollection.find().toArray();
@@ -107,8 +144,6 @@ async function run() {
         }
         const result = await userCollection.insertOne(user);
         res.send(result);
-     
-        
       });
   
   

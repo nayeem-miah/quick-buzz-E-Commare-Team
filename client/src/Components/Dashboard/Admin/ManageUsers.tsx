@@ -3,6 +3,7 @@ import { FaTrashAlt, FaUsers } from "react-icons/fa";
 import Swal from "sweetalert2";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Heading from "../../../Shared/Heading/Heading";
+import LoadingSpinner from "../../../Shared/Loading";
 
 // Define the types for user
 interface User {
@@ -14,7 +15,11 @@ interface User {
 
 const ManageUsers: React.FC = () => {
   const axiosSecure = UseAxiosSecure();
-  const { data: users = [], refetch } = useQuery<User[]>({
+  const {
+    data: users = [],
+    refetch,
+    isLoading,
+  } = useQuery<User[]>({
     queryKey: ["alluser"],
     queryFn: async () => {
       const res = await axiosSecure.get("/alluser");
@@ -87,6 +92,7 @@ const ManageUsers: React.FC = () => {
     });
   };
 
+  if (isLoading) return <LoadingSpinner />;
   return (
     <div>
       <div className="overflow-x-auto">

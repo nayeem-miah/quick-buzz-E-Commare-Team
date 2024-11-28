@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import Heading from "../../../Shared/Heading/Heading";
+import Swal from "sweetalert2";
+import { MdDeleteForever } from "react-icons/md";
+import useAuth from "../../../Hooks/UseAuth";
+import LoadingSpinner from "../../../Shared/Loading";
+import { Link } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
 
 interface Listing {
   _id: number;
@@ -20,26 +26,62 @@ interface Listing {
 
 const MyAddedProduct: React.FC = () => {
   const axiosPublic = useAxiosPublic();
-  const { data, isLoading, isError } = useQuery({
+  const { user } = useAuth();
+
+  const {
+    data = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/products");
+      const res = await axiosPublic.get(`/host-product/${user?.email}`);
       return res.data;
     },
   });
 
-  const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
+  // handle delete
+  const handleDelete = (id: any) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.delete(`/pro/${id}`).then((res) => {
+          if (res.data.deletedCount > 0) {
+            refetch();
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+          }
+        });
+      }
+    });
+  };
 
+  // modal code
+  const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
   const handleDetailsClick = (listing: Listing) => {
     setSelectedBooking(listing);
   };
-
   const closeModal = () => {
     setSelectedBooking(null);
   };
-  console.log(data);
-  if (isLoading) return <div>loading...</div>;
-  if (isError) return <div>error...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
+  if (isError) return <div>error...{isError}</div>;
   return (
     <div>
       <div className="">
@@ -59,6 +101,12 @@ const MyAddedProduct: React.FC = () => {
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-left">
                   status
+                </th>
+                <th className="py-3 px-4 text-sm font-medium text-left">
+                  delete
+                </th>
+                <th className="py-3 px-4 text-sm font-medium text-left">
+                  edit
                 </th>
                 <th className="py-3 px-4 text-sm font-medium text-left">
                   Details
@@ -87,6 +135,24 @@ const MyAddedProduct: React.FC = () => {
                   <td className="py-4 px-4 text-sm text-gray-600">
                     {listing?.adminIsApproved}
                   </td>
+                  <td className="py-4 px-4 text-sm text-gray-600">
+                    <button
+                      onClick={() => {
+                        handleDelete(listing?._id);
+                      }}
+                      className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
+                    >
+                      <MdDeleteForever />
+                    </button>
+                  </td>
+                  <td className="py-4 px-4 text-sm text-gray-600">
+                    <Link to={`/updated-product/${listing._id}`}>
+                      <button className="px-4 py-2   text-2xl rounded-lg hover:text-green-700 transition duration-300 focus:outline-none">
+                        <FaEdit />
+                      </button>
+                    </Link>
+                  </td>
+
                   <td className="py-4 px-4 text-sm">
                     <button
                       onClick={() => handleDetailsClick(listing)}
@@ -157,19 +223,7 @@ const MyAddedProduct: React.FC = () => {
                   <strong>description:</strong> {selectedBooking?.description}
                 </p>
               </div>
-              <div className="mt-6 gap-8 flex">
-                <button
-                  // onClick={closeModal} 
-                  className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"
-                >
-                  delete
-                </button>
-                <button
-                  // onClick={closeModal}
-                  className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"
-                >
-                  edit
-                </button>
+              <div className="mt-6 text-end">
                 <button
                   onClick={closeModal}
                   className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"
