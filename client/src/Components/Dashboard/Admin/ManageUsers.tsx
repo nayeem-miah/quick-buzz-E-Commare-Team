@@ -62,7 +62,7 @@ const ManageUsers: React.FC = () => {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         axiosSecure
-          .delete(`/users/${user._id}`)
+          .delete(`/alluser/${user._id}`)
           .then((res) => {
             if (res.data.deletedCount > 0) {
               refetch();
