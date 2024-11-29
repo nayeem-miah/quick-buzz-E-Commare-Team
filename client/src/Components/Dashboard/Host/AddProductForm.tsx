@@ -177,21 +177,21 @@ const AddProductForm: React.FC = () => {
             required
           >
             <option value="">Select category</option>
-            <option value="mobile">Mobile</option>
-            <option value="laptop">Laptop</option>
-            <option value="penDrive">PenDrive</option>
-            <option value="caves">Caves</option>
-            <option value="earphones">Earphones</option>
-            <option value="cable">Cable</option>
-            <option value="mouse">Mouse</option>
-            <option value="keyboard">Keyboard</option>
-            <option value="tshirt">Tshirt</option>
-            <option value="sunGlass">SunGlass</option>
-            <option value="light">Light</option>
-            <option value="speaker">Speaker</option>
-            <option value="stand">Stand</option>
-            <option value="airpode">Airpode</option>
-            <option value="charger">Charger</option>
+            <option value="Mobile">Mobile</option>
+            <option value="Laptop">Laptop</option>
+            <option value="PenDrive">PenDrive</option>
+            <option value="Caves">Caves</option>
+            <option value="Earphones">Earphones</option>
+            <option value="Cable">Cable</option>
+            <option value="Mouse">Mouse</option>
+            <option value="Keyboard">Keyboard</option>
+            <option value="Tshirt">Tshirt</option>
+            <option value="SunGlass">SunGlass</option>
+            <option value="Light">Light</option>
+            <option value="Speaker">Speaker</option>
+            <option value="Stand">Stand</option>
+            <option value="Airpode">Airpode</option>
+            <option value="Charger">Charger</option>
           </select>
         </div>
 

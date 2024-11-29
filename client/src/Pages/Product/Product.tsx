@@ -29,12 +29,16 @@ const Product: React.FC = () => {
       const res = await axiosPublic.get(`/products?category=${category}`);
       // console.log("API Response:", res.data);
       return res.data;
+    
+      
     },
   });
 
   if (isLoading) {
     return <LoadingSpinner />;
   }
+
+  
 
   return (
     <div>

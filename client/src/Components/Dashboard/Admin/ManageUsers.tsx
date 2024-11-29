@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Heading from "../../../Shared/Heading/Heading";
 import LoadingSpinner from "../../../Shared/Loading";
+import { MdDeleteForever } from "react-icons/md";
 
 // Define the types for user
 interface User {
@@ -141,9 +142,9 @@ const ManageUsers: React.FC = () => {
                 <td>
                   <button
                     onClick={() => handleDelete(user)}
-                    className="btn btn-ghost"
+                    className=" btn-ghost"
                   >
-                    <FaTrashAlt className="text-red-600" />
+                    <MdDeleteForever  className="text-red-600 text-xl" />
                   </button>
                 </td>
               </tr>

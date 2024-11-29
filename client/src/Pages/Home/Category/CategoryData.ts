@@ -1,23 +1,36 @@
-import { TbBeach, TbDeviceAirpods, TbMountain, TbPool } from 'react-icons/tb';
+import { TbDeviceAirpods } from 'react-icons/tb';
 import {
-  GiBarn,
-  GiBoatFishing,
-  GiCactus,
-  GiCastle,
   GiCaveEntrance,
-  GiForestCamp,
-  GiIsland,
-  GiWindmill,
 } from 'react-icons/gi';
-import { FaLaptop, FaLightbulb, FaMobileAlt, FaRegKeyboard, FaSkiing, FaTshirt } from 'react-icons/fa';
-import { BsEmojiSunglasses, BsFillUsbDriveFill, BsSnow } from 'react-icons/bs';
-import { IoDiamond } from 'react-icons/io5';
-import { MdOutlineCable, MdOutlineVilla } from 'react-icons/md';
-import { FaComputerMouse } from 'react-icons/fa6';
-import { RiBattery2ChargeFill } from 'react-icons/ri';
-import { SlEarphones } from 'react-icons/sl';
-import { PiGlobeStand } from 'react-icons/pi';
-import { FcSpeaker } from 'react-icons/fc';
+import { 
+  FaLaptop, 
+  FaLightbulb, 
+  FaMobileAlt, 
+  FaRegKeyboard, 
+  FaTshirt 
+} from 'react-icons/fa';
+import { 
+  BsEmojiSunglasses, 
+  BsFillUsbDriveFill 
+} from 'react-icons/bs';
+import { 
+  MdOutlineCable 
+} from 'react-icons/md';
+import { 
+  FaComputerMouse 
+} from 'react-icons/fa6';
+import { 
+  RiBattery2ChargeFill 
+} from 'react-icons/ri';
+import { 
+  SlEarphones 
+} from 'react-icons/sl';
+import { 
+  PiGlobeStand 
+} from 'react-icons/pi';
+import { 
+  FcSpeaker 
+} from 'react-icons/fc';
 
 interface Category {
   label: string;
@@ -29,76 +42,76 @@ export const categories: Category[] = [
   {
     label: 'Mobile',
     icon: FaMobileAlt,
-    description: 'This property is close to the mobile!',
+    description: 'This category includes mobile devices and accessories.',
   },
   {
     label: 'Mouse',
     icon: FaComputerMouse,
-    description: 'This property has Mouse!',
+    description: 'This category includes computer mice.',
   },
   {
-    label: 'keyboard',
+    label: 'Keyboard',
     icon: FaRegKeyboard,
-    description: 'This property is keyboard!',
+    description: 'This category offers a variety of keyboards.',
   },
   {
-    label: 'Airpode',
+    label: 'AirPods',
     icon: TbDeviceAirpods,
-    description: 'This property is in the Airpode!',
+    description: 'This category includes AirPods and wireless earphones.',
   },
   {
     label: 'Laptop',
     icon: FaLaptop,
-    description: 'This property has a beautiful Laptop!',
+    description: 'This category features different types of laptops.',
   },
   {
     label: 'Charger',
     icon: RiBattery2ChargeFill,
-    description: 'This property is on an Charger!',
+    description: 'This category has various chargers for devices.',
   },
   {
     label: 'Cable',
     icon: MdOutlineCable,
-    description: 'This property is near a cable!',
+    description: 'This category offers high-quality cables.',
   },
   {
     label: 'Earphones',
     icon: SlEarphones,
-    description: 'This property has skiing Earphones!',
+    description: 'This category includes wired and wireless earphones.',
   },
   {
-    label: 'penDrive',
+    label: 'PenDrive',
     icon: BsFillUsbDriveFill,
-    description: 'This property is an ancient penDrive!',
+    description: 'This category includes USB pen drives.',
   },
   {
-    label: 'caves',
+    label: 'Caves',
     icon: GiCaveEntrance,
-    description: 'This property is in a spooky caves!',
+    description: 'Explore properties near caves.',
   },
   {
     label: 'Stand',
     icon: PiGlobeStand,
-    description: 'This property offers camping Stand!',
+    description: 'This category offers globe stands and related products.',
   },
   {
     label: 'Speaker',
     icon: FcSpeaker,
-    description: 'This property is in an arctic Speaker!',
+    description: 'This category includes various speakers.',
   },
   {
     label: 'Light',
     icon: FaLightbulb,
-    description: 'This property is in the Light!',
+    description: 'This category features lighting solutions.',
   },
   {
-    label: 'SunGlass',
+    label: 'Sunglasses',
     icon: BsEmojiSunglasses,
-    description: 'This property is in a SunGlass!',
+    description: 'This category offers stylish sunglasses.',
   },
   {
-    label: 'Tshirt',
+    label: 'T-shirt',
     icon: FaTshirt,
-    description: 'This property is brand new and Tshirt!',
+    description: 'This category includes trendy t-shirts.',
   },
 ];
