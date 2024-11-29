@@ -21,27 +21,23 @@ import LoadingSpinner from "../../Shared/Loading";
 const Sidebar: React.FC = () => {
   const { logOut, user } = useAuth();
   const [isActive, setActive] = useState(false);
-  
+
   if (!user?.email) {
-      return <h1>User email not available</h1>;
+    return <h1>User email not available</h1>;
   }
-  
+
   const { singleUser, loading } = useFetchSingleUser(user?.email);
   // console.log(singleUser);
-  
-  
+
   if (loading) {
-      return <LoadingSpinner></LoadingSpinner>;
+    return <LoadingSpinner></LoadingSpinner>;
   }
-  
+
   if (!singleUser) {
-      return <h1>User not Found</h1>;
+    return <h1>User not Found</h1>;
   }
-  
 
-  
-// console.log(singleUser.role);
-
+  // console.log(singleUser.role);
 
   // const role: string = "admin";
   // Sidebar Responsive Handler
@@ -70,7 +66,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Sidebar  admin*/}
-      { singleUser?.role === "admin" && (
+      {singleUser?.role === "admin" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
@@ -167,7 +163,7 @@ const Sidebar: React.FC = () => {
         </div>
       )}
       {/* Sidebar  host*/}
-      { singleUser?.role === "Host" && (
+      {singleUser?.role === "Host" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
@@ -189,7 +185,7 @@ const Sidebar: React.FC = () => {
                   to="/dashboard"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-white"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -202,7 +198,7 @@ const Sidebar: React.FC = () => {
                   to="host-add-product"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-white"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -214,7 +210,7 @@ const Sidebar: React.FC = () => {
                   to="host-manage-booking"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-white"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -226,7 +222,7 @@ const Sidebar: React.FC = () => {
                   to="my-host-listings"
                   className={({ isActive }) =>
                     `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "text-white" : "text-white"
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
@@ -263,7 +259,7 @@ const Sidebar: React.FC = () => {
         </div>
       )}
       {/* Sidebar  user dashboard*/}
-      { singleUser?.role === "user" && (
+      {singleUser?.role === "user" && (
         <div
           className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
             isActive ? "-translate-x-full" : ""
