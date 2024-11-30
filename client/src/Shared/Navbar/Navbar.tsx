@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="relative  shadow ">
-      <div className="container bg-gradient-to-b  to-[#ffffff]  from-[#5eaaf5ab] px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
+      <div className="container t px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
         <div className="flex items-center justify-between">
           <Link to={'/'}>
             <img className="lg:w-48 h-12 sm:h-20" src={logo} alt="Logo" />
@@ -48,17 +48,17 @@ const Navbar: React.FC = () => {
           } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out   md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center`}
         >
           <div className="flex flex-col md:flex-row md:mx-6">
-            <Link to="/" className="my-2 text-white transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            <Link to="/" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
               HOME
             </Link>
            
-            <Link to="/product" className="my-2 text-white transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            <Link to="/product" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
               PRODUCT
             </Link>
-            <Link to="/about" className="my-2 text-white transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            <Link to="/about" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
               ABOUT
             </Link>
-            <Link to="/contact" className="my-2 text-white transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            <Link to="/contact" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
               CONTACT
             </Link>
           

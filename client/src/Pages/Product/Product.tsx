@@ -55,7 +55,7 @@ const Product: React.FC<CardProps> = () => {
   return (
     <div>
       <BannerDetailsPage
-        headingText="Rooms."
+        headingText="Product."
         subheadingText="Please explore my QuickBuzz all Products and purchase your chosen Product"
       />
       <div className="mb-10">

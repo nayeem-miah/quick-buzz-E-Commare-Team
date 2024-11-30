@@ -23,6 +23,8 @@ import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
 import ProductPage from "../Pages/Product/ProductDetailsPage";
 import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProduct";
+import Checkout from "../Pages/Product/Checkout";
+import MyWishList from "../Components/Dashboard/User/MyWishList";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -53,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile></Profile>,
+      },
+      {
+         path:'/checkout/:id',
+         element:<Checkout></Checkout>
       },
       {
         path: "/updated-product/:id",
@@ -122,6 +128,11 @@ const router = createBrowserRouter([
         path: "my-listings",
         element: <MyAddedCart />,
       },
+      {
+        path: 'my-wishlist',
+        element:<MyWishList></MyWishList>
+      }
+      ,
       {
         path: "my-payment-history",
         element: <UserPaymentHistory />,

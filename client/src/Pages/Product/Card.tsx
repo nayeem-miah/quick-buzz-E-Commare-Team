@@ -20,8 +20,9 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ product }) => {
   return (
     <div className="">
+        
       <Link key={product._id} to={`/product/${product?._id}`}>
-        <div className="overflow-hidden bg-[#26083C] text-white rounded-lg shadow-lg dark:bg-gray-800">
+        <div className="overflow-hidden bg-[#26083C] text-white rounded-lg group shadow-lg dark:bg-gray-800">
           <div className="px-4 py-2">
             <h1 className="text-xl font-bold uppercase dark:text-white">
               {product.brandName}
