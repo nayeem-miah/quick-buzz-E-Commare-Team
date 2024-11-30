@@ -4,6 +4,7 @@ import useAxiosPublic from "../../Hooks/UsePublic";
 import Categories from "../Home/Category/Category";
 import LoadingSpinner from "../../Shared/Loading";
 import { Link, useSearchParams } from "react-router-dom";
+import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 
 // প্রোডাক্ট টাইপ ডেফিনিশন
 interface Product {
@@ -42,6 +43,10 @@ const Product: React.FC = () => {
 
   return (
     <div>
+      <BannerDetailsPage
+      headingText="Rooms."
+      subheadingText="Pleas explore my QuickBuzz all Products and purches your chouse Product"
+      ></BannerDetailsPage>
       <div className="mb-10">
         <Categories />
       </div>
