@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
   }
 
   const { singleUser, loading } = useFetchSingleUser(user?.email);
-  // console.log(singleUser);
+  console.log(singleUser);
 
   if (loading) {
     return <LoadingSpinner></LoadingSpinner>;
@@ -37,7 +37,7 @@ const Sidebar: React.FC = () => {
     return <h1>User not Found</h1>;
   }
 
-  // console.log(singleUser.role);
+
 
   // const role: string = "admin";
   // Sidebar Responsive Handler

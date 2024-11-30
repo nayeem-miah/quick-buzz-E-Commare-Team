@@ -33,11 +33,33 @@ async function run() {
       const result = await productsCollection.insertOne(newProduct)
       res.send(result)
     })
+  
     // get all products in admin dashboard
-    app.get('/products', async(req, res)=>{
-      const result = await productsCollection.find().toArray()
-      res.send(result)
-    })
+    // get all rooms 
+    app.get('/products', async (req, res) => {
+      try {
+          const { category } = req.query;
+  
+  
+          let query = {};
+          if (category && category !== 'all' && category !== 'null') {
+              query = { category };
+          }
+  
+          console.log("Query for products:", query);
+  
+    
+          const result = await productsCollection.find(query).toArray();
+  
+    
+          res.send(result);
+      } catch (error) {
+          console.error("Error fetching products:", error);
+          res.status(500).send({ error: "Failed to fetch products" });
+      }
+  });
+  
+
     // get all product in host or email ways
   app.get('/host-product/:email', async(req, res)=>{
     const email = req.params.email;
@@ -45,6 +67,7 @@ async function run() {
     const result = await productsCollection.find(query).toArray();
     res.send(result);
   })
+
     // admin is approved host products
     app.patch('/admin-product/:id', async(req, res)=>{
       const id = req.params.id;
@@ -120,17 +143,17 @@ async function run() {
   
 
 
-    app.get("/single-user/:email", async (req, res) => {
-      const { email } = req.params;
-        //  console.log('all data is a ohk ',email);
-      const user = await userCollection.findOne({ email })
-      if (!user) {
-          return res.status(404).send({ error: "User not found with this email" });
-      }
-      res.status(200).send(user)
-      // console.log(user);
-      
-  })
+  app.get("/single-user/:email", async (req, res) => {
+    const { email } = req.params;
+    console.log("Received email:", email); // Debugging
+    const user = await userCollection.findOne({ email });
+    if (!user) {
+        console.log("User not found for email:", email); // Debugging
+        return res.status(404).send({ error: "User not found with this email" });
+    }
+    res.status(200).send(user);
+});
+
   
    
     //  post all data 
