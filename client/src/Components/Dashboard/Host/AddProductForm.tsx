@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useNavigate } from "react-router-dom";
-
+import { ImSpinner } from "react-icons/im";
 const AddProductForm: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -83,7 +83,6 @@ const AddProductForm: React.FC = () => {
       setLoading(false); // Reset loading to false once the process completes
     }
   };
-  
 
   return (
     <section className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md">
@@ -236,7 +235,14 @@ const AddProductForm: React.FC = () => {
                 : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
             } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
           >
-            {loading ? "Loading..." : "Add Product"}
+            {loading ? (
+              <ImSpinner
+                size={20}
+                className="animate-spin mx-auto "
+              ></ImSpinner>
+            ) : (
+              "Add Product"
+            )}
           </button>
         </div>
       </form>
