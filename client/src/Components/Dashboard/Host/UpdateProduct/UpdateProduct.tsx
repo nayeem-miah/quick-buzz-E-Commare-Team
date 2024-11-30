@@ -6,6 +6,7 @@ import useAuth from "../../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../../Hooks/UsePublic";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { ImSpinner } from "react-icons/im";
 const UpdateProduct: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -79,7 +80,7 @@ const UpdateProduct: React.FC = () => {
         tags,
         category,
         description,
-        productImage:imageUrl,
+        productImage: imageUrl,
         hostEmail: user?.email,
         hostName: user?.displayName,
         hostPhoto: user?.photoURL,
@@ -260,7 +261,14 @@ const UpdateProduct: React.FC = () => {
                   : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
               } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
             >
-              {loading ? "Loading..." : "Add Product"}
+              {loading ? (
+                <ImSpinner
+                  size={20}
+                  className="animate-spin mx-auto "
+                ></ImSpinner>
+              ) : (
+                "Add Product"
+              )}
             </button>
           </div>
         </form>

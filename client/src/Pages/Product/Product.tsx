@@ -5,7 +5,7 @@ import Categories from "../Home/Category/Category";
 import LoadingSpinner from "../../Shared/Loading";
 import { Link, useSearchParams } from "react-router-dom";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
-import Card from "./card";
+import Card from "./Card";
 
 interface Product {
   id: any;
@@ -62,11 +62,14 @@ const Product: React.FC<CardProps> = () => {
         <Categories />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {products.map((product) => (
-          <Link to={`/product/${product.id}`} key={product.id}>
-            <Card product={product} />
-          </Link>
-        ))}
+        {products.map(
+          (product) =>
+            // <Link to={`/product/${product.id}`} >
+            product.adminIsApproved === "approve" && (
+              <Card product={product} key={product._id} />
+            )
+            // </Link>
+        )}
       </div>
     </div>
   );
