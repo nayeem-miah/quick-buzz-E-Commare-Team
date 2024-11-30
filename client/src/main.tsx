@@ -16,7 +16,8 @@ import AuthProvider from './Provider/AuthProvider';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-        <div className='bg-white  text-black'>
+        <div className=' bg-white text-black'>
+        {/* bg-gradient-to-b  from-[#5eaaf5ab] to-[#ffffff] */}
       <AuthProvider>
      <RouterProvider router={router} />
       <Toaster></Toaster>

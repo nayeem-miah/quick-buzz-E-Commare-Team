@@ -95,7 +95,7 @@ const AdminManageBookings: React.FC = () => {
       <Heading title={"Manage product"} subtitle={""} />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-          <thead className="bg-blue-500 text-white">
+          <thead className="bg-gray-400 text-white">
             <tr>
               <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
               <th className="py-3 px-4 text-sm font-medium text-left">Title</th>
@@ -179,66 +179,110 @@ const AdminManageBookings: React.FC = () => {
 
       {/* Modal */}
       {selectedBooking && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              my added product
-            </h3>
-            <div className="space-y-2">
-              <div>
-                <strong>Image:</strong>
-                <img
-                  src={selectedBooking.productImage}
-                  alt={selectedBooking.productTitle}
-                  className="w-full h-48 object-cover mt-2 rounded-md"
-                />
-              </div>
-              <p>
-                <strong>Title:</strong> {selectedBooking?.productTitle}
-              </p>
-              <p>
-                <strong>adminIsApproved:</strong>{" "}
-                {selectedBooking?.adminIsApproved}
-              </p>
-              <p>
-                <strong>price:</strong> {selectedBooking?.price}
-              </p>
-              <p>
-                <strong>brandName:</strong> {selectedBooking?.brandName}
-              </p>
-              <p>
-                <strong>category:</strong> {selectedBooking?.category}
-              </p>
-
-              <p>
-                <strong>hostEmail:</strong> {selectedBooking?.hostEmail}
-              </p>
-              <p className="flex  items-center gap-4">
-                <strong>hostName:</strong> {selectedBooking?.hostName}
-                <img
-                  className="h-10 w-10 rounded-full"
-                  src={selectedBooking?.hostPhoto}
-                  alt=""
-                />
-              </p>
-
-              <p>
-                <strong>price:</strong> {selectedBooking?.price}
-              </p>
-              <p>
-                <strong>tags:</strong> {selectedBooking?.tags}
-              </p>
-              <p>
-                <strong>description:</strong> {selectedBooking?.description}
-              </p>
-            </div>
-            <div className="mt-6 text-end">
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-200 ease-in-out"
+          onClick={closeModal} // Closes modal when clicking outside
+        >
+          <div
+            className="relative bg-gradient-to-br from-white to-gray-100 rounded-3xl shadow-2xl p-8 w-full max-w-4xl scale-95 opacity-0 transition-all duration-200 ease-out transform hover:scale-100 hover:opacity-100"
+            onClick={(e) => e.stopPropagation()} // Prevents modal content from triggering close
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b pb-4 mb-6">
+              <h3 className="text-4xl font-extrabold text-gray-800 tracking-wide transition-transform duration-200 ease-in-out transform hover:scale-105">
+                Product Details
+              </h3>
+              <div
+                className="text-gray-600 hover:text-gray-900 cursor-pointer text-2xl"
+                onClick={closeModal} // Close modal when clicking the "X"
               >
-                Close
-              </button>
+                ✕
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {/* Image Section */}
+              <div className="relative overflow-hidden rounded-lg shadow-lg hover:scale-105 transition-all duration-200 ease-in-out">
+                <img
+                  src={selectedBooking.productImage || "loading-image-url.jpg"} // Add a placeholder loading image
+                  alt={selectedBooking.productTitle}
+                  className="rounded-2xl w-full h-64 object-cover"
+                />
+                <span className="absolute top-4 left-4 bg-purple-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg transform translate-x-2 translate-y-2">
+                  {selectedBooking?.category}
+                </span>
+              </div>
+
+              {/* Details Section */}
+              <div className="space-y-4 text-gray-700">
+                <p className="text-lg">
+                  <span className="font-bold text-gray-900">Title:</span>{" "}
+                  {selectedBooking?.productTitle || "Loading..."}
+                </p>
+                <p className="text-lg">
+                  <span className="font-bold text-gray-900">Price:</span>{" "}
+                  <span className="text-lg font-extrabold text-green-600">
+                    ${selectedBooking?.price || "0.00"}
+                  </span>
+                </p>
+                <p>
+                  <span className="font-bold text-gray-900">Brand:</span>{" "}
+                  {selectedBooking?.brandName || "Loading..."}
+                </p>
+
+                {/* Host Info */}
+                <div className="flex items-center space-x-4">
+                  <span className="font-bold text-gray-900">Host:</span>
+                  <div className="flex items-center space-x-3">
+                    <img
+                      className="h-14 w-14 rounded-full border-2 border-blue-500 shadow-md transform hover:scale-105 transition-all duration-200"
+                      src={
+                        selectedBooking?.hostPhoto || "default-host-photo.jpg"
+                      } // Placeholder for host image
+                      alt={selectedBooking?.hostName || "Host"}
+                    />
+                    <div>
+                      <p className="text-lg font-semibold text-gray-800">
+                        {selectedBooking?.hostName || "Loading..."}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {selectedBooking?.hostEmail || "Loading..."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-lg">
+                  <span className="font-bold text-gray-900">
+                    Host Approved:
+                  </span>{" "}
+                  <span
+                    className={`font-semibold ${
+                      selectedBooking?.adminIsApproved === "pending"
+                        ? "text-red-600"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {selectedBooking?.adminIsApproved &&
+                      selectedBooking?.adminIsApproved}
+                  </span>
+                </p>
+                <p className="text-lg">
+                  <span className="font-bold text-gray-900">Tags:</span>{" "}
+                  {selectedBooking?.tags || "Loading..."}
+                </p>
+              </div>
+            </div>
+
+            {/* Description Section */}
+            <div className="mt-6">
+              <h4 className="text-xl font-bold text-gray-900 mb-3">
+                Description
+              </h4>
+              <p className="text-gray-600 leading-relaxed text-base">
+                {selectedBooking?.description || "Loading... Please wait."}
+              </p>
             </div>
           </div>
         </div>
