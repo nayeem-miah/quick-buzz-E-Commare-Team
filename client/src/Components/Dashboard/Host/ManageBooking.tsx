@@ -6,6 +6,7 @@ import useAuth from "../../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
+import { useNavigate } from "react-router-dom";
 
 interface Listing {
   _id: number;
@@ -25,6 +26,7 @@ interface Listing {
 const ManageBooking: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const {
     data = [],
@@ -63,6 +65,23 @@ const ManageBooking: React.FC = () => {
         });
       }
     });
+  };
+
+  // host is approved
+  const handleApproved = (product: any) => {
+    // axiosPublic.patch(`/admin-product/${product._id}`).then((res) => {
+    //   if (res.data.modifiedCount > 0) {
+    //     refetch();
+    //     Swal.fire({
+    //       position: "top",
+    //       icon: "success",
+    //       title: `${product.productTitle} is approved now!`,
+    //       showConfirmButton: false,
+    //       timer: 1500,
+    //     });
+    //     navigate("/product");
+    //   }
+    // });
   };
 
   // modal code
@@ -128,7 +147,19 @@ const ManageBooking: React.FC = () => {
                     ${listing?.price}
                   </td>
                   <td className="py-4 px-4 text-sm text-gray-600">
-                    {listing?.adminIsApproved}
+                    {listing?.adminIsApproved === "approve" ? (
+                      "Approve"
+                    ) : (
+                      <button
+                        onClick={() => {
+                          handleApproved(listing);
+                        }}
+                        className=" text-black shadow-lg  relative md:px-6 md:py-2 lg:py-2 py sm:px-4 lg:px-6  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                        border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                      >
+                        approve now
+                      </button>
+                    )}
                   </td>
                   <td className="py-4 px-4 text-sm text-gray-600">
                     <button
