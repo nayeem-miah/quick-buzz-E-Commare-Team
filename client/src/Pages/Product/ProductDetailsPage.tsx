@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
+import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,6 +25,14 @@ const ProductPage: React.FC = () => {
 
   return (
     <div>
+      <BannerDetailsPage
+      headingText="Explore this room."
+      subheadingText="Pleas explore my QuickBuzz all rooms and purches your chouse room"
+      
+      ></BannerDetailsPage>
+
+    
+
       <h1>{product?.name || "Product Name"}</h1>
       <p>{product?.description || "No description available"}</p>
       <p>Price: {product?.price || "N/A"}</p>
