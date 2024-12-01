@@ -1,7 +1,7 @@
 import { AiOutlineMenu } from 'react-icons/ai';
 import { useState } from 'react';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 // Uncomment if needed: import useAuth from '../../../hooks/useAuth';
 
 // Interface for User (Uncomment if needed)
@@ -10,9 +10,11 @@ import { Link } from 'react-router-dom';
 // }
 import logo from '../../../src/assets/Image/logo2.png'
 import MenuDropdown from './MenuDropdawn';
+import useAuth from '../../Hooks/UseAuth';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logOut } = useAuth();
 
   return (
     <nav className="relative  shadow ">
@@ -44,23 +46,64 @@ const Navbar: React.FC = () => {
        
         <div
           className={`${
-            isOpen ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'
+            isOpen ? 'translate-x-0 opacity-100 bg-white' : 'opacity-0 -translate-x-full'
           } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out   md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center`}
         >
           <div className="flex flex-col md:flex-row md:mx-6">
-            <Link to="/" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            <NavLink  to="/"   className={({ isActive }) =>
+            isActive ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0" : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"}>
               HOME
-            </Link>
+            </NavLink>
            
-            <Link to="/product" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            <NavLink to="/product"  className={({ isActive }) =>
+            isActive ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0" : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"} >
               PRODUCT
-            </Link>
-            <Link to="/about" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            </NavLink>
+            <NavLink to="/about"  className={({ isActive }) =>
+            isActive ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0" : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"} >
               ABOUT
-            </Link>
-            <Link to="/contact" className="my-2 text-black transition-colors duration-300 transform hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0">
+            </NavLink>
+            <NavLink to="/contact"  className={({ isActive }) =>
+            isActive ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0" : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"} >
               CONTACT
-            </Link>
+            </NavLink>
+            {/* {user ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/profile"
+                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                >
+                  my profile
+                </Link>
+                <div
+                  onClick={logOut}
+                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold cursor-pointer"
+                >
+                  Logout
+                </div>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )} */}
           
           </div>
 
