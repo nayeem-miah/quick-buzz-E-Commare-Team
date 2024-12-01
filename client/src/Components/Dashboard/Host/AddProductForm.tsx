@@ -229,7 +229,7 @@ const AddProductForm: React.FC = () => {
           <button
             disabled={loading}
             type="submit"
-            className={`w-full text-black shadow-lg py-2 relative ${
+            className={`w-full text-white font-bold  shadow-lg py-2 relative ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
