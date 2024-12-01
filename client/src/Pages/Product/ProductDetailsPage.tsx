@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
+import toast from "react-hot-toast";
 
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,19 +22,55 @@ const ProductPage: React.FC = () => {
     },
     enabled: !!id,
   });
-  //
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {error?.message}</div>;
-  console.log(product);
 
-  const { productImage, description, brandName, productTitle, _id } = product;
+  const {
+    productImage,
+    description,
+    brandName,
+    productTitle,
+    _id,
+    hostName,
+    price,
+    discount,
+  } = product;
+
+
+
+   /* data post  */
+
+  const HandleButton = () => {
+    try {
+      const newData = {
+        _id,
+        productImage,
+        description,
+        brandName,
+        productTitle,
+        hostName,
+        price,
+        discount,
+      };
+  
+      
+      axiosPublic.post('/wishlist', newData).then((res) => {
+        if (res.data.insertedId) {
+          toast.success("Your data is saved. Please explore my listing page.");
+        }
+      });
+    } catch (err: any) {
+      toast.error(err?.message || "Signup Failed");
+    }
+  };
+  
 
   return (
     <div>
       <BannerDetailsPage
         headingText="Explore this Product."
-        subheadingText="Pleas explore my QuickBuzz all Product and purches your chouse Product"
+        subheadingText="Please explore my QuickBuzz all Product and purchase your choice Product"
       ></BannerDetailsPage>
 
       <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full group lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
@@ -44,30 +81,31 @@ const ProductPage: React.FC = () => {
                 {productTitle}
                 <br className="hidden md:block" />
               </h2>
-              <h3 className="text-2xl font-semibold ">{brandName}</h3>
+              <h3 className="text-2xl font-semibold">{brandName}</h3>
               <p className="text-base mt-1 text-gray-700 md:text-lg">
                 {description}
               </p>
             </div>
-            <div className="flex flex-col md:flex-row  md:gap-20 lg:items-end justify-end">
+            <div className="flex flex-col md:flex-row md:gap-20 lg:items-end justify-end">
               <Link
-              to={`/checkout/${_id}`}
+                to={`/checkout/${_id}`}
                 className="mt-2 px-14 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
               >
                 Buy Now
               </Link>
               <button
+                onClick={HandleButton}
                 className="mt-2 px-10 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                     border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
               >
-               Add To Cart
+                Add To Cart
               </button>
             </div>
           </div>
-          <div className="">
+          <div>
             <img
-              className="object-cover lg:ml-40 ml-8 h-56 group-hover:scale-125  shadow-xl rounded-3xl sm:h-96"
+              className="object-cover lg:ml-40 ml-8 h-56 group-hover:scale-125 shadow-xl rounded-3xl sm:h-96"
               src={productImage}
               alt=""
             />

@@ -25,6 +25,7 @@ async function run() {
   try {
     const userCollection = client.db("quickBuzz").collection("alluser");
     const productsCollection = client.db("quickBuzz").collection("allProducts");
+    const wishlistCollection = client.db("quickBuzz").collection("wishlist");
 
 
     // add product in db
@@ -45,13 +46,8 @@ async function run() {
           if (category && category !== 'all' && category !== 'null') {
               query = { category };
           }
-  
           console.log("Query for products:", query);
-  
-    
           const result = await productsCollection.find(query).toArray();
-  
-    
           res.send(result);
       } catch (error) {
           console.error("Error fetching products:", error);
@@ -153,6 +149,28 @@ async function run() {
     }
     res.status(200).send(user);
 });
+
+
+
+
+    /* wishlist post a mongodb  */
+
+    app.post('/wishlist', async(res,req) =>{
+      const wishlist = req.body;
+      delete wishlist._id;
+      const result = await wishlistCollection.insertOne(wishlist)
+      res.send(result)
+
+    })
+
+
+
+
+
+
+
+
+
 
   
    

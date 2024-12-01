@@ -5,6 +5,8 @@ import BrowseByDestination from "../../Components/Home/BrowseByDestination/Brows
 import Categories from "./Category/Category";
 
 const Home: React.FC = () => {
+
+  
   return (
     <div>
       <div className="pt-12">
