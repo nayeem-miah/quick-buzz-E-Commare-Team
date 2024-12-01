@@ -97,10 +97,10 @@ const AllPaymentHistory: React.FC = () => {
                 <td className="py-4 px-4 text-sm">
                   <button
                     onClick={() => handleDetailsClick(payment)}
-                    className="text-black shadow-lg  relative md:px-6 md:py-2 lg:py-2 py sm:px-4 lg:px-6  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                    className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                     border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                   >
-                    View Details
+                    Details
                   </button>
                 </td>
               </tr>
@@ -109,7 +109,7 @@ const AllPaymentHistory: React.FC = () => {
         </table>
       </div>
 
-{/* modal  */}
+      {/* modal  */}
       {selectedPayment && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-200 ease-in-out"

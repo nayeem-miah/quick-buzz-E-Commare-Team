@@ -157,10 +157,10 @@ const MyAddedProduct: React.FC = () => {
                     <Link to={`/product/${listing._id}`}>
                       <button
                         // onClick={() => handleDetailsClick(listing)}
-                        className="  text-black shadow-lg  relative md:px-6 md:py-2 lg:py-2 py sm:px-4 lg:px-6  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                        className="  px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                        border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                       >
-                        View Details
+                         Details
                       </button>
                     </Link>
                   </td>
