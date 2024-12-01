@@ -41,7 +41,6 @@ const Product: React.FC<CardProps> = () => {
     },
     enabled: !!category,
   });
-  console.log(products);
 
   React.useEffect(() => {
     refetch(); //
@@ -50,7 +49,6 @@ const Product: React.FC<CardProps> = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
-  console.log();
 
   return (
     <div>

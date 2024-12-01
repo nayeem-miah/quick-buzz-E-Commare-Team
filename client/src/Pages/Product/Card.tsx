@@ -18,11 +18,21 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ product }) => {
+
+
+   const handleSaveClick = () => {
+    console.log('hellp world');
+    
+   }
+
+
+
+
   return (
     <div className="">
         
       <Link key={product._id} to={`/product/${product?._id}`}>
-        <div className="overflow-hidden bg-[#26083C] text-white rounded-lg group shadow-lg dark:bg-gray-800">
+        <div className="overflow-hidden lg:w-[500px] lg:h-96 bg-[#26083C] text-white rounded-lg group shadow-lg dark:bg-gray-800">
           <div className="px-4 py-2">
             <h1 className="text-xl font-bold uppercase dark:text-white">
               {product.brandName}
@@ -38,7 +48,7 @@ const Card: React.FC<CardProps> = ({ product }) => {
           />
           <div className="flex items-center justify-between px-4 py-2 bg-[#F85606]">
             <h1 className="text-lg font-bold text-white">${product.price}</h1>
-            <button className="px-2 py-1 text-xs font-semibold text-gray-900 uppercase transition-colors duration-300 transform bg-white rounded hover:bg-gray-200 focus:bg-gray-400 focus:outline-none">
+            <button onClick={handleSaveClick} className="px-2 py-1 text-xs font-semibold text-gray-900 uppercase transition-colors duration-300 transform bg-white rounded hover:bg-gray-200 focus:bg-gray-400 focus:outline-none">
               Add to cart
             </button>
           </div>
