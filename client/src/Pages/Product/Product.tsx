@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import Categories from "../Home/Category/Category";
 import LoadingSpinner from "../../Shared/Loading";
-import { Link, useSearchParams } from "react-router-dom";
+import {  useSearchParams } from "react-router-dom";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
 
@@ -41,7 +41,6 @@ const Product: React.FC<CardProps> = () => {
     },
     enabled: !!category,
   });
-  console.log(products);
 
   React.useEffect(() => {
     refetch(); //
@@ -50,7 +49,6 @@ const Product: React.FC<CardProps> = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
-  console.log();
 
   return (
     <div>
