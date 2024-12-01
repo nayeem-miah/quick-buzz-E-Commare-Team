@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 interface Product {
-  length: number;
+  
   adminIsApproved: string;
   _id: any;
   brandName: ReactNode;
