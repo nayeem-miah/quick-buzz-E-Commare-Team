@@ -50,6 +50,16 @@ const Signin: React.FC = () => {
     }
   };
 
+   
+  // Reast Password
+
+    // const ReastPassword = e = >{
+    //   console.log(email);
+      
+    // }
+
+
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
@@ -114,7 +124,7 @@ const Signin: React.FC = () => {
         </form>
 
         <div className="space-y-1">
-          <button className="text-xs hover:underline hover:text-rose-500 text-gray-400">
+          <button  className="text-xs hover:underline hover:text-rose-500 text-gray-400">
             Forgot password?
           </button>
         </div>
