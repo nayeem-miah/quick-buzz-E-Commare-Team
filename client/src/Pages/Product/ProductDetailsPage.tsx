@@ -55,7 +55,7 @@ const ProductPage: React.FC = () => {
       };
   
       
-      axiosPublic.post('/wishlist', newData).then((res) => {
+      axiosPublic.post('/allsave', newData).then((res) => {
         if (res.data.insertedId) {
           toast.success("Your data is saved. Please explore my listing page.");
         }
