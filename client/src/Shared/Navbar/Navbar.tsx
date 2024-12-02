@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* মোবাইল মেনু বাটন */}
-          <div className="flex lg:hidden">
+          <div className="flex md:hidden lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
@@ -103,47 +103,56 @@ const Navbar: React.FC = () => {
             >
               CONTACT
             </NavLink>
-            <div className="block md:hidden">
+            <span className="block md:hidden ">
               {user ? (
-                <>
+                <div className="space-y-5 font-bold uppercase mt-3">
                   <div>
                     <NavLink
                       to="/dashboard"
-                      className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
-                    >
-                      Dashboard
-                    </NavLink>
-                  </div>
-                  <div>
-                    <Link
-                      to="/profile"
-                      className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
-                    >
-                      my profile
-                    </Link>
-                  </div>
-                  <div
-                    onClick={logOut}
-                    className="px-4 py-3 hover:bg-neutral-100 transition font-semibold cursor-pointer"
-                  >
-                    Logout
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div>
-                    <NavLink
-                      to="/login"
                       className={({ isActive }) =>
                         isActive
                           ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
                           : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
                       }
                     >
+                      Dashboard
+                    </NavLink>
+                  </div>
+
+                  <div>
+                    <NavLink
+                      to="/profile"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                          : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                      }
+                    >
+                      My profile
+                    </NavLink>
+                  </div>
+                  <div
+                    onClick={logOut}
+                    className="  font-bold my-2  transition-colors duration-300 transform hover:text-red-500  md:mx-4 md:my-0"
+                  >
+                    Logout
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3 font-bold uppercase mt-3">
+                  <div className=" ">
+                    <NavLink
+                      to="/login"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0 "
+                          : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                      }
+                    >
                       Login
                     </NavLink>
                   </div>
-                  <div>
+                  <div className=" ">
                     <NavLink
                       to="/signup"
                       className={({ isActive }) =>
@@ -155,9 +164,9 @@ const Navbar: React.FC = () => {
                       Sign Up
                     </NavLink>
                   </div>
-                </>
+                </div>
               )}
-            </div>
+            </span>
           </div>
 
           {/* <div className="flex justify-center md:block">
