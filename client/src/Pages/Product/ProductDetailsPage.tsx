@@ -4,10 +4,14 @@ import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import toast from "react-hot-toast";
+import useAuth from "../../Hooks/UseAuth";
 
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const axiosPublic = useAxiosPublic();
+ const {user} = useAuth();
+
+  
 
   const {
     data: product,
@@ -52,6 +56,7 @@ const ProductPage: React.FC = () => {
         hostName,
         price,
         discount,
+        email: user?.email
       };
   
       
