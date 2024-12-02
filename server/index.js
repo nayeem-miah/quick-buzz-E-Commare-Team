@@ -89,7 +89,35 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.findOne(query);
       res.send(result);
-    });
+    }); 
+
+
+    // save data get with mongodb 
+     app.get('/allsave', async (req, res) => {
+       const result = await wishlistCollection.find().toArray()
+       res.send(result)
+       
+    })
+
+
+    
+
+  //  single user by data 
+  app.get('/allsave/:email', async (req, res)=>{
+    const email = req.params.email;
+    if(email){
+    query = { email: email}
+    const result = await wishlistCollection.find(query).toArray();
+    res.send(result)
+    }
+  })
+
+
+
+
+
+
+
 
     //  update single data
     app.patch("/product-update/:id", async (req, res) => {
