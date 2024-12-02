@@ -105,7 +105,7 @@ const Navbar: React.FC = () => {
             </NavLink>
             <span className="block md:hidden ">
               {user ? (
-                <>
+                <div className="space-y-5 font-bold uppercase mt-3">
                   <div>
                     <NavLink
                       to="/dashboard"
@@ -133,11 +133,11 @@ const Navbar: React.FC = () => {
                   </div>
                   <div
                     onClick={logOut}
-                    className="  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                    className="  font-bold my-2  transition-colors duration-300 transform hover:text-red-500  md:mx-4 md:my-0"
                   >
                     Logout
                   </div>
-                </>
+                </div>
               ) : (
                 <div className="space-y-3 font-bold uppercase mt-3">
                   <div className=" ">
