@@ -25,6 +25,7 @@ import ProductPage from "../Pages/Product/ProductDetailsPage";
 import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProduct";
 import Checkout from "../Pages/Product/Checkout";
 import MyWishList from "../Components/Dashboard/User/MyWishList";
+import BecomeAHost from "../Components/Become a host/BecomeAHost";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -57,8 +58,8 @@ const router = createBrowserRouter([
         element: <Profile></Profile>,
       },
       {
-         path:'/checkout/:id',
-         element:<Checkout></Checkout>
+        path: "/checkout/:id",
+        element: <Checkout></Checkout>,
       },
       {
         path: "/updated-product/:id",
@@ -68,6 +69,8 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+
+      { path: "/become-host", element: <BecomeAHost /> },
     ],
   },
   { path: "/login", element: <Signin /> },
@@ -129,10 +132,9 @@ const router = createBrowserRouter([
         element: <MyAddedCart />,
       },
       {
-        path: 'my-wishlist',
-        element:<MyWishList></MyWishList>
-      }
-      ,
+        path: "my-wishlist",
+        element: <MyWishList></MyWishList>,
+      },
       {
         path: "my-payment-history",
         element: <UserPaymentHistory />,

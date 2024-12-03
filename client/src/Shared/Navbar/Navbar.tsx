@@ -131,6 +131,18 @@ const Navbar: React.FC = () => {
                       My profile
                     </NavLink>
                   </div>
+                  <div>
+                    <NavLink
+                      to="/become-host"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                          : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                      }
+                    >
+                    Become a Seller
+                    </NavLink>
+                  </div>
                   <div
                     onClick={logOut}
                     className="  font-bold my-2  transition-colors duration-300 transform hover:text-red-500  md:mx-4 md:my-0"

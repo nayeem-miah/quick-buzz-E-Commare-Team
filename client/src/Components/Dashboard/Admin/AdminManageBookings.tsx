@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
 import useAxiosPublic from "../../../Hooks/UsePublic";

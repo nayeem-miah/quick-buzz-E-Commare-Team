@@ -66,9 +66,15 @@ const MenuDropdown: React.FC = () => {
                 >
                   my profile
                 </Link>
+                <Link
+                  to="/become-host"
+                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                >
+                Become a Seller
+                </Link>
                 <div
                   onClick={logOut}
-                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold cursor-pointer"
+                  className="px-4 py-3 hover:bg-neutral-100 hover:text-red-500 transition font-semibold cursor-pointer"
                 >
                   Logout
                 </div>
