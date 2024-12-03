@@ -44,11 +44,10 @@ const ProductPage: React.FC = () => {
 
 
    /* data post  */
-
-  const HandleButton = () => {
+   const HandleButton = () => {
     try {
       const newData = {
-        _id,
+       
         productImage,
         description,
         brandName,
@@ -56,17 +55,24 @@ const ProductPage: React.FC = () => {
         hostName,
         price,
         discount,
-        email: user?.email
+        email: user?.email,
       };
   
-      
+      console.log("Sending data:", newData); 
+  
       axiosPublic.post('/allsave', newData).then((res) => {
-        if (res.data.insertedId) {
+        if (res.status === 201) {
           toast.success("Your data is saved. Please explore my listing page.");
+        } else {
+          toast.error("Failed to save data.");
         }
+      }).catch((error) => {
+        console.error("Error posting data:", error);
+        toast.error("Server error occurred.");
       });
-    } catch (err: any) {
-      toast.error(err?.message || "Signup Failed");
+    } catch (err) {
+      console.error("Error occurred:", err);
+      toast.error("Error in handling button.");
     }
   };
   

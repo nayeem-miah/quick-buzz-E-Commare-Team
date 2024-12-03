@@ -144,6 +144,8 @@ async function run() {
       res.send(result);
     });
 
+
+
     // get all users
     app.get("/alluser", async (req, res) => {
       const result = await userCollection.find().toArray();
@@ -176,24 +178,31 @@ async function run() {
     app.post("/allsave", async (req, res) => {
       try {
         const wishlist = req.body;
-
-
+    
+        // `_id` মুছে দিন
+        console.log("Before deleting _id:", wishlist);
+        delete wishlist._id;
+        console.log("After deleting _id:", wishlist);
+    
         if (!wishlist || Object.keys(wishlist).length === 0) {
           return res.status(400).send({ error: "Invalid wishlist data." });
         }
-
-        console.log("Received wishlist:", wishlist);
-
-
+    
+        // ইনসার্ট অপারেশন
         const result = await wishlistCollection.insertOne(wishlist);
-
-       
+    
         res.status(201).send(result);
       } catch (error) {
         console.error("Error inserting wishlist:", error);
         res.status(500).send({ error: "Failed to save wishlist." });
       }
     });
+    
+
+
+
+
+
 
     //  post all data
     app.post("/users", async (req, res) => {
