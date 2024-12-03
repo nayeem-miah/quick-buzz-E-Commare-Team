@@ -37,7 +37,7 @@ const BrowseByDestination: React.FC = () => {
   ];
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="text-center mb-12">
+      <div className="text-center ">
         <Heading
           title={"Shop from Anywhere, Anytime"}
           subtitle={
