@@ -76,7 +76,7 @@ const AddProductForm: React.FC = () => {
           navigate("/dashboard/my-host-listings");
         }
       });
-    } catch (err: any) {
+    } catch (err) {
       console.error("Product addition failed:", err);
       toast.error("Failed to add product. Please try again.");
     } finally {
