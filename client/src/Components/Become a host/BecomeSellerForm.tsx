@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { ImSpinner } from "react-icons/im";
 
 interface SellerFormData {
   name: string;
@@ -150,10 +151,19 @@ const BecomeSellerForm: React.FC = () => {
         </div>
 
         <button
+          disabled={loading}
           type="submit"
-          className="w-full py-2 px-4 bg-indigo-600 text-white font-medium rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className={`w-full text-white   shadow-lg py-2 relative ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
+          } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
         >
-          Submit
+          {loading ? (
+            <ImSpinner size={20} className="animate-spin mx-auto "></ImSpinner>
+          ) : (
+            "submit"
+          )}
         </button>
       </form>
     </div>
