@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 interface SellerFormData {
   name: string;
@@ -17,23 +19,34 @@ const BecomeSellerForm: React.FC = () => {
     other: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const [loading, setLoading] = useState(false);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const form = e.target as HTMLFormElement;
+
     console.log("Form Data Submitted:", formData);
     alert("Form Submitted Successfully!");
   };
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-md">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Become a Seller</h2>
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        Become a Seller
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700"
+          >
             Name
           </label>
           <input
@@ -49,7 +62,10 @@ const BecomeSellerForm: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="mobile"
+            className="block text-sm font-medium text-gray-700"
+          >
             Mobile Number
           </label>
           <input
@@ -65,7 +81,10 @@ const BecomeSellerForm: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="address"
+            className="block text-sm font-medium text-gray-700"
+          >
             Address
           </label>
           <input
@@ -81,7 +100,10 @@ const BecomeSellerForm: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="reason"
+            className="block text-sm font-medium text-gray-700"
+          >
             Why should you become a seller?
           </label>
           <textarea
@@ -95,9 +117,25 @@ const BecomeSellerForm: React.FC = () => {
             rows={4}
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium" htmlFor="productImage">
+            Passport or nid card !!
+          </label>
+          <input
+            id="productImage"
+            name="productImage"
+            type="file"
+            accept="image/*"
+            className="block w-full px-4 py-2 mt-2 bg-white border border-gray-200 rounded-md focus:outline-none"
+            required
+          />
+        </div>
 
         <div>
-          <label htmlFor="other" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="other"
+            className="block text-sm font-medium text-gray-700"
+          >
             Other Information
           </label>
           <input

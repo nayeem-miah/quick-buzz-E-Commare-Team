@@ -3,7 +3,7 @@ import BecomeSellerForm from './BecomeSellerForm';
 
 const BecomeAHost: React.FC = () => {
     return (
-        <div>
+        <div className='py-10'>
           <BecomeSellerForm/>
         </div>
     );
