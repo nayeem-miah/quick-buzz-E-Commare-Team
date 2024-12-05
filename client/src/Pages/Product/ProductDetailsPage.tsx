@@ -6,6 +6,7 @@ import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/UseAuth";
 
+
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const axiosPublic = useAxiosPublic();
@@ -80,6 +81,7 @@ const ProductPage: React.FC = () => {
   return (
     <div>
       <BannerDetailsPage
+       imageURL={productImage}
         headingText="Explore this Product."
         subheadingText="Please explore my QuickBuzz all Product and purchase your choice Product"
       ></BannerDetailsPage>
@@ -88,13 +90,16 @@ const ProductPage: React.FC = () => {
         <div className="grid gap-12 row-gap-8 lg:grid-cols-2">
           <div className="flex flex-col justify-center">
             <div className="max-w-xl mb-6">
-              <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">
+              {/* <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">
                 {productTitle}
                 <br className="hidden md:block" />
-              </h2>
+              </h2> */}
               <h3 className="text-2xl font-semibold">{brandName}</h3>
               <p className="text-base mt-1 text-gray-700 md:text-lg">
-                {description}
+                {productTitle}
+              </p>
+              <p className="text-lg mt-2 font-bold text-orange-600">
+              $   {price}
               </p>
             </div>
             <div className="flex flex-col md:flex-row md:gap-20 lg:items-end justify-end">

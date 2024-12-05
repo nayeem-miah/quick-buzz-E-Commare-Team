@@ -7,9 +7,10 @@ interface Product {
   brandName: ReactNode;
   description: ReactNode;
   productImage: string | undefined;
-
   name: string;
   price: number;
+  productTitle:string
+  discount: number;
 }
 
 interface CardProps {
@@ -23,32 +24,29 @@ const Card: React.FC<CardProps> = ({ product }) => {
 
   return (
     <div className="">
+      <div className="">
       <Link key={product._id} to={`/product/${product?._id}`}>
-        <div className="overflow-hidden lg:w-[500px] lg:h-96 bg-[#26083C] text-white rounded-lg group shadow-lg dark:bg-gray-800">
-          <div className="px-4 py-2">
-            <h1 className="text-xl font-bold uppercase dark:text-white">
-              {product.brandName}
-            </h1>
-            <p className="mt-1 text-sm dark:text-gray-400">
-              {product.description}
-            </p>
-          </div>
-          <img
-            className="object-cover w-full group-hover:scale-110 h-48 mt-2"
-            src={product.productImage}
-            alt={product.name}
-          />
-          <div className="flex items-center justify-between px-4 py-2 bg-[#F85606]">
-            <h1 className="text-lg font-bold text-white">${product.price}</h1>
-            <button
-              onClick={handleSaveClick}
-              className="px-2 py-1 text-xs font-semibold text-gray-900 uppercase transition-colors duration-300 transform bg-white rounded hover:bg-gray-200 focus:bg-gray-400 focus:outline-none"
-            >
-              Add to cart
-            </button>
-          </div>
+      <div className=" bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition">
+      <img
+        src={product?.productImage}
+        alt= ''
+        className="h-48 w-full object-cover rounded-t-lg"
+      />
+      <div className="p-4">
+        <h3 className="text-sm font-semibold text-gray-800 truncate">{product?.productTitle}</h3>
+        <div className="flex items-center justify-between mt-2">
+          <span className="text-lg font-bold text-orange-600">$ {product?.price}</span>
+          <span className="text-sm text-gray-500">-{product.discount}%</span>
         </div>
+        <div className="flex items-center mt-2">
+          <span className="text-yellow-400 text-sm">★</span>
+          <span className="text-sm text-gray-600 ml-1">(Rating) </span>
+          <span className="text-xs text-gray-500 ml-2"> </span>
+        </div>
+      </div>
+    </div>
       </Link>
+    </div>
     </div>
   );
 };
