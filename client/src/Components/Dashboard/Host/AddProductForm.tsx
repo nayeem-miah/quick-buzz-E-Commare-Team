@@ -184,8 +184,8 @@ const AddProductForm: React.FC = () => {
             <option value="Cable">Cable</option>
             <option value="Mouse">Mouse</option>
             <option value="Keyboard">Keyboard</option>
-            <option value="Tshirt">Tshirt</option>
-            <option value="SunGlass">SunGlass</option>
+            <option value="T-shirt">Tshirt</option>
+            <option value="Sunglasses">SunGlass</option>
             <option value="Light">Light</option>
             <option value="Speaker">Speaker</option>
             <option value="Stand">Stand</option>

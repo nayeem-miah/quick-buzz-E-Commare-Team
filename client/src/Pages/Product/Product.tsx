@@ -6,6 +6,7 @@ import LoadingSpinner from "../../Shared/Loading";
 import { useSearchParams } from "react-router-dom";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
+import img from '../../../src/assets/Image/service.jpg'
 
 interface Product {
   _id: number;
@@ -15,10 +16,13 @@ interface Product {
   price: number;
   description: string;
   adminIsApproved: string;
+  
 }
 interface CardProps {
-  product: Product; // প্রপস টাইপ ডিফাইন করা হয়েছে
+  product: Product; 
+  // প্রপস টাইপ ডিফাইন করা হয়েছে
 }
+
 
 const Product: React.FC<CardProps> = () => {
   const axiosPublic = useAxiosPublic();
@@ -48,17 +52,20 @@ const Product: React.FC<CardProps> = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
+  
+  
 
   return (
     <div>
       <BannerDetailsPage
+       imageURL={img}
         headingText="Product."
         subheadingText="Please explore my QuickBuzz all Products and purchase your chosen Product"
       />
       <div className="mb-10">
         <Categories />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className=" max-w-7xl mx-auto grid grid-cols-1 mt-15 mb-20 md:grid-cols-3 p-2 lg:grid-cols-6 gap-2">
         {products.map(
           (product) =>
             // <Link to={`/product/${product.id}`} >
