@@ -346,7 +346,7 @@ const Sidebar: React.FC = () => {
 
           <div>
             <hr />
-
+            {/*  */}
             {/* Profile Menu */}
             <NavLink
               to="/dashboard/profile"
