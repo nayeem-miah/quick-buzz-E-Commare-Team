@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import useAuth from "../../Hooks/UseAuth";
 import avatar from "../../../src/assets/Image/avatar.jpg";
+import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 
 const MenuDropdown: React.FC = () => {
   const { user, logOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const { singleUser, loading } = useFetchSingleUser(user?.email);
+  
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,9 +52,8 @@ const MenuDropdown: React.FC = () => {
       </div>
 
       {isOpen && (
-        <div className="absolute rounded-xl shadow-md w-40 md:w-48 bg-white overflow-hidden right-0 top-12 text-sm">
+        <div className="absolute rounded-xl shadow-md w-40 md:w-56 bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
-
             {user ? (
               <>
                 <Link
@@ -66,12 +68,14 @@ const MenuDropdown: React.FC = () => {
                 >
                   my profile
                 </Link>
-                <Link
-                  to="/become-host"
-                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
-                >
-                Become a Seller
-                </Link>
+                {singleUser?.role === "user" && (
+                  <Link
+                    to="/become-host"
+                    className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                  >
+                    Become a Seller
+                  </Link>
+                )}
                 <div
                   onClick={logOut}
                   className="px-4 py-3 hover:bg-neutral-100 hover:text-red-500 transition font-semibold cursor-pointer"

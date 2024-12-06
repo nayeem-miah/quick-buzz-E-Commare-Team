@@ -11,10 +11,13 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../../../src/assets/Image/logo2.png";
 import MenuDropdown from "./MenuDropdawn";
 import useAuth from "../../Hooks/UseAuth";
+import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logOut } = useAuth();
+  const { singleUser, loading } = useFetchSingleUser(user?.email);
+  // console.log(singleUser);
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white  shadow-lg z-50 ">
@@ -61,7 +64,7 @@ const Navbar: React.FC = () => {
               : "opacity-0 -translate-x-full"
           } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out   md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center`}
         >
-          <div className="flex flex-col md:flex-row md:mx-6">
+          <div className="flex flex-col md:flex-row md:mx-6  text-center">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -132,16 +135,18 @@ const Navbar: React.FC = () => {
                     </NavLink>
                   </div>
                   <div>
-                    <NavLink
-                      to="/become-host"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
-                          : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
-                      }
-                    >
-                    Become a Seller
-                    </NavLink>
+                    {singleUser?.role === "user" && (
+                      <NavLink
+                        to="/become-host"
+                        className={({ isActive }) =>
+                          isActive
+                            ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                            : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                        }
+                      >
+                        Become a Seller
+                      </NavLink>
+                    )}
                   </div>
                   <div
                     onClick={logOut}
