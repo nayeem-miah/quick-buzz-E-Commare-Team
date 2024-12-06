@@ -6,6 +6,7 @@ import LoadingSpinner from "../../Shared/Loading";
 import { useSearchParams } from "react-router-dom";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
+import NoData from "../../Shared/NoDataFound/NoData";
 import img from '../../../src/assets/Image/service.jpg'
 
 interface Product {
@@ -18,13 +19,8 @@ interface Product {
   adminIsApproved: string;
   
 }
-interface CardProps {
-  product: Product; 
-  // প্রপস টাইপ ডিফাইন করা হয়েছে
-}
 
-
-const Product: React.FC<CardProps> = () => {
+const Product: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const [params] = useSearchParams();
   const category = params.get("category") || "all";
@@ -65,16 +61,20 @@ const Product: React.FC<CardProps> = () => {
       <div className="mb-10">
         <Categories />
       </div>
-      <div className=" max-w-7xl mx-auto grid grid-cols-1 mt-15 mb-20 md:grid-cols-3 p-2 lg:grid-cols-6 gap-2">
-        {products.map(
-          (product) =>
-            // <Link to={`/product/${product.id}`} >
-            product.adminIsApproved === "approve" && (
-              <Card product={product} key={product._id} />
-            )
-          // </Link>
-        )}
-      </div>
+      {products.length == 0 ? (
+        <NoData />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {products.map(
+            (product) =>
+              // <Link to={`/product/${product.id}`} >
+              product.adminIsApproved === "approve" && (
+                <Card product={product} key={product._id} />
+              )
+            // </Link>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -26,6 +26,7 @@ async function run() {
     const userCollection = client.db("quickBuzz").collection("alluser");
     const productsCollection = client.db("quickBuzz").collection("allProducts");
     const wishlistCollection = client.db("quickBuzz").collection("allsave");
+    const becomeSellerCollection = client.db("quickBuzz").collection("sellerRequest")
 
     // add product in db
     app.post("/product", async (req, res) => {
@@ -96,7 +97,6 @@ async function run() {
      app.get('/allsave', async (req, res) => {
        const result = await wishlistCollection.find().toArray()
        res.send(result)
-       
     })
 
 
@@ -204,7 +204,7 @@ async function run() {
 
 
 
-    //  post all data
+    //  post all user
     app.post("/users", async (req, res) => {
       // console.log("Request received for /users:", req.body);
       const user = req.body;
@@ -236,11 +236,68 @@ async function run() {
         res.status(500).send({ message: "Failed to update role", error });
       }
     });
+
+
+
+
+    // become a seller post in db ------------
+  app.post('/seller', async(req, res)=>{
+    try{
+      const seller = req.body;
+    const query = {sellerEmail: seller.sellerEmail};
+    const existingUser = await becomeSellerCollection.findOne(query)
+    if (existingUser) {
+      return res.send({ message: "seller already exist", insertedId: null });
+    }
+    const result = await becomeSellerCollection.insertOne(seller)
+    res.send(result)
+    }catch(err){
+      console.err(err.message);
+    }
+    })
+
+
+
+    //  get all data in seller
+    app.get('/seller', async (req,res)=>{
+       try{
+        const result = await becomeSellerCollection.find().toArray();
+        res.send(result)
+       }catch(err){
+        console.log(err);
+       }
+       })
+
+    //  get seller data in email ways
+
+    app.get('/single-seller/:email', async(req, res)=>{
+       try{
+        const email = req.params.email;
+        const query = {sellerEmail : email}
+        const result = await becomeSellerCollection.findOne(query)
+        res.send(result)
+       }catch(err){
+        console.error(err);
+       }
+    })
+    
+
+
+
+
+
+
+
+
+
+
+
     // await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
+    // console.clear()
   } finally {
     // await client.close();
   }

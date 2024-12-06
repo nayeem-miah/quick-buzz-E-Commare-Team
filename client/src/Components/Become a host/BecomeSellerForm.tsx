@@ -1,14 +1,19 @@
-import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { ImSpinner } from "react-icons/im";
+import useAuth from "../../Hooks/UseAuth";
+import useAxiosPublic from "../../Hooks/UsePublic";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const BecomeSellerForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
-
+  const { user } = useAuth();
+  const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
+  // handle submit btn
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const form = e.target as HTMLFormElement;
     const name = (form.elements.namedItem("name") as HTMLInputElement).value;
     const mobile = (form.elements.namedItem("mobile") as HTMLInputElement)
@@ -40,9 +45,12 @@ const BecomeSellerForm: React.FC = () => {
         formData
       );
       const imageUrl = data.data.display_url;
+      
       // seller data
       const sellerData = {
-        name,
+        sellerName: name || user?.displayName,
+        sellerEmail: user?.email,
+        sellerPhoto: user?.photoURL,
         mobile,
         reason,
         address,
@@ -50,7 +58,18 @@ const BecomeSellerForm: React.FC = () => {
         imageUrl,
       };
 
-      console.log(sellerData);
+      // console.log(sellerData);
+      // seller data post in db
+      await axiosPublic.post("/seller", sellerData).then((res) => {
+        // console.log(res);
+        if (res.data.insertedId) {
+          toast.success("your request successfully ");
+          form.reset();
+          navigate("/dashboard/my-host-listings");
+        } else {
+          toast.error("already send your details !! ");
+        }
+      });
     } catch (err) {
       console.error("seller details addition failed:", err);
       toast.error("Failed to seller details. Please try again.");
@@ -60,7 +79,7 @@ const BecomeSellerForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-md">
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-md">
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
         Become a Seller
       </h2>

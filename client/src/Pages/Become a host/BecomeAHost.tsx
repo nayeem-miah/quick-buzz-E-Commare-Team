@@ -1,5 +1,5 @@
 import React from 'react';
-import BecomeSellerForm from './BecomeSellerForm';
+import BecomeSellerForm from '../../Components/Become a host/BecomeSellerForm';
 
 const BecomeAHost: React.FC = () => {
     return (

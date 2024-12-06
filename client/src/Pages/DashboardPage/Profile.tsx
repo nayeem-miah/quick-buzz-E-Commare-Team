@@ -19,7 +19,7 @@ const Profile: React.FC = () => {
 }
 
   const { singleUser, loading } = useFetchSingleUser(user?.email);
-  console.log(singleUser);
+  // console.log(singleUser);
 
   if (loading) {
     return <LoadingSpinner></LoadingSpinner>;
