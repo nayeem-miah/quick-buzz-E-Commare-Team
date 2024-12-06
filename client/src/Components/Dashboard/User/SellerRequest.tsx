@@ -25,9 +25,9 @@ const SellerRequest: React.FC = () => {
         <Heading title={"Seller Request data"} subtitle={""}></Heading>
 
         <div>
-          {singleSeller.map((singleData: any) => (
+          {/* {singleSeller?.map((singleData: any) => (
             <div className="border border-green-400">{singleData.address}</div>
-          ))}
+          ))} */}
         </div>
       </section>
     </div>
