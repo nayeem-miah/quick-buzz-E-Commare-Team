@@ -123,7 +123,7 @@ const AdminManageBookings: React.FC = () => {
                   {(id = id + 1)}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
-                  {listing?.productTitle}
+                  {listing?.productTitle.slice(0,20)}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
                   <img

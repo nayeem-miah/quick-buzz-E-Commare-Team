@@ -25,7 +25,9 @@ import ProductPage from "../Pages/Product/ProductDetailsPage";
 import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProduct";
 import Checkout from "../Pages/Product/Checkout";
 import MyWishList from "../Components/Dashboard/User/MyWishList";
-import BecomeAHost from "../Components/Become a host/BecomeAHost";
+import BecomeAHost from "../Pages/Become a host/BecomeAHost";
+import SellerRequest from "../Components/Dashboard/User/SellerRequest";
+import AllHostRequest from "../Components/Dashboard/Admin/AllHostRequest";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -70,7 +72,14 @@ const router = createBrowserRouter([
         ),
       },
 
-      { path: "/become-host", element: <BecomeAHost /> },
+      {
+        path: "/become-host",
+        element: (
+          <PrivateRoute>
+            <BecomeAHost />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   { path: "/login", element: <Signin /> },
@@ -105,6 +114,10 @@ const router = createBrowserRouter([
         path: "all-payment-history",
         element: <AllPaymentHistory />,
       },
+      {
+        path: "all-host-request",
+        element: <AllHostRequest />,
+      },
       // host dashboard
       {
         index: true,
@@ -134,6 +147,10 @@ const router = createBrowserRouter([
       {
         path: "my-wishlist",
         element: <MyWishList></MyWishList>,
+      },
+      {
+        path: "seller-request",
+        element: <SellerRequest />,
       },
       {
         path: "my-payment-history",

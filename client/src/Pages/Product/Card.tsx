@@ -22,6 +22,7 @@ const Card: React.FC<CardProps> = ({ product }) => {
     console.log("hellp world");
   };
 
+
   return (
     <div className="">
       <div className="">

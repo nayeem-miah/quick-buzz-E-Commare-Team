@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
 import { useNavigate } from "react-router-dom";
+import NoData from "../../../Shared/NoDataFound/NoData";
 
 interface Listing {
   _id: number;
@@ -103,88 +104,92 @@ const ManageBooking: React.FC = () => {
     <div>
       <div className="">
         <Heading title={"Manage booking product"} subtitle={""} />
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-gray-400 text-white">
-              <tr>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Title
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Image
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  price
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  status
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  delete
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Details
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((listing: Listing) => (
-                <tr
-                  key={listing._id}
-                  className="border-b hover:bg-gray-50 transition duration-200"
-                >
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {listing?.productTitle}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    <img
-                      src={listing?.productImage}
-                      alt={"no image founded"}
-                      className="w-16 h-16 object-cover rounded-md"
-                    />
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    ${listing?.price}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {listing?.adminIsApproved === "approve" ? (
-                      "Approve"
-                    ) : (
+        {data.length === 0 ? (
+          <NoData />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+              <thead className="bg-gray-400 text-white">
+                <tr>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Title
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Image
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    price
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    status
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    delete
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Details
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((listing: Listing) => (
+                  <tr
+                    key={listing._id}
+                    className="border-b hover:bg-gray-50 transition duration-200"
+                  >
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {listing?.productTitle}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      <img
+                        src={listing?.productImage}
+                        alt={"no image founded"}
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      ${listing?.price}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {listing?.adminIsApproved === "approve" ? (
+                        "Approve"
+                      ) : (
+                        <button
+                          onClick={() => {
+                            handleApproved(listing);
+                          }}
+                          className=" px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                        >
+                          approve
+                        </button>
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
                       <button
                         onClick={() => {
-                          handleApproved(listing);
+                          handleDelete(listing?._id);
                         }}
-                        className=" px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                        border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                        className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
                       >
-                        approve 
+                        <MdDeleteForever />
                       </button>
-                    )}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    <button
-                      onClick={() => {
-                        handleDelete(listing?._id);
-                      }}
-                      className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
-                    >
-                      <MdDeleteForever />
-                    </button>
-                  </td>
-                  <td className="py-4 px-4 text-sm">
-                    <button
-                      onClick={() => handleDetailsClick(listing)}
-                      className="   px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                    >
-                       Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    </td>
+                    <td className="py-4 px-4 text-sm">
+                      <button
+                        onClick={() => handleDetailsClick(listing)}
+                        className="   px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                    border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                      >
+                        Details
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Modal */}
         {selectedBooking && (
