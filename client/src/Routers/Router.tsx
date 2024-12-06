@@ -26,7 +26,8 @@ import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProd
 import Checkout from "../Pages/Product/Checkout";
 import MyWishList from "../Components/Dashboard/User/MyWishList";
 import BecomeAHost from "../Pages/Become a host/BecomeAHost";
-import SellerRequest from "../Components/Dashboard/User/sellerRequest";
+import SellerRequest from "../Components/Dashboard/User/SellerRequest";
+import AllHostRequest from "../Components/Dashboard/Admin/AllHostRequest";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -112,6 +113,10 @@ const router = createBrowserRouter([
       {
         path: "all-payment-history",
         element: <AllPaymentHistory />,
+      },
+      {
+        path: "all-host-request",
+        element: <AllHostRequest />,
       },
       // host dashboard
       {
