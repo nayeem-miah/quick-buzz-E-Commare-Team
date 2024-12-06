@@ -269,7 +269,6 @@ async function run() {
        })
 
     //  get seller data in email ways
-
     app.get('/single-seller/:email', async(req, res)=>{
        try{
         const email = req.params.email;
@@ -280,6 +279,9 @@ async function run() {
         console.error(err);
        }
     })
+
+    // delete single seller 
+    // app.delete
     
 
 
