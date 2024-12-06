@@ -8,6 +8,7 @@ import useAuth from "../../../Hooks/UseAuth";
 import LoadingSpinner from "../../../Shared/Loading";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import NoData from "../../../Shared/NoDataFound/NoData";
 
 interface Listing {
   _id: number;
@@ -86,89 +87,93 @@ const MyAddedProduct: React.FC = () => {
     <div>
       <div className="">
         <Heading title={"My added product"} subtitle={""} />
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-gray-400 text-white">
-              <tr>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Title
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Image
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  price
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  status
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  delete
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  edit
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Details
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((listing: Listing) => (
-                <tr
-                  key={listing._id}
-                  className="border-b hover:bg-gray-50 transition duration-300"
-                >
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {listing?.productTitle}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    <img
-                      src={listing?.productImage}
-                      alt={"no image founded"}
-                      className="w-16 h-16 object-cover rounded-md"
-                    />
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    ${listing?.price}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {listing?.adminIsApproved}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    <button
-                      onClick={() => {
-                        handleDelete(listing?._id);
-                      }}
-                      className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
-                    >
-                      <MdDeleteForever />
-                    </button>
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    <Link to={`/updated-product/${listing._id}`}>
-                      <button className="px-4 py-2   text-2xl rounded-lg hover:text-green-700 transition duration-300 focus:outline-none">
-                        <FaEdit />
-                      </button>
-                    </Link>
-                  </td>
-
-                  <td className="py-4 px-4 text-sm">
-                    <Link to={`/product/${listing._id}`}>
-                      <button
-                        // onClick={() => handleDetailsClick(listing)}
-                        className="  px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                        border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                      >
-                         Details
-                      </button>
-                    </Link>
-                  </td>
+        {data.length === 0 ? (
+          <NoData />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+              <thead className="bg-gray-400 text-white">
+                <tr>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Title
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Image
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    price
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    status
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    delete
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    edit
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Details
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {data.map((listing: Listing) => (
+                  <tr
+                    key={listing._id}
+                    className="border-b hover:bg-gray-50 transition duration-300"
+                  >
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {listing?.productTitle.slice(0, 20)}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      <img
+                        src={listing?.productImage}
+                        alt={"no image founded"}
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      ${listing?.price}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {listing?.adminIsApproved}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      <button
+                        onClick={() => {
+                          handleDelete(listing?._id);
+                        }}
+                        className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
+                      >
+                        <MdDeleteForever />
+                      </button>
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      <Link to={`/updated-product/${listing._id}`}>
+                        <button className="px-4 py-2   text-2xl rounded-lg hover:text-green-700 transition duration-300 focus:outline-none">
+                          <FaEdit />
+                        </button>
+                      </Link>
+                    </td>
+
+                    <td className="py-4 px-4 text-sm">
+                      <Link to={`/product/${listing._id}`}>
+                        <button
+                          // onClick={() => handleDetailsClick(listing)}
+                          className="  px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                        >
+                          Details
+                        </button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Modal */}
         {selectedBooking && (
