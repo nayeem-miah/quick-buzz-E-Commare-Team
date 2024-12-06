@@ -17,6 +17,7 @@ import logo from "../../../src/assets/Image/logo2.png";
 import { MdOutlinePayment } from "react-icons/md";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import LoadingSpinner from "../../Shared/Loading";
+import { RiGitClosePullRequestFill } from "react-icons/ri";
 
 const Sidebar: React.FC = () => {
   const { logOut, user } = useAuth();
@@ -131,6 +132,18 @@ const Sidebar: React.FC = () => {
                 >
                   <FaHistory className="w-5 h-5" />
                   <span className="mx-4 font-medium">All payment history</span>
+                </NavLink>
+                {/* host request  */}
+                <NavLink
+                  to="all-host-request"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
+                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
+                    }`
+                  }
+                >
+                  <RiGitClosePullRequestFill className="w-5 h-5" />
+                  <span className="mx-4 font-medium">All Host Request</span>
                 </NavLink>
               </nav>
             </div>

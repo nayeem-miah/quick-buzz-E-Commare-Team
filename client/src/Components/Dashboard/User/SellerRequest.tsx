@@ -8,14 +8,7 @@ const SellerRequest: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
 
-  //    get host request data
-  const { data: sellerData = [] } = useQuery({
-    queryKey: ["sellerData"],
-    queryFn: async () => {
-      const res = await axiosPublic.get("/seller");
-      return res.data;
-    },
-  });
+ 
 
   //    get host request data in every single email
   const { data: singleSeller = [] } = useQuery({

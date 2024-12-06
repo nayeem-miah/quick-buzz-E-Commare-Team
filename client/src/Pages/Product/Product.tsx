@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
 import NoData from "../../Shared/NoDataFound/NoData";
-import img from '../../../src/assets/Image/service.jpg'
+import img from "../../../src/assets/Image/service.jpg";
 
 interface Product {
   _id: number;
@@ -17,7 +17,7 @@ interface Product {
   price: number;
   description: string;
   adminIsApproved: string;
-  
+  discount: number;
 }
 
 const Product: React.FC = () => {
@@ -48,13 +48,11 @@ const Product: React.FC = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
-  
-  
 
   return (
     <div>
       <BannerDetailsPage
-       imageURL={img}
+        imageURL={img}
         headingText="Product."
         subheadingText="Please explore my QuickBuzz all Products and purchase your chosen Product"
       />
