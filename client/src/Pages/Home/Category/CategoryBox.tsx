@@ -1,29 +1,28 @@
-import React from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import queryString from 'query-string';
+import React from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import queryString from "query-string";
 
 interface CategoryBoxProps {
   label: string;
-  icon: React.ElementType; 
+  icon: React.ElementType;
 }
 
 const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
   const [params] = useSearchParams();
-  const category = params.get('category');
+  const category = params.get("category");
   const navigate = useNavigate();
 
   const handleClick = () => {
     const currentQuery = { category: label };
-  
+
     const url = queryString.stringifyUrl({
-      url: '/product',
+      url: "/product",
       query: currentQuery,
     });
-  
-    console.log("Generated URL:", url); 
-    navigate(url);  // নতুন ক্যাটাগরি নির্বাচন হলে URL আপডেট হবে
+
+    // console.log("Generated URL:", url);
+    navigate(url);
   };
-  
 
   return (
     <div
@@ -41,7 +40,7 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
         hover:text-neutral-800
         transition
         cursor-pointer ${
-          category === label && 'border-b-neutral-800 text-neutral-800'
+          category === label && "border-b-neutral-800 text-neutral-800"
         }`}
     >
       <Icon size={26} />
