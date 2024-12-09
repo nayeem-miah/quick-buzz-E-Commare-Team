@@ -123,7 +123,7 @@ const AdminManageBookings: React.FC = () => {
                   {(id = id + 1)}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
-                  {listing?.productTitle.slice(0,20)}
+                  {listing?.productTitle.slice(0, 20)}
                 </td>
                 <td className="py-4 px-4 text-sm text-gray-600">
                   <img
@@ -147,7 +147,7 @@ const AdminManageBookings: React.FC = () => {
                       className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                       border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                     >
-                      approve 
+                      approve
                     </button>
                   )}
                 </td>
@@ -167,7 +167,7 @@ const AdminManageBookings: React.FC = () => {
                     className="  px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                     border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                   >
-                     Details
+                    Details
                   </button>
                 </td>
               </tr>
@@ -179,16 +179,16 @@ const AdminManageBookings: React.FC = () => {
       {/* Modal */}
       {selectedBooking && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-200 ease-in-out"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onClick={closeModal} // Closes modal when clicking outside
         >
           <div
-            className="relative bg-gradient-to-br from-white to-gray-100 rounded-3xl shadow-2xl p-8 w-full max-w-4xl scale-95 opacity-0 transition-all duration-200 ease-out transform hover:scale-100 hover:opacity-100"
+            className="relative bg-gradient-to-br from-white to-gray-100 rounded-3xl shadow-2xl p-8 w-full max-w-4xl"
             onClick={(e) => e.stopPropagation()} // Prevents modal content from triggering close
           >
             {/* Modal Header */}
             <div className="flex justify-between items-center border-b pb-4 mb-6">
-              <h3 className="text-4xl font-extrabold text-gray-800 tracking-wide transition-transform duration-200 ease-in-out transform hover:scale-105">
+              <h3 className="text-4xl font-extrabold text-gray-800 tracking-wide">
                 Product Details
               </h3>
               <div
@@ -202,13 +202,13 @@ const AdminManageBookings: React.FC = () => {
             {/* Modal Content */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {/* Image Section */}
-              <div className="relative overflow-hidden rounded-lg shadow-lg hover:scale-105 transition-all duration-200 ease-in-out">
+              <div className="relative overflow-hidden rounded-lg shadow-lg">
                 <img
                   src={selectedBooking.productImage || "loading-image-url.jpg"} // Add a placeholder loading image
                   alt={selectedBooking.productTitle}
                   className="rounded-2xl w-full h-64 object-cover"
                 />
-                <span className="absolute top-4 left-4 bg-purple-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg transform translate-x-2 translate-y-2">
+                <span className="absolute top-4 left-4 bg-purple-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg">
                   {selectedBooking?.category}
                 </span>
               </div>
@@ -235,7 +235,7 @@ const AdminManageBookings: React.FC = () => {
                   <span className="font-bold text-gray-900">Host:</span>
                   <div className="flex items-center space-x-3">
                     <img
-                      className="h-14 w-14 rounded-full border-2 border-blue-500 shadow-md transform hover:scale-105 transition-all duration-200"
+                      className="h-14 w-14 rounded-full border-2 border-blue-500 shadow-md"
                       src={
                         selectedBooking?.hostPhoto || "default-host-photo.jpg"
                       } // Placeholder for host image

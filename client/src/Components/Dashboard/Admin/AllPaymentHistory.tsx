@@ -110,54 +110,55 @@ const AllPaymentHistory: React.FC = () => {
       </div>
 
       {/* modal  */}
-      {selectedPayment && (
+{selectedPayment && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    onClick={closeModal} // Close modal when clicking outside
+  >
+    <div
+      className="relative bg-gradient-to-br from-white to-gray-100 rounded-3xl shadow-2xl p-8 w-full max-w-4xl"
+      onClick={(e) => e.stopPropagation()} // Prevents modal content from triggering close
+    >
+      {/* Modal Header */}
+      <div className="flex justify-between items-center border-b pb-4 mb-6">
+        <h3 className="text-4xl font-extrabold text-gray-800 tracking-wide">
+          Payment Details
+        </h3>
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-200 ease-in-out"
-          onClick={closeModal} // Close modal when clicking outside
+          className="text-gray-600 hover:text-gray-900 cursor-pointer text-2xl"
+          onClick={closeModal} // Close modal when clicking the "X"
         >
-          <div
-            className="relative bg-gradient-to-br from-white to-gray-100 rounded-3xl shadow-2xl p-8 w-full max-w-4xl scale-95 opacity-0 transition-all duration-200 ease-out transform hover:scale-100 hover:opacity-100"
-            onClick={(e) => e.stopPropagation()} // Prevents modal content from triggering close
-          >
-            {/* Modal Header */}
-            <div className="flex justify-between items-center border-b pb-4 mb-6">
-              <h3 className="text-4xl font-extrabold text-gray-800 tracking-wide">
-                Payment Details
-              </h3>
-              <div
-                className="text-gray-600 hover:text-gray-900 cursor-pointer text-2xl"
-                onClick={closeModal} // Close modal when clicking the "X"
-              >
-                ✕
-              </div>
-            </div>
-
-            {/* Modal Content */}
-            <div className="space-y-4 text-gray-700">
-              <p className="text-lg">
-                <span className="font-bold text-gray-900">User Name:</span>
-                {selectedPayment.userName}
-              </p>
-              <p className="text-lg">
-                <span className="font-bold text-gray-900">Email:</span>
-                {selectedPayment.email}
-              </p>
-              <p className="text-lg">
-                <span className="font-bold text-gray-900">Payment Date:</span>{" "}
-                {selectedPayment.paymentDate}
-              </p>
-              <p className="text-lg">
-                <span className="font-bold text-gray-900">Amount:</span>{" "}
-                {selectedPayment.amount}
-              </p>
-              <p className="text-lg">
-                <span className="font-bold text-gray-900">Transaction ID:</span>{" "}
-                {selectedPayment.transactionId}
-              </p>
-            </div>
-          </div>
+          ✕
         </div>
-      )}
+      </div>
+
+      {/* Modal Content */}
+      <div className="space-y-4 text-gray-700">
+        <p className="text-lg">
+          <span className="font-bold text-gray-900">User Name:</span>{" "}
+          {selectedPayment.userName}
+        </p>
+        <p className="text-lg">
+          <span className="font-bold text-gray-900">Email:</span>{" "}
+          {selectedPayment.email}
+        </p>
+        <p className="text-lg">
+          <span className="font-bold text-gray-900">Payment Date:</span>{" "}
+          {selectedPayment.paymentDate}
+        </p>
+        <p className="text-lg">
+          <span className="font-bold text-gray-900">Amount:</span>{" "}
+          {selectedPayment.amount}
+        </p>
+        <p className="text-lg">
+          <span className="font-bold text-gray-900">Transaction ID:</span>{" "}
+          {selectedPayment.transactionId}
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
