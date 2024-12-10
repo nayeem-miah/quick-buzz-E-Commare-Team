@@ -41,7 +41,7 @@ const ManageBooking: React.FC = () => {
       return res.data;
     },
   });
-
+//  
   // handle delete
   const handleDelete = (id: any) => {
     Swal.fire({
