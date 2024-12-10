@@ -43,6 +43,7 @@ const ProductPage: React.FC = () => {
   const HandleButton = () => {
     try {
       const newData = {
+        _id,
         productImage,
         description,
         brandName,
