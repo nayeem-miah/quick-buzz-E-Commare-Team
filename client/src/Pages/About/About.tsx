@@ -33,7 +33,7 @@ const About: React.FC = () => {
   ];
 
   return (
-    <div className=" text-gray-800 font-sans">
+    <div className=" text-gray-800 font-sans m-4">
       {/* Banner */}
       <div
         className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative"
