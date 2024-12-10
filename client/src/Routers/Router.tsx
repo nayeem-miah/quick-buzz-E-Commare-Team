@@ -28,6 +28,7 @@ import MyWishList from "../Components/Dashboard/User/MyWishList";
 import BecomeAHost from "../Pages/Become a host/BecomeAHost";
 import SellerRequest from "../Components/Dashboard/User/SellerRequest";
 import AllHostRequest from "../Components/Dashboard/Admin/AllHostRequest";
+import UpdateProfile from "../Pages/Dashboard/UpdateProfile";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
   { path: "/login", element: <Signin /> },
   { path: "/signup", element: <Signup /> },
   {
+    path:':edit-profile',
+    element:<UpdateProfile></UpdateProfile>
+  },
+  {
     path: "/dashboard",
     element: (
       <PrivateRoute>
@@ -97,6 +102,7 @@ const router = createBrowserRouter([
         path: "profile",
         element: <Profile></Profile>,
       },
+     
       //   admin dashboard
       {
         index: true,
