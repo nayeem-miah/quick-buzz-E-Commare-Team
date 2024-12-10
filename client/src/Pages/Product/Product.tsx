@@ -8,6 +8,7 @@ import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
 import NoData from "../../Shared/NoDataFound/NoData";
 import img from "../../../src/assets/Image/service.jpg";
+import Input from "./Input";
 
 interface Product {
   _id: number;
@@ -56,9 +57,16 @@ const Product: React.FC = () => {
         headingText="Product."
         subheadingText="Please explore my QuickBuzz all Products and purchase your chosen Product"
       />
+
+
+     <Input></Input>
+
+
+
       <div className="mb-10">
         <Categories />
       </div>
+      
       {products.length == 0 ? (
         <NoData />
       ) : (
