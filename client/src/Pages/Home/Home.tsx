@@ -88,7 +88,7 @@ const Home: React.FC = () => {
 
           <Categories></Categories>
         </div>
-        <div className="py-10">
+        <div className="py-10 p-12">
           {/* {added poduct} */}
           <RecentProduct recentData={recentData} isLoading={isLoading} />
         </div>

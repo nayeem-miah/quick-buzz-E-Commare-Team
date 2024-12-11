@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/UseAuth";
+import Afk from "./Afk";
 
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -85,6 +86,13 @@ const ProductPage: React.FC = () => {
         subheadingText="Please explore my QuickBuzz all Product and purchase your choice Product"
       ></BannerDetailsPage>
 
+    
+      {/* Datails page for Afk  */}
+      <div>
+        <Afk></Afk>
+      </div>
+        
+        {/* product details  */}
       <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full  bg-red-300 lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
         <div className="grid gap-12 row-gap-8 lg:grid-cols-2">
           <div className="flex flex-col justify-center">
@@ -120,7 +128,10 @@ const ProductPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+
       {/*user review rating start*/}
+      
       <div className="flex   flex-col lg:w-[400px] lg:ml-[80px] mt-2 p-8 shadow-sm rounded-xl lg:p-12 dark:bg-gray-50 dark:text-gray-800">
         <div className="flex flex-col items-center w-full">
           <h2 className="text-3xl font-semibold text-center">
@@ -209,7 +220,6 @@ const ProductPage: React.FC = () => {
             className="input input-bordered w-full max-w-xs"
           />
           <button
-           
             className="mt-2 px-10 py-2 text-2xl text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                     border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
           >
