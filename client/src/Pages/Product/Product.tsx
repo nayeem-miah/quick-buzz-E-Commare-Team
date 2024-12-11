@@ -72,10 +72,10 @@ const Product: React.FC = () => {
       />
 
       {/* Search Field */}
-      <div className="w-full h-auto mx-auto p-4 bg-red-400">
+      <div className="w-full h-auto mx-auto p-4 bg-red-300">
         {/* Heading Section */}
         <div className="text-center mb-4">
-          <h2 className="text-2xl   font-semibold">
+          <h2 className="text-2xl ">
             
             Search Products
           </h2>
@@ -114,7 +114,7 @@ const Product: React.FC = () => {
       {filteredProducts.length === 0 ? (
         <NoData />
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid max-w-7xl p-2 mx-auto grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {filteredProducts.map(
             (product) =>
               product.adminIsApproved === "approve" && (
