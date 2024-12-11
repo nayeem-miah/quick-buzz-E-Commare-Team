@@ -12,7 +12,7 @@ const NoData: React.FC<NoDataProps> = ({
   message = "No data available.",
   actionText,
   onActionClick,
-  illustration,
+
 }) => {
   return (
     <div className="flex flex-col items-center justify-center h-80 p-6 bg-white rounded-lg shadow-md">

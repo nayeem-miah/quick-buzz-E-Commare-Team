@@ -123,15 +123,31 @@ async function run() {
       res.send(result);
     }); 
 
-    // recent product show in home page
-   app.get('/recent-product', async (req, res)=>{
-   try{
-    const result = await productsCollection.find().limit(20).sort({createAt: -1}).toArray()
-   res.send(result)
-   }catch(err){
-      console.error(err)
-   }
-   })
+    // recent product show in home page and search implement
+    app.get('/recent-product', async (req, res) => {
+      try {
+        const search = req.query.search || "";
+        const query = {
+          $or: [
+            { productTitle: { $regex: search, $options: "i" } },
+            { brandName: { $regex: search, $options: "i" } },
+            { category: { $regex: search, $options: "i" } },
+          ],
+        };
+    
+        const result = await productsCollection
+          .find(query)
+          .limit(20)
+          .sort({ createAt: -1 })
+          .toArray();
+    
+        res.send(result);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ err: "Failed to perform search" });
+      }
+    });
+    
 
 
     // save data get with mongodb 
