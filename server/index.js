@@ -92,6 +92,16 @@ async function run() {
       res.send(result);
     }); 
 
+    // recent product show in home page
+   app.get('/recent-product', async (req, res)=>{
+   try{
+    const result = await productsCollection.find().limit(20).sort({createAt: -1}).toArray()
+   res.send(result)
+   }catch(err){
+      console.error(err)
+   }
+   })
+
 
     // save data get with mongodb 
      app.get('/allsave', async (req, res) => {
@@ -197,9 +207,6 @@ async function run() {
       }
     });
     
-
-
-
 
 
 

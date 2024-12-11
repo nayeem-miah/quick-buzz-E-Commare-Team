@@ -3,6 +3,7 @@ import Faq from "../../Components/Home/Faq/Faq";
 import Slider from "./Banner/Banner";
 import BrowseByDestination from "../../Components/Home/BrowseByDestination/BrowseByDestination";
 import Categories from "./Category/Category";
+import RecentProduct from "../../Components/Home/RecentProducts/RecentProduct";
 
 const Home: React.FC = () => {
 
@@ -16,8 +17,9 @@ const Home: React.FC = () => {
    
           <Categories></Categories>
         </div>
-        <div>
+        <div className="py-10">
           {/* {added poduct} */}
+          <RecentProduct/>
         </div>
         <BrowseByDestination />
         <Faq></Faq>

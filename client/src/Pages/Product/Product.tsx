@@ -18,6 +18,7 @@ interface Product {
   description: string;
   adminIsApproved: string;
   discount: number;
+  productTitle: string;
 }
 
 const Product: React.FC = () => {
