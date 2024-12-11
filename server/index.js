@@ -121,7 +121,42 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.findOne(query);
       res.send(result);
-    });
+    }); 
+
+    // recent product show in home page
+   app.get('/recent-product', async (req, res)=>{
+   try{
+    const result = await productsCollection.find().limit(20).sort({createAt: -1}).toArray()
+   res.send(result)
+   }catch(err){
+      console.error(err)
+   }
+   })
+
+
+    // save data get with mongodb 
+     app.get('/allsave', async (req, res) => {
+       const result = await wishlistCollection.find().toArray()
+       res.send(result)
+    })
+
+
+    
+
+  //  single user by data 
+  app.get('/allsave/:email', async (req, res)=>{
+    const email = req.params.email;
+    if(email){
+    query = { email: email}
+    const result = await wishlistCollection.find(query).toArray();
+    res.send(result)
+    }
+  })
+
+
+
+
+
 
     // save data get with mongodb
     app.get("/allsave", async (req, res) => {
