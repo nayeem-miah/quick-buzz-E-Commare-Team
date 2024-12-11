@@ -41,7 +41,7 @@ const ManageBooking: React.FC = () => {
       return res.data;
     },
   });
-//  
+  //
   // handle delete
   const handleDelete = (id: any) => {
     Swal.fire({
@@ -195,11 +195,11 @@ const ManageBooking: React.FC = () => {
         {selectedBooking && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-            onClick={closeModal} 
+            onClick={closeModal}
           >
             <div
               className="relative bg-white rounded-3xl shadow-2xl p-8 w-full max-w-4xl"
-              onClick={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="flex justify-between items-center border-b pb-4 mb-6">
