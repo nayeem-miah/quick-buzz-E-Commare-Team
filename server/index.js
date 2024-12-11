@@ -26,7 +26,9 @@ async function run() {
     const userCollection = client.db("quickBuzz").collection("alluser");
     const productsCollection = client.db("quickBuzz").collection("allProducts");
     const wishlistCollection = client.db("quickBuzz").collection("allsave");
-    const becomeSellerCollection = client.db("quickBuzz").collection("sellerRequest")
+    const becomeSellerCollection = client
+      .db("quickBuzz")
+      .collection("sellerRequest");
 
     // add product in db
     app.post("/product", async (req, res) => {
@@ -73,6 +75,35 @@ async function run() {
       };
       const result = await productsCollection.updateOne(filter, updatedDoc);
       res.send(result);
+    });
+
+    /* user deleted data  */
+
+    app.delete("/userpro/:id", async (req, res) => {
+      const id = req.params.id;
+
+      // Validate the ID format to ensure it matches ObjectId format
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send({ error: "Invalid ID format" });
+      }
+
+      console.log("Deleting ID:", id);
+
+      const query = { _id: new ObjectId(id) };
+      try {
+        const result = await wishlistCollection.deleteOne(query);
+
+        if (result.deletedCount === 0) {
+          console.log("No item found to delete with ID:", id);
+          return res.status(404).send({ error: "Item not found" });
+        }
+
+        console.log("Successfully deleted item with ID:", id);
+        res.send(result);
+      } catch (error) {
+        console.error("Error deleting item:", error.message);
+        res.status(500).send({ error: "Failed to delete the item" });
+      }
     });
 
     // delete product
@@ -127,7 +158,21 @@ async function run() {
 
 
 
+    // save data get with mongodb
+    app.get("/allsave", async (req, res) => {
+      const result = await wishlistCollection.find().toArray();
+      res.send(result);
+    });
 
+    //  single user by data
+    app.get("/allsave/:email", async (req, res) => {
+      const email = req.params.email;
+      if (email) {
+        query = { email: email };
+        const result = await wishlistCollection.find(query).toArray();
+        res.send(result);
+      }
+    });
 
     //  update single data
     app.patch("/product-update/:id", async (req, res) => {
@@ -153,8 +198,6 @@ async function run() {
       const result = await productsCollection.updateOne(filter, updatedDoc);
       res.send(result);
     });
-
-
 
     // get all users
     app.get("/alluser", async (req, res) => {
@@ -187,28 +230,25 @@ async function run() {
     app.post("/allsave", async (req, res) => {
       try {
         const wishlist = req.body;
-    
+
         // `_id` মুছে দিন
         console.log("Before deleting _id:", wishlist);
         delete wishlist._id;
         console.log("After deleting _id:", wishlist);
-    
+
         if (!wishlist || Object.keys(wishlist).length === 0) {
           return res.status(400).send({ error: "Invalid wishlist data." });
         }
-    
+
         // ইনসার্ট অপারেশন
         const result = await wishlistCollection.insertOne(wishlist);
-    
+
         res.status(201).send(result);
       } catch (error) {
         console.error("Error inserting wishlist:", error);
         res.status(500).send({ error: "Failed to save wishlist." });
       }
     });
-    
-
-
 
     //  post all user
     app.post("/users", async (req, res) => {
@@ -243,65 +283,54 @@ async function run() {
       }
     });
 
-
-
-
     // become a seller post in db ------------
-  app.post('/seller', async(req, res)=>{
-    try{
-      const seller = req.body;
-    const query = {sellerEmail: seller.sellerEmail};
-    const existingUser = await becomeSellerCollection.findOne(query)
-    if (existingUser) {
-      return res.send({ message: "seller already exist", insertedId: null });
-    }
-    const result = await becomeSellerCollection.insertOne(seller)
-    res.send(result)
-    }catch(err){
-      console.err(err.message);
-    }
-    })
+    app.post("/seller", async (req, res) => {
+      try {
+        const seller = req.body;
+        const query = { sellerEmail: seller.sellerEmail };
+        const existingUser = await becomeSellerCollection.findOne(query);
+        if (existingUser) {
+          return res.send({
+            message: "seller already exist",
+            insertedId: null,
+          });
+        }
+        const result = await becomeSellerCollection.insertOne(seller);
+        res.send(result);
+      } catch (err) {
+        console.err(err.message);
+      }
+    });
 
     //  get all data in seller
-    app.get('/seller', async (req,res)=>{
-       try{
+    app.get("/seller", async (req, res) => {
+      try {
         const result = await becomeSellerCollection.find().toArray();
-        res.send(result)
-       }catch(err){
+        res.send(result);
+      } catch (err) {
         console.log(err);
-       }
-       })
+      }
+    });
 
     //  get seller data in email ways
-    app.get('/single-seller/:email', async(req, res)=>{
-       try{
+    app.get("/single-seller/:email", async (req, res) => {
+      try {
         const email = req.params.email;
-        const query = {sellerEmail : email}
-        const result = await becomeSellerCollection.findOne(query)
-        res.send(result)
-       }catch(err){
+        const query = { sellerEmail: email };
+        const result = await becomeSellerCollection.findOne(query);
+        res.send(result);
+      } catch (err) {
         console.error(err);
-       }
-    })
+      }
+    });
 
-    // delete single seller 
-    app.delete('/delete-seller/:id', async(req, res)=>{
+    // delete single seller
+    app.delete("/delete-seller/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id : new ObjectId(id)}
+      const query = { _id: new ObjectId(id) };
       const result = await becomeSellerCollection.deleteOne(query);
       res.send(result);
-    })
-    
-
-
-
-
-
-
-
-
-
-
+    });
 
     // await client.connect();
     await client.db("admin").command({ ping: 1 });

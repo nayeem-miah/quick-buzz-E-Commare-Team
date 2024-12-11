@@ -29,7 +29,7 @@ const RecentProduct: React.FC = () => {
     },
   });
 
-  console.log(RecentData, "recent 20 data");
+//   console.log(RecentData, "recent 20 data");
   if (isLoading) return <LoadingSpinner />;
   //   if(isError) return <div>error</div>
   return (
