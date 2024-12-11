@@ -34,7 +34,7 @@ const RecentProduct: React.FC = () => {
   //   if(isError) return <div>error</div>
   return (
     <div>
-      <Heading title={"recent data"} subtitle={""} />
+      <Heading title={"Just For You"} subtitle={""} />
       {RecentData.length == 0 ? (
         <NoData />
       ) : (

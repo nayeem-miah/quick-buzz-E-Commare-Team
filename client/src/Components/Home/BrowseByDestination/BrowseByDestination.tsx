@@ -84,7 +84,7 @@ const BrowseByDestination: React.FC = () => {
                         </h3>
                       </div>
 
-                      <div className="flex items-center justify-between">
+                      <div className="flex text-white items-center justify-between">
                         <span className="text-background/80 text-sm">
                           {"Explore destination"}
                         </span>
