@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 
 import auth from "../Firebase/FireBase.config";
+import toast from "react-hot-toast";
 
 interface AuthContextType {
   user: User | null;
@@ -84,6 +85,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     await signOut(auth);
     setUser(null);
     setLoading(false);
+    toast.success("Logout successful ... :)")
   };
 
   const updateUserProfile = async (name: string, photo: string) => {
