@@ -348,6 +348,10 @@ async function run() {
       res.send(result);
     });
 
+
+    // start payment work in ssl commarze---------------
+    
+
     // await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(

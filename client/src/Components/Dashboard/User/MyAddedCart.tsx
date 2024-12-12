@@ -23,7 +23,6 @@ const MyAddedCart: React.FC = () => {
       return res.data;
     },
   });
-  console.log(allsave);
   // Wait until allsave is fetched before calculating totalPrice
   const totalPrice = allsave.reduce(
     (total: any, save: { price: any }) => total + save.price,
@@ -38,7 +37,7 @@ const MyAddedCart: React.FC = () => {
 
   /* My added product is deleted */
   const handleDelete = (id: any) => {
-    console.log("Deleting ID:", id); // Check ID being sent
+    // console.log("Deleting ID:", id); 
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -86,7 +85,7 @@ const MyAddedCart: React.FC = () => {
   return (
     <div>
       <div className="overflow-x-auto">
-        <div className="flex justify-around m-8 gap-8">
+        <div className="flex justify-around items-center m-8 gap-8">
           <h2 className="md:text-3xl sm:text-2xl lg:text-3xl">
             All Items: {allsave?.length}
           </h2>
