@@ -16,7 +16,7 @@ interface Product {
 }
 
 type ChildComponentProps = {
-  recentData: Product[];
+  recentData: any;
   isLoading: boolean;
 };
 
@@ -26,7 +26,7 @@ const RecentProduct: React.FC<ChildComponentProps>= ({recentData, isLoading}) =>
   if (isLoading) return <LoadingSpinner />;
   //   if(isError) return <div>error</div>
   return (
-    <div>
+    <div id="recentData">
       <Heading title={"recent data"} subtitle={""} />
       {recentData.length == 0 ? (
         <NoData />
