@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Faq from "../../Components/Home/Faq/Faq";
 import Slider from "./Banner/Banner";
 import BrowseByDestination from "../../Components/Home/BrowseByDestination/BrowseByDestination";
@@ -7,6 +7,7 @@ import Categories from "./Category/Category";
 import RecentProduct from "../../Components/Home/RecentProducts/RecentProduct";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
+import { debounce } from "lodash";
 
 interface Product {
   _id: string;
@@ -17,23 +18,36 @@ interface Product {
   imageUrl?: string;
 }
 
+
 const Home: React.FC = () => {
+  const [search, setSearch] = useState<string>(""); // Start with an empty search
+  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const axiosPublic = useAxiosPublic();
-  const [search, setSearch] = useState<string>("");
-  // Handle search submission
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const searchFieldValue = (
-      e.currentTarget.elements.namedItem("search") as HTMLInputElement
-    ).value;
-    setSearch(searchFieldValue);
+
+  // Debounce search input
+  useEffect(() => {
+    const handler = debounce((value: string) => {
+      setDebouncedSearch(value);
+    }, 300);
+
+    handler(search);
+
+    return () => {
+      handler.cancel && handler.cancel();
+    };
+  }, [search]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
   };
 
   const { data: recentData = [], isLoading } = useQuery<Product[], Error>({
-    queryKey: ["productData", search],
+    queryKey: ["productData", debouncedSearch],
     queryFn: async (): Promise<Product[]> => {
       const res = await axiosPublic.get<Product[]>(
-        `/recent-product?search=${search}`
+        debouncedSearch
+          ? `/recent-product?search=${debouncedSearch}`
+          : `/recent-product`
       );
       return res.data;
     },
@@ -57,27 +71,26 @@ const Home: React.FC = () => {
             </div>
 
             {/* Search Box Section */}
-            <form
-              onSubmit={handleSearch}
-              className="flex  md:flex-row items-center justify-center gap-2 w-full"
-            >
+            <form className="flex md:flex-row items-center justify-center gap-2 w-full">
               <input
                 type="text"
+                required
                 placeholder="Search by brand, category, or title"
                 name="search"
-                required
-                //   value={searchText}
-                //   onChange={(e) => setSearchText(e.target.value)}
+                value={search}
+                onChange={handleSearchChange}
+               
                 className="input input-bordered w-full md:w-full max-w-screen-sm"
               />
-
-              <button
-                type="submit"
-                className=" px-5  py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+              <a href="#recentData">
+                <button
+                  type="button"
+                  className="px-5 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                     border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-              >
-                Search
-              </button>
+                >
+                  Search
+                </button>
+              </a>
             </form>
           </div>
         </div>
@@ -88,10 +101,10 @@ const Home: React.FC = () => {
 
           <Categories></Categories>
         </div>
-        <div className="py-10 p-12">
+        <section className="py-10 p-12">
           {/* {added poduct} */}
           <RecentProduct recentData={recentData} isLoading={isLoading} />
-        </div>
+        </section>
         <BrowseByDestination />
         <Faq></Faq>
       </div>

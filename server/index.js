@@ -47,7 +47,7 @@ async function run() {
         if (category && category !== "all" && category !== "null") {
           query = { category };
         }
-        console.log("Query for products:", query);
+        // console.log("Query for products:", query);
         const result = await productsCollection.find(query).toArray();
         res.send(result);
       } catch (error) {
