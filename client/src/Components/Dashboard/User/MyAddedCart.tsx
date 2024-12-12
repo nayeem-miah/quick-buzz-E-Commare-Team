@@ -6,6 +6,7 @@ import { FaArrowRight } from "react-icons/fa";
 import useAuth from "../../../Hooks/UseAuth";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 
 const MyAddedCart: React.FC = () => {
   const axiosPublic = useAxiosPublic();
@@ -29,7 +30,6 @@ const MyAddedCart: React.FC = () => {
     0
   );
 
-  // console.log(typeof totalPrice);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -37,7 +37,7 @@ const MyAddedCart: React.FC = () => {
 
   /* My added product is deleted */
   const handleDelete = (id: any) => {
-    // console.log("Deleting ID:", id); 
+    // console.log("Deleting ID:", id);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -82,6 +82,44 @@ const MyAddedCart: React.FC = () => {
     });
   };
 
+  const multiProductTitle = allsave?.map(
+    (name: { productTitle: any }) => name.productTitle
+  );
+  const multiProductImg = allsave?.map(
+    (img: { productImage: any }) => img.productImage
+  );
+  const multiProductBrandName = allsave?.map(
+    (brand: { brandName: any }) => brand.brandName
+  );
+  const multiProductPrice = allsave?.map((pri: { price: any }) => pri.price);
+  const multiProductDescription = allsave?.map(
+    (desc: { description: any }) => desc.description
+  );
+  const multiProductHostEmail = allsave?.map(
+    (email: { hostEmail: any }) => email.hostEmail
+  );
+  const paymentInfo = {
+    multiProductTitle,
+    multiProductImg,
+    multiProductDescription,
+    multiProductPrice,
+    multiProductBrandName,
+    multiProductHostEmail,
+    allsave,
+    totalPrice,
+    email: user?.email,
+    displayName: user?.displayName,
+  };
+  // payment start
+  const handlePayment = async () => {
+    try {
+      const { data } = await axiosPublic.post("/create-payment", paymentInfo);
+      console.log(data, "data is data ");
+    } catch (error: any) {
+      console.error("Error posting payment info:", error);
+      toast.error(error.message);
+    }
+  };
   return (
     <div>
       <div className="overflow-x-auto">
@@ -93,7 +131,10 @@ const MyAddedCart: React.FC = () => {
             Total Price: ${totalPrice}
           </h2>
           <h3 className="md:text-xl lg:xl  sm:text-sm">
-            <button className="mt-3 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
+            <button
+              onClick={handlePayment}
+              className="mt-3 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+            >
               <span className="mx-4 flex items-center">Pay </span>
               <FaArrowRight className="" />
             </button>

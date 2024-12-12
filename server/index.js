@@ -2,11 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb"); // Import MongoClient and ServerApiVersion
+const { default: axios } = require("axios");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
 app.use(cors());
 app.use(express.json());
+
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
+
 
 // MongoDB connection string
 // const uri='mongodb://localhost:27017'
@@ -20,7 +25,9 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
-
+const store_id = process.env.STORE_ID;
+const store_passwd = process.env.STORE_PASS;
+const is_live = false; //true for live, false for sandbox
 async function run() {
   try {
     const userCollection = client.db("quickBuzz").collection("alluser");
@@ -348,8 +355,58 @@ async function run() {
       res.send(result);
     });
 
+   // -----------------------ssl commarze start----------------
+    //1.init payment
+    //2.post Request---url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
+    // 3. save data in database
+    // 4. if payment success and then update database
+    // 5. if payment is not success and fail
+    // sslCommarze create payment-------------------------------
 
-    // start payment work in ssl commarze---------------
+    app.post('/create-payment', async(req, res)=>{
+      const paymentInfo= req.body;
+     const  {totalPrice, email,displayName,multiProductTitle,multiProductBrandName}= paymentInfo;
+      
+
+
+      const trxId = new ObjectId().toString();
+      const intentData = {
+        store_id,
+        store_passwd,
+        totalPrice: totalPrice,
+        currency: paymentInfo?.currency || "BDT",
+        tran_id: trxId,
+        // success_url: "https://urban-driveserver.vercel.app/success-booking",
+        // success_url: "http://localhost:8000/success-booking",
+        // fail_url: "https://urban-driveserver.vercel.app/fail",
+        // fail_url: "http://localhost:8000/fail",
+        // cancel_url: "https://urban-driveserver.vercel.app/cancel",
+        // cancel_url: "http://localhost:8000/cancel",
+        emi_option: 0,
+        cus_name: displayName,
+        cus_email: email,
+        cus_add1: "Address Line 1",
+        cus_city: "City",
+        cus_postcode: "1234",
+        cus_country: "Bangladesh",
+        cus_phone: "01711111111",
+        shipping_method: "NO",
+        product_name: multiProductTitle,
+        product_category: "General",
+        product_brandName: multiProductBrandName,
+        product_profile: "general",
+      };
+
+      const response = await axios({
+        method: "POST",
+        url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
+        data: intentData,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      console.log(response);
+    })
     
 
     // await client.connect();

@@ -38,6 +38,7 @@ const ProductPage: React.FC = () => {
     hostName,
     price,
     discount,
+    hostEmail,
   } = product;
   const priceFloat = parseFloat(price);
   // console.log(typeof priceFloat);
@@ -54,6 +55,8 @@ const ProductPage: React.FC = () => {
         price: priceFloat,
         discount,
         email: user?.email,
+        displayName: user?.displayName,
+        hostEmail: hostEmail
       };
 
       axiosPublic
