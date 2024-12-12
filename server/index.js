@@ -33,6 +33,7 @@ async function run() {
     const userCollection = client.db("quickBuzz").collection("alluser");
     const productsCollection = client.db("quickBuzz").collection("allProducts");
     const wishlistCollection = client.db("quickBuzz").collection("allsave");
+    const reviewtCollection = client.db("quickBuzz").collection("reviews");
     const becomeSellerCollection = client
       .db("quickBuzz")
       .collection("sellerRequest");
@@ -284,7 +285,44 @@ async function run() {
       }
       const result = await userCollection.insertOne(user);
       res.send(result);
+      
     });
+
+  
+
+
+    
+/* Review post  */
+app.post('/reviews', async (req, res) => {
+  const review = req.body;
+  console.log("Received review data:", review); // রিকোয়েস্টে প্রাপ্ত ডাটা লগ করা
+  try {
+      const result = await reviewtCollection.insertOne(review); // ডাটাবেসে নতুন রিভিউ যোগ করা
+      console.log("Review successfully saved:", result); // সফল ইনসার্ট লগ করা
+      res.status(201).send(result); 
+  } catch (error) {
+      console.error("Error saving review:", error.message); // ত্রুটির বার্তা লগ করা
+      console.error("Full error details:", error); // পুরো ত্রুটি লগ করা
+      res.status(500).send({ message: "Failed to save review" }); // ত্রুটির রেসপন্স
+  }
+});
+
+
+/* Get a Review data  */
+app.get('/review', async (req, res) => {
+  try {
+    const result = await reviewtCollection.find({ rating: { $gt: 3 } }).toArray(); // rating ৩ এর বেশি হলে
+
+      console.log(result);  // ডেটা কনসোল লগ
+      res.send(result);  // ক্লায়েন্টে রেসপন্স পাঠান
+  } catch (error) {
+      console.error("Error fetching reviews:", error);
+      res.status(500).send({ message: "Failed to fetch reviews" });  // ত্রুটির রেসপন্স
+  }
+});
+
+
+
 
     // patch all user
     app.patch("/alluser/admin/:id", async (req, res) => {
