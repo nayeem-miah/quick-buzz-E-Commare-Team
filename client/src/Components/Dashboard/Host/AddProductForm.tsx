@@ -23,7 +23,9 @@ const AddProductForm: React.FC = () => {
     ).value;
     const brandName = (form.elements.namedItem("brandName") as HTMLInputElement)
       .value;
-    const price = (form.elements.namedItem("price") as HTMLInputElement).value;
+    const priceString = (form.elements.namedItem("price") as HTMLInputElement)
+      .value;
+    const price = parseFloat(priceString);
     const discount = (form.elements.namedItem("discount") as HTMLInputElement)
       .value;
     const tags = (form.elements.namedItem("tags") as HTMLInputElement).value;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
@@ -39,7 +39,8 @@ const ProductPage: React.FC = () => {
     price,
     discount,
   } = product;
-
+  const priceFloat = parseFloat(price);
+  // console.log(typeof priceFloat);
   /* data post  */
   const HandleButton = () => {
     try {
@@ -50,12 +51,10 @@ const ProductPage: React.FC = () => {
         brandName,
         productTitle,
         hostName,
-        price,
+        price: priceFloat,
         discount,
         email: user?.email,
       };
-
-      console.log("Sending data:", newData);
 
       axiosPublic
         .post("/allsave", newData)
@@ -86,13 +85,12 @@ const ProductPage: React.FC = () => {
         subheadingText="Please explore my QuickBuzz all Product and purchase your choice Product"
       ></BannerDetailsPage>
 
-    
       {/* Datails page for Afk  */}
       <div>
         <Afk></Afk>
       </div>
-        
-        {/* product details  */}
+
+      {/* product details  */}
       <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full  bg-red-300 lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
         <div className="grid gap-12 row-gap-8 lg:grid-cols-2">
           <div className="flex flex-col justify-center">
@@ -129,9 +127,8 @@ const ProductPage: React.FC = () => {
         </div>
       </div>
 
-
       {/*user review rating start*/}
-      
+
       <div className="flex   flex-col lg:w-[400px] lg:ml-[80px] mt-2 p-8 shadow-sm rounded-xl lg:p-12 dark:bg-gray-50 dark:text-gray-800">
         <div className="flex flex-col items-center w-full">
           <h2 className="text-3xl font-semibold text-center">

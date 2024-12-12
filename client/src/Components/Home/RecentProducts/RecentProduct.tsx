@@ -21,7 +21,7 @@ type ChildComponentProps = {
 };
 
 const RecentProduct: React.FC<ChildComponentProps>= ({recentData, isLoading}) => {
-  console.log(recentData);
+  
  
   if (isLoading) return <LoadingSpinner />;
   //   if(isError) return <div>error</div>

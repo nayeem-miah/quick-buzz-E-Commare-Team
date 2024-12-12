@@ -8,7 +8,7 @@ import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
 import NoData from "../../Shared/NoDataFound/NoData";
 import img from "../../../src/assets/Image/service.jpg";
-import { FaSearch } from "react-icons/fa";
+
 
 interface Product {
   [x: string]: any;
