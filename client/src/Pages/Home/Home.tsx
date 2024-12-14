@@ -18,7 +18,6 @@ interface Product {
   imageUrl?: string;
 }
 
-
 const Home: React.FC = () => {
   const [search, setSearch] = useState<string>(""); // Start with an empty search
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
@@ -57,7 +56,9 @@ const Home: React.FC = () => {
   return (
     <div>
       <div className="pt-12">
-        <Slider></Slider>
+   
+          <Slider></Slider>
+      
         {/* search implementation */}
         <div className="">
           <div className="w-full h-auto mx-auto p-4 bg-red-400">
@@ -79,7 +80,6 @@ const Home: React.FC = () => {
                 name="search"
                 value={search}
                 onChange={handleSearchChange}
-               
                 className="input input-bordered w-full md:w-full max-w-screen-sm"
               />
               <a href="#recentData">

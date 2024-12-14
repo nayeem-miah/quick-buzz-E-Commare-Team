@@ -187,6 +187,7 @@ async function run() {
       const result = await wishlistCollection.find().toArray();
       res.send(result);
     });
+    
 
     //  single user by data
     app.get("/allsave/:email", async (req, res) => {
