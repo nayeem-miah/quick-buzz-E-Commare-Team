@@ -379,9 +379,9 @@ async function run() {
         total_amount: totalPrice,
         currency: paymentInfo?.currency || "BDT",
         tran_id: trxId,
-        success_url: "http://localhost:3000/success-payment",
-        fail_url: "http://localhost:3000/fail",
-        cancel_url: "http://localhost:3000/cancel",
+        success_url: "http://localhost:5173/success",
+        fail_url: "http://localhost:5173/fail",
+        cancel_url: "http://localhost:5173/cancel",
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,
@@ -416,8 +416,9 @@ async function run() {
         date:date,
         totalPrice:totalPrice,
         currency:  "BDT",
-        paymentId: trxId,
-        hostEmail: multiProductHostEmail
+        transactionId: trxId,
+        hostEmail: multiProductHostEmail,
+        status: "pending",
       }
       const result = await successPaymentCollection.insertOne(savaData)
       // result response frontend
@@ -431,17 +432,17 @@ async function run() {
      // success-payment
      app.post("/success-payment", async (req, res) => {
       const successData = req.body;
-      console.log(successData);
+      // console.log(successData);
       if (successData.status !== "VALID") {
         throw new Error("unauthorize payment , invalid payment");
       }
       // update the database
       const query = {
-        paymentId: successData.tran_id,
+        transactionId: successData.tran_id,
       };
       const update = {
         $set: {
-          status: "Success",
+          status: "success",
           tran_date: successData.tran_date,
           card_type: successData.card_type,
           hostIsApproved: "pending",

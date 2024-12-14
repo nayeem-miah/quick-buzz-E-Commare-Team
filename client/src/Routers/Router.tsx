@@ -84,35 +84,35 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      // fail success and cancel
-      {
-        path: "/success",
-        element: (
-          <PrivateRoute>
-            <Success />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "/cancel",
-        element: (
-          <PrivateRoute>
-            <Cancel />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "/fail",
-        element: (
-          <PrivateRoute>
-            <Fail />
-          </PrivateRoute>
-        ),
-      },
     ],
   },
   { path: "/login", element: <Signin /> },
   { path: "/signup", element: <Signup /> },
+  // fail success and cancel
+  {
+    path: "/success",
+    element: (
+      <PrivateRoute>
+        <Success />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/cancel",
+    element: (
+      <PrivateRoute>
+        <Cancel />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/fail",
+    element: (
+      <PrivateRoute>
+        <Fail />
+      </PrivateRoute>
+    ),
+  },
   {
     path: ":edit-profile",
     element: <UpdateProfile></UpdateProfile>,
