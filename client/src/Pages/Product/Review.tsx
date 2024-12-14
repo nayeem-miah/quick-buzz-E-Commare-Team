@@ -62,14 +62,16 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
       return data;
     },
   });
-//   console.log(reviewdata);
+  //   console.log(reviewdata);
 
   return (
     <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 lg:space-y-0">
       {/* Review Form */}
       <div className=" lg:w-[400px] w-full mt-2 p-8 shadow-sm rounded-xl lg:p-12 dark:bg-gray-50 dark:text-gray-800">
         <div className="flex flex-col items-center w-full">
-          <h2 className="text-3xl font-semibold text-center">Your opinion matters!</h2>
+          <h2 className="text-3xl font-semibold text-center">
+            Your opinion matters!
+          </h2>
           <div className="flex flex-col items-center py-6 space-y-3">
             <span className="text-center">How was your experience?</span>
             <div className="flex space-x-3">
@@ -136,8 +138,14 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
               <div className="ml-20 mt-4 text-xl">
                 <Rating
                   initialRating={item?.rating}
-                  emptySymbol={<span style={{ fontSize: "1.5em", color: "lightgray" }}>☆</span>}
-                  fullSymbol={<span style={{ fontSize: "1.5em", color: "gold" }}>★</span>}
+                  emptySymbol={
+                    <span style={{ fontSize: "1.5em", color: "lightgray" }}>
+                      ☆
+                    </span>
+                  }
+                  fullSymbol={
+                    <span style={{ fontSize: "1.5em", color: "gold" }}>★</span>
+                  }
                   readonly
                 />
               </div>
