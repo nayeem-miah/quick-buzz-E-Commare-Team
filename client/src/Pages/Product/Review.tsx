@@ -62,7 +62,7 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
       return data;
     },
   });
-  console.log(reviewdata);
+//   console.log(reviewdata);
 
   return (
     <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 lg:space-y-0">
