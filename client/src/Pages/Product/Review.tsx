@@ -2,34 +2,34 @@ import React, { useState } from 'react';
 import useAxiosPublic from '../../Hooks/UsePublic';
 import toast from 'react-hot-toast';
 import useAuth from '../../Hooks/UseAuth';
+import { useQuery } from '@tanstack/react-query';
 
-const Review: React.FC = () => {
+const Review: React.FC = ({id}) => {
+ 
+    
     const [rating, setRating] = useState<number | null>(null); 
     const [review, setReview] = useState<string>(''); 
     const axiosPublic = useAxiosPublic();
-     const {user} = useAuth();
-     
-     
-   const name = user?. displayName;
-   const photo = user?.photoURL;
-   const email = user?.email;
+    const {user} = useAuth();
+    const name = user?. displayName;
+    const photo = user?.photoURL;
+    const email = user?.email;
 
    
-     
-
- 
     const handleSubmit = async () => {
         if (rating && review) {
             const currentTime = new Date().toISOString();
             const data = { 
                 rating, 
+                productid:id,
                 review, 
                 name,
                 photo,
                 email,
                 timestamp: currentTime 
             };
-          
+           console.log(data);
+           
             
             axiosPublic
             .post("/reviews", data, {
@@ -58,6 +58,24 @@ const Review: React.FC = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setReview(e.target.value);
     };
+
+  
+     
+  const {
+    data: reviewdata = [] } = useQuery({
+    queryKey: ["review",],
+    queryFn: async () => {
+      const { data } = await axiosPublic.get(`/review/${id}`);
+    //   return data;
+    console.log(data);
+    
+    },
+   
+  });
+
+
+
+
 
     return (
         <div className="flex flex-col items-center w-full">

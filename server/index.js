@@ -308,18 +308,47 @@ app.post('/reviews', async (req, res) => {
 });
 
 
-/* Get a Review data  */
-app.get('/review', async (req, res) => {
-  try {
-    const result = await reviewtCollection.find({ rating: { $gt: 3 } }).toArray(); // rating ৩ এর বেশি হলে
 
-      console.log(result);  // ডেটা কনসোল লগ
-      res.send(result);  // ক্লায়েন্টে রেসপন্স পাঠান
+
+/* Get a Review data  */
+app.get('/review/:id', async (req, res) => {
+  const productid = req.params.id; 
+  console.log(productid);
+  
+  try {
+     
+      const query = { productid: productid };
+      const result = await reviewtCollection.
+      find(query)
+      sort({ createAt: -1 })
+      .toArray();
+
+      console.log(result);  
+      res.send(result);  
   } catch (error) {
       console.error("Error fetching reviews:", error);
-      res.status(500).send({ message: "Failed to fetch reviews" });  // ত্রুটির রেসপন্স
+      res.status(500).send({ message: "Failed to fetch reviews" });  
   }
 });
+
+
+
+// /* Get a Review data  */
+// app.get('/review', async (req, res) => {
+
+//   try {
+//       const result = await reviewtCollection.find().toArray();
+//       console.log(result);  
+//       res.send(result);  
+//   } catch (error) {
+//       console.error("Error fetching reviews:", error);
+//       res.status(500).send({ message: "Failed to fetch reviews" });  
+//   }
+// });
+
+
+
+
 
 
 
