@@ -114,7 +114,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: ":edit-profile",
+    path: "edit-profile",
     element: <UpdateProfile></UpdateProfile>,
   },
   {
