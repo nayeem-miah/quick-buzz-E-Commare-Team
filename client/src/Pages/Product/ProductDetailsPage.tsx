@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
 import { useParams } from "react-router-dom";
 import useAxiosPublic from "../../Hooks/UsePublic";
@@ -10,8 +12,13 @@ import Review from "./Review";
 
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
+
+
+
+
 
   const {
     data: product,
@@ -81,6 +88,9 @@ const ProductPage: React.FC = () => {
     }
   };
 
+
+
+
   return (
     <div>
       <BannerDetailsPage
@@ -135,7 +145,14 @@ const ProductPage: React.FC = () => {
 
        <div className="flex   flex-col lg:w-[400px] lg:ml-[80px] mt-2 p-8 shadow-sm rounded-xl lg:p-12 dark:bg-gray-50 dark:text-gray-800">
 
-        <Review></Review>
+  
+
+      
+
+        <Review id={id}></Review>
+
+
+
        </div>
     </div>
   );
