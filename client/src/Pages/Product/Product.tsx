@@ -63,6 +63,8 @@ const Product: React.FC = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
+ 
+
 
   return (
     <div>
