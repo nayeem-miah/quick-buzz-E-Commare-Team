@@ -1,46 +1,54 @@
-import React, { useState } from 'react';
-import './banner.css';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-const Slider: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+// Import Swiper styles
+import
+ 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
-  const images = [
-    "https://i.ibb.co/MDWv1tz/img1.jpg",
-    "https://i.ibb.co/cJz3jkF/img2.jpg",
-    "https://i.ibb.co/C8qW9vT/img4.jpg",
-    "https://i.ibb.co/SvxfKhW/img3.jpg",
-  ];
+// Import required modules
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
 
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-  };
+import bgimg1 from '../../../assets/slider/Barisal.jpg';
+import bgimg2 from '../../../assets/slider/chittagong.png';
+import bgimg3 from '../../../assets/slider/dhaka.jpg';
+import bgimg4 from '../../../assets/slider/mymenshing.jpg';
+import bgimg5 from '../../../assets/slider/rajshahi.jpg';
+import bgimg6 from '../../../assets/slider/rongpur.png';
+import Slide from './Slide';
 
+interface SlideProps {
+  image: string;
+}
+
+export default function Carousel(): JSX.Element {
   return (
-    <div className="slider">
-      <div className="list">
-        <div className="item">
-          <img src={images[currentIndex]} alt="" />
-        </div>
-      </div>
-
-      <div className="thumbnail">
-        {images.map((img, index) => (
-          <div key={index} className="item">
-            <img src={img} alt="" />
-          </div>
-        ))}
-      </div>
-
-      <div className="nextPrevArrows">
-        <button className="prev" onClick={handlePrev}> &lt; </button>
-        <button className="next" onClick={handleNext}> &gt; </button>
-      </div>
+    <div className="">
+      <Swiper
+        spaceBetween={30}
+        centeredSlides={true}
+        loop={true}
+        autoplay={{
+          delay: 1800,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Autoplay, Pagination, Navigation]}
+        className="mySwiper"
+      >
+        <SwiperSlide><Slide image={bgimg1} /></SwiperSlide>
+        <SwiperSlide><Slide image={bgimg2} /></SwiperSlide>
+        <SwiperSlide><Slide image={bgimg3} /></SwiperSlide>
+        <SwiperSlide><Slide image={bgimg4} /></SwiperSlide>
+        <SwiperSlide><Slide image={bgimg5} /></SwiperSlide>
+        <SwiperSlide><Slide image={bgimg6} /></SwiperSlide>
+      </Swiper>
     </div>
   );
-};
-
-export default Slider;
+}
