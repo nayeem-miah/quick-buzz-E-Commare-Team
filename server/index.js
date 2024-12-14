@@ -380,7 +380,7 @@ async function run() {
         tran_id: trxId,
         success_url: "http://localhost:3000/success-payment",
         fail_url: "http://localhost:3000/fail",
-        cancel_url: "hthttp://localhost:5173/cancel",
+        cancel_url: "http://localhost:3000/cancel",
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,
@@ -455,6 +455,17 @@ async function run() {
       // console.log(updateData, "update data");
       res.redirect("http://localhost:5173/success");
     });
+     // Fail-payment
+     app.post("/fail", async (req, res) => {
+      // rediect in fronend
+      res.redirect("http://localhost:5173/fail");
+    });
+     // cancle-payment
+     app.post("/cancel", async (req, res) => {
+      // rediect in fronend
+      res.redirect("http://localhost:5173/cancel");
+    });
+  
     // ------------end ssl commarce-----------------------
 
     await client.db("admin").command({ ping: 1 });
