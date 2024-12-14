@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
@@ -7,10 +7,12 @@ import useAuth from "../../../Hooks/UseAuth";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
+import { ImSpinner9 } from "react-icons/im";
 
 const MyAddedCart: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
+  const [Loading, setLoading] = useState<boolean>(false);
 
   // Query data
   const {
@@ -29,7 +31,6 @@ const MyAddedCart: React.FC = () => {
     (total: any, save: { price: any }) => total + save.price,
     0
   );
-
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -110,14 +111,23 @@ const MyAddedCart: React.FC = () => {
     email: user?.email,
     displayName: user?.displayName,
   };
+  // console.log(allsave);
   // payment start
   const handlePayment = async () => {
     try {
+      setLoading(true);
       const { data } = await axiosPublic.post("/create-payment", paymentInfo);
       console.log(data, "data is data ");
+      const redirectUrl = data.paymentUrl;
+      // console.log(redirectUrl);
+      if (redirectUrl) {
+        window.location.replace(redirectUrl);
+      }
     } catch (error: any) {
       console.error("Error posting payment info:", error);
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -132,11 +142,20 @@ const MyAddedCart: React.FC = () => {
           </h2>
           <h3 className="md:text-xl lg:xl  sm:text-sm">
             <button
+              className={`mt-3 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${
+                Loading ? " cursor-not-allowed bg-gray-300" : ""
+              }`}
+              disabled={Loading}
               onClick={handlePayment}
-              className="mt-3 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
             >
-              <span className="mx-4 flex items-center">Pay </span>
-              <FaArrowRight className="" />
+              {Loading ? (
+                <ImSpinner9
+                  size={28}
+                  className="animate-spin m-auto text-accent"
+                />
+              ) : (
+                "pay"
+              )}
             </button>
           </h3>
         </div>

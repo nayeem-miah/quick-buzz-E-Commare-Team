@@ -29,6 +29,9 @@ import BecomeAHost from "../Pages/Become a host/BecomeAHost";
 import SellerRequest from "../Components/Dashboard/User/SellerRequest";
 import AllHostRequest from "../Components/Dashboard/Admin/AllHostRequest";
 import UpdateProfile from "../Pages/Dashboard/UpdateProfile";
+import Fail from "../Components/SSLCommarze/Fail";
+import Cancel from "../Components/SSLCommarze/Cancel";
+import Success from "../Components/SSLCommarze/Success";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -81,13 +84,38 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      // fail success and cancel
+      {
+        path: "/success",
+        element: (
+          <PrivateRoute>
+            <Success />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/cancel",
+        element: (
+          <PrivateRoute>
+            <Cancel />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/fail",
+        element: (
+          <PrivateRoute>
+            <Fail />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   { path: "/login", element: <Signin /> },
   { path: "/signup", element: <Signup /> },
   {
-    path:':edit-profile',
-    element:<UpdateProfile></UpdateProfile>
+    path: ":edit-profile",
+    element: <UpdateProfile></UpdateProfile>,
   },
   {
     path: "/dashboard",
@@ -102,7 +130,7 @@ const router = createBrowserRouter([
         path: "profile",
         element: <Profile></Profile>,
       },
-     
+
       //   admin dashboard
       {
         index: true,

@@ -9,8 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(express.urlencoded());
 
 
 // MongoDB connection string
@@ -33,6 +32,7 @@ async function run() {
     const userCollection = client.db("quickBuzz").collection("alluser");
     const productsCollection = client.db("quickBuzz").collection("allProducts");
     const wishlistCollection = client.db("quickBuzz").collection("allsave");
+    const successPaymentCollection = client.db("quickBuzz").collection("allpayment");
     const becomeSellerCollection = client
       .db("quickBuzz")
       .collection("sellerRequest");
@@ -358,14 +358,17 @@ async function run() {
    // -----------------------ssl commarze start----------------
     //1.init payment
     //2.post Request---url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
-    // 3. save data in database
+    //3.0 then  success payment post request
+    // 3.2 save data in database
     // 4. if payment success and then update database
     // 5. if payment is not success and fail
     // sslCommarze create payment-------------------------------
-
+    const date = new Date().toLocaleDateString();
+    
+    
     app.post('/create-payment', async(req, res)=>{
       const paymentInfo= req.body;
-     const  {totalPrice, email,displayName,multiProductTitle,multiProductBrandName}= paymentInfo;
+     const  {totalPrice, email,displayName,multiProductTitle,multiProductBrandName,multiProductHostEmail,multiProductImg,multiProductDescription}= paymentInfo;
       
 
 
@@ -373,15 +376,12 @@ async function run() {
       const intentData = {
         store_id,
         store_passwd,
-        totalPrice: totalPrice,
+        total_amount: totalPrice,
         currency: paymentInfo?.currency || "BDT",
         tran_id: trxId,
-        // success_url: "https://urban-driveserver.vercel.app/success-booking",
-        // success_url: "http://localhost:8000/success-booking",
-        // fail_url: "https://urban-driveserver.vercel.app/fail",
-        // fail_url: "http://localhost:8000/fail",
-        // cancel_url: "https://urban-driveserver.vercel.app/cancel",
-        // cancel_url: "http://localhost:8000/cancel",
+        success_url: "http://localhost:3000/success-payment",
+        fail_url: "http://localhost:3000/fail",
+        cancel_url: "http://localhost:3000/cancel",
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,
@@ -396,7 +396,6 @@ async function run() {
         product_brandName: multiProductBrandName,
         product_profile: "general",
       };
-
       const response = await axios({
         method: "POST",
         url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
@@ -405,18 +404,62 @@ async function run() {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
-      console.log(response);
+      console.log(response.data.GatewayPageURL, "response");
+      // sava data in db
+      const savaData ={
+        cus_name: displayName,
+        cus_email: email,
+        productTitle: multiProductTitle,
+        brandName: multiProductBrandName,
+        productImage: multiProductImg,
+        description: multiProductDescription,
+        date:date,
+        totalPrice:totalPrice,
+        currency:  "BDT",
+        paymentId: trxId,
+        hostEmail: multiProductHostEmail
+      }
+      const result = await successPaymentCollection.insertOne(savaData)
+      // result response frontend
+      if (result) {
+        res.send({
+          paymentUrl: response.data.GatewayPageURL,
+        });
+      }
+      res.send(response)
     })
+     // success-payment
+     app.post("/success-payment", async (req, res) => {
+      const successData = req.body;
+      console.log(successData);
+      if (successData.status !== "VALID") {
+        throw new Error("unauthorize payment , invalid payment");
+      }
+      // update the database
+      const query = {
+        paymentId: successData.tran_id,
+      };
+      const update = {
+        $set: {
+          status: "Success",
+          tran_date: successData.tran_date,
+          card_type: successData.card_type,
+          hostIsApproved: "pending",
+        },
+      };
+      const updateData = await successPaymentCollection.updateOne(
+        query,
+        update
+      );
+      res.redirect("http://localhost:5173/success");
+    });
     
 
-    // await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
-    // console.clear()
   } finally {
-    // await client.close();
   }
 }
 
