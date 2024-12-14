@@ -9,8 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(express.urlencoded());
 
 
 // MongoDB connection string
@@ -33,6 +32,7 @@ async function run() {
     const userCollection = client.db("quickBuzz").collection("alluser");
     const productsCollection = client.db("quickBuzz").collection("allProducts");
     const wishlistCollection = client.db("quickBuzz").collection("allsave");
+    const successPaymentCollection = client.db("quickBuzz").collection("allpayment");
     const reviewtCollection = client.db("quickBuzz").collection("reviews");
     const becomeSellerCollection = client
       .db("quickBuzz")
@@ -95,7 +95,7 @@ async function run() {
         return res.status(400).send({ error: "Invalid ID format" });
       }
 
-      console.log("Deleting ID:", id);
+      // console.log("Deleting ID:", id);
 
       const query = { _id: new ObjectId(id) };
       try {
@@ -106,7 +106,7 @@ async function run() {
           return res.status(404).send({ error: "Item not found" });
         }
 
-        console.log("Successfully deleted item with ID:", id);
+        // console.log("Successfully deleted item with ID:", id);
         res.send(result);
       } catch (error) {
         console.error("Error deleting item:", error.message);
@@ -420,30 +420,29 @@ app.get('/review', async (req, res) => {
    // -----------------------ssl commarze start----------------
     //1.init payment
     //2.post Request---url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
-    // 3. save data in database
+    //3.0 then  success payment post request
+    // 3.2 save data in database
     // 4. if payment success and then update database
     // 5. if payment is not success and fail
     // sslCommarze create payment-------------------------------
-
+    const date = new Date().toLocaleDateString();
+    
+    
     app.post('/create-payment', async(req, res)=>{
       const paymentInfo= req.body;
-     const  {totalPrice, email,displayName,multiProductTitle,multiProductBrandName}= paymentInfo;
+     const  {totalPrice, email,displayName,multiProductTitle,multiProductBrandName,multiProductHostEmail,multiProductImg,multiProductDescription}= paymentInfo;
       
-
-
+// init data
       const trxId = new ObjectId().toString();
       const intentData = {
         store_id,
         store_passwd,
-        totalPrice: totalPrice,
+        total_amount: totalPrice,
         currency: paymentInfo?.currency || "BDT",
         tran_id: trxId,
-        // success_url: "https://urban-driveserver.vercel.app/success-booking",
-        // success_url: "http://localhost:8000/success-booking",
-        // fail_url: "https://urban-driveserver.vercel.app/fail",
-        // fail_url: "http://localhost:8000/fail",
-        // cancel_url: "https://urban-driveserver.vercel.app/cancel",
-        // cancel_url: "http://localhost:8000/cancel",
+        success_url: "http://localhost:3000/success-payment",
+        fail_url: "http://localhost:3000/fail",
+        cancel_url: "http://localhost:3000/cancel",
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,
@@ -458,7 +457,7 @@ app.get('/review', async (req, res) => {
         product_brandName: multiProductBrandName,
         product_profile: "general",
       };
-
+      // post request
       const response = await axios({
         method: "POST",
         url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
@@ -467,18 +466,75 @@ app.get('/review', async (req, res) => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
-      console.log(response);
+      // console.log(response.data.GatewayPageURL, "response");
+      // sava data in db
+      const savaData ={
+        cus_name: displayName,
+        cus_email: email,
+        productTitle: multiProductTitle,
+        brandName: multiProductBrandName,
+        productImage: multiProductImg,
+        description: multiProductDescription,
+        date:date,
+        totalPrice:totalPrice,
+        currency:  "BDT",
+        transactionId: trxId,
+        hostEmail: multiProductHostEmail,
+        status: "pending",
+      }
+      const result = await successPaymentCollection.insertOne(savaData)
+      // result response frontend
+      // console.log(result, "result is");
+      if (result) {
+        res.send({
+          paymentUrl: response.data.GatewayPageURL,
+        });
+      }
     })
-    
+     // success-payment
+     app.post("/success-payment", async (req, res) => {
+      const successData = req.body;
+      // console.log(successData, "success data");
+      if (successData.status !== "VALID") {
+        throw new Error("unauthorize payment , invalid payment");
+      }
+      // update the database
+      const query = {
+        transactionId: successData.tran_id,
+      };
+      const update = {
+        $set: {
+          status: "success",
+          tran_date: successData.tran_date,
+          card_type: successData.card_type,
+          hostIsApproved: "pending",
+        },
+      };
+      const updateData = await successPaymentCollection.updateOne(
+        query,
+        update
+      );
+      // console.log(updateData, "update data");
+      res.redirect("http://localhost:5173/success");
+    });
+     // Fail-payment
+     app.post("/fail", async (req, res) => {
+      // rediect in fronend
+      res.redirect("http://localhost:5173/fail");
+    });
+     // cancle-payment
+     app.post("/cancel", async (req, res) => {
+      // rediect in fronend
+      res.redirect("http://localhost:5173/cancel");
+    });
+  
+    // ------------end ssl commarce-----------------------
 
-    // await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
-    // console.clear()
   } finally {
-    // await client.close();
   }
 }
 
