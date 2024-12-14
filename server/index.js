@@ -94,7 +94,7 @@ async function run() {
         return res.status(400).send({ error: "Invalid ID format" });
       }
 
-      console.log("Deleting ID:", id);
+      // console.log("Deleting ID:", id);
 
       const query = { _id: new ObjectId(id) };
       try {
@@ -105,7 +105,7 @@ async function run() {
           return res.status(404).send({ error: "Item not found" });
         }
 
-        console.log("Successfully deleted item with ID:", id);
+        // console.log("Successfully deleted item with ID:", id);
         res.send(result);
       } catch (error) {
         console.error("Error deleting item:", error.message);
@@ -370,8 +370,7 @@ async function run() {
       const paymentInfo= req.body;
      const  {totalPrice, email,displayName,multiProductTitle,multiProductBrandName,multiProductHostEmail,multiProductImg,multiProductDescription}= paymentInfo;
       
-
-
+// init data
       const trxId = new ObjectId().toString();
       const intentData = {
         store_id,
@@ -379,9 +378,9 @@ async function run() {
         total_amount: totalPrice,
         currency: paymentInfo?.currency || "BDT",
         tran_id: trxId,
-        success_url: "http://localhost:5173/success",
-        fail_url: "http://localhost:5173/fail",
-        cancel_url: "http://localhost:5173/cancel",
+        success_url: "http://localhost:3000/success-payment",
+        fail_url: "http://localhost:3000/fail",
+        cancel_url: "hthttp://localhost:5173/cancel",
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,
@@ -396,6 +395,7 @@ async function run() {
         product_brandName: multiProductBrandName,
         product_profile: "general",
       };
+      // post request
       const response = await axios({
         method: "POST",
         url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
@@ -404,7 +404,7 @@ async function run() {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
-      console.log(response.data.GatewayPageURL, "response");
+      // console.log(response.data.GatewayPageURL, "response");
       // sava data in db
       const savaData ={
         cus_name: displayName,
@@ -422,17 +422,17 @@ async function run() {
       }
       const result = await successPaymentCollection.insertOne(savaData)
       // result response frontend
+      // console.log(result, "result is");
       if (result) {
         res.send({
           paymentUrl: response.data.GatewayPageURL,
         });
       }
-      res.send(response)
     })
      // success-payment
      app.post("/success-payment", async (req, res) => {
       const successData = req.body;
-      // console.log(successData);
+      // console.log(successData, "success data");
       if (successData.status !== "VALID") {
         throw new Error("unauthorize payment , invalid payment");
       }
@@ -452,9 +452,10 @@ async function run() {
         query,
         update
       );
+      // console.log(updateData, "update data");
       res.redirect("http://localhost:5173/success");
     });
-    
+    // ------------end ssl commarce-----------------------
 
     await client.db("admin").command({ ping: 1 });
     console.log(
