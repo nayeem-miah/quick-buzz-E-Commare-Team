@@ -3,7 +3,6 @@ import Faq from "../../Components/Home/Faq/Faq";
 import Slider from "./Banner/Banner";
 import BrowseByDestination from "../../Components/Home/BrowseByDestination/BrowseByDestination";
 import Categories from "./Category/Category";
-// import Input from "../Product/Input";
 import RecentProduct from "../../Components/Home/RecentProducts/RecentProduct";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
@@ -55,13 +54,13 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <div className="pt-12">
+      <div className="">
    
           <Slider></Slider>
       
         {/* search implementation */}
         <div className="">
-          <div className="w-full h-auto mx-auto p-4 bg-red-400">
+          <div className="w-full h-auto mx-auto p-4 bg-gray-50 border my-2 shadow">
             {/* Heading Section */}
             <div className="text-center mb-4">
               <h2 className="text-2xl   font-semibold">Search Products</h2>

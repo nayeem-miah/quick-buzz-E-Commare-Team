@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
 import { BsGraphUp } from "react-icons/bs";
-import { FaHeart, FaListAlt } from "react-icons/fa";
+import { FaListAlt } from "react-icons/fa";
 import { HiUsers } from "react-icons/hi2";
 import { FaHistory } from "react-icons/fa";
 import logo from "../../../src/assets/Image/logo2.png";
@@ -18,6 +18,7 @@ import { MdOutlinePayment } from "react-icons/md";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import LoadingSpinner from "../../Shared/Loading";
 import { RiGitClosePullRequestFill } from "react-icons/ri";
+import { GoGitPullRequestClosed } from "react-icons/go";
 
 const Sidebar: React.FC = () => {
   const { logOut, user } = useAuth();
@@ -320,25 +321,25 @@ const Sidebar: React.FC = () => {
                 <NavLink
                   to="my-payment-history"
                   className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
+                    `flex items-center px-4 py-2 my-5 gap-2 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
                   <MdOutlinePayment className="w-5 h-5" />
-                  <span className="mx-4 font-medium">My payment history</span>
+                  <span className=" font-medium">My payment history</span>
                 </NavLink>
                 {/* seller request */}
                 <NavLink
                   to="seller-request"
                   className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
+                    `flex items-center px-4 py-2 my-5 gap-2 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
                       isActive ? "bg-gray-300 text-gray-700" : "text-white"
                     }`
                   }
                 >
-                  <FaHeart className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Become a seller request</span>
+                  <GoGitPullRequestClosed className="w-5 h-5" />
+                  <span className=" font-medium">Become a seller request</span>
                 </NavLink>
               </nav>
             </div>

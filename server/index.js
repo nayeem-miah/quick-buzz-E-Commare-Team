@@ -243,7 +243,7 @@ async function run() {
       const { email } = req.params;
       const user = await userCollection.findOne({ email });
       if (!user) {
-        console.log("User not found for email:", email); // Debugging
+        // console.log("User not found for email:", email); // Debugging
         return res
           .status(404)
           .send({ error: "User not found with this email" });
@@ -257,9 +257,9 @@ async function run() {
         const wishlist = req.body;
 
         // `_id` মুছে দিন
-        console.log("Before deleting _id:", wishlist);
+        // console.log("Before deleting _id:", wishlist);
         delete wishlist._id;
-        console.log("After deleting _id:", wishlist);
+        // console.log("After deleting _id:", wishlist);
 
         if (!wishlist || Object.keys(wishlist).length === 0) {
           return res.status(400).send({ error: "Invalid wishlist data." });
@@ -296,10 +296,10 @@ async function run() {
 /* Review post  */
 app.post('/reviews', async (req, res) => {
   const review = req.body;
-  console.log("Received review data:", review); // রিকোয়েস্টে প্রাপ্ত ডাটা লগ করা
+  // console.log("Received review data:", review); // রিকোয়েস্টে প্রাপ্ত ডাটা লগ করা
   try {
       const result = await reviewtCollection.insertOne(review); // ডাটাবেসে নতুন রিভিউ যোগ করা
-      console.log("Review successfully saved:", result); // সফল ইনসার্ট লগ করা
+      // console.log("Review successfully saved:", result); // সফল ইনসার্ট লগ করা
       res.status(201).send(result); 
   } catch (error) {
       console.error("Error saving review:", error.message); // ত্রুটির বার্তা লগ করা
@@ -337,7 +337,7 @@ app.get('/review', async (req, res) => {
 
   try {
       const result = await reviewtCollection.find().toArray();
-      console.log(result);  
+      // console.log(result);  
       res.send(result);  
   } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -394,7 +394,7 @@ app.get('/review', async (req, res) => {
         const result = await becomeSellerCollection.find().toArray();
         res.send(result);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     });
 
