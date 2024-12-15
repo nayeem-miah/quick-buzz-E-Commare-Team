@@ -184,7 +184,17 @@ const router = createBrowserRouter([
       },
       {
         path: "seller-request",
-        element: <SellerRequest />,
+        element: <SellerRequest sellerData={{
+          _id: "",
+          sellerName: "",
+          sellerEmail: "",
+          sellerPhoto: "",
+          mobile: "",
+          reason: "",
+          address: "",
+          other: "",
+          imageUrl: ""
+        }} />,
       },
       {
         path: "my-payment-history",

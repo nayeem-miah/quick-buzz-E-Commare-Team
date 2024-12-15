@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { FaUserAlt, FaDollarSign } from 'react-icons/fa';
 import { BsFillCartPlusFill, BsFillHouseDoorFill } from 'react-icons/bs';
@@ -7,7 +8,7 @@ interface StatData {
   userCount: number;
   bookingCount: number;
   roomCount: number;
-  chartData: any[]; // Update type if you have a specific structure for chartData
+  chartData: any[]; 
 }
 
 const HostHome: React.FC = () => {
