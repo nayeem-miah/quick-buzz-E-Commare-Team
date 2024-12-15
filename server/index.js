@@ -398,6 +398,33 @@ app.get('/review', async (req, res) => {
       }
     });
 
+    // get id seller
+    app.get("/sell/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await becomeSellerCollection.findOne(query);
+      res.send(result);
+    }); 
+// decline message
+app.patch("/decline-message/:id", async(req, res)=>{
+  try{
+    const declineMessage= req.body;
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id)}
+  console.log(declineMessage);
+  const updatedDoc = {
+    $set:{
+      decline: declineMessage.inputValue
+    }
+  }
+  const result = await becomeSellerCollection.updateOne(filter, updatedDoc)
+  res.send(result)
+  }catch(err){
+    console.error(err);
+    res.status(500).send({message: "failed decline message"})
+  }
+})
+
     //  get seller data in email ways
     app.get("/single-seller/:email", async (req, res) => {
       try {
