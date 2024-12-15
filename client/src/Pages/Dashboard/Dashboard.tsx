@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
 import { BsGraphUp } from "react-icons/bs";
-import { FaHeart, FaListAlt } from "react-icons/fa";
+import { FaListAlt } from "react-icons/fa";
 import { HiUsers } from "react-icons/hi2";
 import { FaHistory } from "react-icons/fa";
 import logo from "../../../src/assets/Image/logo2.png";

@@ -65,7 +65,7 @@ const BecomeSellerForm: React.FC = () => {
         if (res.data.insertedId) {
           toast.success("your request successfully ");
           form.reset();
-          navigate("/dashboard/my-host-listings");
+          navigate("/dashboard/seller-request");
         } else {
           toast.error("already send your details !! ");
         }
