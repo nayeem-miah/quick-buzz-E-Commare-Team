@@ -156,16 +156,12 @@ async function run() {
       }
     });
     
-
-
     // save data get with mongodb 
      app.get('/allsave', async (req, res) => {
        const result = await wishlistCollection.find().toArray()
        res.send(result)
     })
 
-
-    
 
   //  single user by data 
   app.get('/allsave/:email', async (req, res)=>{
@@ -176,11 +172,6 @@ async function run() {
     res.send(result)
     }
   })
-
-
-
-
-
 
     // save data get with mongodb
     app.get("/allsave", async (req, res) => {
@@ -545,14 +536,22 @@ app.get('/review', async (req, res) => {
     });
      // Fail-payment
      app.post("/fail", async (req, res) => {
-      // rediect in fronend
+      // redirect in frontend
       res.redirect("http://localhost:5173/fail");
     });
-     // cancle-payment
+     // cancel-payment
      app.post("/cancel", async (req, res) => {
-      // rediect in fronend
+      // redirect in frontend
       res.redirect("http://localhost:5173/cancel");
     });
+
+
+
+    // get all payment history data 
+    app.get('/payment-history', async(req,res)=>{
+      const result = await successPaymentCollection.find().toArray()
+      res.send(result)
+    })
   
     // ------------end ssl commarce-----------------------
 
