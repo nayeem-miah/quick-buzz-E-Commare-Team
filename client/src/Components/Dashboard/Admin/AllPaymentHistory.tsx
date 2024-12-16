@@ -35,7 +35,8 @@ const AllPaymentHistory: React.FC = () => {
       return res.data;
     },
   });
-  // console.log(PaymentHistoryData);
+
+  
 
   if (isLoading) return <LoadingSpinner />;
 

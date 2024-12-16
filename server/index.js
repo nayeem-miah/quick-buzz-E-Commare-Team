@@ -580,11 +580,29 @@ app.patch("/decline-message/:id", async(req, res)=>{
       res.send(result)
     })
 
+    // single payment history
     app.get('/single-payment-history/:email',async(req, res)=>{
       const email= req.params.email;
       const query = {cus_email: email};
       const result = await successPaymentCollection.find(query).toArray();
       res.send(result)
+    })
+    // host payment history
+    app.get('/host-payment-history/:email',async(req, res)=>{
+     try{
+      const {email}= req.params.email;
+      const query = { hostEmail: { $in: [email] } };
+      const result = await successPaymentCollection.find(query).toArray();
+      if (result.length === 0) {
+        return res.status(404).json({ message: 'No payments found for this email' });
+      }
+      res.send(result)
+      // res.status(200).send({message: "payment data get successfully"})
+     }catch(err){
+      console.error(err)
+      res.status(404).send({message : "email not found"})
+     }
+
     })
   
     // ------------end ssl commarce-----------------------
