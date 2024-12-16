@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import Heading from "../../../Shared/Heading/Heading";
@@ -7,7 +8,8 @@ import { useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 import NoData from "../../../Shared/NoDataFound/NoData";
-import { Link } from "react-router-dom";
+import { Form, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 interface SellerDetails {
   sellerName: string;
@@ -40,7 +42,7 @@ const AllHostRequest: React.FC = () => {
       return res.data;
     },
   });
-  //   console.log(sellerData);
+  // console.log(sellerData);
 
   // delete
   const handleDelete = async (id: any) => {
@@ -76,11 +78,28 @@ const AllHostRequest: React.FC = () => {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Submitted value:", inputValue);
-    setInputValue(""); // Reset input field
-    toggleModal(); // Close modal
+  const handleSubmit = async (e: React.FormEvent) => {
+    try {
+      e.preventDefault();
+      const declineData = {
+        inputValue,
+      };
+
+      await axiosPublic
+        .patch(`/decline-message/${sellerData._id}`, declineData)
+        .then((res) => {
+          if (res.data.modifiedCount > 0) {
+            toast.success("decline successfully");
+            // navigate("/dashboard/my-host-listings");
+          }
+        });
+
+      setInputValue(""); // Reset input field
+      toggleModal(); // Close modal
+    } catch (err) {
+      console.error(err);
+      toast.error(`error is ,${err}`);
+    }
   };
 
   //   details modal
@@ -152,15 +171,17 @@ const AllHostRequest: React.FC = () => {
                     {sellerData?.adminIsApproved === "approve" ? (
                       "Approve"
                     ) : (
-                     <Link to={'/dashboard/manage-users'}> <button
-                     onClick={() => {
-                       // handleApproved(sellerData);
-                     }}
-                     className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                      <Link to={"/dashboard/manage-users"}>
+                        <button
+                          onClick={() => {
+                            // handleApproved(sellerData);
+                          }}
+                          className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                   >
-                     approve
-                   </button></Link>
+                        >
+                          approve
+                        </button>
+                      </Link>
                     )}
                   </td>
                   <td className="py-4 px-4 text-sm">

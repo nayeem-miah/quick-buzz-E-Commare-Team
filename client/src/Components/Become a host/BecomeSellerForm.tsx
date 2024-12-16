@@ -45,7 +45,7 @@ const BecomeSellerForm: React.FC = () => {
         formData
       );
       const imageUrl = data.data.display_url;
-      
+
       // seller data
       const sellerData = {
         sellerName: name || user?.displayName,
@@ -56,6 +56,8 @@ const BecomeSellerForm: React.FC = () => {
         address,
         other,
         imageUrl,
+        decline:
+          "The admin has not seen the message yet, so please wait. Further steps will be taken once the admin responds. Thank you for your patience",
       };
 
       // console.log(sellerData);

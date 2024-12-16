@@ -160,9 +160,8 @@ const Signup: React.FC = () => {
               className="w-full rounded-md py-3  text-black shadow-lg   bg-gradient-to-r from-purple-500 to-blue-500  transition-all duration-500 ease-in-out
                 border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105  disabled:cursor-not-allowed"
             >
-              
               {loading ? (
-                <ImSpinner9 size={15}  className="animate-spin m-auto" />
+                <ImSpinner9 size={15} className="animate-spin m-auto" />
               ) : (
                 "Continue"
               )}
@@ -188,7 +187,7 @@ const Signup: React.FC = () => {
           Already have an account?{" "}
           <Link
             to="/login"
-            className="hover:underline hover:text-rose-500 text-gray-600"
+            className="hover:underline hover:text-blue-500 text-gray-600"
           >
             Login
           </Link>
