@@ -32,6 +32,7 @@ import UpdateProfile from "../Pages/Dashboard/UpdateProfile";
 import Fail from "../Components/SSLCommarze/Fail";
 import Cancel from "../Components/SSLCommarze/Cancel";
 import Success from "../Components/SSLCommarze/Success";
+import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/SellerDataUpdated";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -72,6 +73,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <UpdateProduct></UpdateProduct>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/updated-seller/:id",
+        element: (
+          <PrivateRoute>
+            <SellerDataUpdated></SellerDataUpdated>
           </PrivateRoute>
         ),
       },
@@ -184,7 +193,17 @@ const router = createBrowserRouter([
       },
       {
         path: "seller-request",
-        element: <SellerRequest />,
+        element: <SellerRequest sellerData={{
+          _id: "",
+          sellerName: "",
+          sellerEmail: "",
+          sellerPhoto: "",
+          mobile: "",
+          reason: "",
+          address: "",
+          other: "",
+          imageUrl: ""
+        }} />,
       },
       {
         path: "my-payment-history",

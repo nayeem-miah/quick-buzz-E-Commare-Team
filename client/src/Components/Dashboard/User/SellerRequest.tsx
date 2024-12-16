@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import Heading from "../../../Shared/Heading/Heading";
 import NoData from "../../../Shared/NoDataFound/NoData";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 type SellerRequestProps = {
   sellerData: {
@@ -24,7 +25,7 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
   const axiosPublic = useAxiosPublic();
 
   //    get host request data in every single email
-  const { data: sellerData = [] ,refetch} = useQuery({
+  const { data: sellerData = [], refetch } = useQuery({
     queryKey: ["sellerData"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/single-seller/${user?.email}`);
@@ -127,12 +128,11 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
 
               {/* Action Buttons Section */}
               <div className="mt-6 flex justify-between p-6">
-                <button
-                  onClick={handleEdit}
-                  className="px-5 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition"
-                >
-                  edit
-                </button>
+                <Link to={`/updated-seller/${sellerData._id}`}>
+                  <button className="px-5 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition">
+                    edit
+                  </button>
+                </Link>
                 <button
                   onClick={() => {
                     handleDelete(sellerData._id);

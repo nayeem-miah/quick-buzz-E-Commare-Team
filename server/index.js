@@ -418,6 +418,31 @@ app.get('/review', async (req, res) => {
       res.send(result);
     });
 
+    // single data updated
+    app.patch('/seller-updated/:id', async(req, res)=>{
+     try{
+      const sellerData = req.body;
+      const id = req.params.id;
+     const filter = { _id: new ObjectId(id) };
+     const updatedDoc = {
+      $set:{
+        sellerName: sellerData.sellerName,
+        mobile: sellerData.mobile,
+        other: sellerData.other,
+        address: sellerData.address,
+        reason: sellerData.reason,
+        imageUrl: sellerData.imageUrl
+      }
+     } 
+     const result = await becomeSellerCollection.updateOne(filter, updatedDoc)
+     res.send(result)
+     }catch(err){
+      console.error(err)
+      res.status(500).send({message: "does'n updated success"})
+      
+     }
+    })
+
    // -----------------------ssl commarze start----------------
     //1.init payment
     //2.post Request---url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
