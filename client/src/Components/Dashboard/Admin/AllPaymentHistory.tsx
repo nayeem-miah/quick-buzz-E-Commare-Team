@@ -35,7 +35,8 @@ const AllPaymentHistory: React.FC = () => {
       return res.data;
     },
   });
-  console.log(PaymentHistoryData);
+
+  
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -173,7 +174,7 @@ const AllPaymentHistory: React.FC = () => {
               {/* Host Approval Status */}
               <p className="text-sm sm:text-base">
                 <span className="font-semibold text-gray-900">
-                  Approval Status:
+                  Approval Status:  
                 </span>
                 <span
                   className={`font-semibold ${
@@ -190,7 +191,7 @@ const AllPaymentHistory: React.FC = () => {
 
               {/* Status */}
               <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">Status:</span>
+                <span className="font-semibold text-gray-900">payment Status: </span>
                 <span
                   className={`font-semibold ${
                     selectedPayment?.status === "success"

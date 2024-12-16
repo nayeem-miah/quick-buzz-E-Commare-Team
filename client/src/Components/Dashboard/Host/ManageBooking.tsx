@@ -37,11 +37,12 @@ const ManageBooking: React.FC = () => {
   } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/host-product/${user?.email}`);
+      const res = await axiosPublic.get(`/host-payment-history/${user?.email}`);
       return res.data;
     },
   });
-
+  console.log(data);
+  // handle delete
   const handleDelete = (id: any) => {
     Swal.fire({
       title: "Are you sure?",
