@@ -44,9 +44,7 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
     imageUrl,
   } = sellerData;
 
-  const handleEdit = () => {
-    console.log(`Approved seller: ${sellerName}`);
-  };
+  
 
   // delete
   const handleDelete = async (id: any) => {

@@ -70,9 +70,7 @@ const MyAddedProduct: React.FC = () => {
 
   // modal code
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
-  const handleDetailsClick = (listing: Listing) => {
-    setSelectedBooking(listing);
-  };
+
   const closeModal = () => {
     setSelectedBooking(null);
   };
