@@ -90,7 +90,7 @@ const SellerDataUpdated: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="py-8">
       <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Become a Seller updated
