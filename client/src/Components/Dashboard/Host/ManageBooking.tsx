@@ -41,8 +41,7 @@ const ManageBooking: React.FC = () => {
       return res.data;
     },
   });
-  //
-  // handle delete
+
   const handleDelete = (id: any) => {
     Swal.fire({
       title: "Are you sure?",
@@ -68,24 +67,10 @@ const ManageBooking: React.FC = () => {
     });
   };
 
-  // host is approved
   const handleApproved = (product: any) => {
-    // axiosPublic.patch(`/admin-product/${product._id}`).then((res) => {
-    //   if (res.data.modifiedCount > 0) {
-    //     refetch();
-    //     Swal.fire({
-    //       position: "top",
-    //       icon: "success",
-    //       title: `${product.productTitle} is approved now!`,
-    //       showConfirmButton: false,
-    //       timer: 1500,
-    //     });
-    //     navigate("/product");
-    //   }
-    // });
+    // handle product approval logic
   };
 
-  // modal code
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
   const handleDetailsClick = (listing: Listing) => {
     setSelectedBooking(listing);
@@ -93,6 +78,7 @@ const ManageBooking: React.FC = () => {
   const closeModal = () => {
     setSelectedBooking(null);
   };
+
   if (isLoading)
     return (
       <div>
@@ -100,9 +86,10 @@ const ManageBooking: React.FC = () => {
       </div>
     );
   if (isError) return <div>error...{isError}</div>;
+
   return (
     <div>
-      <div className="">
+      <div>
         <Heading title={"Manage booking product"} subtitle={""} />
         {data.length === 0 ? (
           <NoData />
@@ -111,24 +98,12 @@ const ManageBooking: React.FC = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
               <thead className="bg-gray-400 text-white">
                 <tr>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    Title
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    Image
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    price
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    status
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    delete
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    Details
-                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">Title</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">Image</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">Price</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">Status</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">Delete</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -137,19 +112,15 @@ const ManageBooking: React.FC = () => {
                     key={listing._id}
                     className="border-b hover:bg-gray-50 transition duration-200"
                   >
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.productTitle}
-                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">{listing?.productTitle}</td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       <img
                         src={listing?.productImage}
-                        alt={"no image founded"}
+                        alt={"no image found"}
                         className="w-16 h-16 object-cover rounded-md"
                       />
                     </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      ${listing?.price}
-                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">${listing?.price}</td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       {listing?.adminIsApproved === "approve" ? (
                         "Approve"
@@ -158,8 +129,7 @@ const ManageBooking: React.FC = () => {
                           onClick={() => {
                             handleApproved(listing);
                           }}
-                          className=" px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                          className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                         >
                           approve
                         </button>
@@ -170,7 +140,7 @@ const ManageBooking: React.FC = () => {
                         onClick={() => {
                           handleDelete(listing?._id);
                         }}
-                        className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
+                        className="px-4 py-2 text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
                       >
                         <MdDeleteForever />
                       </button>
@@ -178,8 +148,7 @@ const ManageBooking: React.FC = () => {
                     <td className="py-4 px-4 text-sm">
                       <button
                         onClick={() => handleDetailsClick(listing)}
-                        className="   px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                    border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                        className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                       >
                         Details
                       </button>
@@ -219,9 +188,7 @@ const ManageBooking: React.FC = () => {
                 {/* Image Section */}
                 <div className="relative overflow-hidden rounded-lg shadow-lg">
                   <img
-                    src={
-                      selectedBooking.productImage || "loading-image-url.jpg"
-                    } // Add a placeholder loading image
+                    src={selectedBooking.productImage || "loading-image-url.jpg"} // Add a placeholder loading image
                     alt={selectedBooking.productTitle}
                     className="rounded-2xl w-full h-64 object-cover"
                   />
@@ -233,18 +200,14 @@ const ManageBooking: React.FC = () => {
                 {/* Details Section */}
                 <div className="space-y-4 text-gray-700">
                   <p className="text-lg">
-                    <span className="font-bold text-gray-900">Title:</span>{" "}
-                    {selectedBooking?.productTitle || "Loading..."}
+                    <span className="font-bold text-gray-900">Title:</span> {selectedBooking?.productTitle || "Loading..."}
                   </p>
                   <p className="text-lg">
                     <span className="font-bold text-gray-900">Price:</span>{" "}
-                    <span className="text-lg font-extrabold text-green-600">
-                      ${selectedBooking?.price || "0.00"}
-                    </span>
+                    <span className="text-lg font-extrabold text-green-600">${selectedBooking?.price || "0.00"}</span>
                   </p>
                   <p>
-                    <span className="font-bold text-gray-900">Brand:</span>{" "}
-                    {selectedBooking?.brandName || "Loading..."}
+                    <span className="font-bold text-gray-900">Brand:</span> {selectedBooking?.brandName || "Loading..."}
                   </p>
 
                   {/* Host Info */}
@@ -253,51 +216,34 @@ const ManageBooking: React.FC = () => {
                     <div className="flex items-center space-x-3">
                       <img
                         className="h-14 w-14 rounded-full border-2 border-blue-500 shadow-md"
-                        src={
-                          selectedBooking?.hostPhoto || "default-host-photo.jpg"
-                        } // Placeholder for host image
+                        src={selectedBooking?.hostPhoto || "default-host-photo.jpg"}
                         alt={selectedBooking?.hostName || "Host"}
                       />
                       <div>
-                        <p className="text-lg font-semibold text-gray-800">
-                          {selectedBooking?.hostName || "Loading..."}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {selectedBooking?.hostEmail || "Loading..."}
-                        </p>
+                        <p className="text-lg font-semibold text-gray-800">{selectedBooking?.hostName || "Loading..."}</p>
+                        <p className="text-sm text-gray-600">{selectedBooking?.hostEmail || "Loading..."}</p>
                       </div>
                     </div>
                   </div>
 
                   <p className="text-lg">
-                    <span className="font-bold text-gray-900">
-                      Host Approved:
-                    </span>{" "}
+                    <span className="font-bold text-gray-900">Host Approved:</span>{" "}
                     <span
-                      className={`font-semibold ${
-                        selectedBooking?.adminIsApproved === "pending"
-                          ? "text-red-600"
-                          : "text-green-600"
-                      }`}
+                      className={`font-semibold ${selectedBooking?.adminIsApproved === "pending" ? "text-red-600" : "text-green-600"}`}
                     >
                       {selectedBooking?.adminIsApproved || "Loading..."}
                     </span>
                   </p>
                   <p className="text-lg">
-                    <span className="font-bold text-gray-900">Tags:</span>{" "}
-                    {selectedBooking?.tags || "Loading..."}
+                    <span className="font-bold text-gray-900">Tags:</span> {selectedBooking?.tags || "Loading..."}
                   </p>
                 </div>
               </div>
 
               {/* Description Section */}
               <div className="mt-6">
-                <h4 className="text-xl font-bold text-gray-900 mb-3">
-                  Description
-                </h4>
-                <p className="text-gray-600 leading-relaxed text-base">
-                  {selectedBooking?.description || "Loading... Please wait."}
-                </p>
+                <p className="text-xl font-bold text-gray-900">Description:</p>
+                <p className="text-gray-700">{selectedBooking?.description || "No description available."}</p>
               </div>
             </div>
           </div>
