@@ -3,34 +3,38 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
-import
- 'swiper/css';
+import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 // Import required modules
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
-
-import bgimg1 from '../../../assets/slider/Barisal.jpg';
-import bgimg2 from '../../../assets/slider/chittagong.png';
-import bgimg3 from '../../../assets/slider/dhaka.jpg';
-import bgimg4 from '../../../assets/slider/mymenshing.jpg';
-import bgimg5 from '../../../assets/slider/rajshahi.jpg';
-import bgimg6 from '../../../assets/slider/rongpur.png';
-import Slide from './Slide';
-
-interface SlideProps {
-  image: string;
-}
+import { useQuery } from '@tanstack/react-query';
+import useAxiosPublic from '../../../Hooks/UsePublic';
 
 export default function Carousel(): JSX.Element {
+  const axiosPublic = useAxiosPublic();
+
+  // Fetch data using React Query
+  const { data: allsave = [] } = useQuery({
+    queryKey: ['allsave'],
+    queryFn: async () => {
+      const { data } = await axiosPublic.get('/allsave'); // API endpoint ঠিক করুন
+      console.log(data);
+      return data;
+    },
+  });
+
+  // Get the last 6 items from the data
+  const lastSixSlides = allsave.slice(-6);
+
   return (
-    <div className="">
+    <div className="my-6">
       <Swiper
-        spaceBetween={30}
-        centeredSlides={true}
-        loop={true}
+        spaceBetween={30} // The space between slides
+        centeredSlides={true} // Center the slides
+        loop={false} // Disable loop since we are showing 6 slides only
         autoplay={{
           delay: 1800,
           disableOnInteraction: false,
@@ -42,12 +46,26 @@ export default function Carousel(): JSX.Element {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide><Slide image={bgimg1} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg2} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg3} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg4} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg5} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg6} /></SwiperSlide>
+        {lastSixSlides.map((slide: { productImage: string }, index: number) => (
+          <SwiperSlide key={index}>
+            <div
+              className="bg-center mt-1 bg-cover h-[32rem]"
+              style={{
+                backgroundImage: `url(${slide.productImage})`, // Set product image as background
+              }}
+            >
+              <div className="flex items-center justify-center w-full h-full">
+                <div className="text-center">
+                  <h1 className="text-2xl font-semibold font-mono  lg:text-2xl">
+                    {slide.productTitle} 
+                  </h1>
+                
+                  <br />
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );
