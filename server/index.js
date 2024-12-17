@@ -590,12 +590,12 @@ app.patch("/decline-message/:id", async(req, res)=>{
     // host payment history
     app.get('/host-payment-history/:email',async(req, res)=>{
      try{
-      const {email}= req.params.email;
-      const query = { hostEmail: { $in: [email] } };
+      const hostEmail= req.params.email;
+      const query = { hostEmail: hostEmail };
       const result = await successPaymentCollection.find(query).toArray();
-      if (result.length === 0) {
-        return res.status(404).json({ message: 'No payments found for this email' });
-      }
+      // if (result.length === 0) {
+      //   return res.status(404).json({ message: 'No payments found for this email' });
+      // }
       res.send(result)
       // res.status(200).send({message: "payment data get successfully"})
      }catch(err){

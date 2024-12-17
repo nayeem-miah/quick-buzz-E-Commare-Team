@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import NoData from "../../../Shared/NoDataFound/NoData";
 
 interface Listing {
+  [x: string]: ReactNode;
   _id: number;
   productTitle: string;
   productImage: string;
@@ -99,11 +100,12 @@ const ManageBooking: React.FC = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
               <thead className="bg-gray-400 text-white">
                 <tr>
-                  <th className="py-3 px-4 text-sm font-medium text-left">Title</th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">Image</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">cus_email</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">date</th>
+                  {/* <th className="py-3 px-4 text-sm font-medium text-left">transition ID</th> */}
                   <th className="py-3 px-4 text-sm font-medium text-left">Price</th>
                   <th className="py-3 px-4 text-sm font-medium text-left">Status</th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">Delete</th>
                   <th className="py-3 px-4 text-sm font-medium text-left">Details</th>
                 </tr>
               </thead>
@@ -113,7 +115,7 @@ const ManageBooking: React.FC = () => {
                     key={listing._id}
                     className="border-b hover:bg-gray-50 transition duration-200"
                   >
-                    <td className="py-4 px-4 text-sm text-gray-600">{listing?.productTitle}</td>
+                    <td className="py-4 px-4 text-sm text-gray-600">{listing?.cus_email}</td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       <img
                         src={listing?.productImage}
@@ -136,7 +138,7 @@ const ManageBooking: React.FC = () => {
                         </button>
                       )}
                     </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
+                    {/* <td className="py-4 px-4 text-sm text-gray-600">
                       <button
                         onClick={() => {
                           handleDelete(listing?._id);
@@ -145,7 +147,7 @@ const ManageBooking: React.FC = () => {
                       >
                         <MdDeleteForever />
                       </button>
-                    </td>
+                    </td> */}
                     <td className="py-4 px-4 text-sm">
                       <button
                         onClick={() => handleDetailsClick(listing)}
