@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import Swal from "sweetalert2";
-import { MdDeleteForever } from "react-icons/md";
+import React, { ReactNode, useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import useAuth from "../../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
@@ -34,7 +32,6 @@ const ManageBooking: React.FC = () => {
     data = [],
     isLoading,
     isError,
-    refetch,
   } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
@@ -43,31 +40,6 @@ const ManageBooking: React.FC = () => {
     },
   });
   console.log(data);
-  // handle delete
-  const handleDelete = (id: any) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic.delete(`/pro/${id}`).then((res) => {
-          if (res.data.deletedCount > 0) {
-            refetch();
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
-          }
-        });
-      }
-    });
-  };
 
   const handleApproved = (product: any) => {
     // handle product approval logic
@@ -100,30 +72,45 @@ const ManageBooking: React.FC = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
               <thead className="bg-gray-400 text-white">
                 <tr>
-                  <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">cus_email</th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">date</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    sl
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    cus_email
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    date
+                  </th>
                   {/* <th className="py-3 px-4 text-sm font-medium text-left">transition ID</th> */}
-                  <th className="py-3 px-4 text-sm font-medium text-left">Price</th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">Status</th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">Details</th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Price
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Status
+                  </th>
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Details
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((listing: Listing) => (
+                {data.map((listing: Listing, i: number) => (
                   <tr
                     key={listing._id}
                     className="border-b hover:bg-gray-50 transition duration-200"
                   >
-                    <td className="py-4 px-4 text-sm text-gray-600">{listing?.cus_email}</td>
                     <td className="py-4 px-4 text-sm text-gray-600">
-                      <img
-                        src={listing?.productImage}
-                        alt={"no image found"}
-                        className="w-16 h-16 object-cover rounded-md"
-                      />
+                      {(i = i + 1)}
                     </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">${listing?.price}</td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {listing?.cus_email}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {listing?.date}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      ${listing?.totalPrice}
+                    </td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       {listing?.adminIsApproved === "approve" ? (
                         "Approve"
@@ -187,66 +174,103 @@ const ManageBooking: React.FC = () => {
               </div>
 
               {/* Modal Content */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {/* Image Section */}
-                <div className="relative overflow-hidden rounded-lg shadow-lg">
-                  <img
-                    src={selectedBooking.productImage || "loading-image-url.jpg"} // Add a placeholder loading image
-                    alt={selectedBooking.productTitle}
-                    className="rounded-2xl w-full h-64 object-cover"
-                  />
-                  <span className="absolute top-4 left-4 bg-purple-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg">
-                    {selectedBooking?.category}
+              <div className="space-y-4 text-gray-700">
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    User Name:
                   </span>
-                </div>
+                  {selectedBooking?.cus_name || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">Email:</span>
+                  {selectedBooking?.cus_email || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Payment Date:
+                  </span>
+                  {selectedBooking?.tran_date || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">Amount:</span>
+                  {selectedBooking?.totalPrice || "0"}
+                  {selectedBooking?.currency || ""}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Transaction ID:
+                  </span>
+                  {selectedBooking?.transactionId || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Card Type:
+                  </span>
+                  {selectedBooking?.card_type || "N/A"}
+                </p>
 
-                {/* Details Section */}
-                <div className="space-y-4 text-gray-700">
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">Title:</span> {selectedBooking?.productTitle || "Loading..."}
-                  </p>
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">Price:</span>{" "}
-                    <span className="text-lg font-extrabold text-green-600">${selectedBooking?.price || "0.00"}</span>
-                  </p>
-                  <p>
-                    <span className="font-bold text-gray-900">Brand:</span> {selectedBooking?.brandName || "Loading..."}
-                  </p>
+                {/* Host Approval Status */}
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Approval Status:
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      selectedBooking?.hostIsApproved === "approved"
+                        ? "text-green-600"
+                        : selectedBooking?.hostIsApproved === "pending"
+                        ? "text-red-600"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {selectedBooking?.hostIsApproved || "N/A"}
+                  </span>
+                </p>
 
-                  {/* Host Info */}
-                  <div className="flex items-center space-x-4">
-                    <span className="font-bold text-gray-900">Host:</span>
-                    <div className="flex items-center space-x-3">
-                      <img
-                        className="h-14 w-14 rounded-full border-2 border-blue-500 shadow-md"
-                        src={selectedBooking?.hostPhoto || "default-host-photo.jpg"}
-                        alt={selectedBooking?.hostName || "Host"}
-                      />
-                      <div>
-                        <p className="text-lg font-semibold text-gray-800">{selectedBooking?.hostName || "Loading..."}</p>
-                        <p className="text-sm text-gray-600">{selectedBooking?.hostEmail || "Loading..."}</p>
-                      </div>
-                    </div>
-                  </div>
+                {/* Status */}
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    payment Status:{" "}
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      selectedBooking?.status === "success"
+                        ? "text-green-500" // Green for Success
+                        : selectedBooking?.status === "Failed"
+                        ? "text-red-500" // Red for Failed
+                        : "text-yellow-500" // Yellow for Pending or N/A
+                    }`}
+                  >
+                    {selectedBooking?.status || "N/A"}
+                  </span>
+                </p>
 
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">Host Approved:</span>{" "}
-                    <span
-                      className={`font-semibold ${selectedBooking?.adminIsApproved === "pending" ? "text-red-600" : "text-green-600"}`}
-                    >
-                      {selectedBooking?.adminIsApproved || "Loading..."}
-                    </span>
-                  </p>
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">Tags:</span> {selectedBooking?.tags || "Loading..."}
-                  </p>
-                </div>
-              </div>
-
-              {/* Description Section */}
-              <div className="mt-6">
-                <p className="text-xl font-bold text-gray-900">Description:</p>
-                <p className="text-gray-700">{selectedBooking?.description || "No description available."}</p>
+                {/* Products List */}
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">Products:</span>
+                  <ul className="list-disc list-inside space-y-2">
+                    {selectedBooking?.productTitle?.map(
+                      (title: any, index: any) => (
+                        <li key={index} className="flex items-start space-x-3">
+                          <img
+                            src={selectedBooking?.productImage?.[index] || ""}
+                            alt={title || "Product Image"}
+                            className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-md"
+                          />
+                          <div>
+                            <p className="font-medium text-sm sm:text-base">
+                              {title || "Unnamed Product"}
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-500">
+                              {selectedBooking?.brandName?.[index] ||
+                                "No Brand"}
+                            </p>
+                          </div>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </p>
               </div>
             </div>
           </div>
