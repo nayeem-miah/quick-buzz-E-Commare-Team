@@ -62,7 +62,14 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
       return data;
     },
   });
-  //   console.log(reviewdata);
+  //   console.log(reviewdata); 
+
+  
+  
+ 
+  
+
+
 
   return (
     <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 lg:space-y-0">
@@ -105,6 +112,7 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
             />
             <button
               onClick={handleSubmit}
+    
               className="mt-2 px-10 py-2 text-2xl text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
               border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
             >
