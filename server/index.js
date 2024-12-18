@@ -160,6 +160,21 @@ async function run() {
      app.get('/allsave', async (req, res) => {
        const result = await wishlistCollection.find().toArray()
        res.send(result)
+    }) 
+
+
+    /* Banner page show korar jonno data  */
+
+     app.get('/banner', async (req, res) => {
+     
+      const result = await productsCollection
+      .find()
+      .limit(6)
+      .sort({ createAt: -1 })
+      .toArray();
+
+    
+       res.send(result)
     })
 
 
