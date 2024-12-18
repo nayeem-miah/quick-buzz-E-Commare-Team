@@ -620,7 +620,25 @@ app.patch("/decline-message/:id", async(req, res)=>{
 
     })
   
-    // ------------end ssl commarce-----------------------
+    // ------------end ssl commerce-----------------------
+
+    // manage or approved product 
+    app.patch('/host-manage-product/:id', async(req, res)=>{
+      try{
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) };
+        const updatedDoc = {
+          $set: {
+            adminIsApproved: "approve",
+          },
+        };
+        const result = await successPaymentCollection.updateOne(filter, updatedDoc);
+        res.send(result);
+      }catch(err){
+        console.error(err)
+        res.status(404).send({message: "no approved product"})
+      }
+    })
 
     await client.db("admin").command({ ping: 1 });
     console.log(

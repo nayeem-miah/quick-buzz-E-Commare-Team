@@ -6,6 +6,7 @@ import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
 import { useNavigate } from "react-router-dom";
 import NoData from "../../../Shared/NoDataFound/NoData";
+import Swal from "sweetalert2";
 
 interface Listing {
   [x: string]: ReactNode;
@@ -32,6 +33,7 @@ const ManageBooking: React.FC = () => {
     data = [],
     isLoading,
     isError,
+    refetch
   } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
@@ -42,7 +44,19 @@ const ManageBooking: React.FC = () => {
   console.log(data);
 
   const handleApproved = (product: any) => {
-    // handle product approval logic
+    axiosPublic.patch(`/host-manage-product/${product._id}`).then((res) => {
+      if (res.data.modifiedCount > 0) {
+        refetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: `${product.productTitle} is approved now!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        // navigate("/product");
+      }
+    });
   };
 
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
