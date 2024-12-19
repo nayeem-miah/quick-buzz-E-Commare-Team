@@ -540,6 +540,7 @@ app.patch("/decline-message/:id", async(req, res)=>{
         transactionId: trxId,
         hostEmail: multiProductHostEmail,
         status: "pending",
+        
       }
       const result = await successPaymentCollection.insertOne(savaData)
       // result response frontend
@@ -629,7 +630,7 @@ app.patch("/decline-message/:id", async(req, res)=>{
         const filter = { _id: new ObjectId(id) };
         const updatedDoc = {
           $set: {
-            adminIsApproved: "approve",
+            hostIsApproved: "approve",
           },
         };
         const result = await successPaymentCollection.updateOne(filter, updatedDoc);

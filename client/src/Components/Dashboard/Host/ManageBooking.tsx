@@ -4,7 +4,6 @@ import useAuth from "../../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
-import { useNavigate } from "react-router-dom";
 import NoData from "../../../Shared/NoDataFound/NoData";
 import Swal from "sweetalert2";
 
@@ -13,7 +12,7 @@ interface Listing {
   _id: number;
   productTitle: string;
   productImage: string;
-  adminIsApproved: string;
+  hostIsApproved: string;
   hostPhoto: string;
   hostName: string;
   hostEmail: string;
@@ -27,13 +26,12 @@ interface Listing {
 const ManageBooking: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const {
     data = [],
     isLoading,
     isError,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
@@ -41,7 +39,7 @@ const ManageBooking: React.FC = () => {
       return res.data;
     },
   });
-  console.log(data);
+  // console.log(data);
 
   const handleApproved = (product: any) => {
     axiosPublic.patch(`/host-manage-product/${product._id}`).then((res) => {
@@ -108,57 +106,60 @@ const ManageBooking: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((listing: Listing, i: number) => (
-                  <tr
-                    key={listing._id}
-                    className="border-b hover:bg-gray-50 transition duration-200"
-                  >
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {(i = i + 1)}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.cus_email}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.date}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      ${listing?.totalPrice}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.adminIsApproved === "approve" ? (
-                        "Approve"
-                      ) : (
-                        <button
-                          onClick={() => {
-                            handleApproved(listing);
-                          }}
-                          className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                        >
-                          approve
-                        </button>
-                      )}
-                    </td>
-                    {/* <td className="py-4 px-4 text-sm text-gray-600">
-                      <button
-                        onClick={() => {
-                          handleDelete(listing?._id);
-                        }}
-                        className="px-4 py-2 text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
+                {data.map(
+                  (listing: Listing, i: number) =>
+                    listing.status === "success" && (
+                      <tr
+                        key={listing._id}
+                        className="border-b hover:bg-gray-50 transition duration-200"
                       >
-                        <MdDeleteForever />
-                      </button>
-                    </td> */}
-                    <td className="py-4 px-4 text-sm">
-                      <button
-                        onClick={() => handleDetailsClick(listing)}
-                        className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                      >
-                        Details
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {(i = i + 1)}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {listing?.cus_email}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {listing?.date}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          ${listing?.totalPrice}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {listing?.hostIsApproved === "approve" ? (
+                            "Approve"
+                          ) : (
+                            <button
+                              onClick={() => {
+                                handleApproved(listing);
+                              }}
+                              className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                            >
+                              approve
+                            </button>
+                          )}
+                        </td>
+                        {/* <td className="py-4 px-4 text-sm text-gray-600">
+                    <button
+                      onClick={() => {
+                        handleDelete(listing?._id);
+                      }}
+                      className="px-4 py-2 text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
+                    >
+                      <MdDeleteForever />
+                    </button>
+                  </td> */}
+                        <td className="py-4 px-4 text-sm">
+                          <button
+                            onClick={() => handleDetailsClick(listing)}
+                            className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                          >
+                            Details
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                )}
               </tbody>
             </table>
           </div>
@@ -230,7 +231,7 @@ const ManageBooking: React.FC = () => {
                   </span>
                   <span
                     className={`font-semibold ${
-                      selectedBooking?.hostIsApproved === "approved"
+                      selectedBooking?.hostIsApproved === "approve"
                         ? "text-green-600"
                         : selectedBooking?.hostIsApproved === "pending"
                         ? "text-red-600"
@@ -244,7 +245,7 @@ const ManageBooking: React.FC = () => {
                 {/* Status */}
                 <p className="text-sm sm:text-base">
                   <span className="font-semibold text-gray-900">
-                    payment Status:{" "}
+                    payment Status:
                   </span>
                   <span
                     className={`font-semibold ${
