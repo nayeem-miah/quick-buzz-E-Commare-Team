@@ -4,6 +4,7 @@ import useAxiosPublic from "../../../Hooks/UsePublic";
 import useAuth from "../../../Hooks/UseAuth";
 import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
+import NoData from "../../../Shared/NoDataFound/NoData";
 interface PaymentHistory {
   date: ReactNode;
   id: number;
@@ -22,9 +23,9 @@ interface PaymentHistory {
   status?: string;
 }
 const UserPaymentHistory: React.FC = () => {
-    const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
-        null
-      );
+  const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
+    null
+  );
   const { user } = useAuth();
 
   const axiosPublic = useAxiosPublic();
@@ -51,71 +52,76 @@ const UserPaymentHistory: React.FC = () => {
   return (
     <div className="overflow-x-auto">
       <Heading title={" Payment History"} subtitle={""} />
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-          <thead className="bg-gray-300 text-black">
-            <tr>
-              <th className="py-3 px-4 text-sm font-medium text-left">ID</th>
-              <th className="py-3 px-4 text-sm font-medium text-left">
-                User Name
-              </th>
+      {PaymentHistoryData.length === 0 ? (
+        <NoData />
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead className="bg-gray-300 text-black">
+              <tr>
+                <th className="py-3 px-4 text-sm font-medium text-left">ID</th>
+                <th className="py-3 px-4 text-sm font-medium text-left">
+                  User Name
+                </th>
 
-              <th className="py-3 px-4 text-sm font-medium text-left">Email</th>
-              {/* <th className="py-3 px-4 text-sm font-medium text-left">transactionId</th> */}
-              <th className="py-3 px-4 text-sm font-medium text-left">
-                Payment Date
-              </th>
-              <th className="py-3 px-4 text-sm font-medium text-left">
-                Amount
-              </th>
-              <th className="py-3 px-4 text-sm font-medium text-left">
-                Details
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {PaymentHistoryData?.map(
-              (payment: PaymentHistory, id: number) =>
-                payment.status === "success" && (
-                  <tr
-                    key={payment.id}
-                    className="border-b hover:bg-gray-50 transition duration-300"
-                  >
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {(id = id + 1)}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {payment?.cus_name}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {payment?.cus_email}
-                    </td>
-                    {/* <td className="py-4 px-4 text-sm text-gray-600">
-            {payment?.transactionId}
-          </td> */}
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {payment?.date}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {payment?.totalPrice}$
-                    </td>
+                <th className="py-3 px-4 text-sm font-medium text-left">
+                  Email
+                </th>
+                {/* <th className="py-3 px-4 text-sm font-medium text-left">transactionId</th> */}
+                <th className="py-3 px-4 text-sm font-medium text-left">
+                  Payment Date
+                </th>
+                <th className="py-3 px-4 text-sm font-medium text-left">
+                  Amount
+                </th>
+                <th className="py-3 px-4 text-sm font-medium text-left">
+                  Details
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {PaymentHistoryData?.map(
+                (payment: PaymentHistory, id: number) =>
+                  payment.status === "success" && (
+                    <tr
+                      key={payment.id}
+                      className="border-b hover:bg-gray-50 transition duration-300"
+                    >
+                      <td className="py-4 px-4 text-sm text-gray-600">
+                        {(id = id + 1)}
+                      </td>
+                      <td className="py-4 px-4 text-sm text-gray-600">
+                        {payment?.cus_name}
+                      </td>
+                      <td className="py-4 px-4 text-sm text-gray-600">
+                        {payment?.cus_email}
+                      </td>
+                      {/* <td className="py-4 px-4 text-sm text-gray-600">
+          {payment?.transactionId}
+        </td> */}
+                      <td className="py-4 px-4 text-sm text-gray-600">
+                        {payment?.date}
+                      </td>
+                      <td className="py-4 px-4 text-sm text-gray-600">
+                        {payment?.totalPrice}$
+                      </td>
 
-                    <td className="py-4 px-4 text-sm">
-                      <button
-                        onClick={() => handleDetailsClick(payment)}
-                        className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-              border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                      >
-                        Details
-                      </button>
-                    </td>
-                  </tr>
-                )
-            )}
-          </tbody>
-        </table>
-      </div>
-
+                      <td className="py-4 px-4 text-sm">
+                        <button
+                          onClick={() => handleDetailsClick(payment)}
+                          className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+            border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                        >
+                          Details
+                        </button>
+                      </td>
+                    </tr>
+                  )
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
       {/* Modal Component */}
       {selectedPayment && (
         <div
@@ -174,24 +180,26 @@ const UserPaymentHistory: React.FC = () => {
               {/* Host Approval Status */}
               <p className="text-sm sm:text-base">
                 <span className="font-semibold text-gray-900">
-                  Approval Status: 
-                 </span>
+                  Approval Status:
+                </span>
                 <span
                   className={`font-semibold ${
-                    selectedPayment?.hostIsApproved === "approved"
+                    selectedPayment?.hostIsApproved === "approve"
                       ? "text-green-600"
                       : selectedPayment?.hostIsApproved === "pending"
                       ? "text-red-600"
                       : "text-gray-600"
                   }`}
                 >
-                   {selectedPayment?.hostIsApproved || "N/A"}
+                  {selectedPayment?.hostIsApproved || "N/A"}
                 </span>
               </p>
 
               {/* Status */}
               <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">Payment status: </span>
+                <span className="font-semibold text-gray-900">
+                  Payment status:{" "}
+                </span>
                 <span
                   className={`font-semibold ${
                     selectedPayment?.status === "success"

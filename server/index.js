@@ -146,7 +146,7 @@ async function run() {
         const result = await productsCollection
           .find(query)
           .limit(20)
-          .sort({ createAt: -1 })
+          .sort({  _id: -1 })
           .toArray();
     
         res.send(result);
@@ -165,17 +165,20 @@ async function run() {
 
     /* Banner page show korar jonno data  */
 
-     app.get('/banner', async (req, res) => {
-     
-      const result = await productsCollection
-      .find()
-      .limit(6)
-      .sort({ createAt: -1 })
-      .toArray();
-
+    app.get('/banner', async (req, res) => {
+      try {
+        const result = await productsCollection
+          .find()
+          .sort({  _id: -1}) 
+          .limit(6) 
+          .toArray(); 
+        res.send(result); 
+      } catch (error) {
+        console.error("Failed to fetch recent products:", error);
+        res.status(500).send({ error: "Failed to fetch recent products" });
+      }
+    });
     
-       res.send(result)
-    })
 
 
   //  single user by data 
@@ -540,6 +543,7 @@ app.patch("/decline-message/:id", async(req, res)=>{
         transactionId: trxId,
         hostEmail: multiProductHostEmail,
         status: "pending",
+        
       }
       const result = await successPaymentCollection.insertOne(savaData)
       // result response frontend
@@ -629,7 +633,7 @@ app.patch("/decline-message/:id", async(req, res)=>{
         const filter = { _id: new ObjectId(id) };
         const updatedDoc = {
           $set: {
-            adminIsApproved: "approve",
+            hostIsApproved: "approve",
           },
         };
         const result = await successPaymentCollection.updateOne(filter, updatedDoc);
