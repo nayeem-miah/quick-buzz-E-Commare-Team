@@ -146,7 +146,7 @@ async function run() {
         const result = await productsCollection
           .find(query)
           .limit(20)
-          .sort({ createAt: -1 })
+          .sort({  _id: -1 })
           .toArray();
     
         res.send(result);
@@ -165,17 +165,20 @@ async function run() {
 
     /* Banner page show korar jonno data  */
 
-     app.get('/banner', async (req, res) => {
-     
-      const result = await productsCollection
-      .find()
-      .limit(6)
-      .sort({ createAt: -1 })
-      .toArray();
-
+    app.get('/banner', async (req, res) => {
+      try {
+        const result = await productsCollection
+          .find()
+          .sort({  _id: -1}) 
+          .limit(6) 
+          .toArray(); 
+        res.send(result); 
+      } catch (error) {
+        console.error("Failed to fetch recent products:", error);
+        res.status(500).send({ error: "Failed to fetch recent products" });
+      }
+    });
     
-       res.send(result)
-    })
 
 
   //  single user by data 

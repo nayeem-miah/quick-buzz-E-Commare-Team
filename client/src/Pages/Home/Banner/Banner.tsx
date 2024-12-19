@@ -21,13 +21,12 @@ export default function Carousel(): JSX.Element {
     queryKey: ["banner"],
     queryFn: async () => {
       const { data } = await axiosPublic.get("/banner"); // API endpoint ঠিক করুন
-      console.log(data);
       return data;
     },
   });
 
   // Get the last 6 items from the data
-  console.log(banner);
+  // console.log(banner);
 
   return (
     <div className="my-6">

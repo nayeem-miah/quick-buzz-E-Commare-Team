@@ -183,7 +183,7 @@ const AllPaymentHistory: React.FC = () => {
                 </span>
                 <span
                   className={`font-semibold ${
-                    selectedPayment?.hostIsApproved === "approved"
+                    selectedPayment?.hostIsApproved === "approve"
                       ? "text-green-600"
                       : selectedPayment?.hostIsApproved === "pending"
                       ? "text-red-600"
