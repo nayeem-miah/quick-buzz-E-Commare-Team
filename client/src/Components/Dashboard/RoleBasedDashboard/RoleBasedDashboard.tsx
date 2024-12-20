@@ -4,7 +4,6 @@ import AdminStatistics from "../Admin/AdminHome";
 import HostHome from "../Host/HostHome";
 import UserHome from "../User/UserHome";
 import useFetchSingleUser from "../../../Hooks/UseFindSingleUser";
-import ErrorPage from "../../../Routers/ErrorPage";
 
 const RoleBasedDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -19,7 +18,6 @@ const RoleBasedDashboard: React.FC = () => {
     return <UserHome />;
   }
 
-  return <ErrorPage />;
 };
 
 export default RoleBasedDashboard;

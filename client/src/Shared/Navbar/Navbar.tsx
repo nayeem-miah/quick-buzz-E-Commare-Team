@@ -16,7 +16,7 @@ import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logOut } = useAuth();
-  const { singleUser, loading } = useFetchSingleUser(user?.email);
+  const { singleUser } = useFetchSingleUser(user?.email);
   // console.log(singleUser);
 
   return (
