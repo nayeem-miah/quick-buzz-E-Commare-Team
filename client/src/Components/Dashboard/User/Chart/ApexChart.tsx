@@ -1,148 +1,123 @@
-import React from "react";
-import Chart from "react-apexcharts";
+import React, { useState, useEffect } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import UseAxiosSecure from "../../../../Hooks/UseAxiosSecure";
 
-// Define the shape of the state
-interface ApexChartState {
-  series: Array<{
-    name: string;
-    data: [number, number][]; // Array of [timestamp, totalPrice for the day]
-  }>;
-  options: {
-    chart: {
-      type: string;
-      zoom: { enabled: boolean };
-      background: string; // Set background color for better visibility
-      toolbar: {
-        show: boolean; // Disable the toolbar
-      };
-      animations: {
-        enabled: boolean;
-        easing: string;
-        speed: number;
-      };
-    };
-    xaxis: {
-      type: string;
-      title: { text: string };
-    };
-    yaxis: {
-      title: { text: string };
-    };
-    title: {
-      text: string;
-      align: string;
-    };
-    stroke: {
-      curve: string; // Add smooth curve for the line
-      width: number; // Line thickness
-    };
-    markers: {
-      size: number; // Marker size for data points
-    };
-    tooltip: {
-      enabled: boolean; // Enable tooltips to show data values
-    };
-  };
-}
-
-// Declare the PaymentHistoryData type
-interface PaymentHistoryData {
+interface BookingData {
   status: string;
+  tran_date: string;
   totalPrice: number;
-  date: string;
 }
 
-interface ApexChartProps {
-  PaymentHistoryData: PaymentHistoryData[];
-}
+const EnhancedBarChart: React.FC = () => {
+  const [data, setData] = useState<{ date: string; price: number }[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const axiosSecure = UseAxiosSecure();
 
-class ApexChart extends React.Component<ApexChartProps, ApexChartState> {
-  constructor(props: ApexChartProps) {
-    super(props);
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axiosSecure.get("/payment-history");
+      const bookingsData: BookingData[] = response.data;
 
-    // Filter the successful payments
-    const paymentData = props.PaymentHistoryData.filter(
-      (item) => item.status === "success"
-    );
-
-    // Calculate total price per day
-    const dailyTotalPrice = paymentData.reduce((acc: any, item) => {
-      const date = new Date(item.date).toDateString(); // Get the date part only
-      if (!acc[date]) {
-        acc[date] = 0; // Initialize total price for the day
+      const bookings = bookingsData.filter((item) => item.status === "success");
+      if (bookings.length === 0) {
+        setError("No booking data available! Bar chart cannot be displayed.");
+        setLoading(false);
+        return;
       }
-      acc[date] += item.totalPrice; // Add the total price of the transaction to the day
-      return acc;
-    }, {});
 
-    // Convert daily total price data into the required chart format
-    const seriesData = Object.keys(dailyTotalPrice).map((date) => [
-      new Date(date).getTime(), // Convert date to timestamp
-      dailyTotalPrice[date], // Total price for the day
-    ]);
+      const bookingMap: { [key: string]: number } = {};
+      bookings.forEach((item) => {
+        const date = new Date(item.tran_date);
+        const formattedDate = `${date.getFullYear()}-${
+          date.getMonth() + 1
+        }-${date.getDate()}`;
+        bookingMap[formattedDate] =
+          (bookingMap[formattedDate] || 0) + item.totalPrice;
+      });
 
-    this.state = {
-      series: [
-        {
-          name: "Total Price per Day",
-          data: seriesData,
-        },
-      ],
-      options: {
-        chart: {
-          type: "line",
-          zoom: { enabled: false },
-          background: "#f4f4f4", // Add a light background for visibility
-          toolbar: {
-            show: false, // Disable the download and other toolbar options
-          },
-          animations: {
-            enabled: true,
-            easing: "easeinout", // Smooth animation
-            speed: 1000, // Animation speed
-          },
-        },
-        xaxis: {
-          type: "datetime",
-          title: {
-            text: "Date",
-          },
-        },
-        yaxis: {
-          title: {
-            text: "Total Price (BDT)",
-          },
-        },
-        title: {
-          text: "Total Price per Day",
-          align: "left",
-        },
-        stroke: {
-          curve: "smooth", // Make the line smooth
-          width: 3, // Set the line width
-        },
-        markers: {
-          size: 5, // Add markers at data points
-        },
-        tooltip: {
-          enabled: true, // Show data on hover
-        },
-      },
-    };
-  }
+      const chartData = Object.entries(bookingMap).map(([date, amount]) => ({
+        date,
+        price: amount,
+      }));
 
-  render() {
-    return (
-      <div id="chart">
-        <Chart
-          options={this.state.options}
-          series={this.state.series}
-          type="line"
-          height="350"
+      chartData.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+      setData(chartData);
+    } catch (error: any) {
+      setError("Error fetching data: " + (error.message || "Unknown error"));
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart
+        data={data}
+        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+      >
+        <defs>
+          <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#4caf50" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#81c784" stopOpacity={0.2} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+        <XAxis
+          dataKey="date"
+          stroke="#555"
+          tick={{ fontSize: 12, fontWeight: 600 }}
+          tickLine={false}
         />
-      </div>
-    );
-  }
-}
+        <YAxis
+          stroke="#555"
+          tick={{ fontSize: 12, fontWeight: 600 }}
+          tickFormatter={(value) => `$${value}`}
+        />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "#f4f4f4",
+            borderRadius: 8,
+            border: "1px solid #ccc",
+          }}
+          itemStyle={{ fontWeight: "bold", color: "#4caf50" }}
+          labelStyle={{ fontWeight: "bold" }}
+          cursor={{ fill: "rgba(76, 175, 80, 0.1)" }}
+        />
+        <Legend verticalAlign="top" height={36} />
+        <Bar
+          dataKey="price"
+          fill="url(#barGradient)"
+          barSize={30}
+          animationBegin={300}
+          animationDuration={1500}
+          animationEasing="ease-in-out"
+          radius={[5, 5, 0, 0]} // Rounded corners for bars
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
 
-export default ApexChart;
+export default EnhancedBarChart;
