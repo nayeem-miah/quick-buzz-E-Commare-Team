@@ -1,5 +1,5 @@
 import { FaUserAlt, FaDollarSign } from "react-icons/fa";
-import { BsFillCartPlusFill, BsFillHouseDoorFill } from "react-icons/bs";
+import { BsFillCartPlusFill } from "react-icons/bs";
 import ApexChart from "../User/Chart/ApexChart";
 import ApexCart from "../User/Chart/Simple";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
@@ -113,7 +113,7 @@ const AdminStatistics: React.FC = () => {
           {/* Total Sales Graph Placeholder */}
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
             <div className="p-4 text-center">
-              <ApexChart PaymentHistoryData={PaymentHistoryData}></ApexChart>
+              <ApexChart></ApexChart>
             </div>
           </div>
           {/* Calendar */}
