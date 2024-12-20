@@ -117,7 +117,7 @@ const AdminStatistics: React.FC = () => {
           </div>
           {/* Calendar */}
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden">
-            <ApexCart></ApexCart>
+            <ApexCart data={data} users={users}> </ApexCart>
           </div>
         </div>
       </div>
