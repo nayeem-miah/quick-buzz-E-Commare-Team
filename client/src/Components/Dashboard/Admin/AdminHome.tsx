@@ -1,11 +1,10 @@
 import { FaUserAlt, FaDollarSign } from "react-icons/fa";
 import { BsFillCartPlusFill } from "react-icons/bs";
-import ApexChart from "../User/Chart/ApexChart";
-import ApexCart from "../User/Chart/Simple";
+import ApexChart from "./Chart/ApexChart";
+import ApexCart from "./Chart/Simple";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
-
 
 const AdminStatistics: React.FC = () => {
   // total users
@@ -108,7 +107,7 @@ const AdminStatistics: React.FC = () => {
             </div>
           </div> */}
         </div>
-     
+
         <div className="mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {/* Total Sales Graph Placeholder */}
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">

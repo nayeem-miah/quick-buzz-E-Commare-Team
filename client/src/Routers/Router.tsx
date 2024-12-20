@@ -33,6 +33,7 @@ import Fail from "../Components/SSLCommarze/Fail";
 import Cancel from "../Components/SSLCommarze/Cancel";
 import Success from "../Components/SSLCommarze/Success";
 import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/SellerDataUpdated";
+import RoleBasedDashboard from "../Components/Dashboard/RoleBasedDashboard/RoleBasedDashboard";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -135,16 +136,16 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "profile",
-        element: <Profile></Profile>,
-      },
-
-      //   admin dashboard
+      // Dynamic role-based index
       {
         index: true,
-        element: <AdminHome />,
+        element: <RoleBasedDashboard />,
       },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      // Admin routes
       {
         path: "manage-users",
         element: <ManageUsers />,
@@ -161,11 +162,7 @@ const router = createBrowserRouter([
         path: "all-host-request",
         element: <AllHostRequest />,
       },
-      // host dashboard
-      {
-        index: true,
-        element: <HostHome />,
-      },
+      // Host routes
       {
         path: "host-add-product",
         element: <HostAddProduct />,
@@ -178,38 +175,39 @@ const router = createBrowserRouter([
         path: "host-manage-booking",
         element: <ManageBooking />,
       },
-      // user dashboard route
-      {
-        index: true,
-        element: <UserHome />,
-      },
+      // User routes
       {
         path: "my-listings",
         element: <MyAddedCart />,
       },
       {
         path: "my-wishlist",
-        element: <MyWishList></MyWishList>,
+        element: <MyWishList />,
       },
       {
         path: "seller-request",
-        element: <SellerRequest sellerData={{
-          _id: "",
-          sellerName: "",
-          sellerEmail: "",
-          sellerPhoto: "",
-          mobile: "",
-          reason: "",
-          address: "",
-          other: "",
-          imageUrl: ""
-        }} />,
+        element: (
+          <SellerRequest
+            sellerData={{
+              _id: "",
+              sellerName: "",
+              sellerEmail: "",
+              sellerPhoto: "",
+              mobile: "",
+              reason: "",
+              address: "",
+              other: "",
+              imageUrl: "",
+            }}
+          />
+        ),
       },
       {
         path: "my-payment-history",
         element: <UserPaymentHistory />,
       },
     ],
-  },
+  }
+  
 ]);
 export default router;
