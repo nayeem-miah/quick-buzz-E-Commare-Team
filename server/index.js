@@ -155,6 +155,19 @@ async function run() {
         res.status(500).send({ err: "Failed to perform search" });
       }
     });
+    app.get('/recommended-for-you-product', async (req, res) => {
+      try {
+        const result = await productsCollection
+          .find()
+          .limit(6)
+          .sort({  _id: -1 })
+          .toArray();
+        res.send(result);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ err: "Failed to perform search" });
+      }
+    });
     
     // save data get with mongodb 
      app.get('/allsave', async (req, res) => {

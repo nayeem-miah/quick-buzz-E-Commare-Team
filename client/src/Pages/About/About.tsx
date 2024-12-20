@@ -76,13 +76,14 @@ const About: React.FC = () => {
                 every style and occasion. We bring you the latest trends with
                 uncompressed quality.
               </p>
-             <Link to={'/product'}>
-             <button
-                className=" px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+              <Link to={"/product"}>
+                <button
+                  className=" px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-1050"
-              >
-                Shop Now
-              </button></Link>
+                >
+                  Shop Now
+                </button>
+              </Link>
             </div>
             <div className="lg:w-1/2">
               <img
