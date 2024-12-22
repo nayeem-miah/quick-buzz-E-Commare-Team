@@ -11,7 +11,7 @@ const RoleBasedDashboard: React.FC = () => {
   if (singleUser?.role === "admin") {
     return <AdminStatistics />;
   }
-  if (singleUser?.role === "host") {
+  if (singleUser?.role === "Host") {
     return <HostHome />;
   }
   if (singleUser?.role === "user") {
