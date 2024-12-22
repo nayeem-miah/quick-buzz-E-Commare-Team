@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useAxiosPublic from "../../Hooks/UsePublic";
+import 'animate.css';
+import "aos/dist/aos.css";
+import Aos from "aos";
 
 interface Product {
   adminIsApproved: string;
@@ -38,9 +41,17 @@ const Card: React.FC<CardProps> = ({ product }) => {
   const averageRating = productReviews.length
     ? productReviews.reduce((sum: number, item: any) => sum + item.rating, 0) / productReviews.length
     : 0;
+     
+
+  
+    useEffect(() => {
+      Aos.init();
+    }, []);
+  
+
 
   return (
-    <div className="">
+    <div className=""  data-aos="zoom-in" >
       <div className="">
         <Link key={product._id} to={`/product/${product?._id}`}>
           <div className="bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition">
