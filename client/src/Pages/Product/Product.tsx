@@ -31,7 +31,10 @@ const Product: React.FC = () => {
 
   const [searchText, setSearchText] = useState(""); // Search Text
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Filtered Products
+  
 
+
+  /* product Cetegory data get */
   const {
     data: products = [],
     isLoading,
@@ -44,6 +47,9 @@ const Product: React.FC = () => {
     },
     enabled: !!category,
   });
+
+
+
 
   React.useEffect(() => {
     refetch();
@@ -75,7 +81,7 @@ const Product: React.FC = () => {
       />
 
       {/* Search Field */}
-      <div className="w-full h-auto mx-auto p-4 bg-red-300">
+      <div className="w-full h-auto mx-auto p-4 bg-gray-50 border shadow">
         {/* Heading Section */}
         <div className="text-center mb-4">
           <h2 className="text-2xl ">

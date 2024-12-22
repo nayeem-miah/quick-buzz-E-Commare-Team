@@ -46,7 +46,7 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
 
   
 
-  // delete
+  // delete data 
   const handleDelete = async (id: any) => {
     try {
       Swal.fire({

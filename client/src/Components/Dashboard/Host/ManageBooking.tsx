@@ -26,7 +26,10 @@ interface Listing {
 const ManageBooking: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
+ 
 
+
+  /* All Payment history  */
   const {
     data = [],
     isLoading,
@@ -39,7 +42,10 @@ const ManageBooking: React.FC = () => {
       return res.data;
     },
   });
-  // console.log(data);
+
+   
+
+  /* Product approve update */
 
   const handleApproved = (product: any) => {
     axiosPublic.patch(`/host-manage-product/${product._id}`).then((res) => {

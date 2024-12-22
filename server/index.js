@@ -155,6 +155,8 @@ async function run() {
         res.status(500).send({ err: "Failed to perform search" });
       }
     });
+
+    /* recommended for you get data in use user dashboard */
     app.get('/recommended-for-you-product', async (req, res) => {
       try {
         const result = await productsCollection
@@ -177,7 +179,6 @@ async function run() {
 
 
     /* Banner page show korar jonno data  */
-
     app.get('/banner', async (req, res) => {
       try {
         const result = await productsCollection
@@ -192,8 +193,6 @@ async function run() {
       }
     });
     
-
-
   //  single user by data 
   app.get('/allsave/:email', async (req, res)=>{
     const email = req.params.email;
@@ -203,14 +202,12 @@ async function run() {
     res.send(result)
     }
   })
-
     // save data get with mongodb
     app.get("/allsave", async (req, res) => {
       const result = await wishlistCollection.find().toArray();
       res.send(result);
     });
     
-
     //  single user by data
     app.get("/allsave/:email", async (req, res) => {
       const email = req.params.email;
@@ -260,7 +257,8 @@ async function run() {
       const result = await userCollection.deleteOne(query);
       res.send(result);
     });
-
+    
+      /* get single user email */
     app.get("/single-user/:email", async (req, res) => {
       const { email } = req.params;
       const user = await userCollection.findOne({ email });
@@ -278,16 +276,15 @@ async function run() {
       try {
         const wishlist = req.body;
 
-        // `_id` মুছে দিন
-        // console.log("Before deleting _id:", wishlist);
+   
         delete wishlist._id;
-        // console.log("After deleting _id:", wishlist);
+        
 
         if (!wishlist || Object.keys(wishlist).length === 0) {
           return res.status(400).send({ error: "Invalid wishlist data." });
         }
 
-        // ইনসার্ট অপারেশন
+    
         const result = await wishlistCollection.insertOne(wishlist);
 
         res.status(201).send(result);
@@ -299,7 +296,7 @@ async function run() {
 
     //  post all user
     app.post("/users", async (req, res) => {
-      // console.log("Request received for /users:", req.body);
+   
       const user = req.body;
       const query = { email: user.email };
       const existingUser = await userCollection.findOne(query);
@@ -311,26 +308,21 @@ async function run() {
       
     });
 
-  
-
-
     
 /* Review post  */
 app.post('/reviews', async (req, res) => {
   const review = req.body;
-  // console.log("Received review data:", review); // রিকোয়েস্টে প্রাপ্ত ডাটা লগ করা
+ 
   try {
-      const result = await reviewtCollection.insertOne(review); // ডাটাবেসে নতুন রিভিউ যোগ করা
-      // console.log("Review successfully saved:", result); // সফল ইনসার্ট লগ করা
+      const result = await reviewtCollection.insertOne(review); 
+   
       res.status(201).send(result); 
   } catch (error) {
-      console.error("Error saving review:", error.message); // ত্রুটির বার্তা লগ করা
-      console.error("Full error details:", error); // পুরো ত্রুটি লগ করা
-      res.status(500).send({ message: "Failed to save review" }); // ত্রুটির রেসপন্স
+      console.error("Error saving review:", error.message); 
+      console.error("Full error details:", error); 
+      res.status(500).send({ message: "Failed to save review" }); 
   }
 });
-
- 
 
 
 /* Get a Review data:id  */
@@ -351,9 +343,6 @@ app.get('/review/:id', async (req, res) => {
   }
 });
 
-
-
-
 /* Get a Review data  */
 app.get('/review', async (req, res) => {
 
@@ -366,10 +355,6 @@ app.get('/review', async (req, res) => {
       res.status(500).send({ message: "Failed to fetch reviews" });  
   }
 });
-
-
-
-
 
     // patch all user
     app.patch("/alluser/admin/:id", async (req, res) => {
@@ -492,17 +477,9 @@ app.patch("/decline-message/:id", async(req, res)=>{
      }
     })
 
-   // -----------------------ssl commarze start----------------
-    //1.init payment
-    //2.post Request---url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
-    //3.0 then  success payment post request
-    // 3.2 save data in database
-    // 4. if payment success and then update database
-    // 5. if payment is not success and fail
-    // sslCommarze create payment-------------------------------
     const date = new Date().toLocaleDateString();
     
-    
+     /* post a payment data */
     app.post('/create-payment', async(req, res)=>{
       const paymentInfo= req.body;
      const  {totalPrice, email,displayName,multiProductTitle,multiProductBrandName,multiProductHostEmail,multiProductImg,multiProductDescription}= paymentInfo;

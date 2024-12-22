@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -28,9 +28,9 @@ export default function Carousel(): JSX.Element {
   return (
     <div className="">
       <Swiper
-        spaceBetween={30} // The space between slides
-        centeredSlides={true} // Center the slides
-        loop={false} // Disable loop since we are showing 6 slides only
+        spaceBetween={30} 
+        centeredSlides={true} 
+        loop={false} 
         autoplay={{
           delay: 1800,
           disableOnInteraction: false,

@@ -42,9 +42,9 @@ const AllHostRequest: React.FC = () => {
       return res.data;
     },
   });
-  // console.log(sellerData);
+ 
 
-  // delete
+ /* delete data  */
   const handleDelete = async (id: any) => {
     try {
       Swal.fire({
@@ -94,19 +94,21 @@ const AllHostRequest: React.FC = () => {
           }
         });
 
-      setInputValue(""); // Reset input field
-      toggleModal(); // Close modal
+      setInputValue(""); 
+      toggleModal(); 
     } catch (err) {
       console.error(err);
       toast.error(`error is ,${err}`);
     }
   };
 
+  
   //   details modal
   const handleDetailsClick = (listing: SellerDetails) => {
     setSelectedBooking(listing);
   };
 
+  
   const closeModal = () => {
     setSelectedBooking(null);
   };

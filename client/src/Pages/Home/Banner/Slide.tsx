@@ -13,10 +13,10 @@ interface SlideProps {
         <div className="flex items-center justify-center h-full bg-black bg-opacity-30">
           <div className="text-center px-4 sm:px-6 md:px-8">
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white">
-              Your Slide Title
+            Explore our website
             </h1>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white mt-2">
-              Your slide description goes here.
+            and purchase products of your choice!
             </p>
           </div>
         </div>

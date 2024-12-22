@@ -23,7 +23,8 @@ const ManageUsers: React.FC = () => {
       return res.data;
     },
   });
-
+   
+  /* Ceate a admin  */
   const handleMakeAdmin = (role: string, user: User): void => {
     axiosSecure
       .patch(`/alluser/admin/${user._id}`, { role: role })
@@ -51,7 +52,8 @@ const ManageUsers: React.FC = () => {
         });
       });
   };
-
+ 
+   /* user Delete fun */
   const handleDelete = (user: User): void => {
     Swal.fire({
       title: "Are you sure?",
