@@ -31,6 +31,7 @@ import Cancel from "../Components/SSLCommarze/Cancel";
 import Success from "../Components/SSLCommarze/Success";
 import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/SellerDataUpdated";
 import RoleBasedDashboard from "../Components/Dashboard/RoleBasedDashboard/RoleBasedDashboard";
+import HostHome from "../Components/Dashboard/Host/HostHome";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -163,6 +164,10 @@ const router = createBrowserRouter([
       {
         path: "host-add-product",
         element: <HostAddProduct />,
+      },
+      {
+        path: "overview",
+        element: <HostHome />,
       },
       {
         path: "my-host-listings",
