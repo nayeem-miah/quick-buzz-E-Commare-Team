@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   // console.log(singleUser);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-gray-100  shadow-lg z-50 ">
+    <nav className="fixed top-0 left-0 w-full bg-gray-50 bg-opacity-50 backdrop-blur-lg  shadow-lg z-50 ">
       <div className="container t px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
         <div className="flex items-center justify-between">
           <Link to={"/"}>
@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
         <div
           className={`${
             isOpen
-              ? "translate-x-0 opacity-100 bg-white"
+              ? "translate-x-0 opacity-100 "
               : "opacity-0 -translate-x-full "
           } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out   md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center`}
         >
@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
             >
               CONTACT
             </NavLink>
-            <span className="block md:hidden bg-white">
+            <span className="block md:hidden">
               {user ? (
                 <div className="space-y-5 font-bold uppercase mt-3">
                   <div>

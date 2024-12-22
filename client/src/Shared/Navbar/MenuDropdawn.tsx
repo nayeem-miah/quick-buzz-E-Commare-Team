@@ -35,7 +35,7 @@ const MenuDropdown: React.FC = () => {
         {/* Dropdown button */}
         <div
           onClick={() => setIsOpen((prev) => !prev)}
-          className="p-4 md:py-1 md:px-2 border border-black flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition bg-white"
+          className="p-4 md:py-1 md:px-2 border border-black flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
