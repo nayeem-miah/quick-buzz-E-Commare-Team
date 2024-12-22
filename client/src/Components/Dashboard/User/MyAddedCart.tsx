@@ -112,8 +112,10 @@ const MyAddedCart: React.FC = () => {
     displayName: user?.displayName,
     currency: "USD",
   };
-  // console.log(allsave);
-  // payment start
+ 
+
+
+  /* payment system  */
   const handlePayment = async () => {
     try {
       setLoading(true);
@@ -214,12 +216,7 @@ const MyAddedCart: React.FC = () => {
                   <td className="py-4 px-4 text-sm text-gray-600">
                     {save?.discount}%
                   </td>
-                  {/* <td className="py-4 px-4 text-sm text-gray-600">
-                    <button className="mt-3 px-6 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
-                      <span className="mx-4 font-medium">Pay </span>
-                      <FaArrowRight className="w-5 h-5" />
-                    </button>
-                  </td> */}
+                
                   <td>
                     <button
                       onClick={() => handleDelete(save?._id)}
