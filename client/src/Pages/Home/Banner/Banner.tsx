@@ -6,30 +6,27 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import bgimg1 from '../../../assets/banner/banner pic 1.avif'
+import bgimg2 from '../../../assets/banner/banner pic 2.jpg'
+import bgimg3 from '../../../assets/banner/banner pic 3.avif'
+import bgimg4 from '../../../assets/banner/banner pic 4.jpg'
+import bgimg5 from '../../../assets/banner/banne pic 5.jpg'
+import bgimg6 from '../../../assets/banner/banner pic 6.jpg'
+
 
 // Import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
-import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "../../../Hooks/UsePublic";
+import Slide from "./Slide";
 
 export default function Carousel(): JSX.Element {
-  const axiosPublic = useAxiosPublic();
-
-  // Fetch data using React Query
-  const { data: banner = [] } = useQuery({
-    queryKey: ["banner"],
-    queryFn: async () => {
-      const { data } = await axiosPublic.get("/banner"); // API endpoint ঠিক করুন
-      return data;
-    },
-  });
+  
 
   // Get the last 6 items from the data
   // console.log(banner);
 
   return (
-    <div className="my-6">
+    <div className="">
       <Swiper
         spaceBetween={30} // The space between slides
         centeredSlides={true} // Center the slides
@@ -45,30 +42,12 @@ export default function Carousel(): JSX.Element {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        {banner.map((slide: { productImage: string }, index: number) => (
-          <SwiperSlide key={index}>
-            <div
-              className="bg-center mt-1 bg-[length:100%_100%] h-[300px] lg:h-[500px]"
-              style={{
-                backgroundImage: `url(${slide.productImage})`,
-              }}
-            >
-              <div className="flex items-center justify-center w-full h-full">
-                <div className="text-center">
-                  <h1 >
-                    <span className="lg:text-2xl text-sm font-mono font-bold bg-gradient-to-r from-orange-700 via-blue-500 to-green-400 text-transparent bg-clip-text bg-300% animate-gradient">
-                      Please visit Ourwebsite, browse through the products,{" "}
-                      <br />
-                      and select the ones that suit your preferences
-                    </span>
-                  </h1>
-
-                  <br />
-                </div>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
+        <SwiperSlide><Slide image={bgimg1}></Slide> </SwiperSlide>
+        <SwiperSlide><Slide image={bgimg2}></Slide> </SwiperSlide>
+        <SwiperSlide><Slide image={bgimg3}></Slide> </SwiperSlide>
+        <SwiperSlide><Slide image={bgimg4}></Slide> </SwiperSlide>
+        <SwiperSlide><Slide image={bgimg5}></Slide> </SwiperSlide>
+        <SwiperSlide><Slide image={bgimg6}></Slide> </SwiperSlide>
       </Swiper>
     </div>
   );
