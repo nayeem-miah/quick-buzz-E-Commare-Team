@@ -5,7 +5,9 @@ import Services from "../../assets/Image/service.jpg";
 import mission from "../../assets/Image/mission.jpg";
 import nayeemImage from "../../assets/Image/Nayeem.png";
 import rakibImage from "../../assets/Image/rakib1.jpg";
-
+import { useEffect } from "react";
+import "aos/dist/aos.css";
+import Aos from "aos";
 interface TeamMember {
   name: string;
   position: string;
@@ -31,6 +33,10 @@ const About: React.FC = () => {
       education: "Diploma in Engineering in Computer Science",
     },
   ];
+
+  useEffect(() => {
+    Aos.init();
+  }, []);
 
   return (
     <div className=" text-gray-800 font-sans m-4">
@@ -60,7 +66,7 @@ const About: React.FC = () => {
       </div>
 
       {/* Our Services */}
-      <section className="my-10 px-4 md:px-0">
+      <section className="my-10 px-4 md:px-0" data-aos="flip-left">
         <Heading
           title="Our Services"
           subtitle="We offer a diverse range of high-quality products, backed by fast and reliable delivery, secure payment methods, and 24/7 customer support. Enjoy exclusive deals, hassle-free returns, and easy refunds."
@@ -96,7 +102,7 @@ const About: React.FC = () => {
         </div>
       </section>
       {/* Our mission Section */}
-      <section className="my-10 px-4 md:px-0 ">
+      <section className="my-10 px-4 md:px-0 " data-aos="flip-left">
         <Heading
           title={"Our mission"}
           subtitle={
@@ -136,7 +142,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Meet Our Team */}
-      <section id="meet" className=" py-8 animate-slideIn">
+      <section id="meet" className=" py-8 animate-slideIn" data-aos="flip-left">
         <Heading title="Meet Our Team" subtitle="" />
         <div className="container mx-auto px-6 text-center">
           <div className="grid gap-8 md:grid-cols-2">
