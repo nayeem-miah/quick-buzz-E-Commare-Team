@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   // console.log(singleUser);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white  shadow-lg z-50 ">
+    <nav className="fixed top-0 left-0 w-full bg-[#b962f2]  shadow-lg z-50 ">
       <div className="container t px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
         <div className="flex items-center justify-between">
           <Link to={"/"}>
@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* মোবাইল মেনু বাটন */}
-          <div className="flex md:hidden lg:hidden">
+          <div className="flex md:hidden  lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"

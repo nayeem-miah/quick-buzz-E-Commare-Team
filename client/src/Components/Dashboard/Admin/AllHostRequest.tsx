@@ -8,7 +8,7 @@ import { useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 import NoData from "../../../Shared/NoDataFound/NoData";
-import { Form, Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 interface SellerDetails {
@@ -119,7 +119,7 @@ const AllHostRequest: React.FC = () => {
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-gray-400 text-white">
+            <thead className="bg-[#b962f2] text-white">
               <tr>
                 <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
                 <th className="py-3 px-4 text-sm font-medium text-left">
