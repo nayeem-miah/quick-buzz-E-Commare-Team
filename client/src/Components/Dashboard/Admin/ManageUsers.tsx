@@ -96,7 +96,7 @@ const ManageUsers: React.FC = () => {
         <Heading title={"Manage Users"} subtitle={""} />
         <table className="table w-full border border-gray-200 ">
           <thead>
-            <tr className="bg-gray-300 text-black font-bold">
+            <tr className="bg-[#b962f2] text-black font-bold">
               <th></th>
               <th>Name</th>
               <th>Email</th>

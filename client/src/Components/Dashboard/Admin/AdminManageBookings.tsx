@@ -96,7 +96,7 @@ const AdminManageBookings: React.FC = () => {
       <Heading title={"Manage product"} subtitle={""} />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-          <thead className="bg-gray-400 text-white">
+          <thead className="bg-[#b962f2] text-white">
             <tr>
               <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
               <th className="py-3 px-4 text-sm font-medium text-left">Title</th>
