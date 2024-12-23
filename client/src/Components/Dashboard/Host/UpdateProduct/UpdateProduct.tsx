@@ -267,7 +267,7 @@ const UpdateProduct: React.FC = () => {
                   className="animate-spin mx-auto "
                 ></ImSpinner>
               ) : (
-                "Add Product"
+                "update Product"
               )}
             </button>
           </div>

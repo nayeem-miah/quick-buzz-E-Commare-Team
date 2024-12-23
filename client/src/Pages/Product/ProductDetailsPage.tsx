@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
@@ -48,7 +48,7 @@ const ProductPage: React.FC = () => {
     hostPhoto,
   } = product;
   const priceFloat = parseFloat(price);
-  console.log(product);
+  // console.log(product);
 
   // Handle Add to Cart button
   const HandleButton = () => {
@@ -102,31 +102,40 @@ const ProductPage: React.FC = () => {
           {/* Product Info Section */}
           <div className="flex flex-col justify-center">
             <div className="max-w-xl mb-6">
-            <div className="flex mb-8 gap-20 text-xl">
+              <div className="flex mb-8 gap-20 text-xl">
                 <div className="avatar">
                   <div className="w-12 rounded-full ml-4">
                     <img src={hostPhoto} alt="user" />
                   </div>
                 </div>
                 <h2 className="mt-3 text-2xl font-mono">
-                 HostName:  
-
-                <span className="text-green-400">  {hostName}</span>
-                 
-                
+                  HostName:
+                  <span className="text-green-400"> {hostName}</span>
                 </h2>
               </div>
-              <h3 className="text-3xl font-semibold text-gray-800 tracking-wide">{brandName}</h3>
-              <p className="text-base mt-2 text-gray-600 md:text-lg">{productTitle}</p>
-              <p className="text-2xl mt-4 font-bold text-orange-600">$ {price}</p>
+              <h3 className="text-3xl font-semibold text-gray-800 tracking-wide">
+                {brandName}
+              </h3>
+              <p className="text-base mt-2 text-gray-600 md:text-lg">
+                {productTitle}
+              </p>
+              <p className="text-2xl mt-4 font-bold text-orange-600">
+                $ {price}
+              </p>
             </div>
             <div>
-              <button
-                onClick={HandleButton}
-                className="mt-6 px-12 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              >
+              {user ? (
+                <button
+                  onClick={HandleButton}
+                  className="mt-6 px-12 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                >
+                  Add To Cart
+                </button>
+              ) : (
+                <Link to={'/login'}><button className="mt-6 px-12 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-600">
                 Add To Cart
-              </button>
+              </button></Link>
+              )}
             </div>
           </div>
 
@@ -152,7 +161,9 @@ const ProductPage: React.FC = () => {
         {/* Product Details Section (Additional Info) */}
         <div className="mt-12">
           <div className="max-w-3xl mx-auto text-center">
-            <h3 className="text-2xl font-semibold text-gray-800">Product Details</h3>
+            <h3 className="text-2xl font-semibold text-gray-800">
+              Product Details
+            </h3>
             <p className="mt-4 text-lg text-gray-700">{description}</p>
           </div>
         </div>
@@ -162,7 +173,9 @@ const ProductPage: React.FC = () => {
       {showQuickView && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg p-8 w-96">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Quick View</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Quick View
+            </h2>
             <img
               className="w-full h-48 object-cover mb-4"
               src={productImage}

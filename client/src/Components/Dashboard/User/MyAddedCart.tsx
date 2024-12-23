@@ -52,7 +52,7 @@ const MyAddedCart: React.FC = () => {
         axiosPublic
           .delete(`/userpro/${id}`)
           .then((res) => {
-            console.log("Response from server:", res.data);
+            // console.log("Response from server:", res.data);
             if (res.data.deletedCount > 0) {
               refetch();
               Swal.fire({

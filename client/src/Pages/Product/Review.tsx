@@ -26,14 +26,14 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
         email,
         timestamp: currentTime,
       };
-      console.log(data);
+      // console.log(data);
 
       axiosPublic
         .post("/reviews", data, {
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.status === 201) {
             toast.success("Thank you for your feedback!");
           } else {
