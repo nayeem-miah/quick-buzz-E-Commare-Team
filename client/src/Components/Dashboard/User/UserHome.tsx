@@ -1,104 +1,107 @@
-
-import { FaUserAlt, FaDollarSign } from 'react-icons/fa';
-import { BsFillCartPlusFill, BsFillHouseDoorFill } from 'react-icons/bs';
-import ApexChart from './Chart/ApexChart';
-import ApexCart from './Chart/Simple';
-
-interface StatData {
-  totalSale: number;
-  userCount: number;
-  bookingCount: number;
-  roomCount: number;
-  chartData: any[]; // Update type if you have a specific structure for chartData
-}
+import React from "react";
+import { Link } from "react-router-dom";
+import useAuth from "../../../Hooks/UseAuth";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "../../../Hooks/UsePublic";
+import LoadingSpinner from "../../../Shared/Loading";
+import NoData from "../../../Shared/NoDataFound/NoData";
+import Card from "../../../Pages/Product/Card";
 
 const UserHome: React.FC = () => {
-  // Dummy static data for statics page
-  const statData: StatData = {
-    totalSale: 12000,
-    userCount: 452,
-    bookingCount: 148,
-    roomCount: 85,
-    chartData: [], // Add dummy data if needed for the chart
-  };
+  const { user } = useAuth();
+  const axiosPublic = useAxiosPublic();
+
+  // recommended-for-you-product
+  const { data: recommended = [], isLoading } = useQuery({
+    queryKey: ["recommended"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/recommended-for-you-product");
+      return res.data;
+    },
+  });
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div>
-      <div className='mt-12'>
-        {/* Small cards */}
-        <div className='mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-          {/* Sales Card */}
-          <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md'>
-            <div className='bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center from-[#0A0D34] to-orange-400 text-white shadow-orange-500/40'>
-              <FaDollarSign className='w-6 h-6 text-white' />
-            </div>
-            <div className='p-4 text-right'>
-              <p className='block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600'>
-                Total Sales
-              </p>
-              <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                ${statData.totalSale}
-              </h4>
-            </div>
-          </div>
+    <div className="mt-12 px-6 md:px-12">
+      {/* Welcome, User Details, and Navigation Section */}
+      <div className="bg-gradient-to-r  p-10 rounded-lg shadow-2xl mb-12 space-y-10">
+        <h1 className="text-5xl font-extrabold text-center tracking-tight">
+          Welcome back, {user?.displayName}
+        </h1>
+        <p className="mt-6 text-lg text-center opacity-80">
+          We’re excited to see you again. Explore your personalized
+          recommendations and manage your account details below.
+        </p>
 
-          {/* Users Card */}
-          <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md'>
-            <div className='bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center from-[#221537] to-green-400 text-white shadow-green-500/40'>
-              <FaUserAlt className='w-6 h-6 text-white' />
-            </div>
-            <div className='p-4 text-right'>
-              <p className='block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600'>
-                Total User
+        {/* User Details Section */}
+        <div className="bg-white p-8 rounded-3xl shadow-lg mb-10 border border-gray-200 transform transition-all hover:scale-105 hover:shadow-xl">
+          <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+            Your Profile
+          </h2>
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-8">
+            <img
+              src={user?.photoURL || "https://via.placeholder.com/150"}
+              alt="Profile"
+              className="w-40 h-40 rounded-full shadow-2xl object-cover mb-6 md:mb-0"
+            />
+            <div className="space-y-4 text-center md:text-left">
+              <p className="text-lg text-gray-700">
+                <strong>Name:</strong> {user?.displayName}
               </p>
-              <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                {statData.userCount}
-              </h4>
-            </div>
-          </div>
-
-          {/* Total Bookings */}
-          <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md'>
-            <div className='bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center from-[#0A0D34] to-blue-400 text-white shadow-blue-500/40'>
-              <BsFillCartPlusFill className='w-6 h-6 text-white' />
-            </div>
-            <div className='p-4 text-right'>
-              <p className='block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600'>
-                Total Bookings
+              <p className="text-lg text-gray-700">
+                <strong>Email:</strong> {user?.email}
               </p>
-              <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                {statData.bookingCount}
-              </h4>
-            </div>
-          </div>
-
-          {/* Total Rooms */}
-          <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md'>
-            <div className='bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center from-[#221537] to-pink-400 text-white shadow-pink-500/40'>
-              <BsFillHouseDoorFill className='w-6 h-6 text-white' />
-            </div>
-            <div className='p-4 text-right'>
-              <p className='block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600'>
-                Total Rooms
-              </p>
-              <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                {statData.roomCount}
-              </h4>
             </div>
           </div>
         </div>
 
-        <div className='mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-          {/* Total Sales Graph Placeholder */}
-          <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2'>
-            <div className='p-4 text-center'>
-                <ApexChart></ApexChart>
-            </div>
+        {/* Navigation Links Section */}
+        <div className="bg-white p-8 rounded-3xl shadow-lg mb-10 border border-gray-200 hover:scale-105 transform transition-all hover:shadow-xl">
+          <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+            Account Overview
+          </h2>
+          <div className="flex flex-col space-y-6">
+            <Link
+              to="/dashboard/my-payment-history"
+              className="text-indigo-600 hover:text-indigo-800  duration-300 py-3 px-5 rounded-lg bg-indigo-100 hover:bg-indigo-200 shadow-md transform transition-all hover:scale-105"
+            >
+              View Payment History
+            </Link>
+            <Link
+              to="/dashboard/my-listings"
+              className="text-indigo-600 hover:text-indigo-800  duration-300 py-3 px-5 rounded-lg bg-indigo-100 hover:bg-indigo-200 shadow-md transform transition-all hover:scale-105"
+            >
+              My Added List
+            </Link>
           </div>
-          {/* Calendar */}
-          <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden'>
-            <ApexCart/>
+        </div>
+      </div>
+
+      {/* Recommended Products Section */}
+      <div className="mb-16">
+        <h2 className="text-4xl font-semibold text-gray-800 mb-8 tracking-tight">
+          Recommended for You
+        </h2>
+        {recommended.length === 0 ? (
+          <NoData />
+        ) : (
+          <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-3 gap-8">
+            {recommended?.map(
+              (product: any) =>
+                product?.adminIsApproved === "approve" && (
+                  <Card product={product} key={product._id} />
+                )
+            )}
           </div>
+        )}
+
+        <div className="mx-auto my-8 text-center">
+          <Link to={"/product"}>
+            <button className="px-8 py-4 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transform transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:shadow-xl hover:scale-105">
+              Show All Products
+            </button>
+          </Link>
         </div>
       </div>
     </div>

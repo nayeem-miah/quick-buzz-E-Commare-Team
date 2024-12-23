@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
-import { FaArrowRight } from "react-icons/fa";
 import useAuth from "../../../Hooks/UseAuth";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
@@ -53,7 +52,7 @@ const MyAddedCart: React.FC = () => {
         axiosPublic
           .delete(`/userpro/${id}`)
           .then((res) => {
-            console.log("Response from server:", res.data);
+            // console.log("Response from server:", res.data);
             if (res.data.deletedCount > 0) {
               refetch();
               Swal.fire({
@@ -111,9 +110,12 @@ const MyAddedCart: React.FC = () => {
     totalPrice,
     email: user?.email,
     displayName: user?.displayName,
+    currency: "USD",
   };
-  // console.log(allsave);
-  // payment start
+ 
+
+
+  /* payment system  */
   const handlePayment = async () => {
     try {
       setLoading(true);
@@ -146,7 +148,7 @@ const MyAddedCart: React.FC = () => {
             </h2>
             <h3 className="md:text-xl lg:xl  sm:text-sm">
               <button
-                className={`mt-3 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${
+                className={`mt-3 lg:px-8 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${
                   Loading ? " cursor-not-allowed bg-gray-300" : ""
                 }`}
                 disabled={Loading}
@@ -164,7 +166,7 @@ const MyAddedCart: React.FC = () => {
             </h3>
           </div>
           <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-gray-400 text-white">
+            <thead className="bg-[#b962f2] text-white">
               <tr>
                 <th className="py-3 px-4 text-sm font-medium text-left">
                   Image
@@ -181,9 +183,9 @@ const MyAddedCart: React.FC = () => {
                 <th className="py-3 px-4 text-sm font-medium text-left">
                   Discount
                 </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
+                {/* <th className="py-3 px-4 text-sm font-medium text-left">
                   Payment
-                </th>
+                </th> */}
                 <th className="py-3 px-4 text-sm font-medium text-left">
                   Delete
                 </th>
@@ -193,7 +195,7 @@ const MyAddedCart: React.FC = () => {
               {allsave.map((save: any) => (
                 <tr
                   key={save._id}
-                  className="border-b hover:bg-gray-50 transition duration-300"
+                  className="border-b w-full hover:bg-gray-50 transition duration-300"
                 >
                   <td className="py-4 px-4 text-sm text-gray-600">
                     <img
@@ -214,12 +216,7 @@ const MyAddedCart: React.FC = () => {
                   <td className="py-4 px-4 text-sm text-gray-600">
                     {save?.discount}%
                   </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    <button className="mt-3 px-6 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105">
-                      <span className="mx-4 font-medium">Pay </span>
-                      <FaArrowRight className="w-5 h-5" />
-                    </button>
-                  </td>
+                
                   <td>
                     <button
                       onClick={() => handleDelete(save?._id)}

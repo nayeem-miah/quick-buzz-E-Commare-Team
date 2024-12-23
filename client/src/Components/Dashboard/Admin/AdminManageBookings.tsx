@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
-import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../Shared/Loading";
 import { MdDeleteForever } from "react-icons/md";
+import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 
 interface Listing {
   _id: number;
@@ -25,21 +25,21 @@ interface Listing {
 
 const AdminManageBookings: React.FC = () => {
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = UseAxiosSecure();
   const navigate = useNavigate();
 
   // get all product
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data=[], isLoading, isError, refetch } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/products");
+      const res = await axiosSecure.get("/products");
       return res.data;
     },
   });
 
   // admin is approved
   const handleApproved = (product: any) => {
-    axiosPublic.patch(`/admin-product/${product._id}`).then((res) => {
+    axiosSecure.patch(`/admin-product/${product._id}`).then((res) => {
       if (res.data.modifiedCount > 0) {
         refetch();
         Swal.fire({
@@ -66,7 +66,7 @@ const AdminManageBookings: React.FC = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPublic.delete(`/pro/${id}`).then((res) => {
+        axiosSecure.delete(`/pro/${id}`).then((res) => {
           if (res.data.deletedCount > 0) {
             refetch();
             Swal.fire({
@@ -96,7 +96,7 @@ const AdminManageBookings: React.FC = () => {
       <Heading title={"Manage product"} subtitle={""} />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-          <thead className="bg-gray-400 text-white">
+          <thead className="bg-[#b962f2] text-white">
             <tr>
               <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
               <th className="py-3 px-4 text-sm font-medium text-left">Title</th>

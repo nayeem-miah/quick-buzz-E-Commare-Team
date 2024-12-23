@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
@@ -18,6 +18,9 @@ import { Link } from "react-router-dom";
 import { MdArrowForward, MdLocationOn } from "react-icons/md";
 import Heading from "../../../Shared/Heading/Heading";
 
+import "aos/dist/aos.css";
+import Aos from "aos";
+
 interface Destination {
   name: string;
   image: string;
@@ -35,8 +38,17 @@ const BrowseByDestination: React.FC = () => {
     { name: "Rajshahi", image: rajshahi },
     { name: "Rongpur", image: rongpur },
   ];
+
+  useEffect(() => {
+    Aos.init();
+  }, []);
+
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+
+   
+
+    <div className="max-w-7xl mx-auto px-4 py-12"  data-aos="zoom-in">
       <div className="text-center ">
         <Heading
           title={"Shop from Anywhere, Anytime"}

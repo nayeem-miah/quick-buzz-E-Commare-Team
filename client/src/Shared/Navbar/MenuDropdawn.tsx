@@ -10,7 +10,7 @@ const MenuDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { singleUser, loading } = useFetchSingleUser(user?.email);
+  const { singleUser } = useFetchSingleUser(user?.email);
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -30,12 +30,12 @@ const MenuDropdown: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative " ref={dropdownRef}>
       <div className="flex flex-row items-center gap-3">
         {/* Dropdown button */}
         <div
           onClick={() => setIsOpen((prev) => !prev)}
-          className="p-4 md:py-1 md:px-2 border border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
+          className="p-4 md:py-1 md:px-2 border border-black flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
         >
           <AiOutlineMenu />
           <div className="hidden md:block">

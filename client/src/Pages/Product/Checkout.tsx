@@ -14,15 +14,15 @@ const Checkout: React.FC = () => {
     const location = (form.elements.namedItem("location") as HTMLInputElement).value;
     const number = (form.elements.namedItem("number") as HTMLInputElement).value;
 
-    // Logging all values to check
-    console.log({
-      brandName,
-      email,
-      date,
-      price,
-      location,
-      number,
-    });
+    // // Logging all values to check
+    // console.log({
+    //   brandName,
+    //   email,
+    //   date,
+    //   price,
+    //   location,
+    //   number,
+    // });
 
   };
 

@@ -5,7 +5,6 @@ import About from "../Pages/About/About";
 import Contact from "../Pages/Contact/Contact";
 import Product from "../Pages/Product/Product";
 import DashboardLayout from "../Layouts/Dashboard/DashboardLayout";
-import AdminHome from "../Components/Dashboard/Admin/AdminHome";
 import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
 import ErrorPage from "./ErrorPage";
 import Signin from "../Pages/Page/Login";
@@ -13,12 +12,10 @@ import Signup from "../Pages/Page/Singup";
 import PrivateRoute from "./PribetRoute";
 import Profile from "../Pages/DashboardPage/Profile";
 import HostAddProduct from "../Components/Dashboard/Host/HostAddProduct";
-import HostHome from "../Components/Dashboard/Host/HostHome";
 import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
 import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 import AdminManageBookings from "../Components/Dashboard/Admin/AdminManageBookings";
 import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
-import UserHome from "../Components/Dashboard/User/UserHome";
 import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
 import ProductPage from "../Pages/Product/ProductDetailsPage";
@@ -32,6 +29,9 @@ import UpdateProfile from "../Pages/Dashboard/UpdateProfile";
 import Fail from "../Components/SSLCommarze/Fail";
 import Cancel from "../Components/SSLCommarze/Cancel";
 import Success from "../Components/SSLCommarze/Success";
+import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/SellerDataUpdated";
+import RoleBasedDashboard from "../Components/Dashboard/RoleBasedDashboard/RoleBasedDashboard";
+import HostHome from "../Components/Dashboard/Host/HostHome";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -58,9 +58,9 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: (
-          <PrivateRoute>
+          // <PrivateRoute>
             <ProductPage></ProductPage>
-          </PrivateRoute>
+          // </PrivateRoute>
         ),
       },
       {
@@ -76,6 +76,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <UpdateProduct></UpdateProduct>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/updated-seller/:id",
+        element: (
+          <PrivateRoute>
+            <SellerDataUpdated></SellerDataUpdated>
           </PrivateRoute>
         ),
       },
@@ -130,16 +138,16 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "profile",
-        element: <Profile></Profile>,
-      },
-
-      //   admin dashboard
+      // Dynamic role-based index
       {
         index: true,
-        element: <AdminHome />,
+        element: <RoleBasedDashboard />,
       },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      // Admin routes
       {
         path: "manage-users",
         element: <ManageUsers />,
@@ -156,14 +164,14 @@ const router = createBrowserRouter([
         path: "all-host-request",
         element: <AllHostRequest />,
       },
-      // host dashboard
-      {
-        index: true,
-        element: <HostHome />,
-      },
+      // Host routes
       {
         path: "host-add-product",
         element: <HostAddProduct />,
+      },
+      {
+        path: "overview",
+        element: <HostHome />,
       },
       {
         path: "my-host-listings",
@@ -173,18 +181,14 @@ const router = createBrowserRouter([
         path: "host-manage-booking",
         element: <ManageBooking />,
       },
-      // user dashboard route
-      {
-        index: true,
-        element: <UserHome />,
-      },
+      // User routes
       {
         path: "my-listings",
         element: <MyAddedCart />,
       },
       {
         path: "my-wishlist",
-        element: <MyWishList></MyWishList>,
+        element: <MyWishList />,
       },
       {
         path: "seller-request",
@@ -209,6 +213,7 @@ const router = createBrowserRouter([
         element: <UserPaymentHistory />,
       },
     ],
-  },
+  }
+  
 ]);
 export default router;

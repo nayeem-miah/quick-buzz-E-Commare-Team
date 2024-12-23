@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import Heading from "../../../Shared/Heading/Heading";
 import NoData from "../../../Shared/NoDataFound/NoData";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 type SellerRequestProps = {
   sellerData: {
@@ -24,7 +25,7 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
   const axiosPublic = useAxiosPublic();
 
   //    get host request data in every single email
-  const { data: sellerData = [] ,refetch} = useQuery({
+  const { data: sellerData = [], refetch } = useQuery({
     queryKey: ["sellerData"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/single-seller/${user?.email}`);
@@ -43,11 +44,9 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
     imageUrl,
   } = sellerData;
 
-  const handleEdit = () => {
-    console.log(`Approved seller: ${sellerName}`);
-  };
+  
 
-  // delete
+  // delete data 
   const handleDelete = async (id: any) => {
     try {
       Swal.fire({
@@ -127,17 +126,20 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
 
               {/* Action Buttons Section */}
               <div className="mt-6 flex justify-between p-6">
-                <button
-                  onClick={handleEdit}
-                  className="px-5 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition"
-                >
-                  edit
-                </button>
+                <Link to={`/updated-seller/${sellerData._id}`}>
+                  <button
+                    className="px-5  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                  >
+                    edit
+                  </button>
+                </Link>
                 <button
                   onClick={() => {
                     handleDelete(sellerData._id);
                   }}
-                  className="px-5 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition"
+                  className="px-4  py-2 text-white bg-gradient-to-r from-red-500 to-red-500 rounded-md transition-all duration-500 ease-in-out
+                  border-2 border-transparent hover:bg-red-600 hover:border-red-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
                 >
                   Delete
                 </button>

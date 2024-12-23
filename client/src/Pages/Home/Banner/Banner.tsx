@@ -1,36 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import
- 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import bgimg1 from "../../../assets/banner/banner1.jpg";
+import bgimg2 from "../../../assets/banner/banner pic 2.jpg";
+import bgimg3 from "../../../assets/banner/banner pic 3.avif";
+import bgimg4 from "../../../assets/banner/banner pic 4.jpg";
+import bgimg5 from "../../../assets/banner/banne pic 5.jpg";
+import bgimg6 from "../../../assets/banner/banner pic 6.jpg";
 
 // Import required modules
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
-
-import bgimg1 from '../../../assets/slider/Barisal.jpg';
-import bgimg2 from '../../../assets/slider/chittagong.png';
-import bgimg3 from '../../../assets/slider/dhaka.jpg';
-import bgimg4 from '../../../assets/slider/mymenshing.jpg';
-import bgimg5 from '../../../assets/slider/rajshahi.jpg';
-import bgimg6 from '../../../assets/slider/rongpur.png';
-import Slide from './Slide';
-
-interface SlideProps {
-  image: string;
-}
+import Slide from "./Slide";
 
 export default function Carousel(): JSX.Element {
+  // Get the last 6 items from the data
+  // console.log(banner);
+
   return (
     <div className="">
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
-        loop={true}
+        loop={false}
         autoplay={{
           delay: 1800,
           disableOnInteraction: false,
@@ -42,12 +38,24 @@ export default function Carousel(): JSX.Element {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide><Slide image={bgimg1} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg2} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg3} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg4} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg5} /></SwiperSlide>
-        <SwiperSlide><Slide image={bgimg6} /></SwiperSlide>
+        <SwiperSlide>
+          <Slide image={bgimg1}></Slide>{" "}
+        </SwiperSlide>
+        <SwiperSlide>
+          <Slide image={bgimg2}></Slide>{" "}
+        </SwiperSlide>
+        <SwiperSlide>
+          <Slide image={bgimg3}></Slide>{" "}
+        </SwiperSlide>
+        <SwiperSlide>
+          <Slide image={bgimg4}></Slide>{" "}
+        </SwiperSlide>
+        <SwiperSlide>
+          <Slide image={bgimg5}></Slide>{" "}
+        </SwiperSlide>
+        <SwiperSlide>
+          <Slide image={bgimg6}></Slide>{" "}
+        </SwiperSlide>
       </Swiper>
     </div>
   );

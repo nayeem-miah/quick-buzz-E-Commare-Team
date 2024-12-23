@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import Swal from "sweetalert2";
-import { MdDeleteForever } from "react-icons/md";
+import React, { ReactNode, useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import useAuth from "../../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
-import { useNavigate } from "react-router-dom";
 import NoData from "../../../Shared/NoDataFound/NoData";
+import Swal from "sweetalert2";
 
 interface Listing {
+  [x: string]: ReactNode;
   _id: number;
   productTitle: string;
   productImage: string;
-  adminIsApproved: string;
+  hostIsApproved: string;
   hostPhoto: string;
   hostName: string;
   hostEmail: string;
@@ -27,8 +26,10 @@ interface Listing {
 const ManageBooking: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
-  const navigate = useNavigate();
+ 
 
+
+  /* All Payment history  */
   const {
     data = [],
     isLoading,
@@ -37,55 +38,31 @@ const ManageBooking: React.FC = () => {
   } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/host-product/${user?.email}`);
+      const res = await axiosPublic.get(`/host-payment-history/${user?.email}`);
       return res.data;
     },
   });
-  //
-  // handle delete
-  const handleDelete = (id: any) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic.delete(`/pro/${id}`).then((res) => {
-          if (res.data.deletedCount > 0) {
-            refetch();
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
-          }
+
+   
+
+  /* Product approve update */
+
+  const handleApproved = (product: any) => {
+    axiosPublic.patch(`/host-manage-product/${product._id}`).then((res) => {
+      if (res.data.modifiedCount > 0) {
+        refetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: `${product.productTitle} is approved now!`,
+          showConfirmButton: false,
+          timer: 1500,
         });
+        // navigate("/product");
       }
     });
   };
 
-  // host is approved
-  const handleApproved = (product: any) => {
-    // axiosPublic.patch(`/admin-product/${product._id}`).then((res) => {
-    //   if (res.data.modifiedCount > 0) {
-    //     refetch();
-    //     Swal.fire({
-    //       position: "top",
-    //       icon: "success",
-    //       title: `${product.productTitle} is approved now!`,
-    //       showConfirmButton: false,
-    //       timer: 1500,
-    //     });
-    //     navigate("/product");
-    //   }
-    // });
-  };
-
-  // modal code
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
   const handleDetailsClick = (listing: Listing) => {
     setSelectedBooking(listing);
@@ -93,6 +70,7 @@ const ManageBooking: React.FC = () => {
   const closeModal = () => {
     setSelectedBooking(null);
   };
+
   if (isLoading)
     return (
       <div>
@@ -100,31 +78,33 @@ const ManageBooking: React.FC = () => {
       </div>
     );
   if (isError) return <div>error...{isError}</div>;
+
   return (
     <div>
-      <div className="">
+      <div>
         <Heading title={"Manage booking product"} subtitle={""} />
         {data.length === 0 ? (
           <NoData />
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-              <thead className="bg-gray-400 text-white">
+              <thead className="bg-[#b962f2] text-white">
                 <tr>
                   <th className="py-3 px-4 text-sm font-medium text-left">
-                    Title
+                    sl
                   </th>
                   <th className="py-3 px-4 text-sm font-medium text-left">
-                    Image
+                    cus_email
                   </th>
                   <th className="py-3 px-4 text-sm font-medium text-left">
-                    price
+                    date
+                  </th>
+                  {/* <th className="py-3 px-4 text-sm font-medium text-left">transition ID</th> */}
+                  <th className="py-3 px-4 text-sm font-medium text-left">
+                    Price
                   </th>
                   <th className="py-3 px-4 text-sm font-medium text-left">
-                    status
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    delete
+                    Status
                   </th>
                   <th className="py-3 px-4 text-sm font-medium text-left">
                     Details
@@ -132,60 +112,60 @@ const ManageBooking: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((listing: Listing) => (
-                  <tr
-                    key={listing._id}
-                    className="border-b hover:bg-gray-50 transition duration-200"
-                  >
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.productTitle}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      <img
-                        src={listing?.productImage}
-                        alt={"no image founded"}
-                        className="w-16 h-16 object-cover rounded-md"
-                      />
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      ${listing?.price}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.adminIsApproved === "approve" ? (
-                        "Approve"
-                      ) : (
-                        <button
-                          onClick={() => {
-                            handleApproved(listing);
-                          }}
-                          className=" px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                        >
-                          approve
-                        </button>
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      <button
-                        onClick={() => {
-                          handleDelete(listing?._id);
-                        }}
-                        className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
+                {data.map(
+                  (listing: Listing, i: number) =>
+                    listing.status === "success" && (
+                      <tr
+                        key={listing._id}
+                        className="border-b hover:bg-gray-50 transition duration-200"
                       >
-                        <MdDeleteForever />
-                      </button>
-                    </td>
-                    <td className="py-4 px-4 text-sm">
-                      <button
-                        onClick={() => handleDetailsClick(listing)}
-                        className="   px-4  py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                    border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                      >
-                        Details
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {(i = i + 1)}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {listing?.cus_email}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {listing?.date}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          ${listing?.totalPrice}
+                        </td>
+                        <td className="py-4 px-4 text-sm text-gray-600">
+                          {listing?.hostIsApproved === "approve" ? (
+                            "Approve"
+                          ) : (
+                            <button
+                              onClick={() => {
+                                handleApproved(listing);
+                              }}
+                              className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                            >
+                              approve
+                            </button>
+                          )}
+                        </td>
+                        {/* <td className="py-4 px-4 text-sm text-gray-600">
+                    <button
+                      onClick={() => {
+                        handleDelete(listing?._id);
+                      }}
+                      className="px-4 py-2 text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
+                    >
+                      <MdDeleteForever />
+                    </button>
+                  </td> */}
+                        <td className="py-4 px-4 text-sm">
+                          <button
+                            onClick={() => handleDetailsClick(listing)}
+                            className="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                          >
+                            Details
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                )}
               </tbody>
             </table>
           </div>
@@ -215,88 +195,102 @@ const ManageBooking: React.FC = () => {
               </div>
 
               {/* Modal Content */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {/* Image Section */}
-                <div className="relative overflow-hidden rounded-lg shadow-lg">
-                  <img
-                    src={
-                      selectedBooking.productImage || "loading-image-url.jpg"
-                    } // Add a placeholder loading image
-                    alt={selectedBooking.productTitle}
-                    className="rounded-2xl w-full h-64 object-cover"
-                  />
-                  <span className="absolute top-4 left-4 bg-purple-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg">
-                    {selectedBooking?.category}
+              <div className="space-y-4 text-gray-700">
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    User Name:
                   </span>
-                </div>
+                  {selectedBooking?.cus_name || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">Email:</span>
+                  {selectedBooking?.cus_email || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Payment Date:
+                  </span>
+                  {selectedBooking?.tran_date || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">Amount:</span>
+                  {selectedBooking?.totalPrice || "0"}
+                  {selectedBooking?.currency || ""}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Transaction ID:
+                  </span>
+                  {selectedBooking?.transactionId || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Card Type:
+                  </span>
+                  {selectedBooking?.card_type || "N/A"}
+                </p>
 
-                {/* Details Section */}
-                <div className="space-y-4 text-gray-700">
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">Title:</span>{" "}
-                    {selectedBooking?.productTitle || "Loading..."}
-                  </p>
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">Price:</span>{" "}
-                    <span className="text-lg font-extrabold text-green-600">
-                      ${selectedBooking?.price || "0.00"}
-                    </span>
-                  </p>
-                  <p>
-                    <span className="font-bold text-gray-900">Brand:</span>{" "}
-                    {selectedBooking?.brandName || "Loading..."}
-                  </p>
+                {/* Host Approval Status */}
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    Approval Status:
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      selectedBooking?.hostIsApproved === "approve"
+                        ? "text-green-600"
+                        : selectedBooking?.hostIsApproved === "pending"
+                        ? "text-red-600"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {selectedBooking?.hostIsApproved || "N/A"}
+                  </span>
+                </p>
 
-                  {/* Host Info */}
-                  <div className="flex items-center space-x-4">
-                    <span className="font-bold text-gray-900">Host:</span>
-                    <div className="flex items-center space-x-3">
-                      <img
-                        className="h-14 w-14 rounded-full border-2 border-blue-500 shadow-md"
-                        src={
-                          selectedBooking?.hostPhoto || "default-host-photo.jpg"
-                        } // Placeholder for host image
-                        alt={selectedBooking?.hostName || "Host"}
-                      />
-                      <div>
-                        <p className="text-lg font-semibold text-gray-800">
-                          {selectedBooking?.hostName || "Loading..."}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {selectedBooking?.hostEmail || "Loading..."}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                {/* Status */}
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">
+                    payment Status:
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      selectedBooking?.status === "success"
+                        ? "text-green-500" // Green for Success
+                        : selectedBooking?.status === "Failed"
+                        ? "text-red-500" // Red for Failed
+                        : "text-yellow-500" // Yellow for Pending or N/A
+                    }`}
+                  >
+                    {selectedBooking?.status || "N/A"}
+                  </span>
+                </p>
 
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">
-                      Host Approved:
-                    </span>{" "}
-                    <span
-                      className={`font-semibold ${
-                        selectedBooking?.adminIsApproved === "pending"
-                          ? "text-red-600"
-                          : "text-green-600"
-                      }`}
-                    >
-                      {selectedBooking?.adminIsApproved || "Loading..."}
-                    </span>
-                  </p>
-                  <p className="text-lg">
-                    <span className="font-bold text-gray-900">Tags:</span>{" "}
-                    {selectedBooking?.tags || "Loading..."}
-                  </p>
-                </div>
-              </div>
-
-              {/* Description Section */}
-              <div className="mt-6">
-                <h4 className="text-xl font-bold text-gray-900 mb-3">
-                  Description
-                </h4>
-                <p className="text-gray-600 leading-relaxed text-base">
-                  {selectedBooking?.description || "Loading... Please wait."}
+                {/* Products List */}
+                <p className="text-sm sm:text-base">
+                  <span className="font-semibold text-gray-900">Products:</span>
+                  <ul className="list-disc list-inside space-y-2">
+                    {selectedBooking?.productTitle?.map(
+                      (title: any, index: any) => (
+                        <li key={index} className="flex items-start space-x-3">
+                          <img
+                            src={selectedBooking?.productImage?.[index] || ""}
+                            alt={title || "Product Image"}
+                            className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-md"
+                          />
+                          <div>
+                            <p className="font-medium text-sm sm:text-base">
+                              {title || "Unnamed Product"}
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-500">
+                              {selectedBooking?.brandName?.[index] ||
+                                "No Brand"}
+                            </p>
+                          </div>
+                        </li>
+                      )
+                    )}
+                  </ul>
                 </p>
               </div>
             </div>

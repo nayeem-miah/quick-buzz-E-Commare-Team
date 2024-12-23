@@ -23,12 +23,13 @@ const ManageUsers: React.FC = () => {
       return res.data;
     },
   });
-
+   
+  /* Ceate a admin  */
   const handleMakeAdmin = (role: string, user: User): void => {
     axiosSecure
       .patch(`/alluser/admin/${user._id}`, { role: role })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.modifiedCount > 0) {
           refetch();
           Swal.fire({
@@ -51,7 +52,8 @@ const ManageUsers: React.FC = () => {
         });
       });
   };
-
+ 
+   /* user Delete fun */
   const handleDelete = (user: User): void => {
     Swal.fire({
       title: "Are you sure?",
@@ -96,7 +98,7 @@ const ManageUsers: React.FC = () => {
         <Heading title={"Manage Users"} subtitle={""} />
         <table className="table w-full border border-gray-200 ">
           <thead>
-            <tr className="bg-gray-300 text-black font-bold">
+            <tr className="bg-[#b962f2] text-black font-bold">
               <th></th>
               <th>Name</th>
               <th>Email</th>

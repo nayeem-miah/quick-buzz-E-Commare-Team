@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
 import NoData from "../../../Shared/NoDataFound/NoData";
@@ -20,9 +21,10 @@ type ChildComponentProps = {
   isLoading: boolean;
 };
 
-const RecentProduct: React.FC<ChildComponentProps>= ({recentData, isLoading}) => {
-  
- 
+const RecentProduct: React.FC<ChildComponentProps> = ({
+  recentData,
+  isLoading,
+}) => {
   if (isLoading) return <LoadingSpinner />;
   //   if(isError) return <div>error</div>
   return (
@@ -31,7 +33,7 @@ const RecentProduct: React.FC<ChildComponentProps>= ({recentData, isLoading}) =>
       {recentData.length == 0 ? (
         <NoData />
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-5">
           {recentData?.map(
             (product: Product) =>
               product?.adminIsApproved === "approve" && (

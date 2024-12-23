@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useEffect, useState } from "react";
 import Faq from "../../Components/Home/Faq/Faq";
 import Slider from "./Banner/Banner";
@@ -55,7 +56,7 @@ const Home: React.FC = () => {
   return (
     <div>
       <div className="">
-   
+            
           <Slider></Slider>
       
         {/* search implementation */}
@@ -100,11 +101,12 @@ const Home: React.FC = () => {
 
           <Categories></Categories>
         </div>
-        <section className="py-10 p-12">
+        <section className="py-10 lg:p-12 p-2">
           {/* {added poduct} */}
           <RecentProduct recentData={recentData} isLoading={isLoading} />
         </section>
         <BrowseByDestination />
+        {/* user any question answer */}
         <Faq></Faq>
       </div>
     </div>

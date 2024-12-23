@@ -9,7 +9,7 @@ interface User {
     [key: string]: any; 
 }
 
-const useFetchSingleUser = (email?: string) => {
+const useFetchSingleUser = (email?: unknown) => {
     const axiosSecure = UseAxiosSecure();
 
     const { data: singleUser, isLoading: loading } = useQuery<User>({
