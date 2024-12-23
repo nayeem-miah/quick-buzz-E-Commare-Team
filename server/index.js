@@ -70,7 +70,9 @@ async function run() {
       const query = { hostEmail: email };
       const result = await productsCollection.find(query).toArray();
       res.send(result);
-    });
+    }); 
+
+    
 
     // admin is approved host products
     app.patch("/admin-product/:id", async (req, res) => {
@@ -130,6 +132,8 @@ async function run() {
       const result = await productsCollection.findOne(query);
       res.send(result);
     }); 
+
+
 
     // recent product show in home page and search implement
     app.get('/recent-product', async (req, res) => {
@@ -597,6 +601,7 @@ app.patch("/decline-message/:id", async(req, res)=>{
       res.send(result)
     })
     // host payment history
+
     app.get('/host-payment-history/:email',async(req, res)=>{
      try{
       const hostEmail= req.params.email;
