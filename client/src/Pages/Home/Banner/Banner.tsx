@@ -22,7 +22,7 @@ export default function Carousel(): JSX.Element {
   // console.log(banner);
 
   return (
-    <div className="">
+    <div className="max-w-screen-2xl">
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
@@ -39,23 +39,25 @@ export default function Carousel(): JSX.Element {
         className="mySwiper"
       >
         <SwiperSlide>
+          <Slide image={bgimg5}></Slide>{" "}
+        </SwiperSlide>
+        <SwiperSlide>
+          <Slide image={bgimg6}></Slide>{" "}
+        </SwiperSlide>
+        <SwiperSlide>
           <Slide image={bgimg1}></Slide>{" "}
         </SwiperSlide>
         <SwiperSlide>
           <Slide image={bgimg2}></Slide>{" "}
         </SwiperSlide>
         <SwiperSlide>
-          <Slide image={bgimg3}></Slide>{" "}
-        </SwiperSlide>
-        <SwiperSlide>
           <Slide image={bgimg4}></Slide>{" "}
         </SwiperSlide>
         <SwiperSlide>
-          <Slide image={bgimg5}></Slide>{" "}
+          <Slide image={bgimg3}></Slide>{" "}
         </SwiperSlide>
-        <SwiperSlide>
-          <Slide image={bgimg6}></Slide>{" "}
-        </SwiperSlide>
+        
+        
       </Swiper>
     </div>
   );

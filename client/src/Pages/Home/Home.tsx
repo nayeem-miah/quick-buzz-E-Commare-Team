@@ -8,6 +8,7 @@ import RecentProduct from "../../Components/Home/RecentProducts/RecentProduct";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
+import { Helmet } from "react-helmet-async";
 
 interface Product {
   _id: string;
@@ -56,9 +57,11 @@ const Home: React.FC = () => {
   return (
     <div>
       <div className="">
-            
-          <Slider></Slider>
-      
+        <Helmet>
+          <title>quickBuzz | Home Page </title>
+        </Helmet>
+        <Slider></Slider>
+
         {/* search implementation */}
         <div className="">
           <div className="w-full h-auto mx-auto p-4 bg-gray-50 border my-2 shadow">

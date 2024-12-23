@@ -48,7 +48,7 @@ const BrowseByDestination: React.FC = () => {
 
    
 
-    <div className="max-w-7xl mx-auto px-4 py-12"  data-aos="zoom-in">
+    <div className="  px-4 py-12"  data-aos="zoom-in">
       <div className="text-center ">
         <Heading
           title={"Shop from Anywhere, Anytime"}

@@ -7,12 +7,16 @@ import letsMessage from "../../assets/Image/contact.jpg";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import Aos from "aos";
+import { Helmet } from "react-helmet-async";
 const Contact: React.FC = () => {
   useEffect(() => {
     Aos.init();
   }, []);
   return (
     <div className="">
+       <Helmet>
+          <title>quickBuzz | Contact Page </title>
+        </Helmet>
       <div
         className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative"
         style={{
