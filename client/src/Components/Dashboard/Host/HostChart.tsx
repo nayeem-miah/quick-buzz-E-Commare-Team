@@ -1,108 +1,43 @@
-import React from "react";
+import React from 'react';
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+  Legend,
+} from 'recharts';
 
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: -1000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 500,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: -2000,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: -250,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+const MyChartComponent: React.FC = () => {
+  const dataset = [
+    { month: 'January', bangladesh: 30, paris: 20, newYork: 50, seoul: 40 },
+    { month: 'February', bangladesh: 25, paris: 15, newYork: 45, seoul: 35 },
+    { month: 'March', bangladesh: 35, paris: 25, newYork: 55, seoul: 45 },
+    { month: 'April', bangladesh: 40, paris: 30, newYork: 60, seoul: 50 },
+    { month: 'May', bangladesh: 45, paris: 35, newYork: 65, seoul: 55 },
+    { month: 'June', bangladesh: 50, paris: 40, newYork: 70, seoul: 60 },
+    { month: 'July', bangladesh: 55, paris: 45, newYork: 75, seoul: 65 },
+    { month: 'August', bangladesh: 60, paris: 50, newYork: 80, seoul: 70 },
+    { month: 'September', bangladesh: 65, paris: 55, newYork: 85, seoul: 75 },
+    { month: 'October', bangladesh: 70, paris: 60, newYork: 90, seoul: 80 },
+    { month: 'November', bangladesh: 75, paris: 65, newYork: 95, seoul: 85 },
+    { month: 'December', bangladesh: 80, paris: 70, newYork: 100, seoul: 90 },
+  ];
 
-const gradientOffset = (): number => {
-  const dataMax = Math.max(...data.map((i) => i.uv));
-  const dataMin = Math.min(...data.map((i) => i.uv));
-
-  if (dataMax <= 0) {
-    return 0;
-  }
-  if (dataMin >= 0) {
-    return 1;
-  }
-
-  return dataMax / (dataMax - dataMin);
-};
-
-const off = gradientOffset();
-
-const HostChart: React.FC = () => {
   return (
-    <div className="w-full h-96 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
-          data={data}
-          margin={{
-            top: 10,
-            right: 30,
-            left: 0,
-            bottom: 0,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <defs>
-            <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-              <stop offset={off} stopColor="green" stopOpacity={1} />
-              <stop offset={off} stopColor="red" stopOpacity={1} />
-            </linearGradient>
-          </defs>
-          <Area
-            type="monotone"
-            dataKey="uv"
-            stroke="#000"
-            fill="url(#splitColor)"
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </div>
+    <BarChart width={700} height={400} data={dataset}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="month" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="bangladesh" fill="#8884d8" name="Bangladesh" />
+      <Bar dataKey="paris" fill="#82ca9d" name="Paris" />
+      <Bar dataKey="newYork" fill="#ffc658" name="New York" />
+      <Bar dataKey="seoul" fill="#ff7300" name="Seoul" />
+    </BarChart>
   );
 };
 
-export default HostChart;
+export default MyChartComponent;
