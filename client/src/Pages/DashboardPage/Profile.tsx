@@ -205,7 +205,7 @@ const Profile: React.FC = () => {
               {/* Logout Button: Visible to all */}
               <button
                 onClick={handleLogout}
-                className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+                className="w-full px-6 py-3 text-black shadow-lg bg-gradient-to-r from-red-500 to-red-500 rounded-md transition-all duration-500 ease-in-out
       border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
               >
                 Logout
