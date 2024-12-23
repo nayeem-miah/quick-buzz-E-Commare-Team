@@ -67,7 +67,7 @@ const AllHostRequest: React.FC = () => {
         }
       });
     } catch (err: any) {
-      console.error(err);
+      console.log(err);
     }
   };
 
