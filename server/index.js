@@ -490,7 +490,7 @@ app.patch("/decline-message/:id", async(req, res)=>{
         store_id,
         store_passwd,
         total_amount: totalPrice,
-        currency: paymentInfo?.currency || "BDT",
+        currency: paymentInfo?.currency || "USD",
         tran_id: trxId,
         success_url: "http://localhost:3000/success-payment",
         fail_url: "http://localhost:3000/fail",

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Success: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-teal-500">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 ">
       {/* Card Container */}
       <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10 max-w-md w-11/12 md:w-full">
         {/* Animated Icon */}

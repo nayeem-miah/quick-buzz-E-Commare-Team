@@ -7,7 +7,7 @@ const SearchFeild: React.FC = () => {
     const SearchFelidValue = e.target.search.value;
     setSearch(SearchFelidValue);
   };
-  console.log(search);
+  // console.log(search);
   return (
     <div>
       <div className="w-full h-auto mx-auto p-4 bg-red-400">

@@ -29,7 +29,7 @@ const ManageUsers: React.FC = () => {
     axiosSecure
       .patch(`/alluser/admin/${user._id}`, { role: role })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.modifiedCount > 0) {
           refetch();
           Swal.fire({

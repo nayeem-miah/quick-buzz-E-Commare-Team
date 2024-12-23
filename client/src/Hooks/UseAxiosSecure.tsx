@@ -36,7 +36,7 @@ const UseAxiosSecure = () => {
             },
             async (error: AxiosError) => {
                 const status = error.response?.status;
-                console.log('status error in the interceptors', status);
+                // console.log('status error in the interceptors', status);
                 if (status === 401 || status === 403) {
                     // Handle 401 or 403 errors here
                     // For example: Redirect to login page
