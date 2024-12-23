@@ -57,7 +57,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/product/:id",
-        element: <ProductPage></ProductPage>,
+        element: (
+          <PrivateRoute>
+            <ProductPage></ProductPage>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/profile",
@@ -184,17 +188,21 @@ const router = createBrowserRouter([
       },
       {
         path: "seller-request",
-        element: <SellerRequest sellerData={{
-          _id: "",
-          sellerName: "",
-          sellerEmail: "",
-          sellerPhoto: "",
-          mobile: "",
-          reason: "",
-          address: "",
-          other: "",
-          imageUrl: ""
-        }} />,
+        element: (
+          <SellerRequest
+            sellerData={{
+              _id: "",
+              sellerName: "",
+              sellerEmail: "",
+              sellerPhoto: "",
+              mobile: "",
+              reason: "",
+              address: "",
+              other: "",
+              imageUrl: "",
+            }}
+          />
+        ),
       },
       {
         path: "my-payment-history",

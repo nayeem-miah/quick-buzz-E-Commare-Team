@@ -87,7 +87,7 @@ const AddProductForm: React.FC = () => {
   };
 
   return (
-    <section className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md">
+    <section className="max-w-4xl p-6 mx-auto bg-gray-100 rounded-md shadow-md">
       <Heading title={"Add New Product"} subtitle={""} />
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">

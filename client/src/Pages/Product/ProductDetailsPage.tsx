@@ -86,11 +86,11 @@ const ProductPage: React.FC = () => {
 
   return (
     <div>
-      <BannerDetailsPage
+      {/* <BannerDetailsPage
         imageURL={productImage}
         headingText="Explore this Product."
         subheadingText="Please explore my QuickBuzz all Product and purchase your choice Product"
-      />
+      /> */}
 
       {/* Datails page for Afk  */}
     
