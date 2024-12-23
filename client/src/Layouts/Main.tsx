@@ -6,13 +6,12 @@ import Navbar from "../Shared/Navbar/Navbar";
 const Main: React.FC = () => {
   return (
     <div>
-      <div className="">
-        <Navbar></Navbar>
-      </div>
+      <Navbar></Navbar>
+
       <div className="md:mt-28 mt-20 lg:mt-28">
         <Outlet></Outlet>
       </div>
-      <div className="">
+      <div className="mt-10">
         <Footer></Footer>
       </div>
     </div>
