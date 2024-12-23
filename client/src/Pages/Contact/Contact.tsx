@@ -75,9 +75,8 @@ const Contact: React.FC = () => {
         </div>
 
         <div
-          className="p-4 relative px-6 py-2 text-white bg-gradient-to-r from-green-400 to-blue-400 rounded-md transition-all duration-500 ease-in-out
-               border-2 border-transparent hover:bg-gradient-to-r hover:from-yellow-400 hover:to-red-500
-               hover:shadow-[0_0_20px_5px_rgba(255,165,0,0.8)] hover:scale-105 hover:border-yellow-400"
+          className="p-4  text-black shadow-lg md:p-6 relative px-6 py-2  bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+          border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
         >
           <span className="inline-block p-3  rounded-lg text-2xl">
             <FaPhone />
