@@ -39,7 +39,7 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
         border-b-2
         hover:text-neutral-800
         transition
-        cursor-pointer ${
+        cursor-pointer hover:bg-gray-100 ${
           category === label && "border-b-neutral-800 text-neutral-800"
         }`}
     >

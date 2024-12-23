@@ -102,7 +102,7 @@ async function run() {
         const result = await wishlistCollection.deleteOne(query);
 
         if (result.deletedCount === 0) {
-          console.log("No item found to delete with ID:", id);
+          // console.log("No item found to delete with ID:", id);
           return res.status(404).send({ error: "Item not found" });
         }
 

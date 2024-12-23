@@ -102,17 +102,35 @@ const ProductPage: React.FC = () => {
           {/* Product Info Section */}
           <div className="flex flex-col justify-center">
             <div className="max-w-xl mb-6">
-              <div className="flex mb-8 gap-20 text-xl">
+              <div className="mb-10 flex items-center space-x-6 text-lg">
                 <div className="avatar">
-                  <div className="w-12 rounded-full ml-4">
-                    <img src={hostPhoto} alt="user" />
+                  <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-gray-200 shadow-lg">
+                    {/* Fallback to a default image if hostPhoto is missing */}
+                    <img
+                      src={
+                        hostPhoto ||
+                        "https://via.placeholder.com/80?text=No+Image"
+                      }
+                      alt="user"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </div>
-                <h2 className="mt-3 text-2xl font-mono">
-                  HostName:
-                  <span className="text-green-400"> {hostName}</span>
-                </h2>
+                <div>
+                  <h2 className="text-2xl font-medium text-gray-900">
+                    Store Name:
+                    <span className="text-teal-600 font-semibold">
+                      {" "}
+                      {hostName}
+                    </span>
+                  </h2>
+                  <h3 className="mt-2 text-lg font-light text-gray-600">
+                    Store Email:
+                    <span className="text-teal-600">{hostEmail}</span>
+                  </h3>
+                </div>
               </div>
+
               <h3 className="text-3xl font-semibold text-gray-800 tracking-wide">
                 {brandName}
               </h3>
@@ -132,9 +150,11 @@ const ProductPage: React.FC = () => {
                   Add To Cart
                 </button>
               ) : (
-                <Link to={'/login'}><button className="mt-6 px-12 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-600">
-                Add To Cart
-              </button></Link>
+                <Link to={"/login"}>
+                  <button className="mt-6 px-12 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                    Add To Cart
+                  </button>
+                </Link>
               )}
             </div>
           </div>
