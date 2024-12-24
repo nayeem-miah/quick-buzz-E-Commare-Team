@@ -14,9 +14,9 @@ const Uniqe: React.FC = () => {
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">
           Our Unique Features
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 group sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Feature 1 */}
-          <div className="feature-card bg-white rounded-lg shadow-lg p-6">
+          <div className="feature-card  group-hover:scale-105 transform transition duration-300 bg-white rounded-lg shadow-lg p-6">
             <img
               src={img1}
               alt="Fast Delivery"
@@ -36,7 +36,7 @@ const Uniqe: React.FC = () => {
         to='/product'
        
        >
-            <div className="feature-card bg-white rounded-lg hover:translate-y-2 shadow-lg p-6">
+            <div className="feature-card  group-hover:scale-105 transform transition duration-300 bg-white rounded-lg  shadow-lg p-6">
             <img
               src={img2}
               alt="Premium Quality"
@@ -57,7 +57,7 @@ const Uniqe: React.FC = () => {
          to='/contact'
          >
          
-         <div className="feature-card bg-white rounded-lg shadow-lg p-6">
+         <div className="feature-card  group-hover:scale-105 transform transition duration-300 bg-white rounded-lg shadow-lg p-6">
             <img
               src={img3}
               alt="24/7 Support"
