@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import toast from "react-hot-toast";
