@@ -542,17 +542,17 @@ app.patch("/decline-message/:id", async(req, res)=>{
         update
       );
       // console.log(updateData, "update data");
-      res.redirect("http://localhost:5173/success");
+      res.redirect("https://quick-bus-bd.web.app/success");
     });
      // Fail-payment
      app.post("/fail", async (req, res) => {
       // redirect in frontend
-      res.redirect("http://localhost:5173/fail");
+      res.redirect("https://quick-bus-bd.web.app/fail");
     });
      // cancel-payment
      app.post("/cancel", async (req, res) => {
       // redirect in frontend
-      res.redirect("http://localhost:5173/cancel");
+      res.redirect("https://quick-bus-bd.web.app/cancel");
     });
 
 

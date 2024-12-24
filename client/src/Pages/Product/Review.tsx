@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { useState } from "react";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
-import Rating from "react-rating";
+// import Rating from 'react-rating'; 
 
 const Review: React.FC<{ id: any }> = ({ id }) => {
   const [rating, setRating] = useState<number | null>(null);
@@ -127,7 +127,7 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
           review: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined;
           rating: number | undefined;
         }) => (
-          <div key={item.id || item.timestamp}> {/* Fix for key prop */}
+          <div key={item.id}> {/* Fix for key prop */}
             <div className="mb-4">
               <div className="flex space-x-4 text-xl">
                 <div className="avatar">
@@ -143,7 +143,7 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
               </div>
               <h2 className="text-sm ml-20">{item.review}</h2>
               <div className="ml-20 mt-4 text-xl">
-                <Rating
+                {/* <Rating
                   initialRating={item?.rating}
                   emptySymbol={
                     <span style={{ fontSize: "1.5em", color: "lightgray" }}>
@@ -154,7 +154,7 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
                     <span style={{ fontSize: "1.5em", color: "gold" }}>★</span>
                   }
                   readonly
-                />
+                /> */}
               </div>
             </div>
           </div>
