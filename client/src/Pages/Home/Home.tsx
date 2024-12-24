@@ -9,6 +9,7 @@ import useAxiosPublic from "../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { Helmet } from "react-helmet-async";
+import Uniqe from "./Uniqe/Uniqe";
 
 interface Product {
   _id: string;
@@ -111,6 +112,7 @@ const Home: React.FC = () => {
         </section>
         <BrowseByDestination />
         {/* user any question answer */}
+        <Uniqe></Uniqe>
         <Faq></Faq>
       </div>
     </div>
