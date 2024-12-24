@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import Categories from "../Home/Category/Category";
@@ -32,7 +32,7 @@ const Product: React.FC = () => {
   const [searchText, setSearchText] = useState(""); // Search Text
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Filtered Products
 
-  /* product Cetegory data get */
+  /* product Category data get */
   const {
     data: products = [],
     isLoading,
@@ -46,12 +46,13 @@ const Product: React.FC = () => {
     enabled: !!category,
   });
 
-  React.useEffect(() => {
+  // Refetch when category changes
+  useEffect(() => {
     refetch();
   }, [category, refetch]);
 
-  React.useEffect(() => {
-    // Filter Logic
+  // Filter products based on search text
+  useEffect(() => {
     const result = products.filter(
       (product) =>
         product.brandName.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -80,11 +81,9 @@ const Product: React.FC = () => {
       <div className="w-full h-auto mx-auto p-4 bg-gray-50 border shadow">
         {/* Heading Section */}
         <div className="text-center mb-4">
-          <h2 className="text-2xl ">Search Products</h2>
+          <h2 className="text-2xl">Search Products</h2>
           <div className="divider divider-neutral">All Product</div>
-          <p className="text-xl">
-            Find your desired products by brand, category, or title
-          </p>
+          <p className="text-xl">Find your desired products by brand, category, or title</p>
         </div>
 
         {/* Search Box Section */}
@@ -113,11 +112,10 @@ const Product: React.FC = () => {
         <NoData />
       ) : (
         <div className="grid max-w-7xl p-2 mx-auto grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {filteredProducts.map(
-            (product) =>
-              product.adminIsApproved === "approve" && (
-                <Card product={product} key={product._id} />
-              )
+          {filteredProducts.map((product) =>
+            product.adminIsApproved === "approve" ? (
+              <Card product={product} key={product._id} />
+            ) : null
           )}
         </div>
       )}
