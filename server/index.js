@@ -29,6 +29,8 @@ const store_passwd = process.env.STORE_PASS;
 const is_live = false; //true for live, false for sandbox
 async function run() {
   try {
+
+    // create collection
     const userCollection = client.db("quickBuzz").collection("alluser");
     const productsCollection = client.db("quickBuzz").collection("allProducts");
     const wishlistCollection = client.db("quickBuzz").collection("allsave");
@@ -46,11 +48,9 @@ async function run() {
     });
 
     // get all products in admin dashboard
-    // get all rooms
     app.get("/products", async (req, res) => {
       try {
         const { category } = req.query;
-
         let query = {};
         if (category && category !== "all" && category !== "null") {
           query = { category };
@@ -72,8 +72,7 @@ async function run() {
       res.send(result);
     }); 
 
-    
-
+   
     // admin is approved host products
     app.patch("/admin-product/:id", async (req, res) => {
       const id = req.params.id;
@@ -88,7 +87,6 @@ async function run() {
     });
 
     /* user deleted data  */
-
     app.delete("/userpro/:id", async (req, res) => {
       const id = req.params.id;
 
@@ -118,13 +116,17 @@ async function run() {
 
     // delete product
     app.delete("/pro/:id", async (req, res) => {
-      const id = req.params.id;
+      try{
+        const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.deleteOne(query);
       res.send(result);
+      }catch(err){
+        console.error(err)
+        res.status(404).send({message: "soothing is wrong"})
+      }
     });
 
-    // details page is start
     // Get a single room data from db using _id
     app.get("/product/:id", async (req, res) => {
       const id = req.params.id;
@@ -132,7 +134,6 @@ async function run() {
       const result = await productsCollection.findOne(query);
       res.send(result);
     }); 
-
 
 
     // recent product show in home page and search implement
@@ -181,21 +182,6 @@ async function run() {
        res.send(result)
     }) 
 
-
-    /* Banner page show korar jonno data  */
-    app.get('/banner', async (req, res) => {
-      try {
-        const result = await productsCollection
-          .find()
-          .sort({  _id: -1}) 
-          .limit(6) 
-          .toArray(); 
-        res.send(result); 
-      } catch (error) {
-        console.error("Failed to fetch recent products:", error);
-        res.status(500).send({ error: "Failed to fetch recent products" });
-      }
-    });
     
   //  single user by data 
   app.get('/allsave/:email', async (req, res)=>{
@@ -212,15 +198,7 @@ async function run() {
       res.send(result);
     });
     
-    //  single user by data
-    app.get("/allsave/:email", async (req, res) => {
-      const email = req.params.email;
-      if (email) {
-        query = { email: email };
-        const result = await wishlistCollection.find(query).toArray();
-        res.send(result);
-      }
-    });
+  
 
     //  update single data
     app.patch("/product-update/:id", async (req, res) => {
@@ -279,16 +257,10 @@ async function run() {
     app.post("/allsave", async (req, res) => {
       try {
         const wishlist = req.body;
-
-   
         delete wishlist._id;
-        
-
         if (!wishlist || Object.keys(wishlist).length === 0) {
           return res.status(400).send({ error: "Invalid wishlist data." });
         }
-
-    
         const result = await wishlistCollection.insertOne(wishlist);
 
         res.status(201).send(result);
@@ -300,7 +272,6 @@ async function run() {
 
     //  post all user
     app.post("/users", async (req, res) => {
-   
       const user = req.body;
       const query = { email: user.email };
       const existingUser = await userCollection.findOne(query);
@@ -336,7 +307,7 @@ app.get('/review/:id', async (req, res) => {
     const query = { productid: productid };
     const result = await reviewtCollection
       .find(query)
-      .sort({ createdAt: -1 })  
+      .sort({ _id: -1 })  
       .toArray();
 
     // console.log(result);  
@@ -349,7 +320,6 @@ app.get('/review/:id', async (req, res) => {
 
 /* Get a Review data  */
 app.get('/review', async (req, res) => {
-
   try {
       const result = await reviewtCollection.find().toArray();
       // console.log(result);  
@@ -496,9 +466,9 @@ app.patch("/decline-message/:id", async(req, res)=>{
         total_amount: totalPrice,
         currency: paymentInfo?.currency || "USD",
         tran_id: trxId,
-        success_url: "https://quick-bazz.vercel.app/success-payment",
-        fail_url: "https://quick-bazz.vercel.app/fail",
-        cancel_url: "https://quick-bazz.vercel.app/cancel",
+        success_url: "http://localhost:3000/success-payment",
+        fail_url: "http://localhost:3000/fail",
+        cancel_url: "http://localhost:3000/cancel",
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,

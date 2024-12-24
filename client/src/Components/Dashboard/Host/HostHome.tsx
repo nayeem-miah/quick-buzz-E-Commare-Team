@@ -4,68 +4,51 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import EnhancedBarChart from "./Chart/EnhancedBarChart";
-
-interface StatData {
-  totalSale: number;
-  userCount: number;
-  bookingCount: number;
-  roomCount: number;
-  chartData: any[];
-}
+import LoadingSpinner from "../../../Shared/Loading";
+import PiChart from "./Chart/PiChart";
 
 const HostHome: React.FC = () => {
-  // Dummy static data for statics page
-  const statData: StatData = {
-    totalSale: 12000,
-    userCount: 452,
-    bookingCount: 148,
-    roomCount: 85,
-    chartData: [], // Add dummy data if needed for the chart
-  };
-
   const { user } = useAuth();
-  const axiosSecure = useAxiosPublic();
+  const axiosPublic = useAxiosPublic();
 
-  // Fetch products for the specific host email
-  const { data: productsData = [] } = useQuery({
-    queryKey: ["products"], // Include email in queryKey
+  // Fetch payment history using email
+  const { data: PaymentHistoryData = [], isLoading } = useQuery({
+    queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/host-product/${user?.email}`);
-      // return res.data;
-      console.log(res);
+      const res = await axiosPublic.get(`/host-payment-history/${user?.email}`);
+      return res.data;
     },
   });
 
-  // total price
-  //  // Fetch payment history using email
-  // const { data: PaymentHistoryData = [], isLoading } = useQuery({
-  //   queryKey: ["PaymentHistoryData", email], // email as dependency
-  //   queryFn: async () => {
-  //     const res = await axiosSecure.get(`/host-payment-history/${email}`);
-  //     return res.data;
-  //   },
-  // });
-
-  // // Filter for successful payments made to this host email
-  // const successfulPayments = PaymentHistoryData.filter(
-  //   (item: { status: string; hostEmail: string[] }) =>
-  //     item.status === "success" && item.hostEmail.some((Host) => Host === email)
-  // );
-  // console.log(successfulPayments);
-
-  // // Count the number of successful payments
-  // const successfulPaymentCount = successfulPayments.length;
-
-  // // Calculate the total amount of successful payments
-  // const totalAmount = successfulPayments.reduce(
-  //   (total: number, item: { totalPrice: number }) => total + item.totalPrice,
-  //   0
-  // );
-
-  // // Output
-  // console.log("Successful Payment Count:", successfulPaymentCount);
+  // successful payment
+  const successfulPaymentCount = PaymentHistoryData.filter(
+    (item: any) => item.status === "success"
+  );
+  // Calculate the total amount of successful payments
+  const totalAmount = successfulPaymentCount.reduce(
+    (total: number, item: { totalPrice: number }) => total + item.totalPrice,
+    0
+  );
   // console.log("Total Amount of Successful Payments:", totalAmount);
 
+  // get all product
+  const { data = [] } = useQuery({
+    queryKey: ["allProduct"],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/host-product/${user?.email}`);
+      return res.data;
+    },
+  });
+  // console.log("Total product data :", data);
+  // admin manage total product
+  const adminManageProduct = data.filter(
+    (item: any) => item.adminIsApproved === "approve"
+  );
+  console.log("Total manage product :", adminManageProduct.length);
+
+  
+
+  if (isLoading) return <LoadingSpinner />;
   return (
     <div>
       <div className="mt-12">
@@ -81,52 +64,50 @@ const HostHome: React.FC = () => {
                 Total Sales
               </p>
               <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                ${statData.totalSale}
+                ${totalAmount}
               </h4>
             </div>
           </div>
 
-          {/* Total Bookings */}
+          {/* Total product */}
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
             <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center from-[#0A0D34] to-blue-400 text-white shadow-blue-500/40">
               <BsFillCartPlusFill className="w-6 h-6 text-white" />
             </div>
             <div className="p-4 text-right">
               <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                Total Bookings
+                Total product
               </p>
               <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                {/* {data?.length} */}
+                {data?.length}
               </h4>
             </div>
           </div>
 
-          {/* Users Card */}
+          {/* admin manage product Card */}
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
             <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center from-[#221537] to-green-400 text-white shadow-green-500/40">
               <FaUserAlt className="w-6 h-6 text-white" />
             </div>
             <div className="p-4 text-right">
               <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                Total User
+                Total success product
               </p>
               <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                user
+                {adminManageProduct?.length}
               </h4>
             </div>
           </div>
-
-          {/* Total Rooms */}
         </div>
 
         <div className="mb-4 grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3">
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
             <div className="p-4 text-center ">
-              <EnhancedBarChart />
+              <EnhancedBarChart/>
             </div>
           </div>
-          <div>
-            pi chart
+          <div className="">
+            <PiChart  data={data} adminManageProduct ={adminManageProduct}/>
           </div>
         </div>
       </div>
