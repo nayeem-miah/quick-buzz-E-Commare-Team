@@ -67,7 +67,6 @@ const UserPaymentHistory: React.FC = () => {
                 <th className="py-3 px-4 text-sm font-medium text-left">
                   Email
                 </th>
-                {/* <th className="py-3 px-4 text-sm font-medium text-left">transactionId</th> */}
                 <th className="py-3 px-4 text-sm font-medium text-left">
                   Payment Date
                 </th>
@@ -96,9 +95,7 @@ const UserPaymentHistory: React.FC = () => {
                       <td className="py-4 px-4 text-sm text-gray-600">
                         {payment?.cus_email}
                       </td>
-                      {/* <td className="py-4 px-4 text-sm text-gray-600">
-          {payment?.transactionId}
-        </td> */}
+                
                       <td className="py-4 px-4 text-sm text-gray-600">
                         {payment?.date}
                       </td>

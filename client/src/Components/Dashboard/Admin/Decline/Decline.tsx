@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import useAxiosPublic from '../../../../Hooks/UsePublic';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import useAxiosPublic from "../../../../Hooks/UsePublic";
+import toast from "react-hot-toast";
 
-const Decline : React.FC= ({sellerData}) => {
-
-    const axiosPublic = useAxiosPublic();
+interface SellerData {
+  sellData: any;
+}
+const Decline: React.FC<SellerData> = ({ sellData }) => {
+  const axiosPublic = useAxiosPublic();
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -12,7 +14,7 @@ const Decline : React.FC= ({sellerData}) => {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-    
+
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
@@ -21,7 +23,7 @@ const Decline : React.FC= ({sellerData}) => {
       };
 
       await axiosPublic
-        .patch(`/decline-message/${sellerData._id}`, declineData)
+        .patch(`/decline-message/${sellData._id}`, declineData)
         .then((res) => {
           if (res.data.modifiedCount > 0) {
             toast.success("decline successfully");
@@ -36,19 +38,17 @@ const Decline : React.FC= ({sellerData}) => {
       toast.error(`error is ,${err}`);
     }
   };
-    return (
-        <div>
-            <button
-                      onClick={toggleModal}
-                      className="  px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+  return (
+    <div>
+      <button
+        onClick={toggleModal}
+        className="  px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
                 border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                    >
-                      Decline
-                    </button>
+      >
+        Decline
+      </button>
 
-
-
-                     {/* Modal decline */}
+      {/* Modal decline */}
       {isOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mx-4 md:mx-auto">
@@ -57,8 +57,7 @@ const Decline : React.FC= ({sellerData}) => {
               className="absolute top-3 right-3 text-red-500 hover:text-red-700"
               onClick={toggleModal}
             >
-                X
-              {/* <XMarkIcon className="w-6 h-6" /> */}
+              X{/* <XMarkIcon className="w-6 h-6" /> */}
             </button>
 
             {/* Modal Content */}
@@ -98,8 +97,8 @@ const Decline : React.FC= ({sellerData}) => {
           </div>
         </div>
       )}
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Decline;

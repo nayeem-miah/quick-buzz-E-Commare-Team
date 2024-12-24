@@ -10,7 +10,6 @@ import NoData from "../../Shared/NoDataFound/NoData";
 import img from "../../../src/assets/Image/service.jpg";
 import { Helmet } from "react-helmet-async";
 
-
 interface Product {
   [x: string]: any;
   _id: number;
@@ -32,8 +31,6 @@ const Product: React.FC = () => {
 
   const [searchText, setSearchText] = useState(""); // Search Text
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Filtered Products
-  
-
 
   /* product Cetegory data get */
   const {
@@ -48,9 +45,6 @@ const Product: React.FC = () => {
     },
     enabled: !!category,
   });
-
-
-
 
   React.useEffect(() => {
     refetch();
@@ -70,14 +64,12 @@ const Product: React.FC = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
- 
-
 
   return (
     <div>
-       <Helmet>
-          <title>quickBuzz | Product Page </title>
-        </Helmet>
+      <Helmet>
+        <title>quickBuzz | Product Page </title>
+      </Helmet>
       <BannerDetailsPage
         imageURL={img}
         headingText="Product."
@@ -88,10 +80,7 @@ const Product: React.FC = () => {
       <div className="w-full h-auto mx-auto p-4 bg-gray-50 border shadow">
         {/* Heading Section */}
         <div className="text-center mb-4">
-          <h2 className="text-2xl ">
-            
-            Search Products
-          </h2>
+          <h2 className="text-2xl ">Search Products</h2>
           <div className="divider divider-neutral">All Product</div>
           <p className="text-xl">
             Find your desired products by brand, category, or title
@@ -101,20 +90,16 @@ const Product: React.FC = () => {
         {/* Search Box Section */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4">
           <div className="w-full max-w-screen-sm">
-         
             <input
               type="text"
               placeholder="Search by brand, category, or title"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               className="input input-bordered w-full"
-            /> 
-            
-            
+            />
           </div>
           <div>
-
-             <button className="button" > </button>
+            <button className="button"> </button>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import AddProductForm from './AddProductForm';
+import AddProductForm from './Form/AddProductForm';
 
 const HostAddProduct: React.FC = () => {
     return (

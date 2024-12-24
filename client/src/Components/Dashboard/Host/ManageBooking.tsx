@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 interface Listing {
   [x: string]: ReactNode;
   _id: number;
-  productTitle: string;
+  productTitle: any  ;
   productImage: string;
   hostIsApproved: string;
   hostPhoto: string;
@@ -99,7 +99,6 @@ const ManageBooking: React.FC = () => {
                   <th className="py-3 px-4 text-sm font-medium text-left">
                     date
                   </th>
-                  {/* <th className="py-3 px-4 text-sm font-medium text-left">transition ID</th> */}
                   <th className="py-3 px-4 text-sm font-medium text-left">
                     Price
                   </th>
@@ -145,16 +144,7 @@ const ManageBooking: React.FC = () => {
                             </button>
                           )}
                         </td>
-                        {/* <td className="py-4 px-4 text-sm text-gray-600">
-                    <button
-                      onClick={() => {
-                        handleDelete(listing?._id);
-                      }}
-                      className="px-4 py-2 text-2xl rounded-lg hover:text-red-700 transition duration-200 focus:outline-none"
-                    >
-                      <MdDeleteForever />
-                    </button>
-                  </td> */}
+                       
                         <td className="py-4 px-4 text-sm">
                           <button
                             onClick={() => handleDetailsClick(listing)}

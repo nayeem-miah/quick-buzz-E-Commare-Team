@@ -5,7 +5,7 @@ import useAuth from "../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
 import Rating from "react-rating";
 
-const Review: React.FC<{ id: string }> = ({ id }) => {
+const Review: React.FC<{ id: any }> = ({ id }) => {
   const [rating, setRating] = useState<number | null>(null);
   const [review, setReview] = useState<string>("");
   const axiosPublic = useAxiosPublic();
@@ -127,7 +127,7 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
         <h2 className="text-center text-3xl">All Reviews</h2>
         <div className="divider divider-start divider-neutral text-black"></div>
 
-        {reviewdata?.map((item) => (
+        {reviewdata?.map((item: { id: React.Key | null | undefined; photo: string | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; timestamp: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; review: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; rating: number | undefined; }) => (
           <div key={item.id}>
             <div className="mb-4">
               <div className="flex space-x-4 text-xl">

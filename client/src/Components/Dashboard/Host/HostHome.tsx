@@ -6,7 +6,7 @@ import { BsFillCartPlusFill, BsFillHouseDoorFill } from "react-icons/bs";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import { dataTagSymbol, useQuery } from "@tanstack/react-query";
 import MyChartComponent from "./HostChart";
-import ApexCart from "../Admin/Chart/Simple";
+import ApexCart from "../Admin/Chart/ChartWrapper";
 import LoadingSpinner from "../../../Shared/Loading";
 import useAuth from "../../../Hooks/UseAuth";
 

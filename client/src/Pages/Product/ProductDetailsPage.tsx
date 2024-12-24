@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/rules-of-hooks */
+
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useAxiosPublic from "../../Hooks/UsePublic";

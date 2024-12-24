@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import React, { useEffect, useState } from "react";
 import Faq from "../../Components/Home/Faq/Faq";
 import Slider from "./Banner/Banner";
@@ -41,6 +41,7 @@ const Home: React.FC = () => {
     setSearch(e.target.value);
   };
 
+  // recent product
   const { data: recentData = [], isLoading } = useQuery<Product[], Error>({
     queryKey: ["productData", debouncedSearch],
     queryFn: async (): Promise<Product[]> => {
@@ -105,7 +106,7 @@ const Home: React.FC = () => {
           <Categories></Categories>
         </div>
         <section className="py-10 lg:p-12 p-2">
-          {/* {added poduct} */}
+          {/* {recent added product} */}
           <RecentProduct recentData={recentData} isLoading={isLoading} />
         </section>
         <BrowseByDestination />
@@ -115,6 +116,4 @@ const Home: React.FC = () => {
     </div>
   );
 };
-//
-//
 export default Home;
