@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Heading from "../../../Shared/Heading/Heading";
-import useAuth from "../../../Hooks/UseAuth";
+import Heading from "../../../../Shared/Heading/Heading";
+import useAuth from "../../../../Hooks/UseAuth";
 import toast from "react-hot-toast";
 import axios from "axios";
-import useAxiosPublic from "../../../Hooks/UsePublic";
+import useAxiosPublic from "../../../../Hooks/UsePublic";
 import { useNavigate } from "react-router-dom";
 import { ImSpinner } from "react-icons/im";
 const AddProductForm: React.FC = () => {

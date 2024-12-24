@@ -16,7 +16,7 @@ const BannerDetailsPage = ({
           className="object-cover w-full h-full"
         />
 
-        {/* <div className="w-full h-full  bg-gradient-to-b from-[#5eaaf590] absolute top-0"></div> */}
+      
         <div className="w-full h-full bg-gradient-to-b  from-[#b4b0b09f] to-[#ffffff] dark:to-[#111827] absolute top-0"></div>
         <div className="absolute w-full h-full flex justify-center items-center top-0">
           <div className="text-center space-y-2">
