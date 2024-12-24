@@ -20,7 +20,6 @@ import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
 import ProductPage from "../Pages/Product/ProductDetailsPage";
 import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProduct";
-import Checkout from "../Pages/Product/Checkout";
 import BecomeAHost from "../Pages/Become a host/BecomeAHost";
 import SellerRequest from "../Components/Dashboard/User/SellerRequest";
 import AllHostRequest from "../Components/Dashboard/Admin/AllHostRequest";
@@ -66,10 +65,7 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <Profile></Profile>,
       },
-      {
-        path: "/checkout/:id",
-        element: <Checkout></Checkout>,
-      },
+    
       {
         path: "/updated-product/:id",
         element: (
