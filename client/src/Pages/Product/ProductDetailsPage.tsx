@@ -16,7 +16,7 @@ const ProductPage: React.FC = () => {
 
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
-
+// 
   const {
     data: product,
     isLoading,
