@@ -9,7 +9,7 @@ const BannerDetailsPage = ({
 }) => {
   return (
     <div>
-      <div className="relative w-full h-[600px] ">
+      <div className="relative w-full lg:h-[600px] md:h-[600px] sm:h-[500px]">
         <img
           src={imageURL}
           alt="banner"

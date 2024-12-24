@@ -7,8 +7,8 @@ import Product from "../Pages/Product/Product";
 import DashboardLayout from "../Layouts/Dashboard/DashboardLayout";
 import ManageUsers from "../Components/Dashboard/Admin/ManageUsers";
 import ErrorPage from "./ErrorPage";
-import Signin from "../Pages/Page/Login";
-import Signup from "../Pages/Page/Singup";
+import Signin from "../Pages/Login-signup/Login";
+import Signup from "../Pages/Login-signup/Singup";
 import PrivateRoute from "./PribetRoute";
 import Profile from "../Pages/DashboardPage/Profile";
 import HostAddProduct from "../Components/Dashboard/Host/HostAddProduct";
@@ -21,7 +21,6 @@ import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory"
 import ProductPage from "../Pages/Product/ProductDetailsPage";
 import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProduct";
 import Checkout from "../Pages/Product/Checkout";
-import MyWishList from "../Components/Dashboard/User/MyWishList";
 import BecomeAHost from "../Pages/Become a host/BecomeAHost";
 import SellerRequest from "../Components/Dashboard/User/SellerRequest";
 import AllHostRequest from "../Components/Dashboard/Admin/AllHostRequest";
@@ -59,7 +58,7 @@ const router = createBrowserRouter([
         path: "/product/:id",
         element: (
           // <PrivateRoute>
-            <ProductPage></ProductPage>
+          <ProductPage></ProductPage>
           // </PrivateRoute>
         ),
       },
@@ -187,10 +186,6 @@ const router = createBrowserRouter([
         element: <MyAddedCart />,
       },
       {
-        path: "my-wishlist",
-        element: <MyWishList />,
-      },
-      {
         path: "seller-request",
         element: (
           <SellerRequest
@@ -213,7 +208,6 @@ const router = createBrowserRouter([
         element: <UserPaymentHistory />,
       },
     ],
-  }
-  
+  },
 ]);
 export default router;

@@ -1,10 +1,10 @@
 import { FaUserAlt, FaDollarSign } from "react-icons/fa";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import ApexChart from "./Chart/ApexChart";
-import ApexCart from "./Chart/Simple";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
+import ChartWrapper from "./Chart/ChartWrapper";
 
 const AdminStatistics: React.FC = () => {
   // total users
@@ -117,7 +117,7 @@ const AdminStatistics: React.FC = () => {
           </div>
           {/* Calendar */}
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden">
-            <ApexCart data={data} users={users}> </ApexCart>
+            <ChartWrapper/>
           </div>
         </div>
       </div>

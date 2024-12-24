@@ -42,8 +42,7 @@ const Card: React.FC<CardProps> = ({ product }) => {
     ? productReviews.reduce((sum: number, item: any) => sum + item.rating, 0) / productReviews.length
     : 0;
      
-
-  
+// aos animation
     useEffect(() => {
       Aos.init();
     }, []);

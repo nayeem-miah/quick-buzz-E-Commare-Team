@@ -1,5 +1,7 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
+import { useQuery } from "@tanstack/react-query";
+import UseAxiosSecure from "../../../../Hooks/UseAxiosSecure";
 
 // Define the state interface
 interface ApexChartState {
@@ -75,19 +77,19 @@ interface ApexChartState {
 
 // Main ApexCart component
 class ApexCart extends React.Component<
-  { data: any[]; users: any[] },
+  { dataCount: number; usersCount: number },
   ApexChartState
 > {
   static defaultProps = {
-    data: [],
-    users: [],
+    dataCount: 0,
+    usersCount: 0,
   };
 
-  constructor(props: { data: any[]; users: any[] }) {
+  constructor(props: { dataCount: number; usersCount: number }) {
     super(props);
 
     this.state = {
-      series: [props.data.length, props.users.length],
+      series: [props.dataCount, props.usersCount],
       options: {
         chart: {
           height: 400,
@@ -148,7 +150,7 @@ class ApexCart extends React.Component<
                 label: "Overall",
                 color: "#777",
                 formatter: () => {
-                  const total = props.data.length + props.users.length;
+                  const total = props.dataCount + props.usersCount;
                   return `${total}`;
                 },
               },
@@ -185,4 +187,36 @@ class ApexCart extends React.Component<
   }
 }
 
-export default ApexCart;
+// Data fetching and integration
+const ChartWrapper = () => {
+  const axiosSecure = UseAxiosSecure();
+
+  const { data: users = [], isLoading: usersLoading } = useQuery({
+    queryKey: ["alluser"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/alluser");
+      return res.data;
+    },
+  });
+
+  const { data: products = [], isLoading: productsLoading } = useQuery({
+    queryKey: ["allProduct"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/products");
+      return res.data;
+    },
+  });
+
+  if (usersLoading || productsLoading) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <ApexCart
+      dataCount={products.length}
+      usersCount={users.length}
+    />
+  );
+};
+
+export default ChartWrapper;
