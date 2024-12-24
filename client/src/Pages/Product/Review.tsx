@@ -62,14 +62,6 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
       return data;
     },
   });
-  //   console.log(reviewdata); 
-
-  
-  
- 
-  
-
-
 
   return (
     <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 lg:space-y-0">
@@ -112,7 +104,6 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
             />
             <button
               onClick={handleSubmit}
-    
               className="mt-2 px-10 py-2 text-2xl text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
               border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
             >
@@ -127,8 +118,15 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
         <h2 className="text-center text-3xl">All Reviews</h2>
         <div className="divider divider-start divider-neutral text-black"></div>
 
-        {reviewdata?.map((item: { id: React.Key | null | undefined; photo: string | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; timestamp: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; review: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; rating: number | undefined; }) => (
-          <div key={item.id}>
+        {reviewdata?.map((item: {
+          id: React.Key | null | undefined;
+          photo: string | undefined;
+          name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined;
+          timestamp: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined;
+          review: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined;
+          rating: number | undefined;
+        }) => (
+          <div key={item.id || item.timestamp}> {/* Fix for key prop */}
             <div className="mb-4">
               <div className="flex space-x-4 text-xl">
                 <div className="avatar">
