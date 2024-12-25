@@ -23,11 +23,12 @@ const UserHome: React.FC = () => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="mt-12 px-6 md:px-12">
+    <div className="mt-8 lg:px-10 md:px-8 px-1">
       {/* Welcome, User Details, and Navigation Section */}
-      <div className="bg-gradient-to-r  p-10 rounded-lg shadow-2xl mb-12 space-y-10">
-        <h1 className="text-5xl font-extrabold text-center tracking-tight">
-          Welcome back, {user?.displayName}
+      <div className="bg-gradient-to-r  lg:p-10 md:p-7 p-3 rounded-lg shadow-2xl mb-12 space-y-10">
+        <h1 className="lg:text-5xl md:text-4xl text-3xl font-extrabold text-center tracking-tight">
+          Welcome back,
+          <span className="text-green-500">{user?.displayName}</span>
         </h1>
         <p className="mt-6 text-lg text-center opacity-80">
           We’re excited to see you again. Explore your personalized
@@ -86,7 +87,7 @@ const UserHome: React.FC = () => {
         {recommended.length === 0 ? (
           <NoData />
         ) : (
-          <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-3 md:gap-8 lg:gap-10 gap-4">
             {recommended?.map(
               (product: any) =>
                 product?.adminIsApproved === "approve" && (

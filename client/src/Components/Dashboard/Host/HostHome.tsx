@@ -102,7 +102,7 @@ const HostHome: React.FC = () => {
 
         <div className="mb-4 grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3">
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
-            <div className="p-4 text-center ">
+            <div className=" text-center ">
               <EnhancedBarChart/>
             </div>
           </div>
