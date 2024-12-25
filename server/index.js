@@ -163,7 +163,7 @@ async function run() {
 
     /* recommended for you get data in use user dashboard */
     app.get('/recommended-for-you-product', async (req, res) => {
-      try {
+      try {z
         const result = await productsCollection
           .find()
           .limit(6)
