@@ -134,7 +134,23 @@ const Navbar: React.FC = () => {
                       My profile
                     </NavLink>
                   </div>
+
                   <div>
+                  {singleUser?.role === "user" && (
+                      <NavLink
+                        to="/dashboard/my-listings"
+                        className={({ isActive }) =>
+                          isActive
+                            ? "text-blue-500  font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                            : " font-bold my-2  transition-colors duration-300 transform hover:text-blue-300 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                        }
+                      >
+                        Go to my Add to Cart
+                      </NavLink>
+                    )}
+                  </div>
+                  <div>
+                 
                     {singleUser?.role === "user" && (
                       <NavLink
                         to="/become-host"
@@ -186,14 +202,6 @@ const Navbar: React.FC = () => {
             </span>
           </div>
 
-          {/* <div className="flex justify-center md:block">
-            <a href="#" className="relative text-gray-700 transition-colors duration-300 transform hover:text-gray-600 dark:hover:text-gray-300">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.707 15.293A1 1 0 005.414 17H17M17 17a2 2 0 102 2 2 2 0 00-2-2zM9 19a2 2 0 11-2 2 2 2 0 012-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span className="absolute top-0 left-0 p-1 text-xs text-white bg-blue-500 rounded-full"></span>
-            </a>
-          </div> */}
           <div className="hidden md:block">
             <MenuDropdown></MenuDropdown>
           </div>
