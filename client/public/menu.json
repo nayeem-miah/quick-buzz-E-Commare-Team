@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Wireless Headphones",
+    "photo": "https://i.ibb.co/TLF6Kqm/still-life-tech-device-23-2150722661.jpg",
+    "price": 99.99,
+    "description": "High-quality wireless headphones with noise-cancellation and excellent sound clarity.",
+    "category": "Audio",
+    "brand": "Earphones"
+  },
+  {
+    "name": "Smartphone Stand",
+    "photo": "https://i.ibb.co/k8fssWJ/smartphone-selfie-stick-closeup-273609-14283.jpg",
+    "price": 15.49,
+    "description": "A durable and adjustable stand for your smartphone, perfect for video calls or watching movies.",
+    "category": "Stand",
+    "brand": "GadgetEase"
+  },
+  {
+    "name": "Gaming Mouse",
+    "photo": "https://i.ibb.co/6FG1fWd/view-neon-illuminated-gaming-desk-setup-with-keyboard-23-2149529362.jpg",
+    "price": 49.99,
+    "description": "Ergonomic gaming mouse with customizable RGB lighting and programmable buttons.",
+    "category": "Mouse",
+    "brand": "GameX"
+  },
+  {
+    "name": "Portable Charger",
+    "photo": "https://i.ibb.co/kxQtKB6/gradient-hard-drive-illustration-23-2149369148.jpg",
+    "price": 25.99,
+    "description": "Compact and lightweight portable charger with fast charging capabilities.",
+    "category": "Charger",
+    "brand": "ChargePro"
+  },
+  {
+    "name": "Bluetooth Speaker",
+    "photo": "https://i.ibb.co/yRx9HfW/still-life-tech-device-23-2150722655.jpg",
+    "price": 39.99,
+    "description": "Portable Bluetooth speaker with powerful bass and long-lasting battery life.",
+    "category": "Speaker",
+    "brand": "SoundWave"
+  }
+]

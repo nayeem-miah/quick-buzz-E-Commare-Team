@@ -1,3 +1,11 @@
+@import "@fontsource/roboto";
+
+/* Tailwind base styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Set Roboto globally */
+body {
+  @apply font-sans;
+}
