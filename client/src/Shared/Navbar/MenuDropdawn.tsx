@@ -11,7 +11,7 @@ const MenuDropdown: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { singleUser } = useFetchSingleUser(user?.email);
-  
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -68,6 +68,14 @@ const MenuDropdown: React.FC = () => {
                 >
                   my profile
                 </Link>
+                {singleUser?.role === "user" && (
+                  <Link
+                    to="/dashboard/my-listings"
+                    className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                  >
+                    Go to my Add to Cart
+                  </Link>
+                )}
                 {singleUser?.role === "user" && (
                   <Link
                     to="/become-host"
