@@ -4,6 +4,8 @@ import { FaUserAlt, FaDollarSign } from 'react-icons/fa';
 import { BsFillCartPlusFill, BsFillHouseDoorFill } from 'react-icons/bs';
 import UseAxiosSecure from '../../../Hooks/UseAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
+import MyChartComponent from './HostChart';
+import ApexCart from '../Admin/Chart/Simple';
 
 interface StatData {
   totalSale: number;
@@ -107,15 +109,17 @@ const HostHome: React.FC = () => {
        
         </div>
 
-        <div className='mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-          {/* Total Sales Graph Placeholder */}
+        <div className='mb-4 grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3'>
+      
           <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2'>
-            <div className='p-4 text-center'>Graph Placeholder</div>
+            <div className='p-4 text-center '>
+            <MyChartComponent></MyChartComponent>
+            </div>
           </div>
-          {/* Calendar */}
-          <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden'>
-            {/* <BiCalendar color='#F43F5E' /> */}
+          <div >
+           <ApexCart data={data} users={users}></ApexCart>
           </div>
+          
         </div>
       </div>
     </div>

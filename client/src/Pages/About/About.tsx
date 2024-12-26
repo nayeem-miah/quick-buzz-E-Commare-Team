@@ -8,6 +8,7 @@ import rakibImage from "../../assets/Image/rakib1.jpg";
 import { useEffect } from "react";
 import "aos/dist/aos.css";
 import Aos from "aos";
+import { Helmet } from "react-helmet-async";
 interface TeamMember {
   name: string;
   position: string;
@@ -41,6 +42,9 @@ const About: React.FC = () => {
   return (
     <div className=" text-gray-800 font-sans m-4">
       {/* Banner */}
+      <Helmet>
+          <title>quickBuzz | About Page </title>
+        </Helmet>
       <div
         className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative"
         style={{ backgroundImage: `url(${aboutImage})` }}

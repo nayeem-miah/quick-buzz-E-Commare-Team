@@ -8,6 +8,7 @@ import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
 import NoData from "../../Shared/NoDataFound/NoData";
 import img from "../../../src/assets/Image/service.jpg";
+import { Helmet } from "react-helmet-async";
 
 
 interface Product {
@@ -74,6 +75,9 @@ const Product: React.FC = () => {
 
   return (
     <div>
+       <Helmet>
+          <title>quickBuzz | Product Page </title>
+        </Helmet>
       <BannerDetailsPage
         imageURL={img}
         headingText="Product."

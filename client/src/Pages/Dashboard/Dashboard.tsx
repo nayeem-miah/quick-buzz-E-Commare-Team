@@ -19,6 +19,7 @@ import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import LoadingSpinner from "../../Shared/Loading";
 import { RiGitClosePullRequestFill } from "react-icons/ri";
 import { GoGitPullRequestClosed } from "react-icons/go";
+import { Helmet } from "react-helmet-async";
 
 const Sidebar: React.FC = () => {
   const { logOut, user } = useAuth();
@@ -49,6 +50,9 @@ const Sidebar: React.FC = () => {
     <>
       {/* Small Screen Navbar */}
       <div className="  flex justify-between md:hidden">
+      <Helmet>
+          <title>quickBuzz | Dashboard Page </title>
+        </Helmet>
         <div>
           <div className="block cursor-pointer p-4 font-bold">
             <Link to="/">
