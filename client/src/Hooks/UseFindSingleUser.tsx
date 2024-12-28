@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useQuery } from "@tanstack/react-query";
 import UseAxiosSecure from "./UseAxiosSecure";
 
@@ -9,10 +9,10 @@ interface User {
     [key: string]: any; 
 }
 
-const useFetchSingleUser = (email?: unknown) => {
+const useFetchSingleUser = (email: any) => {
     const axiosSecure = UseAxiosSecure();
 
-    const { data: singleUser, isLoading: loading } = useQuery<User>({
+    const { data: singleUser , isLoading: loading } = useQuery<User>({
         queryKey: [email, 'singleUserInfo'],
         queryFn: async () => {
             if (!email) {
