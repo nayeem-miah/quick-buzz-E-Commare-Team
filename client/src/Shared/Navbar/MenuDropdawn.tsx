@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import useAuth from "../../Hooks/UseAuth";
 import avatar from "../../../src/assets/Image/avatar.jpg";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
+import { MdLocalGroceryStore } from "react-icons/md";
 
 const MenuDropdown: React.FC = () => {
   const { user, logOut } = useAuth();
@@ -73,7 +74,12 @@ const MenuDropdown: React.FC = () => {
                     to="/dashboard/my-listings"
                     className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
                   >
-                    Go to my Add to Cart
+                    <h3 className="flex items-center gap-3">
+                      Go to my Add to Cart{" "}
+                      <span>
+                        <MdLocalGroceryStore className="text-orange-600 text-2xl mx-auto" />
+                      </span>{" "}
+                    </h3>
                   </Link>
                 )}
                 {singleUser?.role === "user" && (
