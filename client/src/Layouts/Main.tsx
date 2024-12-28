@@ -8,7 +8,7 @@ const Main: React.FC = () => {
     <div>
       <Navbar></Navbar>
 
-      <div className="md:mt-28 mt-20 lg:mt-28">
+      <div className="md:mt-24 mt-16 lg:mt-24">
         <Outlet></Outlet>
       </div>
       <div className="mt-10">
