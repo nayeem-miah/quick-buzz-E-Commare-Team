@@ -4,12 +4,18 @@ import toast from "react-hot-toast";
 import useAuth from "../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
 import Rating from "react-rating";
+import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
+import { Link } from "react-router-dom";
+import { ImSpinner } from "react-icons/im";
+import LoadingSpinner from "../../Shared/Loading";
 
 const Review: React.FC<{ id: any }> = ({ id }) => {
   const [rating, setRating] = useState<number | null>(null);
   const [review, setReview] = useState<string>("");
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { singleUser } = useFetchSingleUser(user?.email);
   const name = user?.displayName;
   const photo = user?.photoURL;
   const email = user?.email;
@@ -26,7 +32,7 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
         email,
         timestamp: currentTime,
       };
-
+      setLoading(true);
       axiosPublic
         .post("/reviews", data, {
           headers: { "Content-Type": "application/json" },
@@ -34,13 +40,16 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
         .then((res) => {
           if (res.status === 201) {
             toast.success("Thank you for your feedback!");
+            setLoading(false);
           } else {
             toast.error("Please try again");
+            setLoading(false);
           }
         })
         .catch((error) => {
           console.error("Error posting data:", error);
           toast.error("Server error occurred.");
+          setLoading(false);
         });
     }
   };
@@ -53,14 +62,14 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
     setReview(e.target.value);
   };
 
-  const { data: reviewdata = [] } = useQuery({
+  const { data: reviewdata = [], isLoading } = useQuery({
     queryKey: ["review"],
     queryFn: async () => {
       const { data } = await axiosPublic.get(`/review/${id}`);
       return data;
     },
   });
-
+  if (isLoading) return <LoadingSpinner />;
   return (
     <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 lg:space-y-0">
       {/* Review Form */}
@@ -100,13 +109,39 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
               onChange={handleInputChange}
               className="input input-bordered w-full lg:h-[80px]"
             />
-            <button
-              onClick={handleSubmit}
-              className="mt-2 px-10 py-2 text-2xl text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-              border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-            >
-              Review
-            </button>
+            {user ? (
+              <button
+                onClick={handleSubmit}
+               disabled={singleUser?.role === "admin" || singleUser?.role === "Host"}
+                className={`w-full text-white font-bold  shadow-lg py-2 relative ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
+                } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent ${
+                  singleUser?.role === "Host" || singleUser?.role === "admin"
+                    ? "cursor-not-allowed"
+                    : ""
+                }`}
+              >
+                {loading ? (
+                  <ImSpinner
+                    size={20}
+                    className="animate-spin mx-auto "
+                  ></ImSpinner>
+                ) : (
+                  "review"
+                )}
+              </button>
+            ) : (
+              <Link to={"/login"}>
+                <button
+                  className="mt-2 px-10 py-2 text-2xl text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
+          border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+                >
+                  Review
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -135,8 +170,14 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
               <div className="ml-20 mt-4 text-xl">
                 <Rating
                   initialRating={item?.rating}
-                  emptySymbol={<span style={{ fontSize: "1.5em", color: "lightgray" }}>☆</span>}
-                  fullSymbol={<span style={{ fontSize: "1.5em", color: "gold" }}>★</span>}
+                  emptySymbol={
+                    <span style={{ fontSize: "1.5em", color: "lightgray" }}>
+                      ☆
+                    </span>
+                  }
+                  fullSymbol={
+                    <span style={{ fontSize: "1.5em", color: "gold" }}>★</span>
+                  }
                   readonly
                 />
               </div>
