@@ -63,6 +63,18 @@ async function run() {
         res.status(500).send({ error: "Failed to fetch products" });
       }
     });
+     
+
+    /* product page pagination */
+
+    app.get('/productsCount', async (req, res) => {
+      const count = await productsCollection.estimatedDocumentCount();
+     
+      res.send({ count });
+  });
+
+
+
 
     // get all product in host or email ways
     app.get("/host-product/:email", async (req, res) => {
