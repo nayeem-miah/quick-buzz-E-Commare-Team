@@ -6,22 +6,21 @@ interface Data {
   adminManageProduct: any[];
 }
 
-// Chart options with customized slice colors and animations
 const options = {
   title: "My Product Activities",
   slices: {
-    0: { color: "#3366CC" }, // Total products (blue)
-    1: { color: "#28a745" }, // Success products (green)
-    2: { color: "#dc3545" }, // Pending products (red)
+    0: { color: "#3366CC" },
+    1: { color: "#28a745" }, 
+    2: { color: "#dc3545" }, 
   },
   animation: {
-    startup: true, // Enable animation when the chart first loads
-    easing: "inAndOut", // Smooth easing effect
-    duration: 1000, // Duration of the animation in milliseconds
+    startup: true, 
+    easing: "inAndOut", 
+    duration: 1000, 
   },
-  pieSliceText: "percentage", // Show percentage on each slice
+  pieSliceText: "percentage", 
   legend: {
-    position: "labeled", // Display labels in the legend
+    position: "labeled", 
   },
   pieSliceTextStyle: {
     color: "white", // Color of the text inside the slices
