@@ -16,6 +16,7 @@ import bgimg6 from "../../../assets/banner/banner pic 6.jpg";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 import Slide from "./Slide";
+import { JSX } from "react";
 
 export default function Carousel(): JSX.Element {
   // Get the last 6 items from the data

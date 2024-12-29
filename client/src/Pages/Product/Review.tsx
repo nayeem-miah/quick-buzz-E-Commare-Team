@@ -3,11 +3,11 @@ import useAxiosPublic from "../../Hooks/UsePublic";
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/UseAuth";
 import { useQuery } from "@tanstack/react-query";
-import Rating from "react-rating";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import { Link } from "react-router-dom";
 import { ImSpinner } from "react-icons/im";
 import LoadingSpinner from "../../Shared/Loading";
+// import ReactStars from "react-stars";
 
 const Review: React.FC<{ id: any }> = ({ id }) => {
   const [rating, setRating] = useState<number | null>(null);
@@ -112,7 +112,9 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
             {user ? (
               <button
                 onClick={handleSubmit}
-               disabled={singleUser?.role === "admin" || singleUser?.role === "Host"}
+                disabled={
+                  singleUser?.role === "admin" || singleUser?.role === "Host"
+                }
                 className={`w-full text-white font-bold  shadow-lg py-2 relative ${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
@@ -168,8 +170,8 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
               </div>
               <h2 className="text-sm ml-20">{item.review}</h2>
               <div className="ml-20 mt-4 text-xl">
-                <Rating
-                  initialRating={item?.rating}
+                {/* <Rating
+                  initialRating={item?.rating || 0} // Default 0 if undefined
                   emptySymbol={
                     <span style={{ fontSize: "1.5em", color: "lightgray" }}>
                       ☆
@@ -178,8 +180,16 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
                   fullSymbol={
                     <span style={{ fontSize: "1.5em", color: "gold" }}>★</span>
                   }
-                  readonly
-                />
+                  readonly={true}
+                /> */}
+                {/* <ReactStars
+                  count={5}
+                  value={item?.rating || 0}
+                  size={24}
+                  color2={"#ffd700"}
+                  edit={false}
+                /> */}
+                ;
               </div>
             </div>
           </div>
