@@ -12,27 +12,34 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
 
 [Quick Buzz BD Website Requirements](https://docs.google.com/document/d/1ECbEbhd9BmR36V8r3F4qftZU2NgNh2Du-W_G-LHBJxU/edit?usp=sharing)
 
+
+
 ## Developers
 
-### Nayeem
+<div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; font-family: Arial, sans-serif;">
 
-![Nayeem](https://i.ibb.co.com/j4K0VZz/nayeem.jpg)
+### Nayeem Miah
+<div style="flex: 1 1 300px; text-align: center; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
+  <img src="https://i.ibb.co/j4K0VZz/nayeem.jpg" alt="Nayeem" width="120" height="120" style="border-radius: 50%; margin-bottom: 15px; border: 3px solid #ddd;">
+  <h3 style="color: #333;">Nayeem Miah</h3>
+  <p><strong>Role:</strong> MERN Stack Developer</p>
+  <p><strong>Education:</strong> Student at Moulvibazar Polytechnic Institute, CST Department</p>
+  <p><strong>Email:</strong> <a href="mailto:nayeem5113@gmail.com" style="color: #0073e6;">nayeem5113@gmail.com</a></p>
+  <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/md-nayeem-miah-734719307/" target="_blank" style="color: #0073e6;">linkedin.com/in/nayeem</a></p>
+  <p><strong>Website:</strong> <a href="https://nayeemportfolio-70.web.app/" target="_blank" style="color: #0073e6;">nayeemportfolio-70.web.app</a></p>
+</div>
 
-- **Role**: MERN Stack Developer
-- **Education**: Student at Moulvibazar Polytechnic Institute, CST Department
-- **Email**: nayeem5113@gmail.com
-- **LinkedIn**: [linkedin.com/in/nayeem](https://www.linkedin.com/in/md-nayeem-miah-734719307/)
-- **Website**: [nayeem](https://nayeemportfolio-70.web.app/)
-
-### Rakib
-
-![Rakib](https://i.ibb.co.com/gdVjqQD/rakib.jpg)
-
-- **Role**: MERN Stack Developer
-- **Education**: Student at Moulvibazar Polytechnic Institute, CST Department
-- **Email**: rakibulhasan3929@gmail.com
-- **LinkedIn**: [linkedin.com/in/rakib](https://www.linkedin.com/in/rakibul-hasan-b94123271/)
-- **Website**: [rakib](https://rakibportfolio.com/)
+### Rakibul Hasan
+<div style="flex: 1 1 300px; text-align: center; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
+  <img src="https://i.ibb.co/gdVjqQD/rakib.jpg" alt="Rakib" width="120" height="120" style="border-radius: 50%; margin-bottom: 15px; border: 3px solid #ddd;">
+  <h3 style="color: #333;">Rakibul Hasan</h3>
+  <p><strong>Role:</strong> MERN Stack Developer</p>
+  <p><strong>Education:</strong> Student at Moulvibazar Polytechnic Institute, CST Department</p>
+  <p><strong>Email:</strong> <a href="mailto:rakibulhasan3929@gmail.com" style="color: #0073e6;">rakibulhasan3929@gmail.com</a></p>
+  <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/rakibul-hasan-b94123271/" target="_blank" style="color: #0073e6;">linkedin.com/in/rakib</a></p>
+  <p><strong>Website:</strong> <a href="https://rakibportfolio.com/" target="_blank" style="color: #0073e6;">rakibportfolio.com</a></p>
+</div>
+</div>
 
 ## Features
 
