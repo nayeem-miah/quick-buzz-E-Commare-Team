@@ -1,4 +1,4 @@
-# quick-buzz: E-Commerce Website for Bangladesh
+# Quick Buzz: E-Commerce Website for Bangladesh
 
 ## Project Overview
 
@@ -16,6 +16,8 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
 
 ### Nayeem
 
+![Nayeem](https://ibb.co.com/DY4k3m1)
+
 - **Role**: MERN Stack Developer
 - **Education**: Student at Moulvibazar Polytechnic Institute, CST Department
 - **Email**: nayeem5113@gmail.com
@@ -23,6 +25,8 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
 - **Website**: [nayeem](https://nayeemportfolio-70.web.app/)
 
 ### Rakib
+
+![Rakib](https://ibb.co.com/sCHmxcF)
 
 - **Role**: MERN Stack Developer
 - **Education**: Student at Moulvibazar Polytechnic Institute, CST Department
