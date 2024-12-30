@@ -1,5 +1,7 @@
 # Quick Buzz: E-Commerce Website for Bangladesh
 
+![QuickBuzz](https://i.ibb.co/mRKfM4m/quickbuzz.png)
+
 ## Project Overview
 
 This is a comprehensive e-commerce platform tailored for the Bangladeshi market, developed using modern technologies to ensure scalability, security, and a seamless user experience.
@@ -12,13 +14,12 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
 
 [Quick Buzz BD Website Requirements](https://docs.google.com/document/d/1ECbEbhd9BmR36V8r3F4qftZU2NgNh2Du-W_G-LHBJxU/edit?usp=sharing)
 
-
-
 ## Developers
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; font-family: Arial, sans-serif;">
 
 ### Nayeem Miah
+
 <div style="flex: 1 1 300px; text-align: center; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
   <img src="https://i.ibb.co/j4K0VZz/nayeem.jpg" alt="Nayeem" width="120" height="120" style="border-radius: 50%; margin-bottom: 15px; border: 3px solid #ddd;">
   <h3 style="color: #333;">Nayeem Miah</h3>
@@ -30,6 +31,7 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
 </div>
 
 ### Rakibul Hasan
+
 <div style="flex: 1 1 300px; text-align: center; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
   <img src="https://i.ibb.co/gdVjqQD/rakib.jpg" alt="Rakib" width="120" height="120" style="border-radius: 50%; margin-bottom: 15px; border: 3px solid #ddd;">
   <h3 style="color: #333;">Rakibul Hasan</h3>
@@ -108,7 +110,7 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
    ```
 5. Start the backend server:
    ```bash
-   npm run dev
+   nodemon index.js
    ```
 
 ### Frontend Setup
@@ -127,7 +129,7 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
    ```
 4. Start the frontend application:
    ```bash
-   npm start
+   npm run dev
    ```
 
 ## Contribution Guidelines
