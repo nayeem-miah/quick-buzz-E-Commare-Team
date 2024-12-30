@@ -16,7 +16,7 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
 
 ### Nayeem
 
-![Nayeem](https://ibb.co.com/DY4k3m1)
+![Nayeem](https://i.ibb.co.com/j4K0VZz/nayeem.jpg)
 
 - **Role**: MERN Stack Developer
 - **Education**: Student at Moulvibazar Polytechnic Institute, CST Department
@@ -26,7 +26,7 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
 
 ### Rakib
 
-![Rakib](https://ibb.co.com/sCHmxcF)
+![Rakib](https://i.ibb.co.com/gdVjqQD/rakib.jpg)
 
 - **Role**: MERN Stack Developer
 - **Education**: Student at Moulvibazar Polytechnic Institute, CST Department
