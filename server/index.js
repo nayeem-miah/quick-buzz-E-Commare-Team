@@ -47,32 +47,41 @@ async function run() {
       res.send(result);
     });
 
-    // get all products in admin dashboard
-    app.get("/products", async (req, res) => {
-      try {
-        const { category } = req.query;
-        let query = {};
-        if (category && category !== "all" && category !== "null") {
-          query = { category };
-        }
-        // console.log("Query for products:", query);
-        const result = await productsCollection.find(query).toArray();
-        res.send(result);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        res.status(500).send({ error: "Failed to fetch products" });
+
+
+
+  // get all products in dashboard
+  app.get("/products", async (req, res) => {
+    const { category, page, size } = req.query;
+   
+    
+    try {
+      let query = {};
+  
+      if (category && category !== "all" && category !== "null") {
+        query.category = category;
       }
-    });
-     
-
-    /* product page pagination */
-
-    app.get('/productsCount', async (req, res) => {
-      const count = await productsCollection.estimatedDocumentCount();
-     
-      res.send({ count });
+  
+      const pageNumber = parseInt(page) || 0;
+      const pageSize = parseInt(size) || 10;
+      const skip = pageNumber * pageSize;
+  
+      const result = await productsCollection.find(query)
+        .skip(skip)
+        .limit(pageSize)
+        .toArray();
+  
+      console.log('Fetched data:', result);
+      res.send(result);
+    } catch (error) {
+      console.error("Error fetching products:", error); // Log any errors
+      res.status(500).send({ error: "Failed to fetch products" });
+    }
   });
-
+  
+  
+   
+    
 
 
 
