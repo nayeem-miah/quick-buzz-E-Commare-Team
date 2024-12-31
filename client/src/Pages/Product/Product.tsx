@@ -1,10 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
 
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import Categories from "../Home/Category/Category";
 import LoadingSpinner from "../../Shared/Loading";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import {  useSearchParams } from "react-router-dom";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import Card from "./Card";
 import NoData from "../../Shared/NoDataFound/NoData";
@@ -24,74 +26,63 @@ interface Product {
   productTitle: string;
 }
 
-interface LoaderData {
-  count: number;
-}
- 
 
 
 const Product: React.FC = () => {
-  const { count } = useLoaderData() as LoaderData; // টাইপ স্পেসিফাই করা হয়েছে
-   console.log(count);
-
-   const itemPerPage = 10 ;
-   const numberOfPage = Math.ceil(count / itemPerPage)
-
-    
-   const pages = [...Array(numberOfPage).keys()];
-
-
-
-
-
-
-
-
   const axiosPublic = useAxiosPublic();
   const [params] = useSearchParams();
   const category = params.get("category") || "all";
 
   const [searchText, setSearchText] = useState(""); // Search Text
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Filtered Products
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+
 
   /* product Category data get */
-  const {
-    data: products = [],
-    isLoading,
-    refetch,
-  } = useQuery<Product[]>({
-    queryKey: ["products", category],
+  const { data: products = [], isLoading, refetch } = useQuery({
+    queryKey: ["products", category, ],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/products?category=${category}`);
+      const res = await axiosPublic.get(
+        `/products?category=${category}`
+      );
+      console.log('Client request sent:', res.config.url); // Log the URL to confirm the request
+      console.log('API Response:', res.data); 
       return res.data;
     },
     enabled: !!category,
   });
+  
 
   // Refetch when category changes
   useEffect(() => {
+
     refetch();
   }, [category, refetch]);
+  
 
   // Filter products based on search text
   useEffect(() => {
     const result = products.filter(
-      (product) =>
+      (product: { brandName: string; category: string; productTitle: string; }) =>
         product.brandName.toLowerCase().includes(searchText.toLowerCase()) ||
         product.category.toLowerCase().includes(searchText.toLowerCase()) ||
         product.productTitle.toLowerCase().includes(searchText.toLowerCase())
     );
     setFilteredProducts(result);
+    console.log('Filtered Products:', result);  // ফিল্টার হওয়া ডেটা চেক করুন
   }, [searchText, products]);
-
+  
+  console.log(filteredProducts);
+  
   if (isLoading) {
     return <LoadingSpinner />;
   }
 
+
+
   return (
     <div>
       <Helmet>
-        <title>quickBuzz | Product Page </title>
+        <title>quickBuzz | Product Page</title>
       </Helmet>
       <BannerDetailsPage
         imageURL={img}
@@ -100,7 +91,7 @@ const Product: React.FC = () => {
       />
 
       {/* Search Field */}
-      <div className="w-full h-auto mx-auto p-4 bg-gray-50 border shadow" >
+      <div className="w-full h-auto mx-auto p-4 bg-gray-50 border shadow">
         {/* Heading Section */}
         <div className="text-center mb-4">
           <h2 className="text-2xl">Search Products</h2>
@@ -121,9 +112,12 @@ const Product: React.FC = () => {
               className="input input-bordered w-full"
             />
           </div>
-          <div>
-            <button className="button"> </button>
-          </div>
+          <button
+            onClick={() => setSearchText("")}
+            className="btn btn-warning ml-2"
+          >
+            Clear
+          </button>
         </div>
       </div>
 
@@ -141,18 +135,12 @@ const Product: React.FC = () => {
               <Card product={product} key={product._id} />
             ) : null
           )}
-
-       
         </div>
-        
       )}
-          <div className="text-center text-2xl">
-            { pages?.map(page => <button className="btn ml-2 bg-black text-white">
-           
-              {page}
-            </button>)}
-           </div>
-      </div>
+
+     
+
+    </div>
   );
 };
 
