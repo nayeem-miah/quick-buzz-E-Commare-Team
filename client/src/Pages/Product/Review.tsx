@@ -7,6 +7,7 @@ import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import { Link } from "react-router-dom";
 import { ImSpinner } from "react-icons/im";
 import LoadingSpinner from "../../Shared/Loading";
+import { FaStar } from "react-icons/fa";
 // import ReactStars from "react-stars";
 
 const Review: React.FC<{ id: any }> = ({ id }) => {
@@ -169,14 +170,10 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
                 </h2>
               </div>
               <h2 className="text-sm ml-20">{item.review}</h2>
-              <div className="ml-20 mt-4 text-xl">
-                {/* <Rating
-                  readonly
-                  initialRating={item?.rating}
-                  emptySymbol="☆" // Empty star symbol
-                  fullSymbol="★" // Filled star symbol
-                  fractions={2} // Allow fractional ratings
-                /> */}
+              <div className="ml-20 mt-4 text-xl flex items-center">
+                {Array.from({ length: item.rating }, (_, index) => (
+                  <FaStar key={index} className="text-yellow-400" />
+                ))}
               </div>
             </div>
           </div>

@@ -52,7 +52,7 @@ const router = createBrowserRouter([
       {
         path: "/product",
         element: <Product />,
-        loader: () => fetch('http://localhost:3000/productsCount')
+        loader: () => fetch('https://quick-bazz.vercel.app/productsCount')
     },
       {
         path: "/product/:id",
