@@ -21,15 +21,15 @@ const Footer: React.FC = () => {
       <footer className=" divide-y font-bold ">
         <div className=" flex flex-col justify-between py-10 mx-auto space-y-8 lg:flex-row lg:space-y-0">
           <div className="lg:w-1/3">
-            <a
+            <Link
               rel="noopener noreferrer"
-              href="#"
+           to={'/'}
               className="flex justify-center space-x-3 lg:justify-start"
             >
               <div className="flex items-center justify-center w-44 h-44 rounded-full ">
                 <img src={icon} alt="" />
               </div>
-            </a>
+            </Link>
           </div>
           <div className="grid grid-cols-2 text-sm gap-x-3 gap-y-8 lg:w-2/3 sm:grid-cols-4 font-bold">
             <div className="space-y-3">
@@ -39,12 +39,12 @@ const Footer: React.FC = () => {
 
               <ul>
                 <li>
-                  <Link className="hover:text-blue-700 hover:underline" to="/">
+                  <Link className="hover:text-blue-700 hover:underline" to="/contact">
                     24/7 Customer Support.
                   </Link>
                 </li>
                 <li>
-                  <Link className="hover:text-blue-700 hover:underline" to="/">
+                  <Link className="hover:text-blue-700 hover:underline" to="/about">
                     Shipping Information
                   </Link>
                 </li>
@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link className="hover:text-blue-700 hover:underline" to="/">
+                  <Link className="hover:text-blue-700 hover:underline" to="/product">
                     Order Tracking
                   </Link>
                 </li>
@@ -67,13 +67,13 @@ const Footer: React.FC = () => {
                   <Link to={"/"}>Home</Link>
                 </li>
                 <li className="hover:text-blue-700 hover:underline">
-                  <Link to={"/"}>Product</Link>
+                  <Link to={"/product"}>Product</Link>
                 </li>
                 <li className="hover:text-blue-700 hover:underline">
-                  <Link to={"/"}>about</Link>
+                  <Link to={"/about"}>about</Link>
                 </li>
                 <li className="hover:text-blue-700 hover:underline">
-                  <Link to={"/"}>contact</Link>
+                  <Link to={"/contact"}>contact</Link>
                 </li>
               </ul>
             </div>
@@ -81,12 +81,20 @@ const Footer: React.FC = () => {
               <h3 className="uppercase font-bold">Developers</h3>
               <ul className="space-y-1">
                 <li>
-                  <a className="hover:text-blue-700 hover:underline" href="#">
+                  <a
+                    className="hover:text-blue-700 hover:underline"
+                    target="_blank"
+                    href="https://nayeemportfolio-70.web.app"
+                  >
                     Nayeem
                   </a>
                 </li>
                 <li>
-                  <a className="hover:text-blue-700 hover:underline" href="#">
+                  <a
+                    className="hover:text-blue-700 hover:underline"
+                    target="_blank"
+                    href="https://www.facebook.com/maybe.rakib.507367"
+                  >
                     Rakib
                   </a>
                 </li>
@@ -110,8 +118,9 @@ const Footer: React.FC = () => {
               </ul>
               <div className="flex justify-start space-x-3">
                 <a
+                target="_blank"
                   rel="noopener noreferrer"
-                  href="#"
+                  href="https://www.facebook.com/na.ye.em.711869/"
                   title="Facebook"
                   className="flex items-center p-1 text-xl"
                 >
