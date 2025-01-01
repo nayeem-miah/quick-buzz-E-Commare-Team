@@ -7,6 +7,7 @@ import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import { Link } from "react-router-dom";
 import { ImSpinner } from "react-icons/im";
 import LoadingSpinner from "../../Shared/Loading";
+import { FaStar } from "react-icons/fa";
 // import ReactStars from "react-stars";
 
 const Review: React.FC<{ id: any }> = ({ id }) => {
@@ -69,11 +70,12 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
       return data;
     },
   });
+  // console.log(reviewdata);
   if (isLoading) return <LoadingSpinner />;
   return (
-    <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 lg:space-y-0">
+    <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 bg-[] lg:space-y-0">
       {/* Review Form */}
-      <div className="lg:w-[400px] w-full mt-2 p-8 shadow-sm rounded-xl lg:p-12 dark:bg-gray-50 dark:text-gray-800">
+      <div className="lg:w-[400px] w-full mt-2 p-8 shadow-sm rounded-xl lg:p-12 bg-[#DDEAFE]">
         <div className="flex flex-col items-center w-full">
           <h2 className="text-3xl font-semibold text-center">
             Your opinion matters!
@@ -169,27 +171,10 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
                 </h2>
               </div>
               <h2 className="text-sm ml-20">{item.review}</h2>
-              <div className="ml-20 mt-4 text-xl">
-                {/* <Rating
-                  initialRating={item?.rating || 0} // Default 0 if undefined
-                  emptySymbol={
-                    <span style={{ fontSize: "1.5em", color: "lightgray" }}>
-                      ☆
-                    </span>
-                  }
-                  fullSymbol={
-                    <span style={{ fontSize: "1.5em", color: "gold" }}>★</span>
-                  }
-                  readonly={true}
-                /> */}
-                {/* <ReactStars
-                  count={5}
-                  value={item?.rating || 0}
-                  size={24}
-                  color2={"#ffd700"}
-                  edit={false}
-                /> */}
-                ;
+              <div className="ml-20 mt-4 text-xl flex items-center">
+                {Array.from({ length: item.rating }, (_, index) => (
+                  <FaStar key={index} className="text-yellow-400" />
+                ))}
               </div>
             </div>
           </div>
