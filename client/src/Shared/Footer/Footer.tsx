@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
                   <a
                     className="hover:text-blue-700 hover:underline"
                     target="_blank"
-                    href="https://www.facebook.com/maybe.rakib.507367"
+                    href="https://rakibul-xi.vercel.app/"
                   >
                     Rakib
                   </a>
