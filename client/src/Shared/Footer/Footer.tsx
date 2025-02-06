@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   return (
     <div
-      className="bg-gradient-to-r from-blue-600 via-purple-500 to-gray-600 text-white 
+      className="bg-gray-800 text-white 
 "
     >
       <hr className="" />
@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
            to={'/'}
               className="flex justify-center space-x-3 lg:justify-start"
             >
-              <div className="flex items-center justify-center w-44 h-44 rounded-full ">
+              <div className="flex bg-white items-center justify-center md:w-40 md:h-40 lg:w-40 lg:h-40 h-32 w-32 rounded-full ">
                 <img src={icon} alt="" />
               </div>
             </Link>
@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
                   <a
                     className="hover:text-blue-700 hover:underline"
                     target="_blank"
-                    href="https://nayeemportfolio-70.web.app"
+                    href="https://nayeem-miah.vercel.app"
                   >
                     Nayeem
                   </a>
@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
                   <a
                     className="hover:text-blue-700 hover:underline"
                     target="_blank"
-                    href="https://www.facebook.com/maybe.rakib.507367"
+                    href="https://rakibul-xi.vercel.app/"
                   >
                     Rakib
                   </a>
