@@ -23,7 +23,7 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
 
   const handleSubmit = async () => {
     if (rating && review) {
-      const currentTime = new Date().toISOString();
+      const currentTime = new Date().toLocaleString();
       const data = {
         rating,
         productid: id,
@@ -70,7 +70,7 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
       return data;
     },
   });
-  // console.log(reviewdata);
+  console.log(reviewdata);
   if (isLoading) return <LoadingSpinner />;
   return (
     <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 bg-[] lg:space-y-0">
