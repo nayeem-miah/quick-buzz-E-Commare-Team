@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Success: React.FC = () => {
   return (
@@ -35,13 +36,13 @@ const Success: React.FC = () => {
 
         {/* Details Button */}
         <div className="flex justify-center">
-          <button
-            className="px-5 py-2 md:px-6 md:py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg transition-all duration-300 ease-in-out
+          <Link to={'/dashboard/my-payment-history'}>
+            <button
+              className="px-5 py-2 md:px-6 md:py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg transition-all duration-300 ease-in-out
             border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-            onClick={() => window.location.href = '/dashboard/my-payment-history'}
-          >
-            View Payment History
-          </button>
+            >
+              View Payment History
+            </button></Link>
         </div>
 
         {/* Back to Home */}
