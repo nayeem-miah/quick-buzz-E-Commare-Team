@@ -90,7 +90,7 @@ const MyAddedProduct: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-              <thead className="bg-[#b9b7bb] text-white">
+              <thead className="bg-gray-800 text-white">
                 <tr>
                   <th className="py-3 px-4 text-sm font-medium text-left">
                     Title
