@@ -27,7 +27,7 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
   <p><strong>Education:</strong> Student at Moulvibazar Polytechnic Institute, CST Department</p>
   <p><strong>Email:</strong> <a href="mailto:nayeem5113@gmail.com" style="color: #0073e6;">nayeem5113@gmail.com</a></p>
   <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/md-nayeem-miah-734719307/" target="_blank" style="color: #0073e6;">linkedin.com/in/nayeem</a></p>
-  <p><strong>Website:</strong> <a href="https://nayeemportfolio-70.web.app/" target="_blank" style="color: #0073e6;">nayeemportfolio-70.web.app</a></p>
+  <p><strong>Website:</strong> <a href="https://nayeem-miah.vercel.app" target="_blank" style="color: #0073e6;">nayeem-miah.vercel.app</a></p>
 </div>
 
 ### Rakibul Hasan
@@ -39,7 +39,7 @@ This is a comprehensive e-commerce platform tailored for the Bangladeshi market,
   <p><strong>Education:</strong> Student at Moulvibazar Polytechnic Institute, CST Department</p>
   <p><strong>Email:</strong> <a href="mailto:rakibulhasan3929@gmail.com" style="color: #0073e6;">rakibulhasan3929@gmail.com</a></p>
   <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/rakibul-hasan-b94123271/" target="_blank" style="color: #0073e6;">linkedin.com/in/rakib</a></p>
-  <p><strong>Website:</strong> <a href="https://rakibportfolio.com/" target="_blank" style="color: #0073e6;">rakibportfolio.com</a></p>
+  <p><strong>Website:</strong> <a href="https://rakibul-hasan-nine.vercel.app/" target="_blank" style="color: #0073e6;">rakibul-hasan-nine.vercel.app/</a></p>
 </div>
 </div>
 
