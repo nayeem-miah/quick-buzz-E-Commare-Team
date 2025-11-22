@@ -19,7 +19,7 @@ const UserHome: React.FC = () => {
       return res.data.data;
     },
   });
-  console.log(recommended);
+
   if (isLoading) return <LoadingSpinner />;
 
   return (

@@ -121,7 +121,7 @@ const MyAddedCart: React.FC = () => {
     try {
       setLoading(true);
       const { data } = await axiosPublic.post("/payments/create-payment", paymentInfo);
-      console.log(data, "data is data ");
+
       const redirectUrl = data.data.paymentUrl;
       // console.log(redirectUrl);
       if (redirectUrl) {

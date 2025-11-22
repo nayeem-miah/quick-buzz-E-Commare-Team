@@ -21,9 +21,9 @@ const About: React.FC = () => {
   const teamMembers: TeamMember[] = [
     {
       name: "MD Nayeem Miah",
-      position: "MERN Stack Developer",
+      position: "Full Stack Developer",
       image: nayeemImage,
-      portfolio: "https://github.com/nayeem-miah",
+      portfolio: "https://nayeem-miah.vercel.app",
       education: "Diploma in Engineering in Computer Science",
     },
     {
@@ -43,8 +43,8 @@ const About: React.FC = () => {
     <div className=" text-gray-800 font-sans m-4">
       {/* Banner */}
       <Helmet>
-          <title>quickBuzz | About Page </title>
-        </Helmet>
+        <title>quickBuzz | About Page </title>
+      </Helmet>
       <div
         className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative"
         style={{ backgroundImage: `url(${aboutImage})` }}

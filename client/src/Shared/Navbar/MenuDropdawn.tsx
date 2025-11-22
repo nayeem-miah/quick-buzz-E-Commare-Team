@@ -11,7 +11,7 @@ const MenuDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { singleUser } = useFetchSingleUser(user?.email);
+  const { singleUser } = useFetchSingleUser(user?.email as string);
 
   // Close dropdown when clicking outside
   useEffect(() => {
