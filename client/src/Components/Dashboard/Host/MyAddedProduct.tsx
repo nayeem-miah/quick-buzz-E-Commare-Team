@@ -11,7 +11,7 @@ import { FaEdit } from "react-icons/fa";
 import NoData from "../../../Shared/NoDataFound/NoData";
 
 interface Listing {
-  _id: number;
+  _id: string;
   productTitle: string;
   productImage: string;
   adminIsApproved: string;
@@ -37,13 +37,13 @@ const MyAddedProduct: React.FC = () => {
   } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/host-product/${user?.email}`);
-      return res.data;
+      const res = await axiosPublic.get(`/products/host-product/${user?.email}`);
+      return res.data.data;
     },
   });
 
   // handle delete
-  const handleDelete = (id: any) => {
+  const handleDelete = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",

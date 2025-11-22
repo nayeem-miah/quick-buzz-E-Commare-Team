@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
@@ -28,10 +29,19 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
   const { data: sellerData = [], refetch } = useQuery({
     queryKey: ["sellerData"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/single-seller/${user?.email}`);
-      return res.data;
+      const res = await axiosPublic.get(`/seller/single-seller/${user?.email}`);
+      return res.data.data;
     },
   });
+
+  if (sellerData === null) {
+    return <div>
+      <NoData />
+      <h3 className="text-blue-600 text-center hover:underline">
+        <Link to={'/become-host'}>please seller request</Link>
+      </h3>
+    </div>
+  }
 
   const {
     sellerName,
@@ -44,10 +54,10 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
     imageUrl,
   } = sellerData;
 
-  
+
 
   // delete data 
-  const handleDelete = async (id: any) => {
+  const handleDelete = async (id: string) => {
     try {
       Swal.fire({
         title: "Are you sure?",
@@ -59,16 +69,18 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosPublic.delete(`/delete-seller/${id}`).then((res) => {
-            if (res.data.deletedCount > 0) {
-              refetch();
-              Swal.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success",
-              });
-            }
-          });
+          axiosPublic.delete(`/seller/delete-seller/${id}`)
+            .then((res) => {
+              console.log(res);
+              if (res.data.data.deletedCount > 0) {
+                refetch();
+                Swal.fire({
+                  title: "Deleted!",
+                  text: "Your file has been deleted.",
+                  icon: "success",
+                });
+              }
+            });
         }
       });
     } catch (err: any) {

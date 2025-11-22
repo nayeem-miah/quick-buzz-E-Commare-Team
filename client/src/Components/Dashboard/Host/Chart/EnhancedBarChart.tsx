@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import {
   BarChart,
@@ -28,8 +29,8 @@ const EnhancedBarChart: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axiosPublic.get(`/host-payment-history/${user?.email}`);
-      const bookingsData: BookingData[] = response.data;
+      const response = await axiosPublic.get(`/payments/host-payment-history/${user?.email}`);
+      const bookingsData: BookingData[] = response.data.data;
 
       const bookings = bookingsData.filter((item) => item.status === "success");
       if (bookings.length === 0) {
@@ -41,9 +42,8 @@ const EnhancedBarChart: React.FC = () => {
       const bookingMap: { [key: string]: number } = {};
       bookings.forEach((item) => {
         const date = new Date(item.tran_date);
-        const formattedDate = `${date.getFullYear()}-${
-          date.getMonth() + 1
-        }-${date.getDate()}`;
+        const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1
+          }-${date.getDate()}`;
         bookingMap[formattedDate] =
           (bookingMap[formattedDate] || 0) + item.totalPrice;
       });

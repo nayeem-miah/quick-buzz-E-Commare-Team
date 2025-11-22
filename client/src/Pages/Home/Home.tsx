@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 
 import React, { useEffect, useState } from "react";
 import Faq from "../../Components/Home/Faq/Faq";
@@ -18,6 +19,13 @@ interface Product {
   category: string;
   createAt?: string;
   imageUrl?: string;
+}
+
+interface ApiResponse<T> {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: T;
 }
 
 const Home: React.FC = () => {
@@ -45,16 +53,19 @@ const Home: React.FC = () => {
   // recent product
   const { data: recentData = [], isLoading } = useQuery<Product[], Error>({
     queryKey: ["productData", debouncedSearch],
-    queryFn: async (): Promise<Product[]> => {
-      const res = await axiosPublic.get<Product[]>(
+    queryFn: async () => {
+      const res = await axiosPublic.get<ApiResponse<Product[]>>(
         debouncedSearch
-          ? `/recent-product?search=${debouncedSearch}`
-          : `/recent-product`
+          ? `/products/recent-product?search=${debouncedSearch}`
+          : `/products/recent-product`
       );
-      return res.data;
+
+      return res.data.data;
     },
     staleTime: 5000,
   });
+
+  console.log(recentData);
 
   return (
     <div>

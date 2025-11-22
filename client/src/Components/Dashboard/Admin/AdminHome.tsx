@@ -10,20 +10,20 @@ const AdminStatistics: React.FC = () => {
   // total users
   const axiosSecure = UseAxiosSecure();
   const { data: users = [] } = useQuery({
-    queryKey: ["alluser"],
+    queryKey: ["users"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/alluser");
-      return res.data;
+      const res = await axiosSecure.get("/users");
+      return res.data.data;
     },
   });
 
   // total product
   // get all product
-  const { data } = useQuery({
+  const { data = [] } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
       const res = await axiosSecure.get("/products");
-      return res.data;
+      return res.data.data;
     },
   });
 
@@ -31,15 +31,15 @@ const AdminStatistics: React.FC = () => {
   const { data: PaymentHistoryData = [], isLoading } = useQuery({
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/payment-history");
-      return res.data;
+      const res = await axiosSecure.get("/payments");
+      return res.data.data;
     },
   });
 
   const totalAmount = PaymentHistoryData.filter(
     (item: { status: string }) => item.status === "success"
   ).reduce(
-    (total: any, item: { totalPrice: any }) => total + item.totalPrice,
+    (total: number, item: { totalPrice: number }) => total + item.totalPrice,
     0
   );
   if (isLoading) return <LoadingSpinner />;
@@ -91,21 +91,6 @@ const AdminStatistics: React.FC = () => {
               </h4>
             </div>
           </div>
-
-          {/* Total Rooms */}
-          {/* <div className='relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md'>
-            <div className='bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center from-[#221537] to-pink-400 text-white shadow-pink-500/40'>
-              <BsFillHouseDoorFill className='w-6 h-6 text-white' />
-            </div>
-            <div className='p-4 text-right'>
-              <p className='block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600'>
-                Total Products
-              </p>
-              <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                {statData.roomCount}
-              </h4>
-            </div>
-          </div> */}
         </div>
 
         <div className="mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
@@ -117,7 +102,7 @@ const AdminStatistics: React.FC = () => {
           </div>
           {/* Calendar */}
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden">
-            <ChartWrapper/>
+            <ChartWrapper />
           </div>
         </div>
       </div>

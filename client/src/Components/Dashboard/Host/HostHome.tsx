@@ -15,8 +15,8 @@ const HostHome: React.FC = () => {
   const { data: PaymentHistoryData = [], isLoading } = useQuery({
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/host-payment-history/${user?.email}`);
-      return res.data;
+      const res = await axiosPublic.get(`/payments/host-payment-history/${user?.email}`);
+      return res.data.data;
     },
   });
 
@@ -35,8 +35,8 @@ const HostHome: React.FC = () => {
   const { data = [] } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/host-product/${user?.email}`);
-      return res.data;
+      const res = await axiosPublic.get(`/products/host-product/${user?.email}`);
+      return res.data.data;
     },
   });
   // console.log("Total product data :", data);
@@ -46,7 +46,7 @@ const HostHome: React.FC = () => {
   );
   console.log("Total manage product :", adminManageProduct.length);
 
-  
+
 
   if (isLoading) return <LoadingSpinner />;
   return (
@@ -103,11 +103,11 @@ const HostHome: React.FC = () => {
         <div className="mb-4 grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3">
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
             <div className=" text-center ">
-              <EnhancedBarChart/>
+              <EnhancedBarChart />
             </div>
           </div>
           <div className="">
-            <PiChart  data={data} adminManageProduct ={adminManageProduct}/>
+            <PiChart data={data} adminManageProduct={adminManageProduct} />
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
@@ -26,7 +27,7 @@ const RecentProduct: React.FC<ChildComponentProps> = ({
   isLoading,
 }) => {
   if (isLoading) return <LoadingSpinner />;
-  
+
   return (
     <div id="recentData">
       <Heading title={"recent data"} subtitle={""} />

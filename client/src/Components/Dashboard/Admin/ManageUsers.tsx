@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
-import {  FaUsers } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import Swal from "sweetalert2";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Heading from "../../../Shared/Heading/Heading";
@@ -16,21 +17,21 @@ interface User {
 
 const ManageUsers: React.FC = () => {
   const axiosSecure = UseAxiosSecure();
-  const { data: users = [], refetch,isLoading,} = useQuery<User[]>({
-    queryKey: ["alluser"],
+  const { data: users = [], refetch, isLoading, } = useQuery<User[]>({
+    queryKey: ["users"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/alluser");
-      return res.data;
+      const res = await axiosSecure.get("/users");
+      return res.data.data;
     },
   });
-   
-  /* Ceate a admin  */
+
+
   const handleMakeAdmin = (role: string, user: User): void => {
     axiosSecure
-      .patch(`/alluser/admin/${user._id}`, { role: role })
+      .patch(`/users/role/${user._id}`, { role: role })
       .then((res) => {
         // console.log(res.data);
-        if (res.data.modifiedCount > 0) {
+        if (res?.data?.data?.modifiedCount > 0) {
           refetch();
           Swal.fire({
             position: "center",
@@ -52,8 +53,8 @@ const ManageUsers: React.FC = () => {
         });
       });
   };
- 
-   /* user Delete fun */
+
+  /* user Delete fun */
   const handleDelete = (user: User): void => {
     Swal.fire({
       title: "Are you sure?",
@@ -66,9 +67,9 @@ const ManageUsers: React.FC = () => {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         axiosSecure
-          .delete(`/alluser/${user._id}`)
+          .delete(`/users/${user._id}`)
           .then((res) => {
-            if (res.data.deletedCount > 0) {
+            if (res?.data?.data.deletedCount > 0) {
               refetch();
               Swal.fire({
                 title: "Deleted!",
@@ -142,7 +143,7 @@ const ManageUsers: React.FC = () => {
                     onClick={() => handleDelete(user)}
                     className=" btn-ghost"
                   >
-                    <MdDeleteForever  className="text-red-600 text-xl" />
+                    <MdDeleteForever className="text-red-600 text-xl" />
                   </button>
                 </td>
               </tr>

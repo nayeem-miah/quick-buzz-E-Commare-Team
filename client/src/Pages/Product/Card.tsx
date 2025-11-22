@@ -12,7 +12,6 @@ interface Product {
   brandName: ReactNode;
   description: ReactNode;
   productImage: string | undefined;
-  name: string;
   price: number;
   productTitle: string;
   discount: number;
@@ -30,7 +29,7 @@ const Card: React.FC<CardProps> = ({ product }) => {
     queryKey: ["review"],
     queryFn: async () => {
       const { data } = await axiosPublic.get(`/review`);
-      return data;
+      return data.data;
     },
   });
 
@@ -42,7 +41,7 @@ const Card: React.FC<CardProps> = ({ product }) => {
   // Calculate the average rating
   const averageRating = productReviews.length
     ? productReviews.reduce((sum: number, item: any) => sum + item.rating, 0) /
-      productReviews.length
+    productReviews.length
     : 0;
 
   // aos animation

@@ -23,8 +23,8 @@ const UpdateProduct: React.FC = () => {
   } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/product/${id}`);
-      return data;
+      const { data } = await axiosPublic.get(`/products/${id}`);
+      return data.data;
     },
     enabled: !!id,
   });
@@ -66,8 +66,7 @@ const UpdateProduct: React.FC = () => {
       setLoading(true); // Set loading to true at the start of the submission process
       // Upload image
       const { data } = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMGBB_API_KEY
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY
         }`,
         formData
       );
@@ -88,21 +87,22 @@ const UpdateProduct: React.FC = () => {
       };
 
       await axiosPublic
-        .patch(`/product-update/${product._id}`, productData)
+        .patch(`/products/${product._id}`, productData)
         .then((res) => {
-          if (res.data.modifiedCount > 0) {
+          if (res.data.data.modifiedCount > 0) {
             toast.success("Product updated  successfully");
             form.reset();
             navigate("/dashboard/my-host-listings");
           }
         });
-    } catch (err: any) {
+    } catch (err) {
       console.error("Product addition failed:", err);
       toast.error("Failed to add product. Please try again.");
     } finally {
-      setLoading(false); // Reset loading to false once the process completes
+      setLoading(false);
     }
   };
+
   return (
     <div>
       <section className="max-w-4xl p-6 mx-auto my-10 bg-white rounded-md shadow-md">
@@ -255,11 +255,10 @@ const UpdateProduct: React.FC = () => {
             <button
               disabled={loading}
               type="submit"
-              className={`w-full text-black shadow-lg py-2 relative ${
-                loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
-              } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
+              className={`w-full text-black shadow-lg py-2 relative ${loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
+                } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
             >
               {loading ? (
                 <ImSpinner

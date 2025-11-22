@@ -15,11 +15,11 @@ const UserHome: React.FC = () => {
   const { data: recommended = [], isLoading } = useQuery({
     queryKey: ["recommended"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/recommended-for-you-product");
-      return res.data;
+      const res = await axiosPublic.get("/products/recommended-for-you-product");
+      return res.data.data;
     },
   });
-
+  console.log(recommended);
   if (isLoading) return <LoadingSpinner />;
 
   return (
