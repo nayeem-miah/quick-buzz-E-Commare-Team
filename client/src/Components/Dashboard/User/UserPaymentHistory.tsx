@@ -33,9 +33,9 @@ const UserPaymentHistory: React.FC = () => {
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
       const res = await axiosPublic.get(
-        `/single-payment-history/${user?.email}`
+        `/payments/${user?.email}`
       );
-      return res.data;
+      return res.data.data;
     },
   });
   // console.log(PaymentHistoryData);
@@ -95,7 +95,7 @@ const UserPaymentHistory: React.FC = () => {
                       <td className="py-4 px-4 text-sm text-gray-600">
                         {payment?.cus_email}
                       </td>
-                
+
                       <td className="py-4 px-4 text-sm text-gray-600">
                         {payment?.date}
                       </td>
@@ -180,13 +180,12 @@ const UserPaymentHistory: React.FC = () => {
                   Approval Status:
                 </span>
                 <span
-                  className={`font-semibold ${
-                    selectedPayment?.hostIsApproved === "approve"
-                      ? "text-green-600"
-                      : selectedPayment?.hostIsApproved === "pending"
+                  className={`font-semibold ${selectedPayment?.hostIsApproved === "approve"
+                    ? "text-green-600"
+                    : selectedPayment?.hostIsApproved === "pending"
                       ? "text-red-600"
                       : "text-gray-600"
-                  }`}
+                    }`}
                 >
                   {selectedPayment?.hostIsApproved || "N/A"}
                 </span>
@@ -198,13 +197,12 @@ const UserPaymentHistory: React.FC = () => {
                   Payment status:{" "}
                 </span>
                 <span
-                  className={`font-semibold ${
-                    selectedPayment?.status === "success"
-                      ? "text-green-500" // Green for Success
-                      : selectedPayment?.status === "Failed"
+                  className={`font-semibold ${selectedPayment?.status === "success"
+                    ? "text-green-500" // Green for Success
+                    : selectedPayment?.status === "Failed"
                       ? "text-red-500" // Red for Failed
                       : "text-yellow-500" // Yellow for Pending or N/A
-                  }`}
+                    }`}
                 >
                   {selectedPayment?.status || "N/A"}
                 </span>
@@ -215,7 +213,7 @@ const UserPaymentHistory: React.FC = () => {
                 <span className="font-semibold text-gray-900">Products:</span>
                 <ul className="list-disc list-inside space-y-2">
                   {selectedPayment?.productTitle?.map(
-                    (title: any, index: any) => (
+                    (title: string, index: number) => (
                       <li key={index} className="flex items-start space-x-3">
                         <img
                           src={selectedPayment?.productImage?.[index] || ""}

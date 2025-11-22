@@ -7,7 +7,8 @@ import useFetchSingleUser from "../../../Hooks/UseFindSingleUser";
 
 const RoleBasedDashboard: React.FC = () => {
   const { user } = useAuth();
-  const { singleUser } = useFetchSingleUser(user?.email);
+
+  const { singleUser } = useFetchSingleUser(user?.email as string);
   if (singleUser?.role === "admin") {
     return <AdminStatistics />;
   }

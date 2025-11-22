@@ -10,13 +10,13 @@ import LoadingSpinner from "../../Shared/Loading";
 import { FaStar } from "react-icons/fa";
 // import ReactStars from "react-stars";
 
-const Review: React.FC<{ id: any }> = ({ id }) => {
+const Review: React.FC<{ id: string }> = ({ id }) => {
   const [rating, setRating] = useState<number | null>(null);
   const [review, setReview] = useState<string>("");
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const { singleUser } = useFetchSingleUser(user?.email);
+  const { singleUser } = useFetchSingleUser(user?.email as string);
   const name = user?.displayName;
   const photo = user?.photoURL;
   const email = user?.email;
@@ -35,11 +35,12 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
       };
       setLoading(true);
       axiosPublic
-        .post("/reviews", data, {
+        .post("/review", data, {
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          if (res.status === 201) {
+          console.log(res);
+          if (res.data.statusCode === 201) {
             toast.success("Thank you for your feedback!");
             setLoading(false);
           } else {
@@ -67,7 +68,7 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
     queryKey: ["review"],
     queryFn: async () => {
       const { data } = await axiosPublic.get(`/review/${id}`);
-      return data;
+      return data.data;
     },
   });
   console.log(reviewdata);
@@ -117,15 +118,13 @@ const Review: React.FC<{ id: any }> = ({ id }) => {
                 disabled={
                   singleUser?.role === "admin" || singleUser?.role === "Host"
                 }
-                className={`w-full text-white font-bold  shadow-lg py-2 relative ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
-                } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent ${
-                  singleUser?.role === "Host" || singleUser?.role === "admin"
+                className={`w-full text-white font-bold  shadow-lg py-2 relative ${loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
+                  } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent ${singleUser?.role === "Host" || singleUser?.role === "admin"
                     ? "cursor-not-allowed"
                     : ""
-                }`}
+                  }`}
               >
                 {loading ? (
                   <ImSpinner

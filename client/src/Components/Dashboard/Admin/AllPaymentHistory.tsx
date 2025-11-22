@@ -32,8 +32,8 @@ const AllPaymentHistory: React.FC = () => {
   const { data: PaymentHistoryData = [], isLoading } = useQuery({
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/payment-history");
-      return res.data;
+      const res = await axiosSecure.get("/payments");
+      return res.data.data;
     },
   });
 
@@ -178,13 +178,12 @@ const AllPaymentHistory: React.FC = () => {
                   Approval Status:
                 </span>
                 <span
-                  className={`font-semibold ${
-                    selectedPayment?.hostIsApproved === "approve"
+                  className={`font-semibold ${selectedPayment?.hostIsApproved === "approve"
                       ? "text-green-600"
                       : selectedPayment?.hostIsApproved === "pending"
-                      ? "text-red-600"
-                      : "text-gray-600"
-                  }`}
+                        ? "text-red-600"
+                        : "text-gray-600"
+                    }`}
                 >
                   {selectedPayment?.hostIsApproved || "N/A"}
                 </span>
@@ -196,13 +195,12 @@ const AllPaymentHistory: React.FC = () => {
                   payment Status:{" "}
                 </span>
                 <span
-                  className={`font-semibold ${
-                    selectedPayment?.status === "success"
+                  className={`font-semibold ${selectedPayment?.status === "success"
                       ? "text-green-500" // Green for Success
                       : selectedPayment?.status === "Failed"
-                      ? "text-red-500" // Red for Failed
-                      : "text-yellow-500" // Yellow for Pending or N/A
-                  }`}
+                        ? "text-red-500" // Red for Failed
+                        : "text-yellow-500" // Yellow for Pending or N/A
+                    }`}
                 >
                   {selectedPayment?.status || "N/A"}
                 </span>

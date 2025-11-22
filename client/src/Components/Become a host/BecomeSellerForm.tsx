@@ -39,8 +39,7 @@ const BecomeSellerForm: React.FC = () => {
       setLoading(true);
       // Upload image
       const { data } = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMGBB_API_KEY
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY
         }`,
         formData
       );
@@ -64,7 +63,7 @@ const BecomeSellerForm: React.FC = () => {
       // seller data post in db
       await axiosPublic.post("/seller", sellerData).then((res) => {
         // console.log(res);
-        if (res.data.insertedId) {
+        if (res.data.data.insertedId) {
           toast.success("your request successfully ");
           form.reset();
           navigate("/dashboard/seller-request");
@@ -186,11 +185,10 @@ const BecomeSellerForm: React.FC = () => {
         <button
           disabled={loading}
           type="submit"
-          className={`w-full text-white   shadow-lg py-2 relative ${
-            loading
+          className={`w-full text-white   shadow-lg py-2 relative ${loading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
-          } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
+            } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
         >
           {loading ? (
             <ImSpinner size={20} className="animate-spin mx-auto "></ImSpinner>

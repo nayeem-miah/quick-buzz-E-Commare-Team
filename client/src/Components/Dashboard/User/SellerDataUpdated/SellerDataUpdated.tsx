@@ -48,8 +48,7 @@ const SellerDataUpdated: React.FC = () => {
       setLoading(true);
       // Upload image
       const { data } = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMGBB_API_KEY
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY
         }`,
         formData
       );
@@ -67,9 +66,9 @@ const SellerDataUpdated: React.FC = () => {
         imageUrl,
       };
       await axiosPublic
-        .patch(`/seller-updated/${sellerData?._id}`, updatedSellerData)
+        .patch(`/seller/${sellerData?._id}`, updatedSellerData)
         .then((res) => {
-          if (res.data.modifiedCount > 0) {
+          if (res.data.data.modifiedCount > 0) {
             toast(
               <div className="flex items-center">
                 <div className="w-6 h-6 flex items-center justify-center bg-green-500 text-white rounded-full mr-3">
@@ -201,11 +200,10 @@ const SellerDataUpdated: React.FC = () => {
           <button
             disabled={loading}
             type="submit"
-            className={`w-full text-white   shadow-lg py-2 relative ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
-            } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
+            className={`w-full text-white   shadow-lg py-2 relative ${loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
+              } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
           >
             {loading ? (
               <ImSpinner
