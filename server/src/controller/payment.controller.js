@@ -67,10 +67,7 @@ const createPayment = catchAsync(async (req, res) => {
         total_amount: totalPrice,
         currency: paymentInfo?.currency || "USD",
         tran_id: trxId,
-        // success_url: "https://quick-bazz.vercel.app/api/v1/payments/success-payment",
-        // fail_url: "https://quick-bazz.vercel.app/api/v1/payments/fail",
-        // cancel_url: "https://quick-bazz.vercel.app/api/v1/payments/cancel",
-        success_url: "http://localhost:3000/api/v1/payments/success-payment",
+        success_url: "hhttps://quick-bazz.vercel.app/api/v1/payments/success-payment",
         fail_url: "https://quick-bazz.vercel.app/api/v1/payments/fail",
         cancel_url: "https://quick-bazz.vercel.app/api/v1/payments/cancel",
         emi_option: 0,
@@ -143,7 +140,7 @@ const successPayment = catchAsync(async (req, res) => {
             hostIsApproved: "pending",
         },
     };
-    const updateData = await PaymentCollection.updateOne(
+    await PaymentCollection.updateOne(
         query,
         update
     );

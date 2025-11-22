@@ -69,9 +69,8 @@ const SellerRequest: React.FC<SellerRequestProps> = () => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosPublic.delete(`/seller/delete-seller/${id}`)
+          axiosPublic.delete(`/seller/${id}`)
             .then((res) => {
-              console.log(res);
               if (res.data.data.deletedCount > 0) {
                 refetch();
                 Swal.fire({
