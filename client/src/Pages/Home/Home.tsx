@@ -65,7 +65,6 @@ const Home: React.FC = () => {
     staleTime: 5000,
   });
 
-  console.log(recentData);
 
   return (
     <div>
