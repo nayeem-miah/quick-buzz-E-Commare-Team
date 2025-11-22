@@ -103,7 +103,7 @@ const sellerDecline = catchAsync(async (req, res) => {
     const declineMessage = req.body;
     const id = req.params.id;
     const filter = { _id: new ObjectId(id) }
-    console.log(declineMessage);
+
     const updatedDoc = {
         $set: {
             decline: declineMessage.inputValue

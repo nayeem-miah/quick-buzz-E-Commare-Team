@@ -222,7 +222,7 @@ const ProductPage: React.FC = () => {
       )}
 
       {/* User Reviews and Ratings */}
-      <Review id={id} />
+      <Review id={id as string} />
       <div>
         <Afk />
       </div>

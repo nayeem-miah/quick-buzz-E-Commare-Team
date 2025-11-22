@@ -50,7 +50,6 @@ const createUser = catchAsync(async (req, res) => {
     }
 
     const result = await UserCollection.insertOne(user);
-    console.log(result);
 
     res.json({
         statusCode: 201,

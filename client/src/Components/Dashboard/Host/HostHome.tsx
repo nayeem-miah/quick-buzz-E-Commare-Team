@@ -39,12 +39,10 @@ const HostHome: React.FC = () => {
       return res.data.data;
     },
   });
-  // console.log("Total product data :", data);
-  // admin manage total product
+
   const adminManageProduct = data.filter(
     (item: any) => item.adminIsApproved === "approve"
   );
-  console.log("Total manage product :", adminManageProduct.length);
 
 
 

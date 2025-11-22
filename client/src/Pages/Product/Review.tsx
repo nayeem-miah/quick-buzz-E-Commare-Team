@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import toast from "react-hot-toast";
@@ -8,7 +9,6 @@ import { Link } from "react-router-dom";
 import { ImSpinner } from "react-icons/im";
 import LoadingSpinner from "../../Shared/Loading";
 import { FaStar } from "react-icons/fa";
-// import ReactStars from "react-stars";
 
 const Review: React.FC<{ id: string }> = ({ id }) => {
   const [rating, setRating] = useState<number | null>(null);
@@ -39,7 +39,6 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          console.log(res);
           if (res.data.statusCode === 201) {
             toast.success("Thank you for your feedback!");
             setLoading(false);
@@ -71,7 +70,7 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
       return data.data;
     },
   });
-  console.log(reviewdata);
+  // console.log(reviewdata);
   if (isLoading) return <LoadingSpinner />;
   return (
     <div className="w-full flex flex-col lg:flex-row p-2 justify-evenly space-y-6 bg-[] lg:space-y-0">

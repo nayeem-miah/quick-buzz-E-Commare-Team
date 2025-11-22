@@ -67,7 +67,7 @@ const createPayment = catchAsync(async (req, res) => {
         total_amount: totalPrice,
         currency: paymentInfo?.currency || "USD",
         tran_id: trxId,
-        success_url: "hhttps://quick-bazz.vercel.app/api/v1/payments/success-payment",
+        success_url: "https://quick-bazz.vercel.app/api/v1/payments/success-payment",
         fail_url: "https://quick-bazz.vercel.app/api/v1/payments/fail",
         cancel_url: "https://quick-bazz.vercel.app/api/v1/payments/cancel",
         emi_option: 0,
@@ -145,9 +145,7 @@ const successPayment = catchAsync(async (req, res) => {
         update
     );
 
-    // res.redirect("http://localhost:5173/success");
     res.redirect("https://quick-bus-bd.web.app/success");
-
 });
 
 const failPayment = catchAsync(async (req, res) => {
