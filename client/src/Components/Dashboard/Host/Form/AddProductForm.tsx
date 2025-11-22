@@ -50,8 +50,7 @@ const AddProductForm: React.FC = () => {
       setLoading(true); // Set loading to true at the start of the submission process
       // Upload image
       const { data } = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMGBB_API_KEY
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY
         }`,
         formData
       );
@@ -71,13 +70,14 @@ const AddProductForm: React.FC = () => {
         adminIsApproved: "pending",
       };
 
-      await axiosPublic.post("/product", productData).then((res) => {
-        if (res.data.insertedId) {
-          toast.success("Product added successfully");
-          form.reset();
-          navigate("/dashboard/my-host-listings");
-        }
-      });
+      await axiosPublic.post("/products", productData)
+        .then((res) => {
+          if (res.data.data.insertedId) {
+            toast.success("Product added successfully");
+            form.reset();
+            navigate("/dashboard/my-host-listings");
+          }
+        });
     } catch (err) {
       console.error("Product addition failed:", err);
       toast.error("Failed to add product. Please try again.");
@@ -231,11 +231,10 @@ const AddProductForm: React.FC = () => {
           <button
             disabled={loading}
             type="submit"
-            className={`w-full text-white font-bold  shadow-lg py-2 relative ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
-            } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
+            className={`w-full text-white font-bold  shadow-lg py-2 relative ${loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
+              } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
           >
             {loading ? (
               <ImSpinner

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
@@ -22,13 +23,13 @@ const MyAddedCart: React.FC = () => {
   } = useQuery({
     queryKey: ["allsave"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/allsave/${user?.email}`);
-      return res.data;
+      const res = await axiosPublic.get(`/wishlist/${user?.email}`);
+      return res.data.data;
     },
   });
   // Wait until allsave is fetched before calculating totalPrice
   const totalPrice = allsave.reduce(
-    (total: any, save: { price: any }) => total + save.price,
+    (total: number, save: { price: number }) => total + save.price,
     0
   );
 
@@ -37,7 +38,7 @@ const MyAddedCart: React.FC = () => {
   }
 
   /* My added product is deleted */
-  const handleDelete = (id: any) => {
+  const handleDelete = (id: string) => {
     // console.log("Deleting ID:", id);
     Swal.fire({
       title: "Are you sure?",
@@ -50,10 +51,10 @@ const MyAddedCart: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosPublic
-          .delete(`/userpro/${id}`)
+          .delete(`/wishlist/${id}`)
           .then((res) => {
             // console.log("Response from server:", res.data);
-            if (res.data.deletedCount > 0) {
+            if (res.data.data.deletedCount > 0) {
               refetch();
               Swal.fire({
                 title: "Deleted!",
@@ -84,20 +85,20 @@ const MyAddedCart: React.FC = () => {
   };
 
   const multiProductTitle = allsave?.map(
-    (name: { productTitle: any }) => name.productTitle
+    (name: { productTitle: string }) => name.productTitle
   );
   const multiProductImg = allsave?.map(
-    (img: { productImage: any }) => img.productImage
+    (img: { productImage: string }) => img.productImage
   );
   const multiProductBrandName = allsave?.map(
-    (brand: { brandName: any }) => brand.brandName
+    (brand: { brandName: string }) => brand.brandName
   );
-  const multiProductPrice = allsave?.map((pri: { price: any }) => pri.price);
+  const multiProductPrice = allsave?.map((pri: { price: number }) => pri.price);
   const multiProductDescription = allsave?.map(
-    (desc: { description: any }) => desc.description
+    (desc: { description: string }) => desc.description
   );
   const multiProductHostEmail = allsave?.map(
-    (email: { hostEmail: any }) => email.hostEmail
+    (email: { hostEmail: string }) => email.hostEmail
   );
   const paymentInfo = {
     multiProductTitle,
@@ -112,16 +113,16 @@ const MyAddedCart: React.FC = () => {
     displayName: user?.displayName,
     currency: "USD",
   };
- 
+
 
 
   /* payment system  */
   const handlePayment = async () => {
     try {
       setLoading(true);
-      const { data } = await axiosPublic.post("/create-payment", paymentInfo);
+      const { data } = await axiosPublic.post("/payments/create-payment", paymentInfo);
       console.log(data, "data is data ");
-      const redirectUrl = data.paymentUrl;
+      const redirectUrl = data.data.paymentUrl;
       // console.log(redirectUrl);
       if (redirectUrl) {
         window.location.replace(redirectUrl);
@@ -148,9 +149,8 @@ const MyAddedCart: React.FC = () => {
             </h2>
             <h3 className="md:text-xl lg:xl  sm:text-sm">
               <button
-                className={`mt-3 lg:px-8 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${
-                  Loading ? " cursor-not-allowed bg-gray-300" : ""
-                }`}
+                className={`mt-3 lg:px-8 px-6 md:px-6 sm:px-1 flex py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${Loading ? " cursor-not-allowed bg-gray-300" : ""
+                  }`}
                 disabled={Loading}
                 onClick={handlePayment}
               >
@@ -216,7 +216,7 @@ const MyAddedCart: React.FC = () => {
                   <td className="py-4 px-4 text-sm text-gray-600">
                     {save?.discount}%
                   </td>
-                
+
                   <td>
                     <button
                       onClick={() => handleDelete(save?._id)}

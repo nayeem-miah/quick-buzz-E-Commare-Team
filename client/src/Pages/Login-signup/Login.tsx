@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
 import { toast } from "react-toastify";
 import usePublic from "../../Hooks/UsePublic";
-import {  ImSpinner9 } from "react-icons/im";
+import { ImSpinner9 } from "react-icons/im";
 
 const Signin: React.FC = () => {
   const navigate = useNavigate();
@@ -50,13 +51,13 @@ const Signin: React.FC = () => {
     }
   };
 
-   
+
   // Reast Password
 
-    // const ReastPassword = e = >{
-    //   console.log(email);
-      
-    // }
+  // const ReastPassword = e = >{
+  //   console.log(email);
+
+  // }
 
 
 
@@ -113,7 +114,7 @@ const Signin: React.FC = () => {
             className=" w-full rounded-md py-3  text-black shadow-lg   bg-gradient-to-r from-purple-500 to-blue-500  transition-all duration-500 ease-in-out
             border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105  disabled:cursor-not-allowed "
           >
-           
+
 
             {loading ? (
               <ImSpinner9 size={15} className="animate-spin m-auto" />
@@ -124,7 +125,7 @@ const Signin: React.FC = () => {
         </form>
 
         <div className="space-y-1">
-          <button  className="text-xs hover:underline hover:text-rose-500 text-gray-400">
+          <button className="text-xs hover:underline hover:text-rose-500 text-gray-400">
             Forgot password?
           </button>
         </div>

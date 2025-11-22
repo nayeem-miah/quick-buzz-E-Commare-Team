@@ -4,7 +4,7 @@ import axios from 'axios';
 // import UseAuth from "./UseAuth";
 
 const axiosSecure = axios.create({
-    baseURL: 'https://quick-bazz.vercel.app',
+    baseURL: 'https://quick-bazz.vercel.app/api/v1',
 });
 
 const UseAxiosSecure = () => {

@@ -7,10 +7,10 @@ const ChartWrapper = () => {
   const axiosSecure = UseAxiosSecure();
 
   const { data: users = [], isLoading: usersLoading } = useQuery({
-    queryKey: ["alluser"],
+    queryKey: ["users"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/alluser");
-      return res.data;
+      const res = await axiosSecure.get("/users");
+      return res.data.data;
     },
   });
 
@@ -18,7 +18,7 @@ const ChartWrapper = () => {
     queryKey: ["allProduct"],
     queryFn: async () => {
       const res = await axiosSecure.get("/products");
-      return res.data;
+      return res.data.data;
     },
   });
 
@@ -34,30 +34,30 @@ const ChartWrapper = () => {
 
   const options = {
     title: "Products and Users Overview",
-    is3D: true, 
+    is3D: true,
     slices: {
       0: { offset: 0.1 },
       1: { offset: 0.1 },
     },
     colors: ["#1E90FF", "#FF6347"],
     legend: {
-      position: "top", 
+      position: "top",
       textStyle: {
-        color: "#333", 
+        color: "#333",
         fontSize: 14,
       },
     },
-    pieSliceText: "percentage", 
+    pieSliceText: "percentage",
     pieSliceTextStyle: {
       color: "#fff",
       fontSize: 14,
     },
     tooltip: {
-      trigger: "selection", 
+      trigger: "selection",
     },
     animation: {
-      startup: true, 
-      duration: 1000, 
+      startup: true,
+      duration: 1000,
       easing: "out",
     },
   };

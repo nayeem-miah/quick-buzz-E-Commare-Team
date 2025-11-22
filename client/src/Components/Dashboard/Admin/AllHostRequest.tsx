@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../../Hooks/UsePublic";
@@ -7,7 +8,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import NoData from "../../../Shared/NoDataFound/NoData";
-import {  Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Decline from "./Decline/Decline";
 
 interface SellerDetails {
@@ -36,13 +37,13 @@ const AllHostRequest: React.FC = () => {
     queryKey: ["sellerData"],
     queryFn: async () => {
       const res = await axiosPublic.get("/seller");
-      return res.data;
+      return res.data.data;
     },
   });
- 
 
- /* delete data  */
-  const handleDelete = async (id: any) => {
+
+  /* delete data  */
+  const handleDelete = async (id: string) => {
     try {
       Swal.fire({
         title: "Are you sure?",
@@ -54,7 +55,7 @@ const AllHostRequest: React.FC = () => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          axiosPublic.delete(`/delete-seller/${id}`).then((res) => {
+          axiosPublic.delete(`/seller/${id}`).then((res) => {
             if (res.data.deletedCount > 0) {
               refetch();
               Swal.fire({
@@ -73,13 +74,13 @@ const AllHostRequest: React.FC = () => {
 
 
 
-  
+
   //   details modal
   const handleDetailsClick = (listing: SellerDetails) => {
     setSelectedBooking(listing);
   };
 
-  
+
   const closeModal = () => {
     setSelectedBooking(null);
   };
@@ -117,7 +118,7 @@ const AllHostRequest: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {sellerData?.map((sellData: any, id: any) => (
+              {sellerData?.map((sellData: any, id: string) => (
                 <tr
                   key={sellData._id}
                   className="border-b hover:bg-gray-50 transition duration-300"
@@ -150,7 +151,7 @@ const AllHostRequest: React.FC = () => {
                     )}
                   </td>
                   <td className="py-4 px-4 text-sm">
-                  <Decline  sellData={sellData}/>
+                    <Decline sellData={sellData} />
                   </td>
                   <td className="py-4 px-4 text-sm text-gray-600">
                     <button
@@ -159,7 +160,7 @@ const AllHostRequest: React.FC = () => {
                       }}
                       className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
                     >
-                      <MdDeleteForever/>
+                      <MdDeleteForever />
                     </button>
                   </td>
                   <td className="py-4 px-4 text-sm">
@@ -283,7 +284,7 @@ const AllHostRequest: React.FC = () => {
         </div>
       )}
 
-     
+
     </div>
   );
 };

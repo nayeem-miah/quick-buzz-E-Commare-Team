@@ -15,7 +15,7 @@ const ProductPage: React.FC = () => {
 
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
-  const { singleUser } = useFetchSingleUser(user?.email);
+  const { singleUser } = useFetchSingleUser(user?.email as string);
   const {
     data: product,
     isLoading,
@@ -24,8 +24,8 @@ const ProductPage: React.FC = () => {
   } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/product/${id}`);
-      return data;
+      const { data } = await axiosPublic.get(`/products/${id}`);
+      return data.data;
     },
     enabled: !!id,
   });
@@ -68,9 +68,10 @@ const ProductPage: React.FC = () => {
       };
 
       axiosPublic
-        .post("/allsave", newData)
+        .post("/wishlist", newData)
         .then((res) => {
-          if (res.status === 201) {
+
+          if (res.data.statusCode === 201) {
             toast.success(
               "Your data is saved. Please explore my listing page."
             );
@@ -148,11 +149,10 @@ const ProductPage: React.FC = () => {
                   }
                   onClick={HandleButton}
                   className={`mt-2 px-7 py-2  text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                  border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${
-                    singleUser?.role === "Host" || singleUser?.role === "admin"
+                  border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${singleUser?.role === "Host" || singleUser?.role === "admin"
                       ? "cursor-not-allowed"
                       : ""
-                  } `}
+                    } `}
                 >
                   Add To Cart
                 </button>

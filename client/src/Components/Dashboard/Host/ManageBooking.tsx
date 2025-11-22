@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import useAuth from "../../../Hooks/UseAuth";
@@ -10,7 +11,7 @@ import Swal from "sweetalert2";
 interface Listing {
   [x: string]: ReactNode;
   _id: number;
-  productTitle: any  ;
+  productTitle: any;
   productImage: string;
   hostIsApproved: string;
   hostPhoto: string;
@@ -26,7 +27,7 @@ interface Listing {
 const ManageBooking: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
- 
+
 
 
   /* All Payment history  */
@@ -38,29 +39,30 @@ const ManageBooking: React.FC = () => {
   } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/host-payment-history/${user?.email}`);
-      return res.data;
+      const res = await axiosPublic.get(`/payments/host-payment-history/${user?.email}`);
+      return res.data.data;
     },
   });
 
-   
+
 
   /* Product approve update */
 
   const handleApproved = (product: any) => {
-    axiosPublic.patch(`/host-manage-product/${product._id}`).then((res) => {
-      if (res.data.modifiedCount > 0) {
-        refetch();
-        Swal.fire({
-          position: "top",
-          icon: "success",
-          title: `${product.productTitle} is approved now!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        // navigate("/product");
-      }
-    });
+    axiosPublic.patch(`/products/host-manage-product/${product._id}`)
+      .then((res) => {
+        if (res.data.data.modifiedCount > 0) {
+          refetch();
+          Swal.fire({
+            position: "top",
+            icon: "success",
+            title: `${product.productTitle.slice(0, 20)} is approved now!`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          // navigate("/product");
+        }
+      });
   };
 
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
@@ -144,7 +146,7 @@ const ManageBooking: React.FC = () => {
                             </button>
                           )}
                         </td>
-                       
+
                         <td className="py-4 px-4 text-sm">
                           <button
                             onClick={() => handleDetailsClick(listing)}
@@ -226,13 +228,12 @@ const ManageBooking: React.FC = () => {
                     Approval Status:
                   </span>
                   <span
-                    className={`font-semibold ${
-                      selectedBooking?.hostIsApproved === "approve"
-                        ? "text-green-600"
-                        : selectedBooking?.hostIsApproved === "pending"
+                    className={`font-semibold ${selectedBooking?.hostIsApproved === "approve"
+                      ? "text-green-600"
+                      : selectedBooking?.hostIsApproved === "pending"
                         ? "text-red-600"
                         : "text-gray-600"
-                    }`}
+                      }`}
                   >
                     {selectedBooking?.hostIsApproved || "N/A"}
                   </span>
@@ -244,13 +245,12 @@ const ManageBooking: React.FC = () => {
                     payment Status:
                   </span>
                   <span
-                    className={`font-semibold ${
-                      selectedBooking?.status === "success"
-                        ? "text-green-500" // Green for Success
-                        : selectedBooking?.status === "Failed"
+                    className={`font-semibold ${selectedBooking?.status === "success"
+                      ? "text-green-500" // Green for Success
+                      : selectedBooking?.status === "Failed"
                         ? "text-red-500" // Red for Failed
                         : "text-yellow-500" // Yellow for Pending or N/A
-                    }`}
+                      }`}
                   >
                     {selectedBooking?.status || "N/A"}
                   </span>

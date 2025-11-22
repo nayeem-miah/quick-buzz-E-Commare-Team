@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../../../Shared/Heading/Heading";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import LoadingSpinner from "../../../Shared/Loading";
 import { MdDeleteForever } from "react-icons/md";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
@@ -28,19 +28,38 @@ const AdminManageBookings: React.FC = () => {
   const axiosSecure = UseAxiosSecure();
   const navigate = useNavigate();
 
-  // get all product
-  const { data=[], isLoading, isError, refetch } = useQuery({
-    queryKey: ["allProduct"],
+  const [params] = useSearchParams();
+  const category = params.get("category") || "all";
+
+  const [page, setPage] = useState(1);
+  const [size] = useState(20);
+
+
+  /* Fetch products with pagination */
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["products", category, page],
     queryFn: async () => {
-      const res = await axiosSecure.get("/products");
+      const res = await axiosSecure.get(
+        `/products?category=${category}&page=${page}&size=${size}`
+      );
       return res.data;
     },
+    enabled: !!category,
   });
+
+  const products = data?.data || [];
+  const totalPages = data?.meta?.totalPages || 1;
+
+
+  useEffect(() => {
+    setPage(1);
+    refetch();
+  }, [category, refetch]);
 
   // admin is approved
   const handleApproved = (product: any) => {
-    axiosSecure.patch(`/admin-product/${product._id}`).then((res) => {
-      if (res.data.modifiedCount > 0) {
+    axiosSecure.patch(`/products/admin-product/${product._id}`).then((res) => {
+      if (res.data.data.modifiedCount > 0) {
         refetch();
         Swal.fire({
           position: "top",
@@ -66,8 +85,8 @@ const AdminManageBookings: React.FC = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/pro/${id}`).then((res) => {
-          if (res.data.deletedCount > 0) {
+        axiosSecure.delete(`/products/${id}`).then((res) => {
+          if (res.data.data.deletedCount > 0) {
             refetch();
             Swal.fire({
               title: "Deleted!",
@@ -89,7 +108,6 @@ const AdminManageBookings: React.FC = () => {
   };
 
   if (isLoading) return <LoadingSpinner />;
-  if (isError) return <div>error...</div>;
 
   return (
     <div className="">
@@ -114,7 +132,7 @@ const AdminManageBookings: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((listing: Listing, id: number) => (
+            {products?.map((listing: Listing, id: number) => (
               <tr
                 key={listing._id}
                 className="border-b hover:bg-gray-50 transition duration-300"
@@ -174,6 +192,39 @@ const AdminManageBookings: React.FC = () => {
             ))}
           </tbody>
         </table>
+
+
+        {/* Pagination Buttons */}
+        <div className="flex justify-center gap-3 mt-10 mb-20">
+          <button
+            className={`mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out 
+      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 
+      hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105
+      ${isLoading || page <= 1 ? "opacity-50 cursor-not-allowed hover:scale-100 hover:shadow-none" : ""}`}
+            disabled={isLoading || page <= 1}
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            Prev
+          </button>
+
+          <button
+            className="mt-3 px-6 py-2 text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-md border-2 border-transparent"
+          >
+            Page {page} / {totalPages}
+          </button>
+
+          <button
+            className={`mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out 
+      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 
+      hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105
+      ${isLoading || page >= totalPages ? "opacity-50 cursor-not-allowed hover:scale-100 hover:shadow-none" : ""}`}
+            disabled={isLoading || page >= totalPages}
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
+        </div>
+
       </div>
 
       {/* Modal */}
@@ -257,11 +308,10 @@ const AdminManageBookings: React.FC = () => {
                     Host Approved:
                   </span>{" "}
                   <span
-                    className={`font-semibold ${
-                      selectedBooking?.adminIsApproved === "pending"
-                        ? "text-red-600"
-                        : "text-green-600"
-                    }`}
+                    className={`font-semibold ${selectedBooking?.adminIsApproved === "pending"
+                      ? "text-red-600"
+                      : "text-green-600"
+                      }`}
                   >
                     {selectedBooking?.adminIsApproved &&
                       selectedBooking?.adminIsApproved}

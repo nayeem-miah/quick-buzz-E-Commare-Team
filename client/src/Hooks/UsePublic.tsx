@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const axiosPublic: AxiosInstance = axios.create({
-  baseURL: 'https://quick-bazz.vercel.app'
+  baseURL: "https://quick-bazz.vercel.app/api/v1",
 });
 
 
