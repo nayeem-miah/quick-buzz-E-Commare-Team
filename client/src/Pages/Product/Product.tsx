@@ -118,36 +118,57 @@ const Product: React.FC = () => {
         </div>
       )}
 
-      {/* Pagination Buttons */}
-      <div className="flex justify-center gap-3 mt-10 mb-20">
-        <button
-          className={`mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out 
-      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 
-      hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105
-      ${isLoading || page <= 1 ? "opacity-50 cursor-not-allowed hover:scale-100 hover:shadow-none" : ""}`}
-          disabled={isLoading || page <= 1}
-          onClick={() => setPage((prev) => prev - 1)}
-        >
-          Prev
-        </button>
+      {/* Pagination Container */}
+      {totalPages > 0 && (
+        <div className="max-w-7xl mx-auto px-4 flex justify-end items-center gap-3 mt-12 mb-24">
+          
+          {/* Previous Button */}
+          <button
+            className={`group px-5 py-2.5 flex items-center gap-2 text-sm font-semibold rounded-xl border transition-all duration-300 
+            ${isLoading || page <= 1 
+              ? "border-gray-200 text-gray-300 bg-gray-50 cursor-not-allowed" 
+              : "border-gray-200 text-gray-600 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 shadow-sm hover:shadow-md hover:-translate-y-0.5"
+            }`}
+            disabled={isLoading || page <= 1}
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            <svg 
+              className={`w-4 h-4 transition-transform duration-300 ${(!isLoading && page > 1) ? "group-hover:-translate-x-1" : ""}`} 
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            <span className="hidden sm:block">Previous</span>
+          </button>
 
-        <button
-          className="mt-3 px-6 py-2 text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-md border-2 border-transparent"
-        >
-          Page {page} / {totalPages}
-        </button>
+          {/* Page Display */}
+          <div className="flex items-center">
+            <span className="px-6 py-2.5 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl shadow-sm">
+              Page <span className="text-blue-600">{page}</span> of {totalPages}
+            </span>
+          </div>
 
-        <button
-          className={`mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out 
-      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 
-      hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105
-      ${isLoading || page >= totalPages ? "opacity-50 cursor-not-allowed hover:scale-100 hover:shadow-none" : ""}`}
-          disabled={isLoading || page >= totalPages}
-          onClick={() => setPage((prev) => prev + 1)}
-        >
-          Next
-        </button>
-      </div>
+          {/* Next Button */}
+          <button
+            className={`group px-5 py-2.5 flex items-center gap-2 text-sm font-semibold rounded-xl border transition-all duration-300
+            ${isLoading || page >= totalPages 
+              ? "border-gray-200 text-gray-300 bg-gray-50 cursor-not-allowed" 
+              : "border-gray-200 text-gray-600 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 shadow-sm hover:shadow-md hover:-translate-y-0.5"
+            }`}
+            disabled={isLoading || page >= totalPages}
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            <span className="hidden sm:block">Next</span>
+            <svg 
+              className={`w-4 h-4 transition-transform duration-300 ${(!isLoading && page < totalPages) ? "group-hover:translate-x-1" : ""}`} 
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+
+        </div>
+      )}
 
     </div>
   );

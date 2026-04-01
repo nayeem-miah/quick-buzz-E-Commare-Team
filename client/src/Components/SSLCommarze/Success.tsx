@@ -38,8 +38,7 @@ const Success: React.FC = () => {
         <div className="flex justify-center">
           <Link to={'/dashboard/my-payment-history'}>
             <button
-              className="px-5 py-2 md:px-6 md:py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg transition-all duration-300 ease-in-out
-            border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+              className="px-5 py-2 md:px-6 md:py-3 text-white font-bold bg-blue-600 rounded-lg shadow-md shadow-blue-500/30 transition-all duration-300 hover:bg-blue-700 hover:-translate-y-0.5"
             >
               View Payment History
             </button></Link>

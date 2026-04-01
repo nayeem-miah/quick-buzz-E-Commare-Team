@@ -99,7 +99,7 @@ const UserHome: React.FC = () => {
 
         <div className="mx-auto my-8 text-center">
           <Link to={"/product"}>
-            <button className="px-8 py-4 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transform transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:shadow-xl hover:scale-105">
+            <button className="px-8 py-4 text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-xl transform transition-all duration-300  hover:bg-blue-700 hover:shadow-xl hover:scale-105">
               Show All Products
             </button>
           </Link>

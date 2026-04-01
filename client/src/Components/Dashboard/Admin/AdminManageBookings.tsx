@@ -32,7 +32,7 @@ const AdminManageBookings: React.FC = () => {
   const category = params.get("category") || "all";
 
   const [page, setPage] = useState(1);
-  const [size] = useState(20);
+  const [size] = useState(10);
 
 
   /* Fetch products with pagination */
@@ -110,118 +110,116 @@ const AdminManageBookings: React.FC = () => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="">
-      <Heading title={"Manage product"} subtitle={""} />
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-          <thead className="bg-gray-800 text-white">
-            <tr>
-              <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
-              <th className="py-3 px-4 text-sm font-medium text-left">Title</th>
-              <th className="py-3 px-4 text-sm font-medium text-left">Image</th>
-              <th className="py-3 px-4 text-sm font-medium text-left">price</th>
-              <th className="py-3 px-4 text-sm font-medium text-left">
-                status
-              </th>
-              <th className="py-3 px-4 text-sm font-medium text-left">
-                delete
-              </th>
-              <th className="py-3 px-4 text-sm font-medium text-left">
-                Details
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {products?.map((listing: Listing, id: number) => (
-              <tr
-                key={listing._id}
-                className="border-b hover:bg-gray-50 transition duration-300"
-              >
-                <td className="py-4 px-4 text-sm text-gray-600">
-                  {(id = id + 1)}
-                </td>
-                <td className="py-4 px-4 text-sm text-gray-600">
-                  {listing?.productTitle.slice(0, 20)}
-                </td>
-                <td className="py-4 px-4 text-sm text-gray-600">
-                  <img
-                    src={listing?.productImage}
-                    alt={"no image founded"}
-                    className="w-16 h-16 object-cover rounded-md"
-                  />
-                </td>
-                <td className="py-4 px-4 text-sm text-gray-600">
-                  ${listing?.price}
-                </td>
-
-                <td className="py-4 px-4 text-sm text-gray-600">
-                  {listing?.adminIsApproved === "approve" ? (
-                    "Approve"
-                  ) : (
-                    <button
-                      onClick={() => {
-                        handleApproved(listing);
-                      }}
-                      className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                    >
-                      approve
-                    </button>
-                  )}
-                </td>
-                <td className="py-4 px-4 text-sm text-gray-600">
-                  <button
-                    onClick={() => {
-                      handleDelete(listing?._id);
-                    }}
-                    className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
-                  >
-                    <MdDeleteForever />
-                  </button>
-                </td>
-                <td className="py-4 px-4 text-sm">
-                  <button
-                    onClick={() => handleDetailsClick(listing)}
-                    className="  px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                    border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                  >
-                    Details
-                  </button>
-                </td>
+    <div className="w-full block px-6 lg:px-16 xl:px-28 2xl:px-40">
+      <div className="mb-6">
+        <Heading title={"Manage product"} subtitle={""} />
+      </div>
+      <div className="w-full block bg-white rounded-2xl shadow-sm border border-gray-100 mt-8 mb-8 overflow-hidden">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-blue-50/80 border-b border-blue-100 uppercase tracking-wider text-blue-800 text-xs font-bold">
+                <th className="py-4 px-6 md:px-8">SL</th>
+                <th className="py-4 px-6">Title</th>
+                <th className="py-4 px-6">Image</th>
+                <th className="py-4 px-6">Price</th>
+                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6 text-center">Delete</th>
+                <th className="py-4 px-8 text-center">Details</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {products?.map((listing: Listing, id: number) => (
+                <tr
+                  key={listing._id}
+                  className="hover:bg-blue-50/30 transition-colors duration-200"
+                >
+                  <td className="py-4 px-6 md:px-8 text-sm font-medium text-gray-500">
+                    {id + 1 + (page - 1) * size}
+                  </td>
+                  <td className="py-4 px-4 text-sm font-semibold text-gray-800">
+                    {listing?.productTitle.slice(0, 20)}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-gray-600">
+                    <div className="w-16 h-16 rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
+                      <img
+                        src={listing?.productImage}
+                        alt={"Product representation"}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </td>
+                  <td className="py-4 px-4 text-sm font-semibold text-blue-600">
+                    ${listing?.price}
+                  </td>
 
+                  <td className="py-4 px-4 text-sm">
+                    {listing?.adminIsApproved === "approve" ? (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                        Approved
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => handleApproved(listing)}
+                        className="px-4 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-500/30 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                      >
+                        Approve
+                      </button>
+                    )}
+                  </td>
+                  <td className="py-4 px-4 text-center">
+                    <button
+                      onClick={() => handleDelete(listing?._id)}
+                      className="inline-flex justify-center items-center w-8 h-8 text-lg text-gray-400 bg-gray-50 rounded-lg hover:text-red-600 hover:bg-red-50 transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                      title="Delete"
+                    >
+                      <MdDeleteForever />
+                    </button>
+                  </td>
+                  <td className="py-4 px-6 text-center">
+                    <button
+                      onClick={() => handleDetailsClick(listing)}
+                      className="px-4 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-600 hover:text-white border border-blue-200 shadow-sm rounded-full transition-all duration-300"
+                    >
+                      View Info
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-        {/* Pagination Buttons */}
-        <div className="flex justify-center gap-3 mt-10 mb-20">
+        {/* Pagination Section */}
+        <div className="flex justify-end items-center gap-3 mt-6 mb-12 pr-4 sm:pr-8">
           <button
-            className={`mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out 
-      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 
-      hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105
-      ${isLoading || page <= 1 ? "opacity-50 cursor-not-allowed hover:scale-100 hover:shadow-none" : ""}`}
+            className={`flex items-center justify-center px-5 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl shadow-sm border 
+            ${isLoading || page <= 1
+                ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                : "bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:-translate-x-1"
+              }`}
             disabled={isLoading || page <= 1}
             onClick={() => setPage((prev) => prev - 1)}
           >
-            Prev
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path></svg>
+            Previous
           </button>
 
-          <button
-            className="mt-3 px-6 py-2 text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-md border-2 border-transparent"
-          >
-            Page {page} / {totalPages}
-          </button>
+          <div className="flex items-center justify-center px-5 py-2.5 text-sm font-medium bg-blue-50/50 text-blue-800 border border-blue-100 rounded-xl shadow-sm">
+            Page <span className="font-extrabold mx-1.5">{page}</span> of <span className="font-bold ml-1.5">{totalPages}</span>
+          </div>
 
           <button
-            className={`mt-3 px-6 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out 
-      border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 
-      hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105
-      ${isLoading || page >= totalPages ? "opacity-50 cursor-not-allowed hover:scale-100 hover:shadow-none" : ""}`}
+            className={`flex items-center justify-center px-5 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl shadow-sm border
+            ${isLoading || page >= totalPages
+                ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                : "bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:translate-x-1"
+              }`}
             disabled={isLoading || page >= totalPages}
             onClick={() => setPage((prev) => prev + 1)}
           >
             Next
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path></svg>
           </button>
         </div>
 

@@ -47,73 +47,103 @@ const AllPaymentHistory: React.FC = () => {
     setSelectedPayment(null);
   };
 
+  const successfulPayments = PaymentHistoryData?.filter((payment: PaymentHistory) => payment.status === "success") || [];
+  const [page, setPage] = useState(1);
+  const size = 10;
+  const totalPages = Math.ceil(successfulPayments.length / size) || 1;
+  const paginatedPayments = successfulPayments.slice((page - 1) * size, page * size);
+
   return (
-    <div className="overflow-x-auto">
-      <Heading title={"All Payment History"} subtitle={""} />
-      {PaymentHistoryData?.length === 0 ? (
+    <div className="w-full block px-6 lg:px-16 xl:px-28 2xl:px-40">
+      <div className="mb-6">
+        <Heading title={"All Payment History"} subtitle={""} />
+      </div>
+      {successfulPayments.length === 0 ? (
         <NoData />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-gray-800 text-white">
-              <tr>
-                <th className="py-3 px-4 text-sm font-medium text-left">ID</th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  User Name
-                </th>
+        <div className="w-full block bg-white rounded-2xl shadow-sm border border-gray-100 mt-8 mb-8 overflow-hidden">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full min-w-full text-left border-collapse whitespace-nowrap">
+              <thead>
+                <tr className="bg-blue-50/80 border-b border-blue-100 uppercase tracking-wider text-blue-800 text-xs font-bold">
+                  <th className="py-4 px-6 md:px-8">ID</th>
+                  <th className="py-4 px-6">User Name</th>
+                  <th className="py-4 px-6">Email</th>
+                  <th className="py-4 px-6">Payment Date</th>
+                  <th className="py-4 px-6">Amount</th>
+                  <th className="py-4 px-6 text-center">Details</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {paginatedPayments.map((payment: PaymentHistory, id: number) => (
+                  <tr
+                    key={payment.transactionId}
+                    className="hover:bg-blue-50/30 transition-colors duration-200"
+                  >
+                    <td className="py-4 px-6 md:px-8 text-sm font-medium text-gray-500">
+                      {id + 1 + (page - 1) * size}
+                    </td>
+                    <td className="py-4 px-6 text-sm font-semibold text-gray-800">
+                      {payment?.cus_name}
+                    </td>
+                    <td className="py-4 px-6 text-sm text-gray-600">
+                      {payment?.cus_email}
+                    </td>
+                    <td className="py-4 px-6 text-sm text-gray-600">
+                      {payment?.date}
+                    </td>
+                    <td className="py-4 px-6 text-sm font-semibold text-green-600">
+                      ${payment?.totalPrice}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <button
+                        onClick={() => handleDetailsClick(payment)}
+                        className="px-4 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-600 hover:text-white border border-blue-200 shadow-sm rounded-full transition-all duration-300"
+                      >
+                        Details
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Email
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Payment Date
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Amount
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Details
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {PaymentHistoryData?.map(
-                (payment: PaymentHistory, id: number) =>
-                  payment.status === "success" && (
-                    <tr
-                      key={payment.transactionId}
-                      className="border-b hover:bg-gray-50 transition duration-300"
-                    >
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {(id = id + 1)}
-                      </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.cus_name}
-                      </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.cus_email}
-                      </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.date}
-                      </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.totalPrice}$
-                      </td>
+          {/* Pagination Section */}
+          <div className="flex justify-end items-center gap-3 mt-6 mb-12 pr-4 sm:pr-8">
+            <button
+              className={`flex items-center justify-center px-5 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl shadow-sm border 
+              ${
+                page <= 1
+                  ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                  : "bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:-translate-x-1"
+              }`}
+              disabled={page <= 1}
+              onClick={() => setPage((prev: number) => prev - 1)}
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path></svg>
+              Previous
+            </button>
 
-                      <td className="py-4 px-4 text-sm">
-                        <button
-                          onClick={() => handleDetailsClick(payment)}
-                          className="px-4 sm:py-0 md:py-2 py-2 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
-                        >
-                          Details
-                        </button>
-                      </td>
-                    </tr>
-                  )
-              )}
-            </tbody>
-          </table>
+            <div className="flex items-center justify-center px-5 py-2.5 text-sm font-medium bg-blue-50/50 text-blue-800 border border-blue-100 rounded-xl shadow-sm">
+              Page <span className="font-extrabold mx-1.5">{page}</span> of <span className="font-bold ml-1.5">{totalPages}</span>
+            </div>
+
+            <button
+              className={`flex items-center justify-center px-5 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl shadow-sm border
+              ${
+                page >= totalPages
+                  ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                  : "bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:translate-x-1"
+              }`}
+              disabled={page >= totalPages}
+              onClick={() => setPage((prev: number) => prev + 1)}
+            >
+              Next
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+
         </div>
       )}
 

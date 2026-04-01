@@ -233,8 +233,8 @@ const AddProductForm: React.FC = () => {
             type="submit"
             className={`w-full text-white font-bold  shadow-lg py-2 relative ${loading
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-indigo-600"
-              } rounded-md transition-all duration-500 ease-in-out border-2 border-transparent`}
+              : "bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 hover:bg-blue-700"
+              } rounded-md transition-all duration-300 `}
           >
             {loading ? (
               <ImSpinner

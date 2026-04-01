@@ -5,13 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/UseAuth";
-import Afk from "./Afk";
 import Review from "./Review";
 import LoadingSpinner from "../../Shared/Loading";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
+import { FaShoppingCart, FaRegStar } from "react-icons/fa";
 
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [quantity, setQuantity] = useState(1);
 
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
@@ -30,8 +31,6 @@ const ProductPage: React.FC = () => {
     enabled: !!id,
   });
 
-  const [showQuickView, setShowQuickView] = useState(false);
-
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
   if (isError) return <div>Error: {error?.message}</div>;
 
@@ -45,10 +44,14 @@ const ProductPage: React.FC = () => {
     price,
     discount,
     hostEmail,
-    hostPhoto,
   } = product;
+  
   const priceFloat = parseFloat(price);
-  // console.log(product);
+  const oldPrice = discount ? (priceFloat / (1 - parseFloat(discount) / 100)).toFixed(2) : null;
+  const total = (priceFloat * quantity).toFixed(2);
+  
+  const shortTitle = productTitle?.length > 55 ? productTitle.slice(0, 55) + "..." : productTitle;
+  const shortDesc = description?.length > 150 ? description.slice(0, 150) + "..." : description;
 
   // Handle Add to Cart button
   const HandleButton = () => {
@@ -70,7 +73,6 @@ const ProductPage: React.FC = () => {
       axiosPublic
         .post("/wishlist", newData)
         .then((res) => {
-
           if (res.data.statusCode === 201) {
             toast.success(
               "Your data is saved. Please explore my listing page."
@@ -90,142 +92,132 @@ const ProductPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="bg-white min-h-screen pb-20">
       <BannerDetailsPage
         imageURL={productImage}
-        headingText="Explore this Product."
-        subheadingText="Please explore my QuickBuzz all Product and purchase your choice Product"
+        headingText="Explore this Product"
+        subheadingText="Discover premium products at QuickBuzz and enhance your lifestyle."
       />
 
-      {/* Product Details Page */}
-      <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full bg-gradient-to-r from-purple-100 to-blue-100 lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 row-gap-8">
-          {/* Product Info Section */}
-          <div className="flex flex-col justify-center px-4 md:px-8 lg:px-0">
-            <div className="max-w-xl mb-6">
-              <div className="mb-10 flex flex-wrap items-center space-x-6">
-                <div className="avatar">
-                  <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-gray-200 shadow-lg">
-                    {/* Fallback to a default image if hostPhoto is missing */}
-                    <img
-                      src={
-                        hostPhoto ||
-                        "https://via.placeholder.com/80?text=No+Image"
-                      }
-                      alt="user"
-                      className="w-full h-full object-cover"
-                    />
+      <div className="px-4 py-12 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-8 items-stretch">
+          
+          {/* Left Column: Image Container */}
+          <div className="w-full lg:w-1/2 p-10 border border-gray-200 rounded-xl bg-[#fafafa] flex justify-center items-center h-[500px]">
+            <img 
+              src={productImage} 
+              alt={productTitle} 
+              className="max-w-full max-h-full object-contain" 
+            />
+          </div>
+
+          {/* Right Column: Details Container */}
+          <div className="w-full lg:w-1/2 p-8 border border-gray-200 rounded-xl bg-white flex flex-col">
+            
+            {/* Category/Badge */}
+            {brandName && (
+              <div className="flex">
+                <span className="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-600 bg-white shadow-sm">
+                  {brandName}
+                </span>
+              </div>
+            )}
+
+            {/* Title */}
+            <h1 className="mt-6 text-2xl lg:text-3xl font-bold text-gray-800 leading-tight">
+              {shortTitle}
+            </h1>
+
+            {/* Brand Info */}
+            <div className="mt-4 text-sm text-gray-500">
+              Brand: <span className="text-blue-500 font-medium">{brandName || "Unknown"}</span>
+            </div>
+
+            {/* Reviews (Placeholder design) */}
+            <div className="mt-4 flex items-center text-sm text-gray-500">
+              <div className="flex text-gray-300 mr-2 text-lg">
+                <FaRegStar /><FaRegStar /><FaRegStar /><FaRegStar /><FaRegStar />
+              </div>
+              <span>0.0 (0 reviews)</span>
+            </div>
+
+            {/* Price section */}
+            <div className="mt-6 flex items-baseline gap-3">
+              <span className="text-[2.5rem] font-bold text-blue-600 tracking-tight">${price}</span>
+              {oldPrice && <span className="text-lg text-gray-400 font-medium line-through">${oldPrice}</span>}
+            </div>
+
+            {/* Stock status */}
+            <div className="mt-3 text-[#22c55e] text-sm font-medium">
+              In Stock (100 available)
+            </div>
+            
+            <p className="mt-6 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-6">
+              {shortDesc}
+            </p>
+
+            {/* Quantity & Actions area pushed to bottom */}
+            <div className="mt-auto pt-6">
+              {/* Quantity */}
+              <div className="mb-8 flex flex-wrap items-center gap-6 text-sm lg:text-base">
+                <div className="flex items-center space-x-4">
+                  <span className="text-gray-700 font-medium">Quantity :</span>
+                  <div className="flex items-center border border-gray-300 rounded-md bg-white">
+                    <button 
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))} 
+                      className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 rounded-l-md transition"
+                    >-</button>
+                    <span className="px-5 py-1.5 border-l border-r border-gray-300 text-gray-800 font-medium">
+                      {quantity}
+                    </span>
+                    <button 
+                      onClick={() => setQuantity(quantity + 1)} 
+                      className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 rounded-r-md transition"
+                    >+</button>
                   </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl font-medium text-gray-900">
-                    Store Name:
-                    <span className="text-teal-600 font-semibold">
-                      {" "}
-                      {hostName}
-                    </span>
-                  </h2>
-                  <h3 className="mt-2 text-lg font-light text-gray-600">
-                    Store Email:
-                    <span className="text-teal-600"> {hostEmail}</span>
-                  </h3>
+                <div className="text-gray-700 font-medium">
+                  Total : <span className="text-blue-600 font-bold ml-1">${total}</span>
                 </div>
               </div>
 
-              <h3 className="text-3xl font-semibold text-gray-800 tracking-wide">
-                {brandName}
-              </h3>
-              <p className="text-base mt-2 text-gray-600 md:text-lg">
-                {productTitle}
-              </p>
-              <p className="text-2xl mt-4 font-bold text-orange-600">
-                $ {price}
-              </p>
+              {/* Buttons */}
+              <div className="flex gap-4">
+                {user ? (
+                  <>
+                    <button 
+                      onClick={HandleButton} 
+                      disabled={singleUser?.role === "admin" || singleUser?.role === "Host"} 
+                      className="flex-1 py-3.5 border border-blue-600 text-blue-600 font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors disabled:opacity-50"
+                    >
+                      <FaShoppingCart /> Add to Cart
+                    </button>
+                    <button 
+                      onClick={HandleButton} 
+                      disabled={singleUser?.role === "admin" || singleUser?.role === "Host"} 
+                      className="flex-1 py-3.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                    >
+                      Buy Now
+                    </button>
+                  </>
+                ) : (
+                  <Link to="/login" className="w-full flex gap-4">
+                    <button className="flex-1 py-3.5 border border-blue-600 text-blue-600 font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors">
+                      <FaShoppingCart /> Add to Cart
+                    </button>
+                    <button className="flex-1 py-3.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                      Buy Now
+                    </button>
+                  </Link>
+                )}
+              </div>
             </div>
-            <div>
-              {user ? (
-                <button
-                  disabled={singleUser?.role === "admin" || singleUser?.role === "Host"
-                  }
-                  onClick={HandleButton}
-                  className={`mt-2 px-7 py-2  text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-md transition-all duration-500 ease-in-out
-                  border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105 ${singleUser?.role === "Host" || singleUser?.role === "admin"
-                      ? "cursor-not-allowed"
-                      : ""
-                    } `}
-                >
-                  Add To Cart
-                </button>
-              ) : (
-                <Link to={"/login"}>
-                  <button className="mt-6 w-full md:w-auto px-12 py-3 text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-600">
-                    Add To Cart
-                  </button>
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {/* Product Image Section */}
-          <div className="flex justify-center items-center relative group px-4 md:px-8 lg:px-0">
-            <img
-              className="object-cover lg:w-3/4 w-full h-64 sm:h-96 group-hover:scale-105 transform transition duration-300 shadow-2xl rounded-lg"
-              src={productImage}
-              alt="Product"
-            />
-            {/* Quick View Button */}
-            <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button
-                onClick={() => setShowQuickView(true)}
-                className="text-white text-xl font-semibold py-2 px-6 bg-gradient-to-r from-yellow-400 to-red-500 rounded-lg hover:bg-yellow-500 focus:outline-none"
-              >
-                Quick View
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Product Details Section (Additional Info) */}
-        <div className="mt-12">
-          <div className="max-w-3xl mx-auto text-center">
-            <h3 className="text-2xl font-semibold text-gray-800">
-              Product Details
-            </h3>
-            <p className="mt-4 text-lg text-gray-700">{description}</p>
           </div>
         </div>
       </div>
-
-      {/* Quick View Modal */}
-      {showQuickView && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-8 w-96">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Quick View
-            </h2>
-            <img
-              className="w-full h-48 object-cover mb-4"
-              src={productImage}
-              alt="Product"
-            />
-            <p className="text-lg text-gray-700">{description}</p>
-            <div className="mt-4 text-center">
-              <button
-                onClick={() => setShowQuickView(false)}
-                className="px-6 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* User Reviews and Ratings */}
       <Review id={id as string} />
-      <div>
-        <Afk />
-      </div>
     </div>
   );
 };

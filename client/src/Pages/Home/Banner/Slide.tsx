@@ -36,13 +36,13 @@ const Slide: React.FC<SlideProps> = ({ image }) => {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-6">
             <a
               href="/product"
-              className="text-white bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 sm:px-5 sm:py-3 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+              className="text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 px-4 py-2 sm:px-5 sm:py-3 rounded-md transition-all duration-300  hover:-translate-y-0.5"
             >
               View Products
             </a>
             <a
               href="/contact"
-              className="text-white bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 sm:px-5 sm:py-3 rounded-md transition-all duration-500 ease-in-out border-2 border-transparent hover:bg-indigo-600 hover:border-indigo-400 hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] hover:scale-105"
+              className="text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 px-4 py-2 sm:px-5 sm:py-3 rounded-md transition-all duration-300  hover:-translate-y-0.5"
             >
               Contact Now
             </a>
