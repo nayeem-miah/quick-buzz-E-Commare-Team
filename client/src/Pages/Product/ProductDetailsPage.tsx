@@ -1,29 +1,41 @@
-import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import useAxiosPublic from "../../Hooks/UsePublic";
-import { useQuery } from "@tanstack/react-query";
-import BannerDetailsPage from "../../Shared/Heading/BannerDetailsPage";
-import toast from "react-hot-toast";
-import useAuth from "../../Hooks/UseAuth";
-import Review from "./Review";
-import LoadingSpinner from "../../Shared/Loading";
-import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
-import { FaShoppingCart, FaRegStar } from "react-icons/fa";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Helmet } from 'react-helmet-async';
+import { useParams } from 'react-router-dom';
+import useAuth from '../../Hooks/UseAuth';
+import useFetchSingleUser from '../../Hooks/UseFindSingleUser';
+import useAxiosPublic from '../../Hooks/UsePublic';
+import LoadingSpinner from '../../Shared/Loading';
+import ProductBreadcrumb from './components/ProductBreadcrumb';
+import ProductGallery from './components/ProductGallery';
+import ProductInfoTabs from './components/ProductInfoTabs';
+import ProductPurchasePanel from './components/ProductPurchasePanel';
+import RelatedProducts from './components/RelatedProducts';
+import {
+  getAverageRating,
+  getProductImages,
+  getShortDescription,
+} from './productDetails.utils';
+import { toNumber } from './product.utils';
+import { ProductDetailsItem, ProductInfoTab, ProductItem, ProductReview } from './types';
 
-const ProductPage: React.FC = () => {
+const ProductDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [quantity, setQuantity] = useState(1);
-
   const axiosPublic = useAxiosPublic();
+  const queryClient = useQueryClient();
   const { user } = useAuth();
   const { singleUser } = useFetchSingleUser(user?.email as string);
-  const {
-    data: product,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["product", id],
+
+  const [quantity, setQuantity] = useState(1);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<ProductInfoTab>('description');
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
+  const { data: product, isLoading, isError, error } = useQuery<ProductDetailsItem>({
+    queryKey: ['product', id],
     queryFn: async () => {
       const { data } = await axiosPublic.get(`/products/${id}`);
       return data.data;
@@ -31,195 +43,156 @@ const ProductPage: React.FC = () => {
     enabled: !!id,
   });
 
-  if (isLoading) return <LoadingSpinner></LoadingSpinner>;
-  if (isError) return <div>Error: {error?.message}</div>;
+  const { data: reviews = [], isLoading: isReviewLoading } = useQuery<ProductReview[]>({
+    queryKey: ['product-reviews', id],
+    queryFn: async () => {
+      const { data } = await axiosPublic.get(`/review/${id}`);
+      return data.data || [];
+    },
+    enabled: !!id,
+  });
 
-  const {
-    productImage,
-    description,
-    brandName,
-    productTitle,
-    _id,
-    hostName,
-    price,
-    discount,
-    hostEmail,
-  } = product;
-  
-  const priceFloat = parseFloat(price);
-  const oldPrice = discount ? (priceFloat / (1 - parseFloat(discount) / 100)).toFixed(2) : null;
-  const total = (priceFloat * quantity).toFixed(2);
-  
-  const shortTitle = productTitle?.length > 55 ? productTitle.slice(0, 55) + "..." : productTitle;
-  const shortDesc = description?.length > 150 ? description.slice(0, 150) + "..." : description;
+  const { data: relatedData = [] } = useQuery<ProductItem[]>({
+    queryKey: ['related-products', product?.category, product?._id],
+    queryFn: async () => {
+      const { data } = await axiosPublic.get(`/products?category=${product?.category}&page=1&size=5`);
+      return data.data || [];
+    },
+    enabled: !!product?.category,
+  });
 
-  // Handle Add to Cart button
-  const HandleButton = () => {
-    try {
-      const newData = {
-        _id,
-        productImage,
-        description,
-        brandName,
-        productTitle,
-        hostName,
-        price: priceFloat,
-        discount,
+  const relatedProducts = useMemo(
+    () => relatedData
+      .filter((item) => item.adminIsApproved === 'approve' && String(item._id) !== String(product?._id))
+      .slice(0, 5),
+    [relatedData, product?._id],
+  );
+
+  if (isLoading) return <LoadingSpinner />;
+  if (isError || !product) return <div className="p-8 text-center text-red-500">Error: {error?.message || 'Product not found'}</div>;
+
+  const price = toNumber(product.price);
+  const discount = toNumber(product.discount);
+  const originalPrice = discount > 0 ? price / (1 - discount / 100) : 0;
+  const total = price * quantity;
+  const images = getProductImages(product.productImage);
+  const averageRating = getAverageRating(reviews);
+  const shortDescription = getShortDescription(product.description);
+  const isActionDisabled = singleUser?.role === 'admin' || singleUser?.role === 'Host';
+
+  const handleAddToCart = () => {
+    axiosPublic
+      .post('/wishlist', {
+        _id: product._id,
+        productImage: product.productImage,
+        description: product.description,
+        brandName: product.brandName,
+        productTitle: product.productTitle,
+        hostName: product.hostName,
+        price,
+        discount: product.discount,
         email: user?.email,
         displayName: user?.displayName,
-        hostEmail: hostEmail,
-      };
+        hostEmail: product.hostEmail,
+        quantity,
+      })
+      .then((res) => {
+        if (res.data.statusCode === 201) toast.success('Product added to cart.');
+        else toast.error('Failed to add product.');
+      })
+      .catch(() => toast.error('Server error occurred.'));
+  };
 
-      axiosPublic
-        .post("/wishlist", newData)
-        .then((res) => {
-          if (res.data.statusCode === 201) {
-            toast.success(
-              "Your data is saved. Please explore my listing page."
-            );
-          } else {
-            toast.error("Failed to save data.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error posting data:", error);
-          toast.error("Server error occurred.");
-        });
-    } catch (err) {
-      console.error("Error occurred:", err);
-      toast.error("Error in handling button.");
+  const handleReviewSubmit = async () => {
+    if (!reviewRating || !reviewText.trim()) {
+      toast.error('Please add a rating and review.');
+      return;
+    }
+
+    setIsSubmittingReview(true);
+    try {
+      const res = await axiosPublic.post('/review', {
+        rating: reviewRating,
+        productid: id,
+        review: reviewText,
+        name: user?.displayName,
+        photo: user?.photoURL,
+        email: user?.email,
+        timestamp: new Date().toLocaleString(),
+      });
+
+      if (res.data.statusCode === 201) {
+        toast.success('Thank you for your feedback!');
+        setReviewRating(0);
+        setReviewText('');
+        queryClient.invalidateQueries({ queryKey: ['product-reviews', id] });
+      } else {
+        toast.error('Please try again.');
+      }
+    } catch {
+      toast.error('Server error occurred.');
+    } finally {
+      setIsSubmittingReview(false);
     }
   };
 
   return (
-    <div className="bg-white min-h-screen pb-20">
-      <BannerDetailsPage
-        imageURL={productImage}
-        headingText="Explore this Product"
-        subheadingText="Discover premium products at QuickBuzz and enhance your lifestyle."
-      />
+    <main className="min-h-screen bg-white pb-16">
+      <Helmet>
+        <title>QuickBuzz | {product.productTitle}</title>
+      </Helmet>
 
-      <div className="px-4 py-12 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-          
-          {/* Left Column: Image Container */}
-          <div className="w-full lg:w-1/2 p-10 border border-gray-200 rounded-xl bg-[#fafafa] flex justify-center items-center h-[500px]">
-            <img 
-              src={productImage} 
-              alt={productTitle} 
-              className="max-w-full max-h-full object-contain" 
-            />
-          </div>
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <ProductBreadcrumb category={product.category} title={product.productTitle} />
 
-          {/* Right Column: Details Container */}
-          <div className="w-full lg:w-1/2 p-8 border border-gray-200 rounded-xl bg-white flex flex-col">
-            
-            {/* Category/Badge */}
-            {brandName && (
-              <div className="flex">
-                <span className="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-600 bg-white shadow-sm">
-                  {brandName}
-                </span>
-              </div>
-            )}
+        <section className="grid gap-8 lg:grid-cols-[1fr_0.92fr] lg:items-start">
+          <ProductGallery
+            title={product.productTitle}
+            images={images}
+            mainImage={images[activeImageIndex] || product.productImage}
+            discount={discount}
+            activeImageIndex={activeImageIndex}
+            onImageChange={setActiveImageIndex}
+          />
 
-            {/* Title */}
-            <h1 className="mt-6 text-2xl lg:text-3xl font-bold text-gray-800 leading-tight">
-              {shortTitle}
-            </h1>
+          <ProductPurchasePanel
+            product={product}
+            price={price}
+            originalPrice={originalPrice}
+            quantity={quantity}
+            total={total}
+            averageRating={averageRating}
+            reviewCount={reviews.length}
+            shortDescription={shortDescription}
+            isActionDisabled={isActionDisabled}
+            user={user}
+            onQuantityChange={setQuantity}
+            onAddToCart={handleAddToCart}
+            onTabChange={setActiveTab}
+          />
+        </section>
 
-            {/* Brand Info */}
-            <div className="mt-4 text-sm text-gray-500">
-              Brand: <span className="text-blue-500 font-medium">{brandName || "Unknown"}</span>
-            </div>
+        <ProductInfoTabs
+          product={product}
+          activeTab={activeTab}
+          discount={discount}
+          reviews={reviews}
+          isReviewLoading={isReviewLoading}
+          user={user}
+          isActionDisabled={isActionDisabled}
+          reviewRating={reviewRating}
+          reviewText={reviewText}
+          isSubmittingReview={isSubmittingReview}
+          onTabChange={setActiveTab}
+          onRatingChange={setReviewRating}
+          onReviewTextChange={setReviewText}
+          onReviewSubmit={handleReviewSubmit}
+        />
 
-            {/* Reviews (Placeholder design) */}
-            <div className="mt-4 flex items-center text-sm text-gray-500">
-              <div className="flex text-gray-300 mr-2 text-lg">
-                <FaRegStar /><FaRegStar /><FaRegStar /><FaRegStar /><FaRegStar />
-              </div>
-              <span>0.0 (0 reviews)</span>
-            </div>
-
-            {/* Price section */}
-            <div className="mt-6 flex items-baseline gap-3">
-              <span className="text-[2.5rem] font-bold text-blue-600 tracking-tight">${price}</span>
-              {oldPrice && <span className="text-lg text-gray-400 font-medium line-through">${oldPrice}</span>}
-            </div>
-
-            {/* Stock status */}
-            <div className="mt-3 text-[#22c55e] text-sm font-medium">
-              In Stock (100 available)
-            </div>
-            
-            <p className="mt-6 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-6">
-              {shortDesc}
-            </p>
-
-            {/* Quantity & Actions area pushed to bottom */}
-            <div className="mt-auto pt-6">
-              {/* Quantity */}
-              <div className="mb-8 flex flex-wrap items-center gap-6 text-sm lg:text-base">
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-700 font-medium">Quantity :</span>
-                  <div className="flex items-center border border-gray-300 rounded-md bg-white">
-                    <button 
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                      className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 rounded-l-md transition"
-                    >-</button>
-                    <span className="px-5 py-1.5 border-l border-r border-gray-300 text-gray-800 font-medium">
-                      {quantity}
-                    </span>
-                    <button 
-                      onClick={() => setQuantity(quantity + 1)} 
-                      className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 rounded-r-md transition"
-                    >+</button>
-                  </div>
-                </div>
-                <div className="text-gray-700 font-medium">
-                  Total : <span className="text-blue-600 font-bold ml-1">${total}</span>
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-4">
-                {user ? (
-                  <>
-                    <button 
-                      onClick={HandleButton} 
-                      disabled={singleUser?.role === "admin" || singleUser?.role === "Host"} 
-                      className="flex-1 py-3.5 border border-blue-600 text-blue-600 font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors disabled:opacity-50"
-                    >
-                      <FaShoppingCart /> Add to Cart
-                    </button>
-                    <button 
-                      onClick={HandleButton} 
-                      disabled={singleUser?.role === "admin" || singleUser?.role === "Host"} 
-                      className="flex-1 py-3.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-                    >
-                      Buy Now
-                    </button>
-                  </>
-                ) : (
-                  <Link to="/login" className="w-full flex gap-4">
-                    <button className="flex-1 py-3.5 border border-blue-600 text-blue-600 font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors">
-                      <FaShoppingCart /> Add to Cart
-                    </button>
-                    <button className="flex-1 py-3.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                      Buy Now
-                    </button>
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <RelatedProducts category={product.category} products={relatedProducts} />
       </div>
-
-      {/* User Reviews and Ratings */}
-      <Review id={id as string} />
-    </div>
+    </main>
   );
 };
 
-export default ProductPage;
+export default ProductDetailsPage;
