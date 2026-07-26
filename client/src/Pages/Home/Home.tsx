@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-
-import React, { useEffect, useState } from "react";
-import Faq from "../../Components/Home/Faq/Faq";
-import Slider from "./Banner/Banner";
-import BrowseByDestination from "../../Components/Home/BrowseByDestination/BrowseByDestination";
-import Categories from "./Category/Category";
-import RecentProduct from "../../Components/Home/RecentProducts/RecentProduct";
-import useAxiosPublic from "../../Hooks/UsePublic";
-import { useQuery } from "@tanstack/react-query";
-import { debounce } from "lodash";
-import { Helmet } from "react-helmet-async";
-import Uniqe from "./Uniqe/Uniqe";
+import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
+import BrowseByDestination from '../../Components/Home/BrowseByDestination/BrowseByDestination';
+import Faq from '../../Components/Home/Faq/Faq';
+import RecentProduct from '../../Components/Home/RecentProducts/RecentProduct';
+import useAxiosPublic from '../../Hooks/UsePublic';
+import Slider from './Banner/Banner';
+import Categories from './Category/Category';
+import Uniqe from './Uniqe/Uniqe';
 
 interface Product {
   _id: string;
@@ -29,42 +27,41 @@ interface ApiResponse<T> {
 }
 
 const Home: React.FC = () => {
-  const [search, setSearch] = useState<string>(""); // Start with an empty search
-  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const axiosPublic = useAxiosPublic();
-
-  // Debounce search input
-  useEffect(() => {
-    const handler = debounce((value: string) => {
-      setDebouncedSearch(value);
-    }, 300);
-
-    handler(search);
-
-    return () => {
-      handler.cancel && handler.cancel();
-    };
-  }, [search]);
+  const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const term = search.trim();
+    if (!term) return;
+
+    navigate(`/product?search=${encodeURIComponent(term)}`);
+  };
+
+  const handlePopularSearch = (term: string) => {
+    setSearch(term);
+    navigate(`/product?search=${encodeURIComponent(term)}`);
+  };
+
   // recent product
   const { data: recentData = [], isLoading } = useQuery<Product[], Error>({
-    queryKey: ["productData", debouncedSearch],
+    queryKey: ['productData', search],
     queryFn: async () => {
       const res = await axiosPublic.get<ApiResponse<Product[]>>(
-        debouncedSearch
-          ? `/products/recent-product?search=${debouncedSearch}`
-          : `/products/recent-product`
+        search.trim()
+          ? `/products/recent-product?search=${encodeURIComponent(search.trim())}`
+          : `/products/recent-product`,
       );
 
       return res.data.data;
     },
     staleTime: 5000,
   });
-
 
   return (
     <div>
@@ -74,49 +71,80 @@ const Home: React.FC = () => {
         </Helmet>
         <Slider></Slider>
 
-        {/* search implementation */}
-        <div className="">
-          <div className="w-full h-auto mx-auto p-4 bg-gray-50 border my-2 shadow">
-            {/* Heading Section */}
-            <div className="text-center mb-4">
-              <h2 className="text-2xl   font-semibold">Search Products</h2>
-              <div className="divider divider-neutral">All Product</div>
-              <p className="text-xl">
-                Find your desired products by brand, category, or title
+        <div className="mx-auto my-12 max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-[22px] border border-slate-100 bg-white p-5 shadow-sm sm:p-6">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl">
+                Find what you need
+              </h2>
+              <p className="mt-2 text-sm text-slate-500">
+                Search for phones, accessories, laptops and more.
               </p>
             </div>
 
-            {/* Search Box Section */}
-            <form className="flex md:flex-row items-center justify-center gap-2 w-full">
-              <input
-                type="text"
-                required
-                placeholder="Search by brand, category, or title"
-                name="search"
-                value={search}
-                onChange={handleSearchChange}
-                className="input input-bordered w-full md:w-full max-w-screen-sm"
-              />
-              <a href="#recentData">
-                <button
-                  type="button"
-                  className="px-5 py-3 text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-md transition-all duration-300
-                     hover:-translate-y-0.5"
+            <form
+              onSubmit={handleSearchSubmit}
+              className="mx-auto mt-5 flex flex-col gap-2 sm:flex-row sm:items-center"
+            >
+              <label className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.8"
+                  stroke="currentColor"
+                  className="h-4 w-4 text-orange-500"
                 >
-                  Search
-                </button>
-              </a>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search mobile, airpods, laptop..."
+                  name="search"
+                  value={search}
+                  onChange={handleSearchChange}
+                  className="w-full border-0 bg-transparent text-sm outline-none placeholder:text-slate-400"
+                />
+              </label>
+              <button
+                type="submit"
+                className="rounded-xl bg-orange-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+              >
+                Search
+              </button>
             </form>
+
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {['AirPods', 'iPhone', 'Mouse', 'Keyboard'].map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => handlePopularSearch(item)}
+                  className="rounded-full border border-orange-100 bg-orange-50 px-2.5 py-1 text-xs text-orange-700 transition hover:bg-orange-100"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="mt-10 space-y-1">
-          <h1 className="text-center text-3xl  border-b-2 font-semibold">
-            Categories
-          </h1>
 
-          <Categories></Categories>
+        <div className="mx-auto mt-10 max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-[20px] border border-slate-100 bg-white p-4 sm:p-5">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-900">
+                Categories
+              </h3>
+            </div>
+
+            <Categories />
+          </div>
         </div>
-        <section className="py-10 lg:p-12 p-2">
+        <section className="py-16 px-2 sm:px-4 lg:px-12">
           {/* {recent added product} */}
           <RecentProduct recentData={recentData} isLoading={isLoading} />
         </section>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Heading from "../../../Shared/Heading/Heading";
+import React, { useState } from 'react';
+import Heading from '../../../Shared/Heading/Heading';
 // import afk from '../../../../src/assets/Image/Group.png'
 
 interface FAQItem {
@@ -16,39 +16,39 @@ const Faq: React.FC = () => {
 
   const faqData: FAQItem[] = [
     {
-      question: "How can I pay for my order?",
+      question: 'How can I pay for my order?',
       answer:
-        "You can pay using bKash, Nagad, Rocket, credit cards, or cash on delivery at checkout.",
+        'You can pay using bKash, Nagad, Rocket, credit cards, or cash on delivery at checkout.',
     },
     {
-      question: "Do you deliver outside Dhaka?",
+      question: 'Do you deliver outside Dhaka?',
       answer:
-        "Yes, we deliver all over Bangladesh. Delivery charges may vary based on the location.",
+        'Yes, we deliver all over Bangladesh. Delivery charges may vary based on the location.',
     },
     {
-      question: "What is your return policy?",
+      question: 'What is your return policy?',
       answer:
-        "You can return a product within 7 days if it is damaged or not as described. Terms and conditions apply.",
+        'You can return a product within 7 days if it is damaged or not as described. Terms and conditions apply.',
     },
     {
-      question: "How long will delivery take?",
+      question: 'How long will delivery take?',
       answer:
-        "Delivery typically takes 2-5 business days, depending on your location.",
+        'Delivery typically takes 2-5 business days, depending on your location.',
     },
     {
-      question: "How can I track my order?",
+      question: 'How can I track my order?',
       answer:
-        "You can track your order status using the tracking ID sent to your registered email or phone number.",
+        'You can track your order status using the tracking ID sent to your registered email or phone number.',
     },
     {
-      question: "Do you offer discounts or promotions?",
+      question: 'Do you offer discounts or promotions?',
       answer:
-        "Yes, we offer seasonal discounts and promotions. Follow us on social media to stay updated.",
+        'Yes, we offer seasonal discounts and promotions. Follow us on social media to stay updated.',
     },
     {
-      question: "What products do you sell?",
+      question: 'What products do you sell?',
       answer:
-        "We offer a wide range of products, including electronics, fashion, home appliances, and groceries.",
+        'We offer a wide range of products, including electronics, fashion, home appliances, and groceries.',
     },
   ];
 
@@ -58,13 +58,15 @@ const Faq: React.FC = () => {
       <div className="w-full  mx-auto px-6 py-12">
         <Heading
           title={'Frequently Asked Questions'}
-          subtitle={'Find answers to our most commonly asked questions about shopping, shipping, and returns.'}
+          subtitle={
+            'Find answers to our most commonly asked questions about shopping, shipping, and returns.'
+          }
         />
-        <div className="mt-8 space-y-8 lg:mt-12">
+        <div className="mt-8 space-y-3 lg:mt-10">
           {faqData.map((item, index) => (
             <div
               key={index}
-              className="p-6 lg:p-8 rounded-lg bg-white border border-gray-200"
+              className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:border-orange-100 hover:shadow-md lg:p-6"
             >
               <button
                 className="flex items-center justify-between w-full focus:outline-none"
@@ -73,8 +75,10 @@ const Faq: React.FC = () => {
                 <h1 className="font-semibold">{item.question}</h1>
                 <span
                   className={`rounded-full p-1 ${
-                    activeIndex === index ? "bg-red-500" : "bg-[#9E59F7]"
-                  } text-white`}
+                    activeIndex === index
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-orange-100 text-orange-600'
+                  }`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,8 +93,8 @@ const Faq: React.FC = () => {
                       strokeWidth="2"
                       d={
                         activeIndex === index
-                          ? "M18 12H6"
-                          : "M12 6v6m0 0v6m0-6h6m-6 0H6"
+                          ? 'M18 12H6'
+                          : 'M12 6v6m0 0v6m0-6h6m-6 0H6'
                       }
                     />
                   </svg>

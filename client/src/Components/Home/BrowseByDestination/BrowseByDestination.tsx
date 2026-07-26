@@ -90,7 +90,7 @@ const BrowseByDestination: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
                     <div className="absolute bottom-0 p-5 w-full">
                       <div className="flex items-center gap-2 mb-3">
-                        <MdLocationOn className="text-secondary text-xl" />
+                        <MdLocationOn className="text-orange-300 text-xl" />
                         <h3 className="text-xl font-bold text-white">
                           {destination.name}
                         </h3>
@@ -100,7 +100,7 @@ const BrowseByDestination: React.FC = () => {
                         <span className="text-background/80 text-sm">
                           {"Explore destination"}
                         </span>
-                        <div className="bg-secondary p-2 rounded-full transform translate-x-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                        <div className="bg-orange-400 p-2 rounded-full text-gray-950 transform translate-x-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
                           <MdArrowForward className="text-lg" />
                         </div>
                       </div>

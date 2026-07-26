@@ -1,18 +1,14 @@
 import React from 'react';
-import Container from '../../../Shared/Navbar/Container';
-import { categories } from './CategoryData';
 import CategoryBox from './CategoryBox';
-
+import { categories } from './CategoryData';
 
 const Categories: React.FC = () => {
   return (
-    <Container>
-      <div className="pt-4 flex  gap-1 items-center justify-between overflow-x-auto ">
-        {categories.map((item) => (
-          <CategoryBox key={item.label} label={item.label} icon={item.icon} />
-        ))}
-      </div>
-    </Container>
+    <div className="flex gap-5 overflow-x-auto pb-1">
+      {categories.map((item) => (
+        <CategoryBox key={item.label} label={item.label} icon={item.icon} />
+      ))}
+    </div>
   );
 };
 

@@ -10,13 +10,13 @@ import { Link } from "react-router-dom";
 const Uniqe: React.FC = () => {
   return (
     <div>
-      <div className="unique-section bg-gray-100 py-12 px-4">
+      <div className="unique-section bg-gray-50 py-12 px-4">
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">
           Our Unique Features
         </h2>
         <div className="grid grid-cols-1 group sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Feature 1 */}
-          <div className="feature-card  group-hover:scale-105 transform transition duration-300 bg-white rounded-lg shadow-lg p-6">
+          <div className="feature-card transform rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-md">
             <img
               src={img1}
               alt="Fast Delivery"
@@ -36,7 +36,7 @@ const Uniqe: React.FC = () => {
         to='/product'
        
        >
-            <div className="feature-card  group-hover:scale-105 transform transition duration-300 bg-white rounded-lg  shadow-lg p-6">
+            <div className="feature-card transform rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-md">
             <img
               src={img2}
               alt="Premium Quality"
@@ -57,7 +57,7 @@ const Uniqe: React.FC = () => {
          to='/contact'
          >
          
-         <div className="feature-card  group-hover:scale-105 transform transition duration-300 bg-white rounded-lg shadow-lg p-6">
+         <div className="feature-card transform rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-md">
             <img
               src={img3}
               alt="24/7 Support"

@@ -13,9 +13,9 @@ const Slide: React.FC<SlideProps> = ({ image }) => {
         backgroundImage: `url(${image})`,
       }}
     >
-      <div className="flex items-center justify-center h-full bg-black bg-opacity-40">
+      <div className="flex items-center justify-center h-full bg-black/45">
         <div className="text-center px-4 sm:px-6 md:px-8 lg:px-10">
-          <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-purple-600 to-red-500">
+          <h1 className="text-3xl font-extrabold leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
             <Typewriter
               options={{
                 strings: ['Welcome to Quick Buzz', 'Your One-Stop Online Store'],
@@ -27,22 +27,22 @@ const Slide: React.FC<SlideProps> = ({ image }) => {
             />
           </h1>
           <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-200 mt-3">
-            Discover a wide variety of products crafted just for you.
+            Find fresh deals, trusted gadgets, and everyday essentials in one clean shopping experience.
           </p>
           <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-gray-300 mt-3 hidden sm:block md:block lg:block">
-  Shop effortlessly and enjoy exclusive deals tailored to your preferences.
+  Shop faster with curated products, smooth checkout, and offers made for QuickBuzz customers.
 </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-6">
             <a
               href="/product"
-              className="text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 px-4 py-2 sm:px-5 sm:py-3 rounded-md transition-all duration-300  hover:-translate-y-0.5"
+              className="rounded-xl bg-orange-400 px-5 py-3 font-semibold text-gray-950 shadow-sm shadow-orange-200 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-500"
             >
               View Products
             </a>
             <a
               href="/contact"
-              className="text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 px-4 py-2 sm:px-5 sm:py-3 rounded-md transition-all duration-300  hover:-translate-y-0.5"
+              className="rounded-xl bg-orange-400 px-5 py-3 font-semibold text-gray-950 shadow-sm shadow-orange-200 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-500"
             >
               Contact Now
             </a>

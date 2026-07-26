@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import queryString from "query-string";
+import queryString from 'query-string';
+import React from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface CategoryBoxProps {
   label: string;
@@ -9,14 +9,14 @@ interface CategoryBoxProps {
 
 const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
   const [params] = useSearchParams();
-  const category = params.get("category");
+  const category = params.get('category');
   const navigate = useNavigate();
 
   const handleClick = () => {
     const currentQuery = { category: label };
 
     const url = queryString.stringifyUrl({
-      url: "/product",
+      url: '/product',
       query: currentQuery,
     });
 
@@ -25,27 +25,20 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
   };
 
   return (
-    <div
+    <button
+      type="button"
       onClick={handleClick}
-      className={`flex 
-        flex-col 
-        items-center 
-        justify-center 
-        gap-2
-        w-24 
-        h-24
-        rounded-full
-        p-3
-        border-b-2
-        hover:text-neutral-800
-        transition
-        cursor-pointer hover:bg-gray-100 ${
-          category === label && "border-b-neutral-800 text-neutral-800"
-        }`}
+      className={`flex min-w-[92px] flex-col items-center justify-center gap-2 rounded-xl border px-2.5 py-3.5 text-center transition-all duration-300 hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600 ${
+        category === label
+          ? 'border-orange-300 bg-orange-50 text-orange-600 shadow-sm'
+          : 'border-slate-200 bg-white text-slate-700'
+      }`}
     >
-      <Icon size={26} />
-      <div className="text-sm font-medium">{label}</div>
-    </div>
+      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-50">
+        <Icon size={18} />
+      </div>
+      <span className="text-xs font-medium">{label}</span>
+    </button>
   );
 };
 

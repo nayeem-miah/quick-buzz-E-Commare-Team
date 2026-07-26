@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import LoadingSpinner from "../../../Shared/Loading";
-import Heading from "../../../Shared/Heading/Heading";
-import NoData from "../../../Shared/NoDataFound/NoData";
-import Card from "../../../Pages/Product/Card";
+import Card from '../../../Pages/Product/Card';
+import Heading from '../../../Shared/Heading/Heading';
+import LoadingSpinner from '../../../Shared/Loading';
+import NoData from '../../../Shared/NoDataFound/NoData';
 
 interface Product {
   _id: number;
@@ -29,17 +29,20 @@ const RecentProduct: React.FC<ChildComponentProps> = ({
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div id="recentData">
-      <Heading title={"recent data"} subtitle={""} />
+    <div id="recentData" className="space-y-6">
+      <Heading
+        title={'New Arrivals'}
+        subtitle={'Latest approved products ready for quick shopping.'}
+      />
       {recentData.length == 0 ? (
         <NoData />
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  gap-5">
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {recentData?.map(
             (product: Product) =>
-              product?.adminIsApproved === "approve" && (
+              product?.adminIsApproved === 'approve' && (
                 <Card product={product} key={product._id} />
-              )
+              ),
           )}
         </div>
       )}
