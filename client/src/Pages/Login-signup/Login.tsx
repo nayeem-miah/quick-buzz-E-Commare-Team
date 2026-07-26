@@ -1,38 +1,95 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAuth from "../../Hooks/UseAuth";
-import { toast } from "react-toastify";
-import usePublic from "../../Hooks/UsePublic";
-import { ImSpinner9 } from "react-icons/im";
+import React, { useState } from 'react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { FcGoogle } from 'react-icons/fc';
+import { ImSpinner9 } from 'react-icons/im';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import useAuth from '../../Hooks/UseAuth';
+import usePublic from '../../Hooks/UsePublic';
+import logo from '../../assets/Image/logo2.png';
+
+const demoAccounts = [
+  { role: 'Admin', email: 'quick.buzz@gmail.com', password: '123456' },
+  { role: 'Host', email: 'rakib@gmail.com', password: '123456' },
+  { role: 'User', email: 'goboqygug@mailinator.com', password: 'Pa$$w0rd!' },
+];
+
+const getAuthErrorMessage = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error || '');
+
+  if (message.includes('INVALID_LOGIN_CREDENTIALS') || message.includes('auth/invalid-credential')) {
+    return 'Invalid email or password.';
+  }
+
+  if (message.includes('auth/user-not-found')) {
+    return 'No account found with this email.';
+  }
+
+  if (message.includes('auth/wrong-password')) {
+    return 'Incorrect password. Please try again.';
+  }
+
+  if (message.includes('auth/too-many-requests')) {
+    return 'Too many attempts. Please try again later.';
+  }
+
+  if (message.includes('auth/network-request-failed')) {
+    return 'Network error. Please check your connection.';
+  }
+
+  return 'Something went wrong. Please try again.';
+};
 
 const Signin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosPublic = usePublic();
-  const from = location?.state || "/";
-  const { signInWithGoogle, signIn, loading, setLoading } = useAuth();
+  const from = location?.state || '/';
+  const { signInWithGoogle, signIn, resetPassword, loading, setLoading } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    await handleSignIn(email, password);
+  };
+
+  const handleSignIn = async (loginEmail: string, loginPassword: string) => {
     try {
       setLoading(true);
-      await signIn(email, password);
+      await signIn(loginEmail, loginPassword);
       navigate(from);
-      toast.success("Login Successful");
+      toast.success('Login Successful');
     } catch (err: any) {
-      console.error(err);
-      toast.error(err.message);
+      toast.error(getAuthErrorMessage(err));
       setLoading(false);
     }
   };
 
-  // Handle Google Sign In
+  const handleDemoLogin = (demoEmail: string, demoPassword: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    handleSignIn(demoEmail, demoPassword);
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast.error('Please enter your email first.');
+      return;
+    }
+
+    try {
+      await resetPassword(email);
+      toast.success('Password reset email sent.');
+    } catch (err: any) {
+      toast.error(getAuthErrorMessage(err));
+      setLoading(false);
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithGoogle();
@@ -40,125 +97,122 @@ const Signin: React.FC = () => {
         email: result.user?.email,
         name: result.user?.displayName,
         photo: result.user?.photoURL,
-        role: "user",
+        role: 'user',
       };
-      axiosPublic.post("/users", userInfo);
+      axiosPublic.post('/users', userInfo);
       navigate(from);
-      toast.success("Google Sign-In Successful");
+      toast.success('Google Sign-In Successful');
     } catch (err: any) {
-      console.error(err);
-      toast.error(err.message);
+      toast.error(getAuthErrorMessage(err));
+      setLoading(false);
     }
   };
 
-
-  // Reast Password
-
-  // const ReastPassword = e = >{
-  //   console.log(email);
-
-  // }
-
-
-
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
-        <div className="mb-8 text-center">
-          <h1 className="my-3 text-4xl font-bold">Log In</h1>
-          <p className="text-sm text-gray-400">
-            Sign in to access your account
-          </p>
+    <main className="flex min-h-screen items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8">
+      <section className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-6 shadow-xl shadow-orange-100/40 sm:p-8">
+        <div className="text-center">
+          <Link to="/" className="inline-flex justify-center">
+            <img src={logo} alt="QuickBuzz" className="h-16 w-auto object-contain" />
+          </Link>
+          <h1 className="mt-5 text-2xl font-bold text-gray-950">Sign in to QuickBuzz</h1>
+          <p className="mt-2 text-sm text-gray-500">Welcome back. Continue shopping faster.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block mb-2 text-sm">
-                Email address
-              </label>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <div>
+            <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-700">Email</label>
+            <div className="relative">
+              <Mail className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
               <input
                 type="email"
-                name="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="Enter Your Email Here"
-                className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
+                placeholder="you@example.com"
+                className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 text-sm outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"
               />
             </div>
+          </div>
 
-            <div>
-              <div className="flex justify-between">
-                <label htmlFor="password" className="text-sm mb-2">
-                  Password
-                </label>
-              </div>
+          <div>
+            <label htmlFor="password" className="mb-2 block text-sm font-semibold text-gray-700">Password</label>
+            <div className="relative">
+              <Lock className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
               <input
-                type="password"
-                name="password"
+                type={showPassword ? 'text' : 'password'}
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="*******"
-                className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900"
+                placeholder="Enter your password"
+                className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-12 text-sm outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((current) => !current)}
+                className="absolute right-3 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-gray-400 transition hover:bg-orange-50 hover:text-orange-600"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button type="button" onClick={handleForgotPassword} className="text-sm font-semibold text-orange-600 hover:text-orange-700">
+              Forgot password?
+            </button>
           </div>
 
           <button
             disabled={loading}
             type="submit"
-            className=" w-full rounded-md py-3  text-black shadow-lg   bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30  transition-all duration-300
-             hover:-translate-y-0.5  disabled:cursor-not-allowed "
+            className="btn min-h-12 w-full border-0 bg-orange-400 font-bold text-gray-950 shadow-none hover:bg-orange-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
-
-
-            {loading ? (
-              <ImSpinner9 size={15} className="animate-spin m-auto" />
-            ) : (
-              "Sign In"
-            )}
+            {loading ? <ImSpinner9 size={18} className="animate-spin" /> : 'Sign In'}
           </button>
         </form>
 
-        <div className="space-y-1">
-          <button className="text-xs hover:underline hover:text-rose-500 text-gray-400">
-            Forgot password?
-          </button>
+        <div className="my-6 flex items-center gap-3">
+          <span className="h-px flex-1 bg-gray-100" />
+          <span className="text-xs font-medium text-gray-400">or continue with</span>
+          <span className="h-px flex-1 bg-gray-100" />
         </div>
 
-        <div className="flex items-center pt-4 space-x-1">
-          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
-          <p className="px-3 text-sm dark:text-gray-400">
-            Login with social accounts
-          </p>
-          <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
-        </div>
-
-        <button
-          disabled={loading}
-          onClick={handleGoogleSignIn}
-          className="disabled:cursor-not-allowed flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer"
-        >
-          <FcGoogle size={32} />
-          <p>Continue with Google</p>
-        </button>
-
-        <p className="px-6 text-sm text-center text-gray-400">
-          Don't have an account yet?{" "}
-          <Link
-            to="/signup"
-            className="hover:underline hover:text-rose-500 text-gray-600"
+        <div className="space-y-3">
+          <button
+            disabled={loading}
+            onClick={handleGoogleSignIn}
+            className="flex min-h-12 w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-700 transition hover:border-orange-200 hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Sign up
+            <FcGoogle size={24} /> Continue with Google
+          </button>
+
+          <div className="grid gap-2 sm:grid-cols-3">
+            {demoAccounts.map((account) => (
+              <button
+                key={account.role}
+                disabled={loading}
+                onClick={() => handleDemoLogin(account.email, account.password)}
+                className="min-h-11 rounded-xl border border-orange-200 bg-orange-50 text-sm font-bold text-orange-700 transition hover:bg-orange-100 disabled:cursor-not-allowed disabled:opacity-60"
+                type="button"
+              >
+                {account.role}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <p className="mt-7 text-center text-sm text-gray-500">
+          Don&apos;t have an account?{' '}
+          <Link to="/signup" className="font-bold text-orange-600 hover:text-orange-700">
+            Sign Up
           </Link>
-          .
         </p>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

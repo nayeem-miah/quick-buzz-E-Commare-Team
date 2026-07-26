@@ -20,24 +20,24 @@ A scalable, secure, and high-performance e-commerce platform designed for the Ba
 
 ## 👤 **User Features**
 
-* Email / Google Login (Firebase Authentication)
-* Advanced Search, Filters, Categories
-* Order Tracking with real-time updates
-* Secure checkout via SSLCommerz
+- Email / Google Login (Firebase Authentication)
+- Advanced Search, Filters, Categories
+- Order Tracking with real-time updates
+- Secure checkout via SSLCommerz
 
 ## 🛍️ **Vendor Features**
 
-* Vendor Dashboard to manage products
-* Add / Edit / Delete products
-* Sales analytics and performance tracking
-* Secure vendor authentication
+- Vendor Dashboard to manage products
+- Add / Edit / Delete products
+- Sales analytics and performance tracking
+- Secure vendor authentication
 
 ## 🛡️ **Admin Features**
 
-* Admin Dashboard with global controls
-* Manage users, vendors, and products
-* Vendor approval system
-* Handle orders, refunds, and disputes
+- Admin Dashboard with global controls
+- Manage users, vendors, and products
+- Vendor approval system
+- Handle orders, refunds, and disputes
 
 ---
 
@@ -45,7 +45,7 @@ A scalable, secure, and high-performance e-commerce platform designed for the Ba
 
 | Role  | Email                                                       | Password  |
 | ----- | ----------------------------------------------------------- | --------- |
-| Admin | [quick.buzz@gmail.com](mailto:quick.buzz@gmail.com)         | 111111    |
+| Admin | [quick.buzz@gmail.com](mailto:quick.buzz@gmail.com)         | 123456    |
 | Host  | [rakib@gmail.com](mailto:rakib@gmail.com)                   | 123456    |
 | User  | [goboqygug@mailinator.com](mailto:goboqygug@mailinator.com) | Pa$$w0rd! |
 
@@ -55,29 +55,29 @@ A scalable, secure, and high-performance e-commerce platform designed for the Ba
 
 ### **Frontend**
 
-* React.js
-* TypeScript
-* TailwindCSS
+- React.js
+- TypeScript
+- TailwindCSS
 
 ### **Backend**
 
-* Node.js
-* Express.js
-* TypeScript
-* JWT Authentication
-* Multer for file uploads
+- Node.js
+- Express.js
+- TypeScript
+- JWT Authentication
+- Multer for file uploads
 
 ### **Database**
 
-* MongoDB
+- MongoDB
 
 ### **Authentication**
 
-* Firebase Authentication
+- Firebase Authentication
 
 ### **Payment Gateway**
 
-* SSLCommerz (bKash, Nagad, Rocket, Cards)
+- SSLCommerz (bKash, Nagad, Rocket, Cards)
 
 ---
 
@@ -139,19 +139,19 @@ npm run dev
 
 ## **🟦 MD Nayeem Miah**
 
-* FULL Stack Developer
-* CST, Moulvibazar Polytechnic Institute
-* 📧 Email: [nayeem5113@gmail.com](mailto:nayeem5113@gmail.com)
-* 🔗 LinkedIn: [https://www.linkedin.com/in/md-nayeem-miah-734719307/](https://www.linkedin.com/in/md-nayeem-miah-734719307/)
-* 🌐 Portfolio: [https://nayeem-miah.vercel.app/](https://nayeem-miah.vercel.app/)
+- FULL Stack Developer
+- CST, Moulvibazar Polytechnic Institute
+- 📧 Email: [nayeem5113@gmail.com](mailto:nayeem5113@gmail.com)
+- 🔗 LinkedIn: [https://www.linkedin.com/in/md-nayeem-miah-734719307/](https://www.linkedin.com/in/md-nayeem-miah-734719307/)
+- 🌐 Portfolio: [https://nayeem-miah.vercel.app/](https://nayeem-miah.vercel.app/)
 
 ## **🟩 Rakibul Hasan**
 
-* FULL Stack Developer
-* CST, Moulvibazar Polytechnic Institute
-* 📧 Email: [rakibulhasan3929@gmail.com](mailto:rakibulhasan3929@gmail.com)
-* 🔗 LinkedIn: [https://www.linkedin.com/in/rakibul-hasan-b94123271/](https://www.linkedin.com/in/rakibul-hasan-b94123271/)
-* 🌐 Portfolio: [https://rakibportfolio.com/](https://rakibportfolio.com/)
+- FULL Stack Developer
+- CST, Moulvibazar Polytechnic Institute
+- 📧 Email: [rakibulhasan3929@gmail.com](mailto:rakibulhasan3929@gmail.com)
+- 🔗 LinkedIn: [https://www.linkedin.com/in/rakibul-hasan-b94123271/](https://www.linkedin.com/in/rakibul-hasan-b94123271/)
+- 🌐 Portfolio: [https://rakibportfolio.com/](https://rakibportfolio.com/)
 
 ---
 
