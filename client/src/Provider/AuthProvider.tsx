@@ -62,6 +62,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     const result = await signInWithEmailAndPassword(auth, email, password);
+    setUser(result.user);
     setLoading(false);
     return result;
   };
@@ -69,6 +70,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signInWithGoogle = async () => {
     setLoading(true);
     const result = await signInWithPopup(auth, googleProvider);
+    setUser(result.user);
     setLoading(false);
     return result;
   };

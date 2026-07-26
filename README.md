@@ -43,11 +43,11 @@ A scalable, secure, and high-performance e-commerce platform designed for the Ba
 
 # 🧪 **Demo Credentials**
 
-| Role  | Email                                                       | Password  |
-| ----- | ----------------------------------------------------------- | --------- |
-| Admin | [quick.buzz@gmail.com](mailto:quick.buzz@gmail.com)         | 123456    |
-| Host  | [rakib@gmail.com](mailto:rakib@gmail.com)                   | 123456    |
-| User  | [goboqygug@mailinator.com](mailto:goboqygug@mailinator.com) | Pa$$w0rd! |
+| Role  | Email                                                       | Password |
+| ----- | ----------------------------------------------------------- | -------- |
+| Admin | [quick.buzz@gmail.com](mailto:quick.buzz@gmail.com)         | 123456   |
+| Host  | [host.quickbuzz@gmail.com](mailto:host.quickbuzz@gmail.com) | 123456   |
+| User  | [user.quickbuzz@gmail.com](mailto:user.quickbuzz@gmail.com) | 123456   |
 
 ---
 

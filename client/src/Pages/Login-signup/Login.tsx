@@ -11,8 +11,8 @@ import logo from '../../assets/Image/logo2.png';
 
 const demoAccounts = [
   { role: 'Admin', email: 'quick.buzz@gmail.com', password: '123456' },
-  { role: 'Host', email: 'rakib@gmail.com', password: '123456' },
-  { role: 'User', email: 'goboqygug@mailinator.com', password: 'Pa$$w0rd!' },
+  { role: 'Host', email: 'host.quickbuzz@gmail.com', password: '123456' },
+  { role: 'User', email: 'user.quickbuzz@gmail.com', password: '123456' },
 ];
 
 const getAuthErrorMessage = (error: unknown) => {
@@ -45,7 +45,7 @@ const Signin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosPublic = usePublic();
-  const from = location?.state || '/';
+  const from = (location.state as { from?: string } | null)?.from || '/dashboard';
   const { signInWithGoogle, signIn, resetPassword, loading, setLoading } = useAuth();
 
   const [email, setEmail] = useState('');
