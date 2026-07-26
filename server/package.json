@@ -17,12 +17,14 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "force": "^0.0.3",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "eslint": "^9.39.1",
-    "globals": "^16.5.0"
+    "globals": "^16.5.0",
+    "nodemon": "^3.1.14"
   }
 }
