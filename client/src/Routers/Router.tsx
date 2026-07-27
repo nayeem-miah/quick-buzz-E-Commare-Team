@@ -30,6 +30,8 @@ import Success from "../Components/SSLCommarze/Success";
 import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/SellerDataUpdated";
 import RoleBasedDashboard from "../Components/Dashboard/RoleBasedDashboard/RoleBasedDashboard";
 import HostHome from "../Components/Dashboard/Host/HostHome";
+import { API_BASE_URL } from "../utils/api";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,8 +54,8 @@ const router = createBrowserRouter([
       {
         path: "/product",
         element: <Product />,
-        loader: () => fetch('https://quick-bazz.vercel.app/productsCount')
-    },
+        loader: () => fetch(`${API_BASE_URL}/productsCount`)
+      },
       {
         path: "/product/:id",
         element: (

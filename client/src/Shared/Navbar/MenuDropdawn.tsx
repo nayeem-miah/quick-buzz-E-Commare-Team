@@ -1,10 +1,9 @@
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
-import useAuth from "../../Hooks/UseAuth";
 import avatar from "../../../src/assets/Image/avatar.jpg";
+import useAuth from "../../Hooks/UseAuth";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
-import { MdLocalGroceryStore } from "react-icons/md";
 
 const MenuDropdown: React.FC = () => {
   const { user, logOut } = useAuth();
@@ -36,63 +35,66 @@ const MenuDropdown: React.FC = () => {
         {/* Dropdown button */}
         <div
           onClick={() => setIsOpen((prev) => !prev)}
-          className="p-4 md:py-1 md:px-2 border border-black flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
+          className="py-1.5 px-2.5 border border-gray-300 hover:border-orange-400 flex flex-row items-center gap-2 rounded-full cursor-pointer hover:shadow-sm transition-all duration-300 bg-white"
         >
-          <AiOutlineMenu />
+          <AiOutlineMenu className="text-gray-600" />
           <div className="hidden md:block">
             <img
-              className="rounded-full"
+              className="rounded-full border border-gray-100"
               referrerPolicy="no-referrer"
               src={user && user.photoURL ? user.photoURL : avatar}
               alt="profile"
-              height={30}
-              width={30}
+              height={26}
+              width={26}
             />
           </div>
         </div>
       </div>
 
       {isOpen && (
-        <div className="absolute rounded-xl shadow-md w-40 md:w-56 bg-white overflow-hidden right-0 top-12 text-sm">
-          <div className="flex flex-col cursor-pointer">
+        <div className="absolute rounded-xl shadow-lg w-40 md:w-52 bg-white border border-gray-100 overflow-hidden right-0 top-12 text-sm z-50 py-1">
+          <div className="flex flex-col">
             {user ? (
               <>
                 <Link
                   to="/dashboard"
-                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2.5 hover:bg-orange-50 hover:text-orange-500 transition font-medium text-gray-700"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/profile"
-                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2.5 hover:bg-orange-50 hover:text-orange-500 transition font-medium text-gray-700"
                 >
-                  my profile
+                  My Profile
                 </Link>
                 {singleUser?.role === "user" && (
                   <Link
                     to="/dashboard/my-listings"
-                    className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-2.5 hover:bg-orange-50 hover:text-orange-500 transition font-medium text-gray-700"
                   >
-                    <h3 className="flex items-center gap-3">
-                      Go to my Add to Cart{" "}
-                      <span>
-                        <MdLocalGroceryStore className="text-orange-600 text-2xl mx-auto" />
-                      </span>{" "}
-                    </h3>
+                    My Cart
                   </Link>
                 )}
                 {singleUser?.role === "user" && (
                   <Link
                     to="/become-host"
-                    className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-2.5 hover:bg-orange-50 hover:text-orange-500 transition font-medium text-gray-700"
                   >
                     Become a Seller
                   </Link>
                 )}
+                <hr className="border-gray-100 my-1" />
                 <div
-                  onClick={logOut}
-                  className="px-4 py-3 hover:bg-neutral-100 hover:text-red-500 transition font-semibold cursor-pointer"
+                  onClick={() => {
+                    logOut();
+                    setIsOpen(false);
+                  }}
+                  className="px-4 py-2.5 hover:bg-orange-50 hover:text-red-500 transition font-medium text-gray-700 cursor-pointer"
                 >
                   Logout
                 </div>
@@ -101,13 +103,15 @@ const MenuDropdown: React.FC = () => {
               <>
                 <Link
                   to="/login"
-                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2.5 hover:bg-orange-50 hover:text-orange-500 transition font-medium text-gray-700"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2.5 hover:bg-orange-50 hover:text-orange-500 transition font-medium text-gray-700"
                 >
                   Sign Up
                 </Link>

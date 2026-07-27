@@ -2,17 +2,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/pagination";
 import "swiper/css/navigation";
-import bgimg1 from "../../../assets/banner/banner1.jpg";
+import "swiper/css/pagination";
+import bgimg5 from "../../../assets/banner/banne pic 5.jpg";
 import bgimg2 from "../../../assets/banner/banner pic 2.jpg";
 import bgimg3 from "../../../assets/banner/banner pic 3.avif";
 import bgimg4 from "../../../assets/banner/banner pic 4.jpg";
-import bgimg5 from "../../../assets/banner/banne pic 5.jpg";
 import bgimg6 from "../../../assets/banner/banner pic 6.jpg";
+import bgimg1 from "../../../assets/banner/banner1.jpg";
 
 // Import required modules
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 import { JSX, useState } from "react";
 import { useNavigate } from "react-router-dom";
