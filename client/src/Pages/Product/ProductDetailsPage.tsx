@@ -97,8 +97,12 @@ const ProductDetailsPage = () => {
         quantity,
       })
       .then((res) => {
-        if (res.data.statusCode === 201) toast.success('Product added to cart.');
-        else toast.error('Failed to add product.');
+        if (res.data.statusCode === 201) {
+          toast.success('Product added to cart.');
+          queryClient.invalidateQueries({ queryKey: ['allsave'] });
+        } else {
+          toast.error('Failed to add product.');
+        }
       })
       .catch(() => toast.error('Server error occurred.'));
   };

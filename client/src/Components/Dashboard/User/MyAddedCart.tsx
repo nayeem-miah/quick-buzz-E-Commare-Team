@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import useAxiosPublic from "../../../Hooks/UsePublic";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Shared/Loading";
 import useAuth from "../../../Hooks/UseAuth";
 import { MdDeleteForever } from "react-icons/md";
@@ -14,6 +14,7 @@ const MyAddedCart: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
   const [Loading, setLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   // Query data
   const {
@@ -56,6 +57,7 @@ const MyAddedCart: React.FC = () => {
             // console.log("Response from server:", res.data);
             if (res.data.data.deletedCount > 0) {
               refetch();
+              queryClient.invalidateQueries({ queryKey: ["allsave"] });
               Swal.fire({
                 title: "Deleted!",
                 text: "Your file has been deleted.",
