@@ -1,4 +1,4 @@
-import { ElementType } from 'react';
+
 
 export interface ProductItem {
   _id: number | string;
@@ -70,5 +70,5 @@ export type ActiveFilterChip = {
 
 export type CategoryOption = {
   label: string;
-  icon: ElementType;
+  icon: string;
 };

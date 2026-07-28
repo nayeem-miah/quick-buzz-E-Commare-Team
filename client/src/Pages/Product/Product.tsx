@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -5,7 +6,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import useAxiosPublic from '../../Hooks/UsePublic';
 import LoadingSpinner from '../../Shared/Loading';
 import NoData from '../../Shared/NoDataFound/NoData';
-import { categories as categoryOptions } from '../Home/Category/CategoryData';
+import { CategoryOption } from './types';
+
 import Card from './Card';
 import ActiveFilterChips from './components/ActiveFilterChips';
 import CategoryScroller from './components/CategoryScroller';
@@ -59,6 +61,18 @@ const Product = () => {
     },
     enabled: !!routeCategory,
   });
+
+  const { data: categoryData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/categories');
+      return res.data;
+    },
+  });
+  const categoryOptions: CategoryOption[] = (categoryData?.data || []).map((cat: any) => ({
+    label: cat.name,
+    icon: cat.icon,
+  }));
 
   const { data: reviews = [] } = useQuery({
     queryKey: ['review'],
