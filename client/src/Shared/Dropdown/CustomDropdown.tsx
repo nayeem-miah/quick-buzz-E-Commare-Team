@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FiChevronDown } from "react-icons/fi";
 
 interface Option {
@@ -14,10 +14,23 @@ interface CustomDropdownProps {
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, options }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const selectedOption = options.find((opt) => opt.value === value) || options[0];
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative w-full md:w-48" onMouseLeave={() => setIsOpen(false)}>
+    <div className="relative w-full md:w-48" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2.5 flex justify-between items-center focus:outline-none focus:ring-4 focus:ring-orange-50 focus:border-orange-400 cursor-pointer"

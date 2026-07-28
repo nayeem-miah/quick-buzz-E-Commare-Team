@@ -207,10 +207,11 @@ const hostManageProduct = catchAsync(async (req, res) => {
 
 const adminManageProduct = catchAsync(async (req, res) => {
     const id = req.params.id;
+    const { status } = req.body;
     const filter = { _id: new ObjectId(id) };
     const updatedDoc = {
         $set: {
-            adminIsApproved: ApprovalStatus.APPROVED,
+            adminIsApproved: status || ApprovalStatus.APPROVED,
         },
     };
     const result = await ProductCollection.updateOne(filter, updatedDoc);
