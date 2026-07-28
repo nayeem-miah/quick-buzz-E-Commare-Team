@@ -5,13 +5,26 @@ const { ObjectId } = require("mongodb")
 
 const getallProduct = catchAsync(async (req, res) => {
 
-    const { category, page = 1, size = 20 } = req.query;
+    const { category, search, status, page = 1, size = 20 } = req.query;
 
     let query = {};
 
     // Category filter
     if (category && category !== "all" && category !== "null") {
         query.category = category;
+    }
+
+    // Status filter
+    if (status && status !== "all" && status !== "null") {
+        query.adminIsApproved = status;
+    }
+
+    // Search filter
+    if (search && search !== "null") {
+        query.$or = [
+            { productTitle: { $regex: search, $options: "i" } },
+            { brandName: { $regex: search, $options: "i" } }
+        ];
     }
 
     const pageNumber = parseInt(page);
@@ -80,7 +93,6 @@ const deleteProduct = catchAsync(async (req, res) => {
         data: result
     })
 });
-
 
 const recentProduct = catchAsync(async (req, res) => {
     const search = req.query.search || "";
@@ -192,7 +204,6 @@ const hostManageProduct = catchAsync(async (req, res) => {
         data: result
     })
 });
-
 
 const adminManageProduct = catchAsync(async (req, res) => {
     const id = req.params.id;
