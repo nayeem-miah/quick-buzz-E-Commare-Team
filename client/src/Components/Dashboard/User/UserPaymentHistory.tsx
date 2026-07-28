@@ -1,34 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
-import React, { ReactNode, useState } from "react";
-import useAxiosPublic from "../../../Hooks/UsePublic";
+import React, { useState } from "react";
 import useAuth from "../../../Hooks/UseAuth";
+import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
-import Heading from "../../../Shared/Heading/Heading";
 import NoData from "../../../Shared/NoDataFound/NoData";
-interface PaymentHistory {
-  date: ReactNode;
-  id: number;
-  cus_name: string;
-  cus_email: string;
-  tran_date: string;
-  totalPrice: number;
-  currency?: string;
-  transactionId?: string;
-  card_type?: string;
-  hostIsApproved?: string;
-  productTitle?: string[];
-  productImage?: string[];
-  brandName?: string[];
-  hostEmail?: string[];
-  status?: string;
-}
+
+import { PaymentHistory } from "../../../types/payment";
+import { PaymentHistoryFilters } from "./components/PaymentHistoryFilters";
+import { PaymentHistoryTable } from "./components/PaymentHistoryTable";
+import { PaymentHistoryCards } from "./components/PaymentHistoryCards";
+import { PaymentDetailsModal } from "./components/PaymentDetailsModal";
+
 const UserPaymentHistory: React.FC = () => {
   const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
     null
   );
-  const { user } = useAuth();
+  const [copiedTrx, setCopiedTrx] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("");
 
+  const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
+
   const { data: PaymentHistoryData = [], isLoading } = useQuery({
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
@@ -38,9 +33,9 @@ const UserPaymentHistory: React.FC = () => {
       return res.data.data;
     },
   });
-  // console.log(PaymentHistoryData);
 
   if (isLoading) return <LoadingSpinner />;
+
   const handleDetailsClick = (payment: PaymentHistory) => {
     setSelectedPayment(payment);
   };
@@ -49,201 +44,86 @@ const UserPaymentHistory: React.FC = () => {
     setSelectedPayment(null);
   };
 
+  const handleCopyTrx = (trxId: string) => {
+    navigator.clipboard.writeText(trxId);
+    setCopiedTrx(trxId);
+    setTimeout(() => setCopiedTrx(null), 2000);
+  };
+
+  const formatDate = (dateStr: any) => {
+    if (!dateStr) return "N/A";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+  };
+
+  const filteredPayments = PaymentHistoryData.filter((payment: any) => {
+    const matchesSearch = !searchQuery || (payment.transactionId && payment.transactionId.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesStatus = statusFilter === "all" || payment.status === statusFilter;
+    const matchesDate = !dateFilter || (payment.date && payment.date.startsWith(dateFilter)) || (payment.tran_date && payment.tran_date.startsWith(dateFilter));
+    return matchesSearch && matchesStatus && matchesDate;
+  });
+
   return (
-    <div className="overflow-x-auto">
-      <Heading title={" Payment History"} subtitle={""} />
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* Header Section */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-extrabold text-gray-900">Payment History</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Review your recent transaction records and order status
+        </p>
+      </div>
+
       {PaymentHistoryData.length === 0 ? (
         <NoData />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-gray-800 text-white">
-              <tr>
-                <th className="py-3 px-4 text-sm font-medium text-left">ID</th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  User Name
-                </th>
+        <div className="space-y-6">
+          <PaymentHistoryFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter}
+          />
 
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Email
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Payment Date
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Amount
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Details
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {PaymentHistoryData?.map(
-                (payment: PaymentHistory, id: number) =>
-                  payment.status === "success" && (
-                    <tr
-                      key={payment.id}
-                      className="border-b hover:bg-gray-50 transition duration-300"
-                    >
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {(id = id + 1)}
-                      </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.cus_name}
-                      </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.cus_email}
-                      </td>
-
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.date}
-                      </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
-                        {payment?.totalPrice}$
-                      </td>
-
-                      <td className="py-4 px-4 text-sm">
-                        <button
-                          onClick={() => handleDetailsClick(payment)}
-                          className="px-4 sm:py-0 md:py-2 py-2 text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-md transition-all duration-300
-             hover:-translate-y-0.5"
-                        >
-                          Details
-                        </button>
-                      </td>
-                    </tr>
-                  )
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {/* Modal Component */}
-      {selectedPayment && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-2 sm:p-4 overflow-auto"
-          onClick={closeModal} // Close modal when clicking outside
-        >
-          <div
-            className="relative bg-gradient-to-br from-white to-gray-100 rounded-xl shadow-lg p-4 sm:p-6 w-full max-w-lg md:max-w-xl overflow-y-auto max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()} // Prevents modal content from triggering close
-          >
-            {/* Modal Header */}
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
-                Payment Details
-              </h3>
+          {filteredPayments.length === 0 ? (
+            <div className="bg-white p-12 rounded-2xl border border-gray-100 shadow-sm text-center">
+              <p className="text-sm text-gray-400 font-semibold">No matching transactions found.</p>
               <button
-                className="absolute top-2 right-2  border-gray-400  p-1 text-gray-600 hover:text-red-500 hover:border-red-500 text-lg sm:text-xl focus:outline-none"
-                onClick={closeModal} // Close modal when clicking the "X"
+                onClick={() => { setSearchQuery(""); setStatusFilter("all"); setDateFilter(""); }}
+                className="mt-4 px-4 py-2 text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-xl transition border border-orange-100"
               >
-                ✕
+                Clear Filters
               </button>
             </div>
-
-            {/* Modal Content */}
-            <div className="space-y-4 text-gray-700">
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">User Name:</span>
-                {selectedPayment?.cus_name || "N/A"}
-              </p>
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">Email:</span>
-                {selectedPayment?.cus_email || "N/A"}
-              </p>
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">
-                  Payment Date:
-                </span>
-                {selectedPayment?.tran_date || "N/A"}
-              </p>
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">Amount:</span>
-                {selectedPayment?.totalPrice || "0"}
-                {selectedPayment?.currency || ""}
-              </p>
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">
-                  Transaction ID:
-                </span>
-                {selectedPayment?.transactionId || "N/A"}
-              </p>
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">Card Type:</span>
-                {selectedPayment?.card_type || "N/A"}
-              </p>
-
-              {/* Host Approval Status */}
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">
-                  Approval Status:
-                </span>
-                <span
-                  className={`font-semibold ${selectedPayment?.hostIsApproved === "approve"
-                    ? "text-green-600"
-                    : selectedPayment?.hostIsApproved === "pending"
-                      ? "text-red-600"
-                      : "text-gray-600"
-                    }`}
-                >
-                  {selectedPayment?.hostIsApproved || "N/A"}
-                </span>
-              </p>
-
-              {/* Status */}
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">
-                  Payment status:{" "}
-                </span>
-                <span
-                  className={`font-semibold ${selectedPayment?.status === "success"
-                    ? "text-green-500" // Green for Success
-                    : selectedPayment?.status === "Failed"
-                      ? "text-red-500" // Red for Failed
-                      : "text-yellow-500" // Yellow for Pending or N/A
-                    }`}
-                >
-                  {selectedPayment?.status || "N/A"}
-                </span>
-              </p>
-
-              {/* Products List */}
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">Products:</span>
-                <ul className="list-disc list-inside space-y-2">
-                  {selectedPayment?.productTitle?.map(
-                    (title: string, index: number) => (
-                      <li key={index} className="flex items-start space-x-3">
-                        <img
-                          src={selectedPayment?.productImage?.[index] || ""}
-                          alt={title || "Product Image"}
-                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-md"
-                        />
-                        <div>
-                          <p className="font-medium text-sm sm:text-base">
-                            {title || "Unnamed Product"}
-                          </p>
-                          <p className="text-xs sm:text-sm text-gray-500">
-                            {selectedPayment?.brandName?.[index] || "No Brand"}
-                          </p>
-                        </div>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </p>
-
-              <p className="text-sm sm:text-base">
-                <span className="font-semibold text-gray-900">
-                  Host Emails:
-                </span>
-                {selectedPayment?.hostEmail?.join(", ") || "N/A"}
-              </p>
-            </div>
-          </div>
+          ) : (
+            <>
+              <PaymentHistoryTable
+                payments={filteredPayments}
+                onDetailsClick={handleDetailsClick}
+                formatDate={formatDate}
+              />
+              <PaymentHistoryCards
+                payments={filteredPayments}
+                onDetailsClick={handleDetailsClick}
+                formatDate={formatDate}
+              />
+            </>
+          )}
         </div>
       )}
+
+      <PaymentDetailsModal
+        payment={selectedPayment}
+        onClose={closeModal}
+        formatDate={formatDate}
+        copiedTrx={copiedTrx}
+        onCopyTrx={handleCopyTrx}
+      />
     </div>
   );
 };

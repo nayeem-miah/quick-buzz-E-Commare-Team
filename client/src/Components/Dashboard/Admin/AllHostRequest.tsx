@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import NoData from "../../../Shared/NoDataFound/NoData";
 import { Link } from "react-router-dom";
 import Decline from "./Decline/Decline";
+import { ApprovalStatus } from "../../../constants/enums";
 
 interface SellerDetails {
   sellerName: string;
@@ -134,7 +135,7 @@ const AllHostRequest: React.FC = () => {
                   </td>
 
                   <td className="py-4 px-4 text-sm text-gray-600">
-                    {sellData?.adminIsApproved === "approve" ? (
+                    {sellData?.adminIsApproved === ApprovalStatus.APPROVED ? (
                       "Approve"
                     ) : (
                       <Link to={"/dashboard/manage-users"}>

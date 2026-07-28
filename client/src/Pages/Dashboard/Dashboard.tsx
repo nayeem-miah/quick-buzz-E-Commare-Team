@@ -1,25 +1,22 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
-import { GrLogout } from "react-icons/gr";
-import { FcSettings } from "react-icons/fc";
+import { Helmet } from "react-helmet-async";
 import { AiOutlineBars } from "react-icons/ai";
-import { MdHomeWork } from "react-icons/md";
-import { MdOutlineAddCircleOutline } from "react-icons/md";
-import { TbBrandBooking } from "react-icons/tb";
-import { NavLink } from "react-router-dom";
-import { Link } from "react-router-dom";
-import useAuth from "../../Hooks/UseAuth";
 import { BsGraphUp } from "react-icons/bs";
-import { FaListAlt } from "react-icons/fa";
+import { FaHistory, FaListAlt } from "react-icons/fa";
+import { FcSettings } from "react-icons/fc";
+import { GoGitPullRequestClosed } from "react-icons/go";
+import { GrLogout } from "react-icons/gr";
 import { HiUsers } from "react-icons/hi2";
-import { FaHistory } from "react-icons/fa";
+import { MdLocalGroceryStore, MdOutlineAddCircleOutline, MdOutlinePayment } from "react-icons/md";
+import { RiGitClosePullRequestFill } from "react-icons/ri";
+import { TbBrandBooking } from "react-icons/tb";
+import { Link, NavLink } from "react-router-dom";
+import { FiPackage, FiLayers } from "react-icons/fi";
 import logo from "../../../src/assets/Image/logo2.png";
-import { MdOutlinePayment } from "react-icons/md";
+import useAuth from "../../Hooks/UseAuth";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import LoadingSpinner from "../../Shared/Loading";
-import { RiGitClosePullRequestFill } from "react-icons/ri";
-import { GoGitPullRequestClosed } from "react-icons/go";
-import { Helmet } from "react-helmet-async";
 
 const Sidebar: React.FC = () => {
   const { logOut, user } = useAuth();
@@ -30,7 +27,6 @@ const Sidebar: React.FC = () => {
   }
 
   const { singleUser, loading } = useFetchSingleUser(user?.email);
-  // console.log(singleUser);
 
   if (loading) {
     return <LoadingSpinner></LoadingSpinner>;
@@ -40,340 +36,171 @@ const Sidebar: React.FC = () => {
     return <h1>User not Found</h1>;
   }
 
-  // const role: string = "admin";
-  // Sidebar Responsive Handler
   const handleToggle = () => {
     setActive(!isActive);
   };
 
+  const activeClass = "bg-orange-50 text-orange-600 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-bold";
+  const inactiveClass = "text-gray-600 hover:bg-gray-50 hover:text-orange-500 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-medium";
+
   return (
     <>
+      {/* Mobile Sidebar Backdrop Overlay */}
+      {isActive && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-20 md:hidden transition-all duration-300"
+          onClick={handleToggle}
+        />
+      )}
+
       {/* Small Screen Navbar */}
-      <div className="  flex justify-between md:hidden">
-      <Helmet>
+      <div className="flex justify-between md:hidden bg-white border-b border-gray-100 items-center px-4 py-2 w-full z-20 relative">
+        <Helmet>
           <title>quickBuzz | Dashboard Page </title>
         </Helmet>
         <div>
-          <div className="block cursor-pointer p-4 font-bold">
+          <div className="block cursor-pointer py-2 font-bold">
             <Link to="/">
-              <img src={logo} alt="logo" width={100} height={100} />
+              <img src={logo} alt="logo" className="w-24 h-auto" />
             </Link>
           </div>
         </div>
 
         <button
           onClick={handleToggle}
-          className="mobile-menu-button p-4 focus:outline-none focus:bg-gray-200"
+          className="mobile-menu-button p-2 rounded-lg text-gray-600 focus:outline-none focus:bg-gray-50"
         >
-          <AiOutlineBars className="h-5 w-5" />
+          <AiOutlineBars className="h-6 w-6" />
         </button>
       </div>
 
-      {/* Sidebar  admin*/}
-      {singleUser?.role === "admin" && (
-        <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-            isActive ? "-translate-x-full" : ""
-          } md:translate-x-0 transition duration-200 ease-in-out`}
-        >
-          <div>
-            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-[#4270B5] mx-auto">
-              <Link to="/">
-                <img src={logo} alt="logo" width={100} height={100} />
-              </Link>
-            </div>
-
-            {/* Nav Items */}
-            <div className="flex flex-col justify-between flex-1 mt-6">
-              {/* Menu Items */}
-              <nav>
-                {/* Statistics */}
-                <NavLink
-                  to="/dashboard"
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <BsGraphUp className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Statistics</span>
-                </NavLink>
-
-                {/* Manage Bookings  */}
-                <NavLink
-                  to="manage-bookings"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <TbBrandBooking className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Manage products</span>
-                </NavLink>
-                {/* Manage Users */}
-                <NavLink
-                  to="manage-users"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <HiUsers className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Manage Users</span>
-                </NavLink>
-
-                {/* My Listing */}
-                <NavLink
-                  to="all-payment-history"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <FaHistory className="w-5 h-5" />
-                  <span className="mx-4 font-medium">All payment history</span>
-                </NavLink>
-                {/* host request  */}
-                <NavLink
-                  to="all-host-request"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <RiGitClosePullRequestFill className="w-5 h-5" />
-                  <span className="mx-4 font-medium">All Host Request</span>
-                </NavLink>
-              </nav>
-            </div>
+      {/* Sidebar */}
+      <div
+        className={`z-30 fixed flex flex-col justify-between overflow-y-auto bg-white w-64 space-y-6 px-3 py-6 inset-y-0 left-0 transform ${
+          isActive ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 transition duration-300 ease-in-out border-r border-gray-100 h-screen`}
+      >
+        <div className="flex flex-col">
+          <div className="w-full hidden md:flex px-4 py-3 justify-center items-center bg-gray-50/50 rounded-xl border border-gray-100/80 mx-auto">
+            <Link to="/">
+              <img src={logo} alt="logo" className="w-28 h-auto object-contain" />
+            </Link>
           </div>
 
-          <div>
-            <hr />
+          {/* Nav Items */}
+          <div className="mt-6 md:mt-8">
+            <nav className="space-y-1">
+              {/* ADMIN ROLE */}
+              {singleUser?.role === "admin" && (
+                <>
+                  <NavLink to="/dashboard" end className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <BsGraphUp className="w-5 h-5 text-gray-400 group-hover:text-orange-500" />
+                    <span className="mx-4">Statistics</span>
+                  </NavLink>
 
-            {/* Profile Menu*/}
-            <NavLink
-              to="/dashboard/profile"
-              className={({ isActive }) =>
-                `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                  isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                }`
-              }
-            >
-              <FcSettings className="w-5 h-5" />
-              <span className="mx-4 font-medium">Profile</span>
-            </NavLink>
-            <button
-              onClick={logOut}
-              className="flex w-full items-center px-4 py-2 mt-5 text-white hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
-            >
-              <GrLogout className="w-5 h-5" />
-              <span className="mx-4 font-medium">Logout</span>
-            </button>
-          </div>
-        </div>
-      )}
-      {/* Sidebar  host*/}
-      {singleUser?.role === "Host" && (
-        <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-            isActive ? "-translate-x-full" : ""
-          } md:translate-x-0 transition duration-200 ease-in-out`}
-        >
-          <div>
-            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-[#4270B5] mx-auto">
-              <Link to="/">
-                <img src={logo} alt="logo" width={100} height={100} />
-              </Link>
-            </div>
+                  <NavLink to="manage-bookings" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <TbBrandBooking className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Manage products</span>
+                  </NavLink>
 
-            {/* Nav Items */}
-            <div className="flex flex-col  justify-between flex-1 mt-6">
-              {/* Menu Items */}
-              <nav>
-                {/* host Home */}
-                <NavLink
-                  to="/dashboard"
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <BsGraphUp className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Overview</span>
-                </NavLink>
+                  <NavLink to="manage-categories" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FiLayers className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Manage Categories</span>
+                  </NavLink>
 
-                {/* Add Product */}
-                <NavLink
-                  to="host-add-product"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <MdOutlineAddCircleOutline className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Add Product</span>
-                </NavLink>
-                {/* host-manageBooking */}
-                <NavLink
-                  to="host-manage-booking"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <TbBrandBooking className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Manage Booking</span>
-                </NavLink>
-                {/* My Listing */}
-                <NavLink
-                  to="my-host-listings"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <FaListAlt className="w-5 h-5" />
-                  <span className="mx-4 font-medium">My Listings</span>
-                </NavLink>
-              </nav>
-            </div>
-          </div>
+                  <NavLink to="manage-users" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <HiUsers className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Manage Users</span>
+                  </NavLink>
 
-          <div>
-            <hr />
+                  <NavLink to="all-payment-history" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FaHistory className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">All payment history</span>
+                  </NavLink>
 
-            {/* Profile Menu */}
-            <NavLink
-              to="/dashboard/profile"
-              className={({ isActive }) =>
-                `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform ${
-                  isActive ? "text-white" : " text-white"
-                }`
-              }
-            >
-              <FcSettings className="w-5 h-5" />
-              <span className="mx-4 font-medium">Profile</span>
-            </NavLink>
-            <button
-              onClick={logOut}
-              className="flex w-full items-center px-4 py-2 mt-5 text-white hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
-            >
-              <GrLogout className="w-5 h-5" />
-              <span className="mx-4 font-medium">Logout</span>
-            </button>
+                  <NavLink to="all-host-request" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <RiGitClosePullRequestFill className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">All Host Request</span>
+                  </NavLink>
+                </>
+              )}
+
+              {/* HOST ROLE */}
+              {singleUser?.role === "Host" && (
+                <>
+                  <NavLink to="/dashboard" end className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <BsGraphUp className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Overview</span>
+                  </NavLink>
+
+                  <NavLink to="host-add-product" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <MdOutlineAddCircleOutline className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Add Product</span>
+                  </NavLink>
+
+                  <NavLink to="host-manage-booking" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <TbBrandBooking className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Manage Booking</span>
+                  </NavLink>
+
+                  <NavLink to="my-host-listings" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FaListAlt className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">My Listings</span>
+                  </NavLink>
+                </>
+              )}
+
+              {/* USER ROLE */}
+              {singleUser?.role === "user" && (
+                <>
+                  <NavLink to="/dashboard" end className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <BsGraphUp className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Overview</span>
+                  </NavLink>
+
+                  <NavLink to="my-listings" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <MdLocalGroceryStore className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">My Cart</span>
+                  </NavLink>
+
+                  <NavLink to="my-orders" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FiPackage className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">My Orders</span>
+                  </NavLink>
+
+                  <NavLink to="my-payment-history" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <MdOutlinePayment className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">My payment history</span>
+                  </NavLink>
+
+                  <NavLink to="seller-request" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <GoGitPullRequestClosed className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Become a Seller</span>
+                  </NavLink>
+                </>
+              )}
+            </nav>
           </div>
         </div>
-      )}
-      {/* Sidebar  user dashboard*/}
-      {singleUser?.role === "user" && (
-        <div
-          className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-[#131826]  w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-            isActive ? "-translate-x-full" : ""
-          } md:translate-x-0 transition duration-200 ease-in-out`}
-        >
-          <div>
-            <div className="w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-[#4270B5] mx-auto">
-              <Link to="/">
-                <img src={logo} alt="logo" width={100} height={100} />
-              </Link>
-            </div>
 
-            {/* Nav Items */}
-            <div className="flex flex-col justify-between flex-1 mt-6">
-              {/* Menu Items */}
-              <nav>
-                {/* user home */}
-                <NavLink
-                  to="/dashboard"
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <BsGraphUp className="w-5 h-5" />
-                  <span className="mx-4 font-medium">Overview</span>
-                </NavLink>
+        <div>
+          <hr className="border-gray-100 my-4" />
 
-                {/* My Listing */}
-                <NavLink
-                  to="my-listings"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <MdHomeWork className="w-5 h-5" />
-                  <span className="mx-4 font-medium">My Listings</span>
-                </NavLink>
+          {/* Profile Menu & Logout */}
+          <NavLink to="/dashboard/profile" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+            <FcSettings className="w-5 h-5 text-gray-400" />
+            <span className="mx-4">Profile</span>
+          </NavLink>
 
-                {/*my-payment-history  */}
-                <NavLink
-                  to="my-payment-history"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 gap-2 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <MdOutlinePayment className="w-5 h-5" />
-                  <span className=" font-medium">My payment history</span>
-                </NavLink>
-                {/* seller request */}
-                <NavLink
-                  to="seller-request"
-                  className={({ isActive }) =>
-                    `flex items-center px-4 py-2 my-5 gap-2 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                      isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                    }`
-                  }
-                >
-                  <GoGitPullRequestClosed className="w-5 h-5" />
-                  <span className=" font-medium">Become a seller request</span>
-                </NavLink>
-              </nav>
-            </div>
-          </div>
-
-          <div>
-            <hr />
-            {/*  */}
-            {/* Profile Menu */}
-            <NavLink
-              to="/dashboard/profile"
-              className={({ isActive }) =>
-                `flex items-center px-4 py-2 my-5 transition-colors duration-300 transform hover:bg-gray-300 hover:text-gray-700 ${
-                  isActive ? "bg-gray-300 text-gray-700" : "text-white"
-                }`
-              }
-            >
-              <FcSettings className="w-5 h-5" />
-              <span className="mx-4 font-medium">Profile</span>
-            </NavLink>
-            <button
-              onClick={logOut}
-              className="flex w-full items-center px-4 py-2 mt-5 text-white hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300 transform"
-            >
-              <GrLogout className="w-5 h-5" />
-              <span className="mx-4 font-medium">Logout</span>
-            </button>
-          </div>
+          <button
+            onClick={logOut}
+            className="flex w-full items-center px-4 py-2.5 my-3 text-gray-500 hover:bg-red-50 text-red-500 rounded-xl transition-all duration-300 font-medium"
+          >
+            <GrLogout className="w-5 h-5 text-red-400" />
+            <span className="mx-4">Logout</span>
+          </button>
         </div>
-      )}
+      </div>
     </>
   );
 };

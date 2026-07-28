@@ -6,6 +6,7 @@ import useAxiosPublic from "../../../Hooks/UsePublic";
 import EnhancedBarChart from "./Chart/EnhancedBarChart";
 import LoadingSpinner from "../../../Shared/Loading";
 import PiChart from "./Chart/PiChart";
+import { PaymentStatus, ApprovalStatus } from "../../../constants/enums";
 
 const HostHome: React.FC = () => {
   const { user } = useAuth();
@@ -22,7 +23,7 @@ const HostHome: React.FC = () => {
 
   // successful payment
   const successfulPaymentCount = PaymentHistoryData.filter(
-    (item: any) => item.status === "success"
+    (item: any) => item.status === PaymentStatus.SUCCESS
   );
   // Calculate the total amount of successful payments
   const totalAmount = successfulPaymentCount.reduce(
@@ -41,7 +42,7 @@ const HostHome: React.FC = () => {
   });
 
   const adminManageProduct = data.filter(
-    (item: any) => item.adminIsApproved === "approve"
+    (item: any) => item.adminIsApproved === ApprovalStatus.APPROVED
   );
 
 

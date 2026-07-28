@@ -6,6 +6,8 @@
 @tailwind utilities;
 
 /* Set Roboto globally */
+html,
 body {
   @apply font-sans;
+  overflow-x: hidden;
 }

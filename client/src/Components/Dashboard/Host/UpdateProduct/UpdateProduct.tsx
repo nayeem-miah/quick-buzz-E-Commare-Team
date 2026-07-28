@@ -7,6 +7,8 @@ import useAxiosPublic from "../../../../Hooks/UsePublic";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ImSpinner } from "react-icons/im";
+import { Category } from "../../../../types/category.type";
+
 const UpdateProduct: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -26,8 +28,16 @@ const UpdateProduct: React.FC = () => {
       const { data } = await axiosPublic.get(`/products/${id}`);
       return data.data;
     },
-    enabled: !!id,
   });
+
+  const { data: categoryData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/categories");
+      return res.data;
+    },
+  });
+  const categories = categoryData?.data || [];
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {error?.message}</div>;
@@ -202,21 +212,11 @@ const UpdateProduct: React.FC = () => {
               required
             >
               <option value="">Select category</option>
-              <option value="mobile">Mobile</option>
-              <option value="laptop">Laptop</option>
-              <option value="penDrive">PenDrive</option>
-              <option value="caves">Caves</option>
-              <option value="earphones">Earphones</option>
-              <option value="cable">Cable</option>
-              <option value="mouse">Mouse</option>
-              <option value="keyboard">Keyboard</option>
-              <option value="tshirt">Tshirt</option>
-              <option value="sunGlass">SunGlass</option>
-              <option value="light">Light</option>
-              <option value="speaker">Speaker</option>
-              <option value="stand">Stand</option>
-              <option value="airpode">Airpode</option>
-              <option value="charger">Charger</option>
+              {categories.map((cat: Category) => (
+                <option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
             </select>
           </div>
 

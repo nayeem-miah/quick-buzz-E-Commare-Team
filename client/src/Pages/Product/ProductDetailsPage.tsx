@@ -81,24 +81,24 @@ const ProductDetailsPage = () => {
   const isActionDisabled = singleUser?.role === 'admin' || singleUser?.role === 'Host';
 
   const handleAddToCart = () => {
+    if (!user?.email) {
+      toast.error("Please log in to add items to cart.");
+      return;
+    }
+
     axiosPublic
-      .post('/wishlist', {
-        _id: product._id,
-        productImage: product.productImage,
-        description: product.description,
-        brandName: product.brandName,
-        productTitle: product.productTitle,
-        hostName: product.hostName,
-        price,
-        discount: product.discount,
+      .post('/cart', {
         email: user?.email,
-        displayName: user?.displayName,
-        hostEmail: product.hostEmail,
+        product_id: product._id,
         quantity,
       })
       .then((res) => {
-        if (res.data.statusCode === 201) toast.success('Product added to cart.');
-        else toast.error('Failed to add product.');
+        if (res.data.statusCode === 201) {
+          toast.success('Product added to cart.');
+          queryClient.invalidateQueries({ queryKey: ['allsave'] });
+        } else {
+          toast.error('Failed to add product.');
+        }
       })
       .catch(() => toast.error('Server error occurred.'));
   };

@@ -7,7 +7,7 @@ import LoadingSpinner from "../../../Shared/Loading";
 import Heading from "../../../Shared/Heading/Heading";
 import NoData from "../../../Shared/NoDataFound/NoData";
 import Swal from "sweetalert2";
-
+import { ApprovalStatus, PaymentStatus } from "../../../constants/enums";
 interface Listing {
   [x: string]: ReactNode;
   _id: number;
@@ -115,7 +115,7 @@ const ManageBooking: React.FC = () => {
               <tbody>
                 {data.map(
                   (listing: Listing, i: number) =>
-                    listing.status === "success" && (
+                    listing.status === PaymentStatus.SUCCESS && (
                       <tr
                         key={listing._id}
                         className="border-b hover:bg-gray-50 transition duration-200"
@@ -133,7 +133,7 @@ const ManageBooking: React.FC = () => {
                           ${listing?.totalPrice}
                         </td>
                         <td className="py-4 px-4 text-sm text-gray-600">
-                          {listing?.hostIsApproved === "approve" ? (
+                          {listing?.hostIsApproved === ApprovalStatus.APPROVED ? (
                             "Approve"
                           ) : (
                             <button
@@ -228,9 +228,9 @@ const ManageBooking: React.FC = () => {
                     Approval Status:
                   </span>
                   <span
-                    className={`font-semibold ${selectedBooking?.hostIsApproved === "approve"
+                    className={`font-semibold ${selectedBooking?.hostIsApproved === ApprovalStatus.APPROVED
                       ? "text-green-600"
-                      : selectedBooking?.hostIsApproved === "pending"
+                      : selectedBooking?.hostIsApproved === ApprovalStatus.PENDING
                         ? "text-red-600"
                         : "text-gray-600"
                       }`}
@@ -245,9 +245,9 @@ const ManageBooking: React.FC = () => {
                     payment Status:
                   </span>
                   <span
-                    className={`font-semibold ${selectedBooking?.status === "success"
+                    className={`font-semibold ${selectedBooking?.status === PaymentStatus.SUCCESS
                       ? "text-green-500" // Green for Success
-                      : selectedBooking?.status === "Failed"
+                      : selectedBooking?.status === PaymentStatus.FAILED
                         ? "text-red-500" // Red for Failed
                         : "text-yellow-500" // Yellow for Pending or N/A
                       }`}

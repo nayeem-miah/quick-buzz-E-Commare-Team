@@ -15,6 +15,7 @@ import HostAddProduct from "../Components/Dashboard/Host/HostAddProduct";
 import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
 import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 import AdminManageBookings from "../Components/Dashboard/Admin/AdminManageBookings";
+import AdminManageCategories from "../Components/Dashboard/Admin/AdminManageCategories";
 import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
 import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
@@ -30,6 +31,11 @@ import Success from "../Components/SSLCommarze/Success";
 import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/SellerDataUpdated";
 import RoleBasedDashboard from "../Components/Dashboard/RoleBasedDashboard/RoleBasedDashboard";
 import HostHome from "../Components/Dashboard/Host/HostHome";
+import { API_BASE_URL } from "../utils/api";
+import Checkout from "../Pages/Checkout/Checkout";
+import MyOrders from "../Components/Dashboard/User/MyOrders";
+import OrderDetails from "../Components/Dashboard/User/OrderDetails";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,8 +58,8 @@ const router = createBrowserRouter([
       {
         path: "/product",
         element: <Product />,
-        loader: () => fetch('https://quick-bazz.vercel.app/productsCount')
-    },
+        loader: () => fetch(`${API_BASE_URL}/productsCount`)
+      },
       {
         path: "/product/:id",
         element: (
@@ -89,6 +95,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <BecomeAHost />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/checkout",
+        element: (
+          <PrivateRoute>
+            <Checkout />
           </PrivateRoute>
         ),
       },
@@ -153,6 +167,10 @@ const router = createBrowserRouter([
         element: <AdminManageBookings />,
       },
       {
+        path: "manage-categories",
+        element: <AdminManageCategories />,
+      },
+      {
         path: "all-payment-history",
         element: <AllPaymentHistory />,
       },
@@ -184,25 +202,19 @@ const router = createBrowserRouter([
       },
       {
         path: "seller-request",
-        element: (
-          <SellerRequest
-            sellerData={{
-              _id: "",
-              sellerName: "",
-              sellerEmail: "",
-              sellerPhoto: "",
-              mobile: "",
-              reason: "",
-              address: "",
-              other: "",
-              imageUrl: "",
-            }}
-          />
-        ),
+        element: <SellerRequest />,
       },
       {
         path: "my-payment-history",
         element: <UserPaymentHistory />,
+      },
+      {
+        path: "my-orders",
+        element: <MyOrders />,
+      },
+      {
+        path: "order/:id",
+        element: <OrderDetails />,
       },
     ],
   },

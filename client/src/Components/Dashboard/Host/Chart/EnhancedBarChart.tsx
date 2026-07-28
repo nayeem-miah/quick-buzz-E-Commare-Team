@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import useAxiosPublic from "../../../../Hooks/UsePublic";
 import useAuth from "../../../../Hooks/UseAuth";
+import { PaymentStatus } from "../../../../constants/enums";
 
 interface BookingData {
   status: string;
@@ -32,7 +33,7 @@ const EnhancedBarChart: React.FC = () => {
       const response = await axiosPublic.get(`/payments/host-payment-history/${user?.email}`);
       const bookingsData: BookingData[] = response.data.data;
 
-      const bookings = bookingsData.filter((item) => item.status === "success");
+      const bookings = bookingsData.filter((item) => item.status === PaymentStatus.SUCCESS);
       if (bookings.length === 0) {
         setError("No booking data available! Bar chart cannot be displayed.");
         setLoading(false);
