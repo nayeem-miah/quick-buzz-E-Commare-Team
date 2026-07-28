@@ -31,6 +31,9 @@ import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/Se
 import RoleBasedDashboard from "../Components/Dashboard/RoleBasedDashboard/RoleBasedDashboard";
 import HostHome from "../Components/Dashboard/Host/HostHome";
 import { API_BASE_URL } from "../utils/api";
+import Checkout from "../Pages/Checkout/Checkout";
+import MyOrders from "../Components/Dashboard/User/MyOrders";
+import OrderDetails from "../Components/Dashboard/User/OrderDetails";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +94,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <BecomeAHost />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/checkout",
+        element: (
+          <PrivateRoute>
+            <Checkout />
           </PrivateRoute>
         ),
       },
@@ -186,25 +197,19 @@ const router = createBrowserRouter([
       },
       {
         path: "seller-request",
-        element: (
-          <SellerRequest
-            sellerData={{
-              _id: "",
-              sellerName: "",
-              sellerEmail: "",
-              sellerPhoto: "",
-              mobile: "",
-              reason: "",
-              address: "",
-              other: "",
-              imageUrl: "",
-            }}
-          />
-        ),
+        element: <SellerRequest />,
       },
       {
         path: "my-payment-history",
         element: <UserPaymentHistory />,
+      },
+      {
+        path: "my-orders",
+        element: <MyOrders />,
+      },
+      {
+        path: "order/:id",
+        element: <OrderDetails />,
       },
     ],
   },

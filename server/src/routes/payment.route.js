@@ -11,6 +11,7 @@ router.post("/create-payment", paymentController.createPayment);
 router.post("/success-payment", paymentController.successPayment);
 router.post("/fail", paymentController.failPayment);
 router.post("/cancel", paymentController.cancelPayment);
+router.patch("/:id/status", paymentController.updatePaymentStatus);
 
 
 const paymentRoutes = router;

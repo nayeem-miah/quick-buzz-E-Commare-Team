@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
     queryKey: ["allsave", user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
-      const res = await axiosPublic.get(`/wishlist/${user.email}`);
+      const res = await axiosPublic.get(`/cart/${user.email}`);
       return res.data.data;
     },
     enabled: !!user?.email,

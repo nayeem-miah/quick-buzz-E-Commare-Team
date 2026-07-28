@@ -1,16 +1,17 @@
 const { SellerCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
-const { ObjectId } = require("mongodb")
+const { ObjectId } = require("mongodb");
+const sendResponse = require("../utils/sendResponse");
 
 const getAllSeller = catchAsync(async (req, res) => {
     const result = await SellerCollection.find().toArray();
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "seller get success",
         data: result
-    })
+    });
 });
 
 const getSingleSeller = catchAsync(async (req, res) => {
@@ -19,12 +20,12 @@ const getSingleSeller = catchAsync(async (req, res) => {
 
     const result = await SellerCollection.findOne(query);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "single seller get success",
         data: result
-    })
+    });
 });
 
 const getSingleSellerByEmail = catchAsync(async (req, res) => {
@@ -32,12 +33,12 @@ const getSingleSellerByEmail = catchAsync(async (req, res) => {
     const query = { sellerEmail: email };
     const result = await SellerCollection.findOne(query);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "single seller get success",
         data: result
-    })
+    });
 });
 
 const deleteSeller = catchAsync(async (req, res) => {
@@ -45,12 +46,12 @@ const deleteSeller = catchAsync(async (req, res) => {
     const query = { _id: new ObjectId(id) };
     const result = await SellerCollection.deleteOne(query);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "seller delete success",
         data: result
-    })
+    });
 });
 
 const updateSeller = catchAsync(async (req, res) => {
@@ -70,12 +71,12 @@ const updateSeller = catchAsync(async (req, res) => {
 
     const result = await SellerCollection.updateOne(filter, updatedDoc);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "seller update success",
         data: result
-    })
+    });
 });
 
 const createSeller = catchAsync(async (req, res) => {
@@ -90,14 +91,13 @@ const createSeller = catchAsync(async (req, res) => {
     }
     const result = await SellerCollection.insertOne(seller);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "seller update success",
         data: result
-    })
+    });
 });
-
 
 const sellerDecline = catchAsync(async (req, res) => {
     const declineMessage = req.body;
@@ -111,15 +111,13 @@ const sellerDecline = catchAsync(async (req, res) => {
     }
     const result = await SellerCollection.updateOne(filter, updatedDoc)
 
-    res.json({
+    sendResponse(res, {
         statusCode: 201,
         success: true,
         message: "seller decline message success",
         data: result
-    })
+    });
 });
-
-
 
 const SellerController = {
     getAllSeller,
@@ -129,6 +127,6 @@ const SellerController = {
     updateSeller,
     createSeller,
     sellerDecline
-}
+};
 
-module.exports = SellerController
+module.exports = SellerController;

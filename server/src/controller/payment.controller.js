@@ -1,50 +1,183 @@
 const { default: axios } = require("axios");
-const { PaymentCollection } = require("../module/module");
+const { PaymentCollection, OrderCollection, CartCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
-const { ObjectId } = require("mongodb")
+const { ObjectId } = require("mongodb");
+const sendResponse = require("../utils/sendResponse");
 
 
 const getAllPayment = catchAsync(async (req, res) => {
-    const result = await PaymentCollection.find().toArray()
+    const result = await PaymentCollection.aggregate([
+        {
+            $lookup: {
+                from: "order_items",
+                localField: "order_id",
+                foreignField: "order_id",
+                as: "orderItems"
+            }
+        }
+    ]).toArray();
 
-    res.json({
-        statusCode: 20,
+    const formatted = result.map(payment => {
+        const hasOrderItems = payment.orderItems && payment.orderItems.length > 0;
+        return {
+            _id: payment._id,
+            order_id: payment.order_id,
+            cus_name: payment.cus_name,
+            cus_email: payment.cus_email,
+            amount: payment.amount,
+            totalPrice: payment.amount || payment.totalPrice,
+            currency: payment.currency || "USD",
+            payment_method: payment.payment_method || "Card",
+            status: payment.status,
+            transactionId: payment.transaction_id || payment.transactionId || "N/A",
+            card_type: payment.card_type || "N/A",
+            date: payment.date || payment.tran_date,
+            tran_date: payment.tran_date || payment.date,
+            hostIsApproved: payment.hostIsApproved || "pending",
+            productTitle: hasOrderItems 
+                ? payment.orderItems.map(item => item.productTitle)
+                : (payment.hostName || []),
+            productImage: hasOrderItems
+                ? payment.orderItems.map(item => item.productImage)
+                : (payment.hostPhoto || []),
+            brandName: hasOrderItems
+                ? payment.orderItems.map(item => item.brandName || "Unknown")
+                : (payment.brandName || []),
+            hostEmail: hasOrderItems
+                ? payment.orderItems.map(item => item.hostEmail || "N/A")
+                : (payment.hostEmail || [])
+        };
+    });
+
+    sendResponse(res, {
+        statusCode: 200,
         success: true,
         message: "payment history find success",
-        data: result
-    })
-
+        data: formatted
+    });
 });
 
 const getPaymentByHostEmail = catchAsync(async (req, res) => {
     const hostEmail = req.params.email;
-    const query = { hostEmail: hostEmail };
-    const result = await PaymentCollection.find(query).toArray();
 
-    res.json({
-        statusCode: 201,
+    const result = await PaymentCollection.aggregate([
+        {
+            $lookup: {
+                from: "order_items",
+                localField: "order_id",
+                foreignField: "order_id",
+                as: "orderItems"
+            }
+        },
+        {
+            $match: {
+                $or: [
+                    { hostEmail: hostEmail },
+                    { "orderItems.hostEmail": hostEmail }
+                ]
+            }
+        }
+    ]).toArray();
+
+    const formatted = result.map(payment => {
+        const relevantItems = payment.orderItems 
+            ? payment.orderItems.filter(item => item.hostEmail === hostEmail)
+            : [];
+        const hasOrderItems = relevantItems.length > 0;
+        const hostItemsTotal = relevantItems.reduce((sum, item) => sum + (item.price * (1 - (item.discount || 0) / 100) * item.quantity), 0);
+
+        return {
+            _id: payment._id,
+            order_id: payment.order_id,
+            cus_name: payment.cus_name,
+            cus_email: payment.cus_email,
+            amount: hasOrderItems ? hostItemsTotal : payment.amount,
+            totalPrice: hasOrderItems ? hostItemsTotal : (payment.amount || payment.totalPrice),
+            currency: payment.currency || "USD",
+            payment_method: payment.payment_method || "Card",
+            status: payment.status,
+            transactionId: payment.transaction_id || payment.transactionId || "N/A",
+            card_type: payment.card_type || "N/A",
+            date: payment.date || payment.tran_date,
+            tran_date: payment.tran_date || payment.date,
+            hostIsApproved: payment.hostIsApproved || "pending",
+            productTitle: hasOrderItems 
+                ? relevantItems.map(item => item.productTitle)
+                : (payment.hostName || []),
+            productImage: hasOrderItems
+                ? relevantItems.map(item => item.productImage)
+                : (payment.hostPhoto || []),
+            brandName: hasOrderItems
+                ? relevantItems.map(item => item.brandName || "Unknown")
+                : (payment.brandName || []),
+            hostEmail: hasOrderItems
+                ? relevantItems.map(item => item.hostEmail || "N/A")
+                : (payment.hostEmail || [])
+        };
+    });
+
+    sendResponse(res, {
+        statusCode: 200,
         success: true,
         message: "payment history find success",
-        data: result
-    })
-
+        data: formatted
+    });
 });
-
 
 const getSinglePayment = catchAsync(async (req, res) => {
     const email = req.params.email;
-    const query = { cus_email: email, status: "success" };
+    const query = { cus_email: email };
 
+    const result = await PaymentCollection.aggregate([
+        { $match: query },
+        {
+            $lookup: {
+                from: "order_items",
+                localField: "order_id",
+                foreignField: "order_id",
+                as: "orderItems"
+            }
+        }
+    ]).toArray();
 
-    const result = await PaymentCollection.find(query).toArray();
+    const formatted = result.map(payment => {
+        const hasOrderItems = payment.orderItems && payment.orderItems.length > 0;
+        return {
+            _id: payment._id,
+            order_id: payment.order_id,
+            cus_name: payment.cus_name,
+            cus_email: payment.cus_email,
+            amount: payment.amount,
+            totalPrice: payment.amount || payment.totalPrice,
+            currency: payment.currency || "USD",
+            payment_method: payment.payment_method || "Card",
+            status: payment.status,
+            transactionId: payment.transaction_id || payment.transactionId || "N/A",
+            card_type: payment.card_type || "N/A",
+            date: payment.date || payment.tran_date,
+            tran_date: payment.tran_date || payment.date,
+            hostIsApproved: payment.hostIsApproved || "pending",
+            productTitle: hasOrderItems 
+                ? payment.orderItems.map(item => item.productTitle)
+                : (payment.hostName || []),
+            productImage: hasOrderItems
+                ? payment.orderItems.map(item => item.productImage)
+                : (payment.hostPhoto || []),
+            brandName: hasOrderItems
+                ? payment.orderItems.map(item => item.brandName || "Unknown")
+                : (payment.brandName || []),
+            hostEmail: hasOrderItems
+                ? payment.orderItems.map(item => item.hostEmail || "N/A")
+                : (payment.hostEmail || [])
+        };
+    });
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "single payment history find success",
-        data: result
-    })
-
+        data: formatted
+    });
 });
 
 
@@ -67,9 +200,9 @@ const createPayment = catchAsync(async (req, res) => {
         total_amount: totalPrice,
         currency: paymentInfo?.currency || "USD",
         tran_id: trxId,
-        success_url: "https://quick-bazz.vercel.app/api/v1/payments/success-payment",
-        fail_url: "https://quick-bazz.vercel.app/api/v1/payments/fail",
-        cancel_url: "https://quick-bazz.vercel.app/api/v1/payments/cancel",
+        success_url: "http://localhost:3000/api/v1/payments/success-payment",
+        fail_url: "http://localhost:3000/api/v1/payments/fail",
+        cancel_url: "http://localhost:3000/api/v1/payments/cancel",
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,
@@ -127,39 +260,105 @@ const successPayment = catchAsync(async (req, res) => {
     if (successData.status !== "VALID") {
         throw new Error("unauthorize payment , invalid payment");
     }
-    // update the database
-    const query = {
-        transactionId: successData.tran_id,
-    };
 
-    const update = {
-        $set: {
-            status: "success",
-            tran_date: successData.tran_date,
-            card_type: successData.card_type,
-            hostIsApproved: "pending",
-        },
-    };
-    await PaymentCollection.updateOne(
-        query,
-        update
-    );
+    // Find the payment record matching transaction ID
+    const paymentRecord = await PaymentCollection.findOne({
+        $or: [
+            { transaction_id: successData.tran_id },
+            { transactionId: successData.tran_id }
+        ]
+    });
 
-    res.redirect("https://quick-bus-bd.web.app/success");
+    if (paymentRecord) {
+        // Update payment status
+        await PaymentCollection.updateOne(
+            { _id: paymentRecord._id },
+            {
+                $set: {
+                    status: "success",
+                    tran_date: successData.tran_date,
+                    card_type: successData.card_type,
+                }
+            }
+        );
+
+        // Update order status
+        if (paymentRecord.order_id) {
+            await OrderCollection.updateOne(
+                { _id: paymentRecord.order_id },
+                { $set: { status: "processing" } }
+            );
+        }
+
+        // Clear user cart
+        if (paymentRecord.cus_email) {
+            await CartCollection.deleteMany({ email: paymentRecord.cus_email });
+        }
+    } else {
+        // Fallback for older legacy payment entries
+        await PaymentCollection.updateOne(
+            { transactionId: successData.tran_id },
+            {
+                $set: {
+                    status: "success",
+                    tran_date: successData.tran_date,
+                    card_type: successData.card_type,
+                    hostIsApproved: "pending",
+                }
+            }
+        );
+    }
+
+    res.redirect("http://localhost:5173/success");
 });
 
 const failPayment = catchAsync(async (req, res) => {
-    res.redirect("https://quick-bus-bd.web.app/fail");
+    res.redirect("http://localhost:5173/fail");
 });
 
 const cancelPayment = catchAsync(async (req, res) => {
-    res.redirect("https://quick-bus-bd.web.app/cancel");
+    res.redirect("http://localhost:5173/cancel");
 
 });
 
 
 
 
+
+const updatePaymentStatus = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: "Invalid Payment ID format" });
+    }
+
+    const payment = await PaymentCollection.findOne({ _id: new ObjectId(id) });
+    if (!payment) {
+        return res.status(404).json({ success: false, message: "Payment not found" });
+    }
+
+    // Update payment status
+    const result = await PaymentCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { status, tran_date: new Date().toISOString() } }
+    );
+
+    // If updated to success, also update the linked order to processing
+    if (status === "success" && payment.order_id) {
+        await OrderCollection.updateOne(
+            { _id: new ObjectId(payment.order_id) },
+            { $set: { status: "processing" } }
+        );
+    }
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Payment status updated successfully",
+        data: result
+    });
+});
 
 const paymentController = {
     getPaymentByHostEmail,
@@ -168,7 +367,8 @@ const paymentController = {
     createPayment,
     successPayment,
     failPayment,
-    cancelPayment
+    cancelPayment,
+    updatePaymentStatus
 };
 
 module.exports = paymentController;

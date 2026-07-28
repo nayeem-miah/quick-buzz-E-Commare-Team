@@ -8,6 +8,8 @@ const paymentRoutes = require("./routes/payment.route");
 const SellerRoutes = require("./routes/seller.route");
 const WishListRoutes = require("./routes/wishlist.route");
 const ReviewRoutes = require("./routes/review.route");
+const CartRoutes = require("./routes/cart.route");
+const OrderRoutes = require("./routes/order.route");
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.use("/api/v1/payments", paymentRoutes);
 app.use("/api/v1/seller", SellerRoutes);
 app.use("/api/v1/wishlist", WishListRoutes);
 app.use("/api/v1/review", ReviewRoutes);
+app.use("/api/v1/cart", CartRoutes);
+app.use("/api/v1/orders", OrderRoutes);
 
 
 // global error 

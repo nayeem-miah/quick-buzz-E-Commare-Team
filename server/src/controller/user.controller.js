@@ -1,17 +1,18 @@
 const { ObjectId } = require('mongodb');
-const { UserCollection } = require('../module/module')
+const { UserCollection } = require('../module/module');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const sendResponse = require('../utils/sendResponse');
 
 const getUser = catchAsync(async (req, res) => {
     const users = await UserCollection.find().toArray();
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "user get success",
         data: users
-    })
+    });
 });
 
 const deleteUser = catchAsync(async (req, res) => {
@@ -19,24 +20,24 @@ const deleteUser = catchAsync(async (req, res) => {
     const query = { _id: new ObjectId(id) };
     const result = await UserCollection.deleteOne(query);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "user deleted success",
         data: result
-    })
+    });
 });
 
 const getSingleUser = catchAsync(async (req, res) => {
     const { email } = req.params;
     const user = await UserCollection.findOne({ email });
 
-    res.json({
+    sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "get single user success",
         data: user
-    })
+    });
 });
 
 const createUser = catchAsync(async (req, res) => {
@@ -46,17 +47,17 @@ const createUser = catchAsync(async (req, res) => {
     const existingUser = await UserCollection.findOne(query);
 
     if (existingUser) {
-        throw new AppError(409, "user already exist")
+        throw new AppError(409, "user already exist");
     }
 
     const result = await UserCollection.insertOne(user);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 201,
         success: true,
         message: "user create success",
         data: result
-    })
+    });
 });
 
 const updateUsers = catchAsync(async (req, res) => {
@@ -73,14 +74,13 @@ const updateUsers = catchAsync(async (req, res) => {
 
     const result = await UserCollection.updateOne(filter, updatedDoc);
 
-    res.json({
+    sendResponse(res, {
         statusCode: 201,
         success: true,
         message: "user updated success",
         data: result
-    })
+    });
 });
-
 
 const UserController = {
     getUser,
@@ -88,6 +88,6 @@ const UserController = {
     getSingleUser,
     createUser,
     updateUsers
-}
+};
 
 module.exports = UserController;

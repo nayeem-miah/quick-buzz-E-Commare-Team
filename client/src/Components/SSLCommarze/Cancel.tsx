@@ -1,63 +1,47 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FiAlertCircle, FiShoppingCart, FiHome } from 'react-icons/fi';
 
 const Cancel: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-red-400 to-pink-500">
+    <div className="fixed inset-0 w-screen h-screen bg-gradient-to-br from-amber-100/50 via-white to-amber-100/30 flex flex-col items-center justify-center px-4 overflow-y-auto">
+      {/* Decorative blurred backgrounds */}
+      <div className="absolute -top-24 -left-24 w-72 h-72 bg-amber-300 opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-orange-300 opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+
       {/* Card Container */}
-      <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10 max-w-md w-11/12 md:w-full">
-        {/* Animated Icon */}
-        <div className="flex justify-center items-center bg-red-100 text-red-600 rounded-full h-16 w-16 md:h-20 md:w-20 mx-auto mb-6 animate-pulse">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-8 h-8 md:w-10 md:h-10"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </div>
-
-        {/* Title */}
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4">
-          Payment Cancelled
-        </h1>
-
-        {/* Message */}
-        <p className="text-gray-600 text-center mb-6 leading-relaxed text-sm md:text-base">
-          Your payment was not completed. Please try again or contact support if you encounter any issues.
-        </p>
-
-        {/* Retry Button */}
+      <div className="relative bg-white/80 backdrop-blur-md rounded-3xl shadow-xl shadow-amber-500/5 p-8 sm:p-12 max-w-lg w-full border border-gray-100 text-center space-y-8 animate-fadeIn">
+        {/* Animated Cancel Icon */}
         <div className="flex justify-center">
-          <button
-            className="px-5 py-2 md:px-6 md:py-3 text-white bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg transition-all duration-300 ease-in-out
-            border-2 border-transparent hover:bg-orange-600 hover:border-orange-400 hover:shadow-[0_0_15px_3px_rgba(255,165,0,0.7)] hover:scale-105"
-            onClick={() => window.location.href = '/dashboard/my-listings'}
-          >
-            Retry Payment
-          </button>
+          <div className="flex justify-center items-center bg-amber-100 text-amber-500 rounded-full h-20 w-20 shadow-inner animate-pulse">
+            <FiAlertCircle size={44} className="stroke-[1.5]" />
+          </div>
         </div>
 
-        {/* Back to Home */}
-        <div className="text-center mt-6">
-          <a
-            href="/"
-            className="text-red-600 hover:text-pink-600 font-medium text-sm md:text-base transition hover:underline"
-          >
-            Back to Homepage
-          </a>
+        {/* Text Details */}
+        <div className="space-y-3">
+          <h1 className="text-3xl font-black text-gray-950 tracking-tight">
+            Payment Cancelled
+          </h1>
+          <p className="text-gray-500 text-sm sm:text-base leading-relaxed max-w-md mx-auto">
+            You have cancelled the checkout process. The items are still in your cart and you can check them out at any time.
+          </p>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          <Link to="/dashboard/my-listings" className="w-full sm:w-auto">
+            <button className="w-full px-6 py-3.5 text-white bg-orange-500 hover:bg-orange-600 rounded-xl transition duration-300 font-bold shadow-md shadow-orange-500/10 flex items-center justify-center gap-2 hover:-translate-y-0.5">
+              <FiShoppingCart size={18} /> View My Cart
+            </button>
+          </Link>
+          <Link to="/" className="w-full sm:w-auto">
+            <button className="w-full px-6 py-3.5 text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-xl transition duration-300 font-bold border border-gray-200/60 flex items-center justify-center gap-2 hover:-translate-y-0.5">
+              <FiHome size={18} /> Back to Home
+            </button>
+          </Link>
         </div>
       </div>
-
-      {/* Decorative Elements */}
-      <div className="absolute top-10 left-10 w-16 h-16 md:w-24 md:h-24 bg-red-300 opacity-50 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-20 h-20 md:w-32 md:h-32 bg-pink-300 opacity-50 rounded-full blur-3xl"></div>
     </div>
   );
 };
