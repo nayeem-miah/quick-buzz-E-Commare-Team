@@ -10,6 +10,7 @@ import LoadingSpinner from "../../Shared/Loading";
 import { ShippingAddressForm } from "./components/ShippingAddressForm";
 import { PaymentMethodSelector } from "./components/PaymentMethodSelector";
 import { OrderSummarySidebar } from "./components/OrderSummarySidebar";
+import { ShippingAddress } from "../../types/order";
 
 const Checkout: React.FC = () => {
   const { user } = useAuth();
@@ -17,11 +18,21 @@ const Checkout: React.FC = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [shippingAddress, setShippingAddress] = useState({
-    name: user?.displayName || "",
-    phone: "",
-    address: "",
-    city: ""
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>(() => {
+    const saved = localStorage.getItem("quickbuzz_shipping_address");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Error parsing shipping address:", e);
+      }
+    }
+    return {
+      name: user?.displayName || "",
+      phone: "",
+      address: "",
+      city: ""
+    };
   });
 
   const [paymentMethod, setPaymentMethod] = useState<string>("Cash on Delivery");

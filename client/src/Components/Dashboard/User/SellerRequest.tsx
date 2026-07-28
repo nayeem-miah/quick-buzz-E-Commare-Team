@@ -181,13 +181,13 @@ const SellerRequest: React.FC = () => {
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
             <Link
               to={`/updated-seller/${sellerData._id}`}
-              className="px-4 py-2 bg-orange-50 text-orange-600 hover:bg-orange-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition border border-orange-100/50"
+              className="px-4 py-2 bg-orange-500 text-white hover:bg-orange-600 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm shadow-orange-500/30"
             >
               <FiEdit2 size={13} /> Edit
             </Link>
             <button
               onClick={() => handleDelete(sellerData._id)}
-              className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition border border-red-100/50"
+              className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm shadow-red-500/30"
             >
               <MdDeleteForever size={15} /> Delete
             </button>

@@ -10,6 +10,7 @@ const WishListRoutes = require("./routes/wishlist.route");
 const ReviewRoutes = require("./routes/review.route");
 const CartRoutes = require("./routes/cart.route");
 const OrderRoutes = require("./routes/order.route");
+const UploadRoutes = require("./routes/upload.route");
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/v1/wishlist", WishListRoutes);
 app.use("/api/v1/review", ReviewRoutes);
 app.use("/api/v1/cart", CartRoutes);
 app.use("/api/v1/orders", OrderRoutes);
+app.use("/api/v1/upload", UploadRoutes);
 
 
 // global error 
