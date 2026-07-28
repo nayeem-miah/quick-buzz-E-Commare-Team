@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { FiCheck, FiCopy } from "react-icons/fi";
+import { PaymentStatus, ApprovalStatus } from "../../../../constants/enums";
 import { PaymentHistory } from "../../../../types/payment";
 
 interface PaymentDetailsModalProps {
@@ -94,19 +95,19 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Payment Status</p>
               <span
                 className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold mt-1 border ${
-                  payment.status === "success"
+                  payment.status === PaymentStatus.SUCCESS
                     ? "bg-green-50 text-green-700 border-green-200"
                     : "bg-yellow-50 text-yellow-700 border-yellow-200"
                 }`}
               >
-                {payment.status === "success" ? "Paid" : "Pending"}
+                {payment.status === PaymentStatus.SUCCESS ? "Paid" : "Pending"}
               </span>
             </div>
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Approval Status</p>
               <span
                 className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold mt-1 border ${
-                  payment.hostIsApproved === "approve"
+                  payment.hostIsApproved === ApprovalStatus.APPROVED
                     ? "bg-green-50 text-green-700 border-green-200"
                     : "bg-yellow-50 text-yellow-700 border-yellow-200"
                 }`}

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
+import { PaymentStatus } from "../../../../constants/enums";
 import { PaymentHistory } from "../../../../types/payment";
 
 interface PaymentHistoryTableProps {
@@ -49,13 +50,13 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
               </td>
               <td className="py-4 px-6 text-sm">
                 <span
-                  className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-wider ${
-                    payment.status === "success"
+                  className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                    payment.status === PaymentStatus.SUCCESS
                       ? "bg-green-50 text-green-700 border-green-200"
                       : "bg-yellow-50 text-yellow-700 border-yellow-200"
                   }`}
                 >
-                  {payment.status === "success" ? "Paid" : "Pending"}
+                  {payment.status === PaymentStatus.SUCCESS ? "Paid" : "Pending"}
                 </span>
               </td>
               <td className="py-4 px-6 text-sm text-right">

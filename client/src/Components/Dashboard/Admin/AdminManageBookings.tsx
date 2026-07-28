@@ -8,7 +8,7 @@ import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import LoadingSpinner from "../../../Shared/Loading";
 
 import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
-
+import { ApprovalStatus } from "../../../constants/enums";
 interface Listing {
   _id: number;
   productTitle: string;
@@ -60,6 +60,19 @@ const AdminManageBookings: React.FC = () => {
       return res.data;
     },
   });
+
+  const { data: categoryData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/categories");
+      return res.data;
+    },
+  });
+
+  const categoryOptions = [
+    { value: "all", label: "All Categories" },
+    ...(categoryData?.data?.map((cat: any) => ({ value: cat.name, label: cat.name })) || [])
+  ];
 
   const products = data?.data || [];
   const totalPages = data?.meta?.totalPages || 1;
@@ -113,7 +126,7 @@ const AdminManageBookings: React.FC = () => {
     setSelectedBooking(null);
   };
 
-  if (isLoading && page === 1) return <LoadingSpinner />;
+
 
   return (
     <div className="min-h-screen bg-gray-50/50 p-4 lg:p-8 font-sans text-gray-800">
@@ -151,14 +164,7 @@ const AdminManageBookings: React.FC = () => {
             <CustomDropdown
               value={categoryFilter}
               onChange={setCategoryFilter}
-              options={[
-                { value: "all", label: "All Categories" },
-                { value: "Electronics", label: "Electronics" },
-                { value: "Fashion", label: "Fashion" },
-                { value: "Home & Living", label: "Home & Living" },
-                { value: "Beauty", label: "Beauty" },
-                { value: "Sports", label: "Sports" }
-              ]}
+              options={categoryOptions}
             />
             
             <CustomDropdown
@@ -166,9 +172,9 @@ const AdminManageBookings: React.FC = () => {
               onChange={setStatusFilter}
               options={[
                 { value: "all", label: "All Statuses" },
-                { value: "approve", label: "Approved" },
-                { value: "pending", label: "Pending" },
-                { value: "reject", label: "Rejected" }
+                { value: ApprovalStatus.APPROVED, label: "Approved" },
+                { value: ApprovalStatus.PENDING, label: "Pending" },
+                { value: ApprovalStatus.REJECTED, label: "Rejected" }
               ]}
             />
           </div>
@@ -176,8 +182,9 @@ const AdminManageBookings: React.FC = () => {
 
         {/* Content Area */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-          {products.length === 0 ? (
+          {isLoading ? (
+            <LoadingSpinner smallHeight={true} />
+          ) : products.length === 0 ? (
             <div className="py-20 flex flex-col items-center justify-center text-center">
               <div className="w-20 h-20 bg-orange-50 text-orange-400 rounded-full flex items-center justify-center mb-4">
                 <FiSearch size={32} />
@@ -224,11 +231,11 @@ const AdminManageBookings: React.FC = () => {
                         <td className="py-4 px-6 text-gray-600">{listing?.category}</td>
                         <td className="py-4 px-6 font-bold text-gray-900">${listing?.price}</td>
                         <td className="py-4 px-6">
-                          {listing?.adminIsApproved === "approve" ? (
+                          {listing?.adminIsApproved === ApprovalStatus.APPROVED ? (
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-600 border border-green-100">
                               Approved
                             </span>
-                          ) : listing?.adminIsApproved === "reject" ? (
+                          ) : listing?.adminIsApproved === ApprovalStatus.REJECTED ? (
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100">
                               Rejected
                             </span>
@@ -288,7 +295,7 @@ const AdminManageBookings: React.FC = () => {
                     </div>
                     <div className="flex items-center justify-between border-t border-gray-50 pt-4">
                       <div>
-                        {listing?.adminIsApproved === "approve" ? (
+                        {listing?.adminIsApproved === ApprovalStatus.APPROVED ? (
                           <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold bg-green-50 text-green-600">Approved</span>
                         ) : (
                           <button onClick={() => handleApproved(listing)} className="px-3 py-1 text-xs font-semibold text-orange-600 bg-orange-50 rounded-md">Approve</button>
@@ -377,7 +384,7 @@ const AdminManageBookings: React.FC = () => {
                   <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
                     <p className="text-xs text-gray-500 font-semibold mb-1">Status</p>
                     <span className={`font-bold capitalize ${
-                      selectedBooking?.adminIsApproved === 'approve' ? 'text-green-600' : 'text-orange-600'
+                      selectedBooking?.adminIsApproved === ApprovalStatus.APPROVED ? 'text-green-600' : 'text-orange-600'
                     }`}>
                       {selectedBooking?.adminIsApproved || 'Pending'}
                     </span>

@@ -12,7 +12,7 @@ import { MdLocalGroceryStore, MdOutlineAddCircleOutline, MdOutlinePayment } from
 import { RiGitClosePullRequestFill } from "react-icons/ri";
 import { TbBrandBooking } from "react-icons/tb";
 import { Link, NavLink } from "react-router-dom";
-import { FiPackage } from "react-icons/fi";
+import { FiPackage, FiLayers } from "react-icons/fi";
 import logo from "../../../src/assets/Image/logo2.png";
 import useAuth from "../../Hooks/UseAuth";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
@@ -101,6 +101,11 @@ const Sidebar: React.FC = () => {
                   <NavLink to="manage-bookings" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
                     <TbBrandBooking className="w-5 h-5 text-gray-400" />
                     <span className="mx-4">Manage products</span>
+                  </NavLink>
+
+                  <NavLink to="manage-categories" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FiLayers className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Manage Categories</span>
                   </NavLink>
 
                   <NavLink to="manage-users" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>

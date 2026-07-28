@@ -13,4 +13,5 @@ module.exports = {
     PaymentCollection: db.collection("payments"),
     ReviewCollection: db.collection("reviews"),
     SellerCollection: db.collection("sellerRequest"),
+    CategoryCollection: db.collection("categories"),
 };

@@ -11,7 +11,7 @@ import LoadingSpinner from "../../../Shared/Loading";
 import NoData from "../../../Shared/NoDataFound/NoData";
 
 import { PaymentHistory } from "../../../types/payment";
-
+import { PaymentStatus, ApprovalStatus } from "../../../constants/enums";
 const AllPaymentHistory: React.FC = () => {
   const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
     null
@@ -66,7 +66,7 @@ const AllPaymentHistory: React.FC = () => {
     }).then(async (result: any) => {
       if (result.isConfirmed) {
         try {
-          await axiosSecure.patch(`/payments/${payment._id}/status`, { status: "success" });
+          await axiosSecure.patch(`/payments/${payment._id}/status`, { status: PaymentStatus.SUCCESS });
           Swal.fire({
             title: "Paid!",
             text: "Payment has been marked as successful.",
@@ -129,7 +129,7 @@ const AllPaymentHistory: React.FC = () => {
                       {payment?.payment_method || "Card"}
                     </td>
                     <td className="py-4 px-6 text-sm">
-                      {payment?.status === "success" ? (
+                      {payment?.status === PaymentStatus.SUCCESS ? (
                         <span className="bg-green-50 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">
                           Paid
                         </span>
@@ -149,7 +149,7 @@ const AllPaymentHistory: React.FC = () => {
                       >
                         Details
                       </button>
-                      {payment?.status === "pending" && payment?.payment_method === "Cash on Delivery" && (
+                      {payment?.status === PaymentStatus.PENDING && payment?.payment_method === "Cash on Delivery" && (
                         <button
                           onClick={() => handleMarkAsPaid(payment)}
                           className="px-3 py-1.5 text-xs text-white bg-orange-500 hover:bg-orange-600 rounded-lg font-semibold transition shadow-sm shadow-orange-500/10"
@@ -279,19 +279,19 @@ const AllPaymentHistory: React.FC = () => {
                   <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Payment Status</p>
                   <span
                     className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold mt-1 border ${
-                      selectedPayment?.status === "success"
+                      selectedPayment?.status === PaymentStatus.SUCCESS
                         ? "bg-green-50 text-green-700 border-green-200"
                         : "bg-yellow-50 text-yellow-700 border-yellow-200"
                     }`}
                   >
-                    {selectedPayment?.status === "success" ? "Paid" : "Pending"}
+                    {selectedPayment?.status === PaymentStatus.SUCCESS ? "Paid" : "Pending"}
                   </span>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Approval Status</p>
                   <span
                     className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold mt-1 border ${
-                      selectedPayment?.hostIsApproved === "approve"
+                      selectedPayment?.hostIsApproved === ApprovalStatus.APPROVED
                         ? "bg-green-50 text-green-700 border-green-200"
                         : "bg-yellow-50 text-yellow-700 border-yellow-200"
                     }`}

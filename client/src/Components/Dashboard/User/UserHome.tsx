@@ -8,7 +8,7 @@ import useAxiosPublic from "../../../Hooks/UsePublic";
 import Card from "../../../Pages/Product/Card";
 import LoadingSpinner from "../../../Shared/Loading";
 import NoData from "../../../Shared/NoDataFound/NoData";
-
+import { OrderStatus, ApprovalStatus } from "../../../constants/enums";
 const UserHome: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
@@ -36,12 +36,12 @@ const UserHome: React.FC = () => {
 
   const totalOrders = orders.length;
   const totalSpent = orders
-    .filter((order: any) => order.status !== "cancelled")
+    .filter((order: any) => order.status !== OrderStatus.CANCELLED)
     .reduce((sum: number, order: any) => sum + (order.total_amount || 0), 0);
   const pendingOrders = orders.filter(
-    (order: any) => order.status === "pending" || order.status === "processing"
+    (order: any) => order.status === OrderStatus.PENDING || order.status === OrderStatus.PROCESSING
   ).length;
-  const completedOrders = orders.filter((order: any) => order.status === "delivered").length;
+  const completedOrders = orders.filter((order: any) => order.status === OrderStatus.DELIVERED).length;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -182,9 +182,9 @@ const UserHome: React.FC = () => {
                     </td>
                     <td className="py-3.5 text-xs">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
-                        order.status === "delivered"
+                        order.status === OrderStatus.DELIVERED
                           ? "bg-green-50 text-green-700 border-green-200"
-                          : order.status === "cancelled"
+                          : order.status === OrderStatus.CANCELLED
                           ? "bg-red-50 text-red-700 border-red-200"
                           : "bg-orange-50 text-orange-700 border-orange-200"
                       }`}>
@@ -217,7 +217,7 @@ const UserHome: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {recommended?.map(
               (product: any) =>
-                product?.adminIsApproved === "approve" && (
+                product?.adminIsApproved === ApprovalStatus.APPROVED && (
                   <Card product={product} key={product._id} />
                 )
             )}

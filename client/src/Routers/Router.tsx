@@ -15,6 +15,7 @@ import HostAddProduct from "../Components/Dashboard/Host/HostAddProduct";
 import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
 import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 import AdminManageBookings from "../Components/Dashboard/Admin/AdminManageBookings";
+import AdminManageCategories from "../Components/Dashboard/Admin/AdminManageCategories";
 import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
 import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
@@ -164,6 +165,10 @@ const router = createBrowserRouter([
       {
         path: "manage-bookings",
         element: <AdminManageBookings />,
+      },
+      {
+        path: "manage-categories",
+        element: <AdminManageCategories />,
       },
       {
         path: "all-payment-history",

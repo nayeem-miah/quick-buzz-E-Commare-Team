@@ -3,7 +3,7 @@ const { PaymentCollection, OrderCollection, CartCollection } = require("../modul
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const sendResponse = require("../utils/sendResponse");
-
+const { PaymentStatus, ApprovalStatus, OrderStatus } = require("../constants/enums");
 
 const getAllPayment = catchAsync(async (req, res) => {
     const result = await PaymentCollection.aggregate([
@@ -33,7 +33,7 @@ const getAllPayment = catchAsync(async (req, res) => {
             card_type: payment.card_type || "N/A",
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
-            hostIsApproved: payment.hostIsApproved || "pending",
+            hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
             productTitle: hasOrderItems 
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
@@ -100,7 +100,7 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
             card_type: payment.card_type || "N/A",
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
-            hostIsApproved: payment.hostIsApproved || "pending",
+            hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
             productTitle: hasOrderItems 
                 ? relevantItems.map(item => item.productTitle)
                 : (payment.hostName || []),
@@ -156,7 +156,7 @@ const getSinglePayment = catchAsync(async (req, res) => {
             card_type: payment.card_type || "N/A",
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
-            hostIsApproved: payment.hostIsApproved || "pending",
+            hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
             productTitle: hasOrderItems 
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
@@ -240,8 +240,7 @@ const createPayment = catchAsync(async (req, res) => {
         currency: "BDT",
         transactionId: trxId,
         hostEmail: multiProductHostEmail,
-        status: "pending",
-
+        status: PaymentStatus.PENDING,
     }
     const result = await PaymentCollection.insertOne(savaData)
 
@@ -275,7 +274,7 @@ const successPayment = catchAsync(async (req, res) => {
             { _id: paymentRecord._id },
             {
                 $set: {
-                    status: "success",
+                    status: PaymentStatus.SUCCESS,
                     tran_date: successData.tran_date,
                     card_type: successData.card_type,
                 }
@@ -286,7 +285,7 @@ const successPayment = catchAsync(async (req, res) => {
         if (paymentRecord.order_id) {
             await OrderCollection.updateOne(
                 { _id: paymentRecord.order_id },
-                { $set: { status: "processing" } }
+                { $set: { status: OrderStatus.PROCESSING } }
             );
         }
 
@@ -300,10 +299,10 @@ const successPayment = catchAsync(async (req, res) => {
             { transactionId: successData.tran_id },
             {
                 $set: {
-                    status: "success",
+                    status: PaymentStatus.SUCCESS,
                     tran_date: successData.tran_date,
                     card_type: successData.card_type,
-                    hostIsApproved: "pending",
+                    hostIsApproved: ApprovalStatus.PENDING,
                 }
             }
         );
@@ -345,10 +344,10 @@ const updatePaymentStatus = catchAsync(async (req, res) => {
     );
 
     // If updated to success, also update the linked order to processing
-    if (status === "success" && payment.order_id) {
+    if (status === PaymentStatus.SUCCESS && payment.order_id) {
         await OrderCollection.updateOne(
             { _id: new ObjectId(payment.order_id) },
-            { $set: { status: "processing" } }
+            { $set: { status: OrderStatus.PROCESSING } }
         );
     }
 

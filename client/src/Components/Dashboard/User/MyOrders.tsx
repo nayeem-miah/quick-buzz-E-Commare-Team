@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet-async";
 import { FiEye, FiCopy, FiCheck } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { Order } from "../../../types/order";
+import { OrderStatus } from "../../../constants/enums";
 
 const MyOrders: React.FC = () => {
   const { user } = useAuth();
@@ -47,15 +48,15 @@ const MyOrders: React.FC = () => {
 
   const getStatusStyle = (status: string) => {
     switch (status) {
-      case "pending":
+      case OrderStatus.PENDING:
         return "bg-yellow-50 text-yellow-700 border-yellow-200";
-      case "processing":
+      case OrderStatus.PROCESSING:
         return "bg-blue-50 text-blue-700 border-blue-200";
-      case "shipped":
+      case OrderStatus.SHIPPED:
         return "bg-indigo-50 text-indigo-700 border-indigo-200";
-      case "delivered":
+      case OrderStatus.DELIVERED:
         return "bg-green-50 text-green-700 border-green-200";
-      case "cancelled":
+      case OrderStatus.CANCELLED:
         return "bg-red-50 text-red-700 border-red-200";
       default:
         return "bg-gray-50 text-gray-700 border-gray-200";
@@ -106,11 +107,11 @@ const MyOrders: React.FC = () => {
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition text-sm text-gray-700 bg-white"
               >
                 <option value="all">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="processing">Processing</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
-                <option value="cancelled">Cancelled</option>
+                <option value={OrderStatus.PENDING}>Pending</option>
+                <option value={OrderStatus.PROCESSING}>Processing</option>
+                <option value={OrderStatus.SHIPPED}>Shipped</option>
+                <option value={OrderStatus.DELIVERED}>Delivered</option>
+                <option value={OrderStatus.CANCELLED}>Cancelled</option>
               </select>
             </div>
             <div className="space-y-1.5">

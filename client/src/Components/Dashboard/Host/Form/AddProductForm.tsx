@@ -5,12 +5,24 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import useAxiosPublic from "../../../../Hooks/UsePublic";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { ImSpinner } from "react-icons/im";
+import { Category } from "../../../../types/category.type";
+import { ApprovalStatus } from "../../../../constants/enums";
 const AddProductForm: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
+
+  const { data: categoryData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/categories");
+      return res.data;
+    },
+  });
+  const categories = categoryData?.data || [];
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,7 +79,7 @@ const AddProductForm: React.FC = () => {
         hostEmail: user?.email,
         hostName: user?.displayName,
         hostPhoto: user?.photoURL,
-        adminIsApproved: "pending",
+        adminIsApproved: ApprovalStatus.PENDING,
       };
 
       await axiosPublic.post("/products", productData)
@@ -178,21 +190,11 @@ const AddProductForm: React.FC = () => {
             required
           >
             <option value="">Select category</option>
-            <option value="Mobile">Mobile</option>
-            <option value="Laptop">Laptop</option>
-            <option value="PenDrive">PenDrive</option>
-            <option value="Caves">Caves</option>
-            <option value="Earphones">Earphones</option>
-            <option value="Cable">Cable</option>
-            <option value="Mouse">Mouse</option>
-            <option value="Keyboard">Keyboard</option>
-            <option value="T-shirt">Tshirt</option>
-            <option value="Sunglasses">SunGlass</option>
-            <option value="Light">Light</option>
-            <option value="Speaker">Speaker</option>
-            <option value="Stand">Stand</option>
-            <option value="Airpode">Airpode</option>
-            <option value="Charger">Charger</option>
+            {categories.map((cat: Category) => (
+              <option key={cat._id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
           </select>
         </div>
 

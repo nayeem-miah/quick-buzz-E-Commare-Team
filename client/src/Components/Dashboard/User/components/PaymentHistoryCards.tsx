@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
+import { PaymentStatus } from "../../../../constants/enums";
 import { PaymentHistory } from "../../../../types/payment";
 
 interface PaymentHistoryCardsProps {
@@ -29,14 +30,12 @@ export const PaymentHistoryCards: React.FC<PaymentHistoryCardsProps> = ({
                 {payment.cus_name}
               </p>
             </div>
-            <span
-              className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
-                payment.status === "success"
+            <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                payment.status === PaymentStatus.SUCCESS
                   ? "bg-green-50 text-green-700 border-green-200"
                   : "bg-yellow-50 text-yellow-700 border-yellow-200"
-              }`}
-            >
-              {payment.status === "success" ? "Paid" : "Pending"}
+              }`}>
+              {payment.status === PaymentStatus.SUCCESS ? "Paid" : "Pending"}
             </span>
           </div>
 

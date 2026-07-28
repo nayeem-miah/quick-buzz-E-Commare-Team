@@ -1,7 +1,7 @@
 const { ProductCollection, PaymentCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb")
-
+const { ApprovalStatus } = require("../constants/enums");
 
 const getallProduct = catchAsync(async (req, res) => {
 
@@ -97,7 +97,7 @@ const deleteProduct = catchAsync(async (req, res) => {
 const recentProduct = catchAsync(async (req, res) => {
     const search = req.query.search || "";
     const query = {
-        adminIsApproved: "approve",
+        adminIsApproved: ApprovalStatus.APPROVED,
         $or: [
             { productTitle: { $regex: search, $options: "i" } },
             { brandName: { $regex: search, $options: "i" } },
@@ -122,7 +122,7 @@ const recentProduct = catchAsync(async (req, res) => {
 
 const recommendedProduct = catchAsync(async (req, res) => {
     const filter = {
-        adminIsApproved: "approve"
+        adminIsApproved: ApprovalStatus.APPROVED
     }
 
     const result = await ProductCollection
@@ -191,7 +191,7 @@ const hostManageProduct = catchAsync(async (req, res) => {
     const filter = { _id: new ObjectId(id) };
     const updatedDoc = {
         $set: {
-            hostIsApproved: "approve",
+            hostIsApproved: ApprovalStatus.APPROVED,
         },
     };
     const result = await PaymentCollection.updateOne(filter, updatedDoc);
@@ -210,7 +210,7 @@ const adminManageProduct = catchAsync(async (req, res) => {
     const filter = { _id: new ObjectId(id) };
     const updatedDoc = {
         $set: {
-            adminIsApproved: "approve",
+            adminIsApproved: ApprovalStatus.APPROVED,
         },
     };
     const result = await ProductCollection.updateOne(filter, updatedDoc);

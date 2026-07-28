@@ -3,7 +3,7 @@ const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const axios = require("axios");
 const sendResponse = require("../utils/sendResponse");
-
+const { OrderStatus, PaymentStatus } = require("../constants/enums");
 const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
 
@@ -21,7 +21,7 @@ const createOrder = catchAsync(async (req, res) => {
     const orderData = {
         email,
         total_amount: parseFloat(total_amount),
-        status: "pending",
+        status: OrderStatus.PENDING,
         shipping_address,
         payment_method,
         date: new Date().toISOString()
@@ -49,7 +49,7 @@ const createOrder = catchAsync(async (req, res) => {
         cus_email: email,
         amount: parseFloat(total_amount),
         payment_method,
-        status: "pending",
+        status: PaymentStatus.PENDING,
         transaction_id: trxId,
         date: new Date().toISOString()
     };
@@ -166,7 +166,7 @@ const updateOrderStatus = catchAsync(async (req, res) => {
         return res.status(400).json({ success: false, message: "Invalid Order ID format" });
     }
 
-    const validStatuses = ["pending", "processing", "shipped", "delivered", "cancelled"];
+    const validStatuses = Object.values(OrderStatus);
     if (!validStatuses.includes(status)) {
         return res.status(400).json({ success: false, message: "Invalid order status" });
     }

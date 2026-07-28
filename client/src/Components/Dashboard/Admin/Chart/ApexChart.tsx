@@ -10,6 +10,7 @@ import {
   YAxis
 } from "recharts";
 import UseAxiosSecure from "../../../../Hooks/UseAxiosSecure";
+import { PaymentStatus } from "../../../../constants/enums";
 
 interface BookingData {
   status: string;
@@ -32,7 +33,7 @@ const EnhancedBarChart: React.FC = () => {
       const response = await axiosSecure.get("/payments");
       const bookingsData: BookingData[] = response.data.data;
 
-      const bookings = bookingsData.filter((item) => item.status === "success");
+      const bookings = bookingsData.filter((item) => item.status === PaymentStatus.SUCCESS);
       setAllBookings(bookings);
 
       if (bookings.length === 0) {

@@ -4,6 +4,7 @@ import { ImSpinner } from "react-icons/im";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useNavigate } from "react-router-dom";
 import { FaClock, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { ApprovalStatus } from "../../../constants/enums";
 
 interface SellerRequest {
   _id: string;
@@ -44,7 +45,7 @@ const SellerStatusView: React.FC<SellerStatusViewProps> = ({ sellerRequest, refe
     }
   };
 
-  const isApproved = sellerRequest.adminIsApproved === "approve";
+  const isApproved = sellerRequest.adminIsApproved === ApprovalStatus.APPROVED;
   const isDeclined = sellerRequest.decline && sellerRequest.decline.trim().length > 0;
 
   return (

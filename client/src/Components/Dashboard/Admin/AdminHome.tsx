@@ -7,6 +7,7 @@ import { FiClock, FiShoppingCart } from "react-icons/fi";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import LoadingSpinner from "../../../Shared/Loading";
 import ApexChart from "./Chart/ApexChart";
+import { PaymentStatus } from "../../../constants/enums";
 
 const AdminStatistics: React.FC = () => {
   const axiosSecure = UseAxiosSecure();
@@ -49,12 +50,12 @@ const AdminStatistics: React.FC = () => {
 
   // Calculations
   const totalAmount = PaymentHistoryData.filter(
-    (item: any) => item.status === "success"
+    (item: any) => item.status === PaymentStatus.SUCCESS
   ).reduce((total: number, item: any) => total + (item.totalPrice || 0), 0);
 
   const totalOrders = PaymentHistoryData.length;
   const pendingOrders = PaymentHistoryData.filter(
-    (item: any) => item.status === "pending"
+    (item: any) => item.status === PaymentStatus.PENDING
   ).length;
 
   if (isLoading) return <LoadingSpinner />;
@@ -176,8 +177,8 @@ const AdminStatistics: React.FC = () => {
                     </td>
                     <td className="py-4 px-6">
                       <span className={`px-2.5 py-1 rounded-md text-xs font-semibold tracking-wide
-                        ${order.status === 'success' ? 'bg-green-50 text-green-600 border border-green-100' :
-                          order.status === 'pending' ? 'bg-orange-50 text-orange-600 border border-orange-100' :
+                        ${order.status === PaymentStatus.SUCCESS ? 'bg-green-50 text-green-600 border border-green-100' :
+                          order.status === PaymentStatus.PENDING ? 'bg-orange-50 text-orange-600 border border-orange-100' :
                           'bg-red-50 text-red-600 border border-red-100'}`}
                       >
                         {order.status || "Unknown"}

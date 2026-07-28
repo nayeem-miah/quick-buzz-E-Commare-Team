@@ -11,7 +11,7 @@ import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
 
 import { Order, OrderItem, Payment } from "../../../types/order";
-
+import { OrderStatus, PaymentStatus } from "../../../constants/enums";
 interface OrderInfoResponse {
   order: Order;
   items: OrderItem[];
@@ -37,15 +37,15 @@ const OrderDetails: React.FC = () => {
 
   const getStatusStyle = (status: string) => {
     switch (status) {
-      case "pending":
+      case OrderStatus.PENDING:
         return "bg-yellow-50 text-yellow-700 border-yellow-200";
-      case "processing":
+      case OrderStatus.PROCESSING:
         return "bg-blue-50 text-blue-700 border-blue-200";
-      case "shipped":
+      case OrderStatus.SHIPPED:
         return "bg-indigo-50 text-indigo-700 border-indigo-200";
-      case "delivered":
+      case OrderStatus.DELIVERED:
         return "bg-green-50 text-green-700 border-green-200";
-      case "cancelled":
+      case OrderStatus.CANCELLED:
         return "bg-red-50 text-red-700 border-red-200";
       default:
         return "bg-gray-50 text-gray-700 border-gray-200";
@@ -83,7 +83,7 @@ const OrderDetails: React.FC = () => {
     }).then(async (result: any) => {
       if (result.isConfirmed) {
         try {
-          await axiosPublic.patch(`/orders/${id}/status`, { status: "cancelled" });
+          await axiosPublic.patch(`/orders/${id}/status`, { status: OrderStatus.CANCELLED });
           Swal.fire({
             title: "Cancelled!",
             text: "Your order has been cancelled successfully.",
@@ -140,18 +140,18 @@ const OrderDetails: React.FC = () => {
 
   // Timeline Steps
   const steps = [
-    { label: "Placed", status: "pending" },
-    { label: "Processing", status: "processing" },
-    { label: "Shipped", status: "shipped" },
-    { label: "Delivered", status: "delivered" }
+    { label: "Placed", status: OrderStatus.PENDING },
+    { label: "Processing", status: OrderStatus.PROCESSING },
+    { label: "Shipped", status: OrderStatus.SHIPPED },
+    { label: "Delivered", status: OrderStatus.DELIVERED }
   ];
 
   const getStepIndex = (status: string) => {
     switch (status) {
-      case "pending": return 0;
-      case "processing": return 1;
-      case "shipped": return 2;
-      case "delivered": return 3;
+      case OrderStatus.PENDING: return 0;
+      case OrderStatus.PROCESSING: return 1;
+      case OrderStatus.SHIPPED: return 2;
+      case OrderStatus.DELIVERED: return 3;
       default: return -1;
     }
   };
@@ -188,7 +188,7 @@ const OrderDetails: React.FC = () => {
           <span className={`px-3 py-1.5 text-xs font-bold rounded-full border uppercase tracking-wider ${getStatusStyle(order.status)}`}>
             {order.status}
           </span>
-          {(order.status === "pending" || order.status === "processing") && (
+          {(order.status === OrderStatus.PENDING || order.status === OrderStatus.PROCESSING) && (
             <button
               onClick={handleCancelOrder}
               className="px-3.5 py-1.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition border border-red-100 flex items-center gap-1.5 shadow-sm shadow-red-500/5"
@@ -207,7 +207,7 @@ const OrderDetails: React.FC = () => {
       </div>
 
       {/* Status Timeline */}
-      {order.status === "cancelled" ? (
+      {order.status === OrderStatus.CANCELLED ? (
         <div className="bg-red-50 text-red-700 p-5 rounded-2xl border border-red-100 text-center font-bold text-sm">
           This order has been cancelled.
         </div>
@@ -331,11 +331,11 @@ const OrderDetails: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="text-gray-400 font-medium">Status</span>
                 <span className={`px-2.5 py-0.5 text-xs font-bold rounded-full border uppercase tracking-wider ${
-                  payment?.status === "success"
+                  payment?.status === PaymentStatus.SUCCESS
                     ? "bg-green-50 text-green-700 border-green-200"
                     : "bg-yellow-50 text-yellow-700 border-yellow-200"
                 }`}>
-                  {payment?.status === "success" ? "Paid" : "Pending"}
+                  {payment?.status === PaymentStatus.SUCCESS ? "Paid" : "Pending"}
                 </span>
               </div>
               {payment?.transaction_id && (

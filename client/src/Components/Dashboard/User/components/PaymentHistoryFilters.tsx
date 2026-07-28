@@ -1,4 +1,5 @@
 import React from "react";
+import { PaymentStatus } from "../../../../constants/enums";
 
 interface PaymentHistoryFiltersProps {
   searchQuery: string;
@@ -37,9 +38,9 @@ export const PaymentHistoryFilters: React.FC<PaymentHistoryFiltersProps> = ({
           className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition text-sm text-gray-700 bg-white"
         >
           <option value="all">All Statuses</option>
-          <option value="success">Paid</option>
-          <option value="pending">Pending</option>
-          <option value="Failed">Failed</option>
+          <option value={PaymentStatus.SUCCESS}>Paid</option>
+          <option value={PaymentStatus.PENDING}>Pending</option>
+          <option value={PaymentStatus.FAILED}>Failed</option>
         </select>
       </div>
       <div className="space-y-1.5">
