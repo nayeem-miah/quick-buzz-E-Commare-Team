@@ -1,67 +1,55 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { FiHome, FiShoppingBag } from "react-icons/fi";
 
 const ErrorPage: React.FC = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-50 overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="bg-gradient-to-br from-blue-300 via-purple-400 to-pink-400 opacity-40 w-full h-full animate-gradient-flow"></div>
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-400 opacity-20 rounded-full animate-pulse blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-pink-400 opacity-20 rounded-full animate-pulse blur-3xl"></div>
-      </div>
-
-      {/* Main Content */}
-      <div className="z-10 text-center">
-        <h1 className="text-9xl font-extrabold text-red-500 drop-shadow-lg">
-          404
-        </h1>
-        <h2 className="mt-4 text-4xl font-bold text-gray-700">
-          Oops! Page Not Found
-        </h2>
-        <p className="mt-2 text-lg text-gray-600">
-          Sorry, the page you are looking for might have been moved or deleted.
-        </p>
-
-        {/* Buttons */}
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <a
-            href="/"
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-md transition-all duration-300
-             hover:-translate-y-0.5"
-          >
-            Back to Home
-          </a>
-          <a
-            href="/product"
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-md transition-all duration-300
-             hover:-translate-y-0.5"
-          >
-            Shop Products
-          </a>
+    <div className="fixed inset-0 w-full h-full flex flex-col items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8 z-50 overflow-y-auto">
+      
+      <div className="max-w-xl w-full text-center space-y-8 animate-fadeIn">
+        
+        {/* 404 Heading */}
+        <div className="space-y-2">
+          <h1 className="text-8xl sm:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 drop-shadow-sm tracking-tight">
+            404
+          </h1>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+            Oops! Page Not Found
+          </h2>
+          <p className="text-base sm:text-lg text-gray-500 max-w-md mx-auto">
+            The page you're looking for doesn't exist, has been removed, or is temporarily unavailable.
+          </p>
         </div>
-      </div>
 
-      {/* Contact Information */}
-      <footer className="mt-12 text-center z-10">
-        <p className="text-gray-500">
-          Need help? Contact us at{" "}
-          <a
-            href="mailto:support@quickbazz.com"
-            className="text-blue-600 underline hover:text-blue-800"
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <Link
+            to="/"
+            className="w-full sm:w-auto px-8 py-3.5 bg-orange-500 text-white font-semibold rounded-xl shadow-sm shadow-orange-500/30 hover:bg-orange-600 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
           >
-            support@quickbazz.com
-          </a>
-        </p>
-        <p className="mt-2 text-gray-500 text-sm">
-          Or call us at{" "}
-          <a
-            href="tel:+8801849317388"
-            className="text-blue-600 underline hover:text-blue-800"
+            <FiHome size={18} />
+            Go to Homepage
+          </Link>
+          <Link
+            to="/products"
+            className="w-full sm:w-auto px-8 py-3.5 bg-white text-orange-500 font-semibold rounded-xl border border-orange-200 hover:bg-orange-50 hover:border-orange-300 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
           >
-            +8801849317388
-          </a>
-        </p>
-      </footer>
+            <FiShoppingBag size={18} />
+            Browse Products
+          </Link>
+        </div>
+
+        {/* Footer Support Info */}
+        <div className="pt-10 text-sm text-gray-400">
+          <p>
+            Need help? Contact our{" "}
+            <a href="mailto:support@quickbazz.com" className="text-orange-500 hover:underline hover:text-orange-600 font-medium transition-colors">
+              support team
+            </a>
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 };

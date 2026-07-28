@@ -1,18 +1,19 @@
-import { createContext, useEffect, useState, ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   GoogleAuthProvider,
+  User,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  User,
   updateProfile,
 } from "firebase/auth";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
-import auth from "../Firebase/FireBase.config";
 import toast from "react-hot-toast";
+import auth from "../Firebase/FireBase.config";
 
 interface AuthContextType {
   user: User | null;
