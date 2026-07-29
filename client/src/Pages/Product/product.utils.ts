@@ -76,7 +76,7 @@ export const filterAndSortProducts = ({
     return (
       (!searchQuery || productText.includes(searchQuery)) &&
       (!filters.brands.length || filters.brands.includes(product.brandName)) &&
-      (!filters.categories.length || filters.categories.includes(product.category)) &&
+      (!filters.categories.length || filters.categories.some(c => normalize(c) === normalize(product.category))) &&
       productPrice >= min &&
       productPrice <= max &&
       (!filters.rating || productRating >= filters.rating) &&

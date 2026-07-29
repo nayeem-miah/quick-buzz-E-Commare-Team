@@ -48,9 +48,15 @@ const AdminManageBookings: React.FC = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["products", categoryFilter, statusFilter, debouncedSearch, page],
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/products?category=${categoryFilter}&status=${statusFilter}&search=${debouncedSearch}&page=${page}&size=${size}`
-      );
+      const res = await axiosSecure.get("/products", {
+        params: {
+          category: categoryFilter,
+          status: statusFilter,
+          search: debouncedSearch,
+          page,
+          size,
+        },
+      });
       return res.data;
     },
   });

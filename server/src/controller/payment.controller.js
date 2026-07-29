@@ -4,6 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const sendResponse = require("../utils/sendResponse");
 const { PaymentStatus, ApprovalStatus, OrderStatus } = require("../constants/enums");
+const { sendOrderConfirmationEmail } = require("../utils/sendMail");
 
 const getAllPayment = catchAsync(async (req, res) => {
     const result = await PaymentCollection.aggregate([
@@ -293,6 +294,15 @@ const successPayment = catchAsync(async (req, res) => {
         if (paymentRecord.cus_email) {
             await CartCollection.deleteMany({ email: paymentRecord.cus_email });
         }
+
+        // Send order confirmation email
+        sendOrderConfirmationEmail(
+            paymentRecord.cus_email,
+            paymentRecord.cus_name,
+            paymentRecord.order_id,
+            paymentRecord.amount || paymentRecord.totalPrice,
+            paymentRecord.payment_method || "Card"
+        ).catch(err => console.error("Email send failed:", err));
     } else {
         // Fallback for older legacy payment entries
         await PaymentCollection.updateOne(

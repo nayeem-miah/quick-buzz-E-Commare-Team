@@ -55,7 +55,7 @@ const ProductDetailsPage = () => {
   const { data: relatedData = [] } = useQuery<ProductItem[]>({
     queryKey: ['related-products', product?.category, product?._id],
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/products?category=${product?.category}&page=1&size=5`);
+      const { data } = await axiosPublic.get(`/products?category=${encodeURIComponent(product?.category || '')}&page=1&size=5`);
       return data.data || [];
     },
     enabled: !!product?.category,

@@ -19,9 +19,11 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "force": "^0.0.3",
+    "jsonwebtoken": "^9.0.3",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.2",
-    "multer": "^2.2.0"
+    "multer": "^2.2.0",
+    "nodemailer": "^9.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

@@ -2,6 +2,8 @@ const { ProductCollection, PaymentCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb")
 const { ApprovalStatus } = require("../constants/enums");
+const { sendProductStatusEmail } = require("../utils/sendMail");
+
 
 const getallProduct = catchAsync(async (req, res) => {
 
@@ -10,8 +12,9 @@ const getallProduct = catchAsync(async (req, res) => {
     let query = {};
 
     // Category filter
-    if (category && category !== "all" && category !== "null") {
-        query.category = category;
+    if (category && category !== "all" && category !== "null" && category !== "undefined") {
+        const cleanCategory = category.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        query.category = { $regex: new RegExp(`^${cleanCategory}$`, "i") };
     }
 
     // Status filter
@@ -34,6 +37,7 @@ const getallProduct = catchAsync(async (req, res) => {
 
     // Fetch records
     const products = await ProductCollection.find(query)
+        .sort({ _id: -1 })
         .skip(skip)
         .limit(pageSize)
         .toArray();
@@ -143,7 +147,7 @@ const recommendedProduct = catchAsync(async (req, res) => {
 const hostProductByEmail = catchAsync(async (req, res) => {
     const email = req.params.email;
     const query = { hostEmail: email };
-    const result = await ProductCollection.find(query).toArray();
+    const result = await ProductCollection.find(query).sort({ _id: -1 }).toArray();
 
 
     res.json({
@@ -207,10 +211,15 @@ const hostManageProduct = catchAsync(async (req, res) => {
     })
 });
 
+
 const adminManageProduct = catchAsync(async (req, res) => {
     const id = req.params.id;
     const { status } = req.body;
     const filter = { _id: new ObjectId(id) };
+
+    // Fetch product details first
+    const product = await ProductCollection.findOne(filter);
+
     const updatedDoc = {
         $set: {
             adminIsApproved: status || ApprovalStatus.APPROVED,
@@ -218,6 +227,15 @@ const adminManageProduct = catchAsync(async (req, res) => {
     };
     const result = await ProductCollection.updateOne(filter, updatedDoc);
 
+    // Send email to host in the background
+    if (product && product.hostEmail) {
+        sendProductStatusEmail(
+            product.hostEmail,
+            product.hostName,
+            product.productTitle,
+            status || ApprovalStatus.APPROVED
+        ).catch(err => console.error("Email send failed:", err));
+    }
 
     res.json({
         statusCode: 201,

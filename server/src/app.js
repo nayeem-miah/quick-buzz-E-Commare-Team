@@ -28,7 +28,20 @@ app.get("/", (req, res) => {
     })
 });
 
+const jwt = require("jsonwebtoken");
+
 // ROUTES
+app.post("/api/v1/jwt", (req, res) => {
+    const user = req.body;
+    const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET || "default_secret", { expiresIn: "1d" });
+    res.json({
+        success: true,
+        statusCode: 200,
+        message: "Token generated success",
+        token
+    });
+});
+
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", ProductRoutes);
 app.use("/api/v1/payments", paymentRoutes);

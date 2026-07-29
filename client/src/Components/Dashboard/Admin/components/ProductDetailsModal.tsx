@@ -114,9 +114,14 @@ export const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                 <div>
                   <h5 className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2">Tags</h5>
                   <div className="flex flex-wrap gap-2">
-                    {selectedBooking.tags.split(',').map((tag, i) => (
+                    {(typeof selectedBooking.tags === 'string'
+                      ? selectedBooking.tags.split(',')
+                      : Array.isArray(selectedBooking.tags)
+                      ? selectedBooking.tags
+                      : []
+                    ).map((tag, i) => (
                       <span key={i} className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-semibold">
-                        {tag.trim()}
+                        {String(tag).trim()}
                       </span>
                     ))}
                   </div>

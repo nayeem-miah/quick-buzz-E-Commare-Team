@@ -4,6 +4,7 @@ const { ObjectId } = require("mongodb");
 const axios = require("axios");
 const sendResponse = require("../utils/sendResponse");
 const { OrderStatus, PaymentStatus } = require("../constants/enums");
+const { sendOrderConfirmationEmail, sendOrderStatusEmail } = require("../utils/sendMail");
 const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
 
@@ -58,6 +59,16 @@ const createOrder = catchAsync(async (req, res) => {
     // If Cash on Delivery, clear cart and finish immediately
     if (payment_method === "Cash on Delivery") {
         await CartCollection.deleteMany({ email });
+        
+        // Send order confirmation email
+        sendOrderConfirmationEmail(
+            email,
+            shipping_address.name,
+            orderId,
+            parseFloat(total_amount),
+            payment_method
+        ).catch(err => console.error("Email send failed:", err));
+
         return sendResponse(res, {
             statusCode: 201,
             success: true,
@@ -175,6 +186,17 @@ const updateOrderStatus = catchAsync(async (req, res) => {
         { _id: new ObjectId(id) },
         { $set: { status } }
     );
+
+    // Fetch updated order details to send email
+    const order = await OrderCollection.findOne({ _id: new ObjectId(id) });
+    if (order && order.email) {
+        sendOrderStatusEmail(
+            order.email,
+            order.shipping_address?.name || "Customer",
+            id,
+            status
+        ).catch(err => console.error("Email send failed:", err));
+    }
 
     sendResponse(res, {
         statusCode: 200,

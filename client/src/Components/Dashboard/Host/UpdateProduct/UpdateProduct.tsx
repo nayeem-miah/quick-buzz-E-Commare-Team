@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, KeyboardEvent } from "react";
 import toast from "react-hot-toast";
 import Heading from "../../../../Shared/Heading/Heading";
 import useAuth from "../../../../Hooks/UseAuth";
+import useFetchSingleUser from "../../../../Hooks/UseFindSingleUser";
 import useAxiosPublic from "../../../../Hooks/UsePublic";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +15,7 @@ import LoadingSpinner from "../../../../Shared/Loading";
 const UpdateProduct: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const { singleUser } = useFetchSingleUser(user?.email || "");
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -70,9 +72,11 @@ const UpdateProduct: React.FC = () => {
   });
   const categories = categoryData?.data || [];
 
+  const [isPrefilled, setIsPrefilled] = useState(false);
+
   // Prefill state when product data arrives
   useEffect(() => {
-    if (product) {
+    if (product && !isPrefilled) {
       setTitle(product.productTitle || "");
       setBrand(product.brandName || "");
       setPrice(product.price !== undefined && product.price !== null ? String(product.price) : "");
@@ -92,8 +96,9 @@ const UpdateProduct: React.FC = () => {
         ? product.productImages
         : (product.productImage ? [product.productImage] : []);
       setExistingImages(initialImgs);
+      setIsPrefilled(true);
     }
-  }, [product]);
+  }, [product, isPrefilled]);
 
   // Image Drag & Drop Handlers
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -222,10 +227,10 @@ const UpdateProduct: React.FC = () => {
 
       if (res.data.data.modifiedCount > 0 || res.data.data.matchedCount > 0) {
         toast.success("Product updated successfully!");
-        navigate("/dashboard/my-host-listings");
+        navigate(singleUser?.role === "admin" ? "/dashboard/manage-bookings" : "/dashboard/my-host-listings");
       } else {
         toast.success("No changes were made.");
-        navigate("/dashboard/my-host-listings");
+        navigate(singleUser?.role === "admin" ? "/dashboard/manage-bookings" : "/dashboard/my-host-listings");
       }
     } catch (err) {
       console.error("Product update failed:", err);

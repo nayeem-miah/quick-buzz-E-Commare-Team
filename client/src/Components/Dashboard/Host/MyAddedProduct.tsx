@@ -148,7 +148,7 @@ const MyAddedProduct: React.FC = () => {
                       </button>
                     </td>
                     <td className="py-4 px-4 text-sm text-gray-600">
-                      <Link to={`/updated-product/${listing._id}`}>
+                      <Link to={`/dashboard/update-product/${listing._id}`}>
                         <button className="px-4 py-2   text-2xl rounded-lg hover:text-green-700 transition duration-300 focus:outline-none">
                           <FaEdit />
                         </button>

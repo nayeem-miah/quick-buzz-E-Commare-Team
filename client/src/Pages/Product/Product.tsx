@@ -55,7 +55,7 @@ const Product = () => {
     queryKey: ['products', routeCategory, page],
     queryFn: async () => {
       const res = await axiosPublic.get(
-        `/products?category=${routeCategory}&page=${page}&size=${PAGE_SIZE}`,
+        `/products?category=${encodeURIComponent(routeCategory)}&status=approve&page=${page}&size=${PAGE_SIZE}`,
       );
       return res.data;
     },

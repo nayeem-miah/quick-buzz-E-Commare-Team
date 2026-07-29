@@ -74,6 +74,24 @@ const ProductPurchasePanel = ({
       {shortDescription}
     </p>
 
+    {product.tags && (
+      <div className="mt-4 flex flex-wrap gap-2">
+        {(typeof product.tags === 'string'
+          ? product.tags.split(',')
+          : Array.isArray(product.tags)
+          ? product.tags
+          : []
+        ).map((tag: any, index: number) => {
+          const cleanTag = String(tag).trim();
+          return cleanTag ? (
+            <span key={index} className="rounded-lg bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700 border border-orange-100">
+              #{cleanTag}
+            </span>
+          ) : null;
+        })}
+      </div>
+    )}
+
     <div className="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-gray-50 p-4">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Quantity</p>

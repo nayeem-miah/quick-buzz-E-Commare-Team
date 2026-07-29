@@ -195,6 +195,14 @@ const router = createBrowserRouter([
         path: "host-manage-booking",
         element: <ManageBooking />,
       },
+      {
+        path: "update-product/:id",
+        element: (
+          <PrivateRoute>
+            <UpdateProduct />
+          </PrivateRoute>
+        ),
+      },
       // User routes
       {
         path: "my-listings",
