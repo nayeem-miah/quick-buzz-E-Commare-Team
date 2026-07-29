@@ -7,24 +7,25 @@ const sendResponse = require('../utils/sendResponse');
 const getUser = catchAsync(async (req, res) => {
     const users = await UserCollection.find().toArray();
 
+    const usersWithTimestamp = users.map(user => {
+        if (!user.timestamp && user._id) {
+            try {
+                user.timestamp = new ObjectId(user._id).getTimestamp().toISOString();
+                UserCollection.updateOne({ _id: user._id }, { $set: { timestamp: user.timestamp } }).catch(err => 
+                    console.error("Failed to update user timestamp:", err)
+                );
+            } catch (err) {
+                user.timestamp = new Date().toISOString();
+            }
+        }
+        return user;
+    });
+
     sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "user get success",
-        data: users
-    });
-});
-
-const deleteUser = catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const query = { _id: new ObjectId(id) };
-    const result = await UserCollection.deleteOne(query);
-
-    sendResponse(res, {
-        statusCode: 200,
-        success: true,
-        message: "user deleted success",
-        data: result
+        data: usersWithTimestamp
     });
 });
 
@@ -48,6 +49,12 @@ const createUser = catchAsync(async (req, res) => {
 
     if (existingUser) {
         throw new AppError(409, "user already exist");
+    }
+
+    // Set timestamp and default role
+    user.timestamp = new Date().toISOString();
+    if (!user.role) {
+        user.role = 'user';
     }
 
     const result = await UserCollection.insertOne(user);
@@ -82,12 +89,34 @@ const updateUsers = catchAsync(async (req, res) => {
     });
 });
 
+const updateUserStatus = catchAsync(async (req, res) => {
+    const { status } = req.body;
+    const id = req.params.id;
+
+    const filter = { _id: new ObjectId(id) };
+
+    const updatedDoc = {
+        $set: {
+            status: status,
+        },
+    };
+
+    const result = await UserCollection.updateOne(filter, updatedDoc);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "user status updated success",
+        data: result
+    });
+});
+
 const UserController = {
     getUser,
-    deleteUser,
     getSingleUser,
     createUser,
-    updateUsers
+    updateUsers,
+    updateUserStatus
 };
 
 module.exports = UserController;

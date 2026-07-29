@@ -5,10 +5,10 @@ const router = express.Router();
 const { verifyToken, verifyAdmin } = require("../middleware/auth");
 
 router.get("/", verifyToken, verifyAdmin, UserController.getUser);
-router.delete("/:id", verifyToken, verifyAdmin, UserController.deleteUser);
 router.get("/:email", verifyToken, UserController.getSingleUser);
 router.post("/", UserController.createUser);
 router.patch("/role/:id", verifyToken, verifyAdmin, UserController.updateUsers);
+router.patch("/status/:id", verifyToken, verifyAdmin, UserController.updateUserStatus);
 
 
 

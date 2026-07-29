@@ -8,6 +8,7 @@ import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Heading from "../../../Shared/Heading/Heading";
 import LoadingSpinner from "../../../Shared/Loading";
 import NoData from "../../../Shared/NoDataFound/NoData";
+import Pagination from "../../../Shared/Pagination/Pagination";
 
 import { PaymentHistory } from "../../../types/payment";
 import { PaymentStatus, ApprovalStatus } from "../../../constants/enums";
@@ -163,40 +164,13 @@ const AllPaymentHistory: React.FC = () => {
             </table>
           </div>
 
-          {/* Pagination Section */}
-          <div className="flex justify-end items-center gap-3 mt-6 mb-12 pr-4 sm:pr-8">
-            <button
-              className={`flex items-center justify-center px-5 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl shadow-sm border
-              ${
-                page <= 1
-                  ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
-                  : "bg-white text-orange-600 border-orange-200 hover:bg-orange-50 hover:-translate-x-1"
-              }`}
-              disabled={page <= 1}
-              onClick={() => setPage((prev: number) => prev - 1)}
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path></svg>
-              Previous
-            </button>
-
-            <div className="flex items-center justify-center px-5 py-2.5 text-sm font-medium bg-orange-50/50 text-orange-800 border border-orange-100 rounded-xl shadow-sm">
-              Page <span className="font-extrabold mx-1.5">{page}</span> of <span className="font-bold ml-1.5">{totalPages}</span>
-            </div>
-
-            <button
-              className={`flex items-center justify-center px-5 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl shadow-sm border
-              ${
-                page >= totalPages
-                  ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
-                  : "bg-white text-orange-600 border-orange-200 hover:bg-orange-50 hover:translate-x-1"
-              }`}
-              disabled={page >= totalPages}
-              onClick={() => setPage((prev: number) => prev + 1)}
-            >
-              Next
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path></svg>
-            </button>
-          </div>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            setPage={setPage}
+            size={size}
+            totalItems={successfulPayments.length}
+          />
 
         </div>
       )}

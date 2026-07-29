@@ -12,9 +12,10 @@ interface CustomDropdownProps {
   options: Option[];
   className?: string;
   searchable?: boolean;
+  buttonClassName?: string;
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, options, className, searchable = false }) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, options, className, searchable = false, buttonClassName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -47,7 +48,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, option
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-3 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all"
+        className={buttonClassName || "w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-3 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all"}
       >
         <span className="truncate">{selectedOption?.label || "Select..."}</span>
         <FiChevronDown

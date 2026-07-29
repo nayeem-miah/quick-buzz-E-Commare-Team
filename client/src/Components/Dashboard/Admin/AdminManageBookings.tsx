@@ -10,9 +10,9 @@ import { Listing } from "../../../types/listing.type";
 import { ManageBookingsCards } from "./components/ManageBookingsCards";
 import { ManageBookingsFilters } from "./components/ManageBookingsFilters";
 import { ManageBookingsHeader } from "./components/ManageBookingsHeader";
-import { ManageBookingsPagination } from "./components/ManageBookingsPagination";
 import { ManageBookingsTable } from "./components/ManageBookingsTable";
 import { ProductDetailsModal } from "./components/ProductDetailsModal";
+import Pagination from "../../../Shared/Pagination/Pagination";
 
 interface Category {
   _id?: string;
@@ -191,11 +191,12 @@ const AdminManageBookings: React.FC = () => {
               />
 
               {/* Pagination */}
-              <ManageBookingsPagination
+              <Pagination
                 page={page}
                 totalPages={totalPages}
-                isLoading={isLoading}
-                onPageChange={setPage}
+                setPage={setPage}
+                size={size}
+                totalItems={data?.meta?.total || 0}
               />
             </>
           )}
