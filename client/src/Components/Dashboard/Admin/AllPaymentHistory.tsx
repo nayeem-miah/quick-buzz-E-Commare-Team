@@ -1,28 +1,48 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
-import { FiCheck, FiCopy } from "react-icons/fi";
-import Swal, { SweetAlertResult } from "sweetalert2";
+import React, { useMemo, useState } from "react";
+import { FiInbox, FiSearch } from "react-icons/fi";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
+import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
 import Heading from "../../../Shared/Heading/Heading";
 import LoadingSpinner from "../../../Shared/Loading";
-import NoData from "../../../Shared/NoDataFound/NoData";
 import Pagination from "../../../Shared/Pagination/Pagination";
 
 import { PaymentHistory } from "../../../types/payment";
-import { PaymentStatus, ApprovalStatus } from "../../../constants/enums";
+import { PaymentStatus } from "../../../constants/enums";
+
+// Subcomponents
+import { AllPaymentHistoryTable } from "./components/AllPaymentHistoryTable";
+import { AllPaymentHistoryCards } from "./components/AllPaymentHistoryCards";
+import { PaymentDetailsModal } from "./components/PaymentDetailsModal";
+
+const STATUS_OPTIONS = [
+  { value: "All", label: "All Statuses" },
+  { value: "Paid", label: "Paid" },
+  { value: "Pending", label: "Pending" }
+];
+
+const METHOD_OPTIONS = [
+  { value: "All", label: "All Methods" },
+  { value: "SSLCommerz", label: "SSLCommerz" },
+  { value: "Cash on Delivery", label: "Cash on Delivery" }
+];
+
 const AllPaymentHistory: React.FC = () => {
-  const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
-    null
-  );
+  const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(null);
   const [copiedTrx, setCopiedTrx] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const size = 10;
   const axiosSecure = UseAxiosSecure();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [methodFilter, setMethodFilter] = useState("All");
+  const [dateFilter, setDateFilter] = useState("");
 
   const handleCopyTrx = (trxId: string) => {
     navigator.clipboard.writeText(trxId);
     setCopiedTrx(trxId);
-    toast.success("Transaction ID copied to clipboard!");
+    import("react-hot-toast").then((m) => m.default.success("Transaction ID copied to clipboard!")).catch(console.error);
     setTimeout(() => setCopiedTrx(null), 2000);
   };
 
@@ -44,8 +64,6 @@ const AllPaymentHistory: React.FC = () => {
     },
   });
 
-  if (isLoading) return <LoadingSpinner />;
-
   const handleDetailsClick = (payment: PaymentHistory) => {
     setSelectedPayment(payment);
   };
@@ -55,256 +73,196 @@ const AllPaymentHistory: React.FC = () => {
   };
 
   const handleMarkAsPaid = (payment: PaymentHistory) => {
-    Swal.fire({
-      title: "Confirm Payment?",
-      text: "Are you sure you want to mark this Cash on Delivery order as Paid?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#f97316",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, mark as Paid!",
-    }).then(async (result: SweetAlertResult) => {
-      if (result.isConfirmed) {
-        try {
-          await axiosSecure.patch(`/payments/${payment._id}/status`, { status: PaymentStatus.SUCCESS });
-          Swal.fire({
-            title: "Paid!",
-            text: "Payment has been marked as successful.",
-            icon: "success",
-            confirmButtonColor: "#f97316",
-          });
-          refetch();
-        } catch (error) {
-          console.error(error);
-          Swal.fire("Error", "Failed to update payment status.", "error");
+    import("sweetalert2").then((Swal) => {
+      Swal.default.fire({
+        title: "Confirm Payment?",
+        text: "Are you sure you want to mark this Cash on Delivery order as Paid?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#f97316",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, mark as Paid!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await axiosSecure.patch(`/payments/${payment._id}/status`, { status: PaymentStatus.SUCCESS });
+            Swal.default.fire({
+              title: "Paid!",
+              text: "Payment has been marked as successful.",
+              icon: "success",
+              confirmButtonColor: "#f97316",
+            });
+            refetch();
+          } catch (error) {
+            console.error(error);
+            Swal.default.fire("Error", "Failed to update payment status.", "error");
+          }
         }
-      }
-    });
+      });
+    }).catch(console.error);
   };
 
-  const successfulPayments = PaymentHistoryData || [];
-  const [page, setPage] = useState(1);
-  const size = 10;
-  const totalPages = Math.ceil(successfulPayments.length / size) || 1;
-  const paginatedPayments = successfulPayments.slice((page - 1) * size, page * size);
+  const filteredPayments = useMemo(() => {
+    return PaymentHistoryData.filter((payment: PaymentHistory) => {
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch =
+        payment.cus_name?.toLowerCase().includes(searchLower) ||
+        payment.cus_email?.toLowerCase().includes(searchLower) ||
+        payment.transactionId?.toLowerCase().includes(searchLower);
+
+      let matchesStatus = true;
+      if (statusFilter !== "All") {
+        const isPaid = payment.status === PaymentStatus.SUCCESS;
+        matchesStatus = statusFilter === "Paid" ? isPaid : !isPaid;
+      }
+
+      let matchesMethod = true;
+      if (methodFilter !== "All") {
+        const payMethod = payment.payment_method || "Card";
+        matchesMethod = payMethod.toLowerCase() === methodFilter.toLowerCase();
+      }
+
+      let matchesDate = true;
+      if (dateFilter) {
+        const paymentDateStr = new Date(payment.date || payment.tran_date || "").toDateString();
+        const filterDateStr = new Date(dateFilter).toDateString();
+        matchesDate = paymentDateStr === filterDateStr;
+      }
+
+      return matchesSearch && matchesStatus && matchesMethod && matchesDate;
+    });
+  }, [PaymentHistoryData, searchQuery, statusFilter, methodFilter, dateFilter]);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [searchQuery, statusFilter, methodFilter, dateFilter]);
+
+  const totalPages = Math.ceil(filteredPayments.length / size) || 1;
+  const paginatedPayments = filteredPayments.slice((page - 1) * size, page * size);
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="w-full block px-6 lg:px-16 xl:px-28 2xl:px-40">
-      <div className="mb-6">
-        <Heading title={"All Payment History"} subtitle={""} />
+    <div className="w-full block px-4 md:px-8 lg:px-12 xl:px-20 py-8">
+      <div className="mb-8">
+        <Heading title={"All Payment History"} subtitle={"View, sort, filter and verify customer transaction histories."} />
       </div>
-      {successfulPayments.length === 0 ? (
-        <NoData />
-      ) : (
-        <div className="w-full block bg-white rounded-2xl shadow-sm border border-gray-100 mt-8 mb-8 overflow-hidden">
-          <div className="overflow-x-auto w-full">
-            <table className="w-full min-w-full text-left border-collapse whitespace-nowrap">
-              <thead>
-                <tr className="bg-orange-50/80 border-b border-orange-100 uppercase tracking-wider text-orange-800 text-xs font-bold">
-                  <th className="py-4 px-6 md:px-8">ID</th>
-                  <th className="py-4 px-6">User Name</th>
-                  <th className="py-4 px-6">Email</th>
-                  <th className="py-4 px-6">Method</th>
-                  <th className="py-4 px-6">Status</th>
-                  <th className="py-4 px-6">Amount</th>
-                  <th className="py-4 px-6 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {paginatedPayments.map((payment: PaymentHistory, id: number) => (
-                  <tr
-                    key={payment._id || id}
-                    className="hover:bg-orange-50/10 transition-colors duration-200"
-                  >
-                    <td className="py-4 px-6 md:px-8 text-sm font-medium text-gray-500">
-                      {id + 1 + (page - 1) * size}
-                    </td>
-                    <td className="py-4 px-6 text-sm font-semibold text-gray-800">
-                      {payment?.cus_name}
-                    </td>
-                    <td className="py-4 px-6 text-sm text-gray-600">
-                      {payment?.cus_email}
-                    </td>
-                    <td className="py-4 px-6 text-sm text-gray-600 font-medium">
-                      {payment?.payment_method || "Card"}
-                    </td>
-                    <td className="py-4 px-6 text-sm">
-                      {payment?.status === PaymentStatus.SUCCESS ? (
-                        <span className="bg-green-50 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">
-                          Paid
-                        </span>
-                      ) : (
-                        <span className="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">
-                          Pending
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-sm font-semibold text-gray-800">
-                      ৳{(payment?.amount || payment?.totalPrice)?.toLocaleString()}
-                    </td>
-                    <td className="py-4 px-6 text-center flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => handleDetailsClick(payment)}
-                        className="px-3 py-1.5 text-xs text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-lg font-semibold transition border border-orange-100"
-                      >
-                        Details
-                      </button>
-                      {payment?.status === PaymentStatus.PENDING && payment?.payment_method === "Cash on Delivery" && (
-                        <button
-                          onClick={() => handleMarkAsPaid(payment)}
-                          className="px-3 py-1.5 text-xs text-white bg-orange-500 hover:bg-orange-600 rounded-lg font-semibold transition shadow-sm shadow-orange-500/10"
-                        >
-                          Mark as Paid
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+      <div className="w-full bg-white rounded-2xl border border-gray-150 mb-8">
+        {/* Filter Toolbar */}
+        <div className="p-5 border-b border-gray-100 flex flex-col xl:flex-row gap-4 justify-between items-center bg-white">
+          <div className="flex w-full xl:w-80 gap-2">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <FiSearch className="text-gray-455 text-base" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search by name, email or trx ID..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-11 pr-4 py-2 bg-gray-50/50 border border-gray-200/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all focus:bg-white"
+              />
+            </div>
           </div>
 
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            setPage={setPage}
-            size={size}
-            totalItems={successfulPayments.length}
-          />
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto z-20">
+            <CustomDropdown
+              value={statusFilter}
+              onChange={(val) => setStatusFilter(val)}
+              options={STATUS_OPTIONS}
+              className="w-full sm:w-40"
+              buttonClassName="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all shadow-sm"
+            />
+            
+            <CustomDropdown
+              value={methodFilter}
+              onChange={(val) => setMethodFilter(val)}
+              options={METHOD_OPTIONS}
+              className="w-full sm:w-44"
+              buttonClassName="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all shadow-sm"
+            />
 
+            <div className="relative w-full sm:w-44">
+              <input
+                type="date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm"
+              />
+              {dateFilter && (
+                <button
+                  onClick={() => setDateFilter("")}
+                  className="absolute right-8 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-orange-500"
+                  title="Clear Date"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-      )}
 
-      {/* Modal Component */}
-      {selectedPayment && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto"
-          onClick={closeModal}
-        >
-          <div
-            className="relative bg-white rounded-2xl border border-gray-100 shadow-xl p-6 w-full max-w-lg overflow-y-auto max-h-[90vh] animate-scaleIn"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex justify-between items-center border-b border-gray-100 pb-4 mb-5">
-              <h3 className="text-lg font-bold text-gray-950">
-                Payment Details
-              </h3>
+        {filteredPayments.length === 0 ? (
+          <div className="p-16 flex flex-col items-center justify-center text-center">
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-100">
+              <FiInbox className="text-3xl text-gray-400" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">No payments found</h3>
+            <p className="text-sm text-gray-550 max-w-sm">
+              We couldn't find any transactions matching your parameters.
+            </p>
+            {(searchQuery || statusFilter !== "All" || methodFilter !== "All" || dateFilter) && (
               <button
-                className="text-gray-400 hover:text-gray-600 text-sm font-semibold transition"
-                onClick={closeModal}
+                onClick={() => {
+                  setSearchQuery("");
+                  setStatusFilter("All");
+                  setMethodFilter("All");
+                  setDateFilter("");
+                }}
+                className="mt-5 px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-sm font-medium transition-colors"
               >
-                ✕
+                Clear all filters
               </button>
-            </div>
-
-            {/* Modal Content */}
-            <div className="space-y-4 text-sm text-gray-700">
-              <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-50">
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Customer Name</p>
-                  <p className="font-bold text-gray-950 mt-0.5">{selectedPayment?.cus_name || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Email Address</p>
-                  <p className="font-semibold text-gray-700 mt-0.5">{selectedPayment?.cus_email || "N/A"}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-50">
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Payment Date</p>
-                  <p className="font-semibold text-gray-700 mt-0.5">{formatDate(selectedPayment?.date || selectedPayment?.tran_date)}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Transaction ID</p>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <p className="font-bold text-orange-500">{selectedPayment?.transactionId || "N/A"}</p>
-                    {selectedPayment?.transactionId && selectedPayment.transactionId !== "N/A" && (
-                      <button
-                        onClick={() => handleCopyTrx(selectedPayment.transactionId!)}
-                        className="text-gray-400 hover:text-orange-500 transition"
-                      >
-                        {copiedTrx === selectedPayment.transactionId ? (
-                          <FiCheck className="text-green-600" size={13} />
-                        ) : (
-                          <FiCopy size={13} />
-                        )}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-50">
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Amount Paid</p>
-                  <p className="font-black text-gray-950 mt-0.5">৳{selectedPayment?.totalPrice?.toLocaleString()} {selectedPayment?.currency || "BDT"}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Card Type</p>
-                  <p className="font-semibold text-gray-700 mt-0.5">{selectedPayment?.card_type || "N/A"}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-50">
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Payment Status</p>
-                  <span
-                    className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold mt-1 border ${
-                      selectedPayment?.status === PaymentStatus.SUCCESS
-                        ? "bg-green-50 text-green-700 border-green-200"
-                        : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                    }`}
-                  >
-                    {selectedPayment?.status === PaymentStatus.SUCCESS ? "Paid" : "Pending"}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Approval Status</p>
-                  <span
-                    className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold mt-1 border ${
-                      selectedPayment?.hostIsApproved === ApprovalStatus.APPROVED
-                        ? "bg-green-50 text-green-700 border-green-200"
-                        : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                    }`}
-                  >
-                    {selectedPayment?.hostIsApproved || "Pending"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Products List */}
-              <div className="pt-2">
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Purchased Products</p>
-                <div className="space-y-3">
-                  {selectedPayment?.productTitle?.map((title: string, index: number) => (
-                    <div key={index} className="flex items-center gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                      <img
-                        src={selectedPayment?.productImage?.[index] || ""}
-                        alt={title || "Product"}
-                        className="w-10 h-10 object-cover rounded-lg border border-gray-200 flex-shrink-0"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-xs text-gray-900 truncate">
-                          {title || "Unnamed Product"}
-                        </p>
-                        <p className="text-[10px] text-gray-500 font-semibold mt-0.5">
-                          Brand: {selectedPayment?.brandName?.[index] || "Unknown"}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-gray-50">
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Host Emails</p>
-                <p className="font-semibold text-gray-700 mt-1">{selectedPayment?.hostEmail?.join(", ") || "N/A"}</p>
-              </div>
-            </div>
+            )}
           </div>
-        </div>
+        ) : (
+          <>
+            <AllPaymentHistoryTable
+              payments={paginatedPayments}
+              formatDate={formatDate}
+              onDetailsClick={handleDetailsClick}
+              onMarkAsPaid={handleMarkAsPaid}
+              page={page}
+              size={size}
+            />
+
+            <AllPaymentHistoryCards
+              payments={paginatedPayments}
+              formatDate={formatDate}
+              onDetailsClick={handleDetailsClick}
+              onMarkAsPaid={handleMarkAsPaid}
+            />
+
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              setPage={setPage}
+              size={size}
+              totalItems={filteredPayments.length}
+            />
+          </>
+        )}
+      </div>
+
+      {selectedPayment && (
+        <PaymentDetailsModal
+          payment={selectedPayment}
+          onClose={closeModal}
+          formatDate={formatDate}
+          onCopyTrx={handleCopyTrx}
+          copiedTrx={copiedTrx}
+        />
       )}
     </div>
   );
