@@ -169,6 +169,8 @@ const updateProduct = catchAsync(async (req, res) => {
             category: productData.category,
             description: productData?.description,
             productImage: productData.productImage,
+            productImages: productData.productImages,
+            quantity: productData.quantity,
             hostEmail: productData?.hostEmail,
             hostName: productData?.hostName,
             hostPhoto: productData?.hostPhoto,

@@ -14,4 +14,5 @@ export interface Listing {
   discount?: number;
   createdAt?: string;
   quantity?: number;
+  productImages?: string[];
 }
