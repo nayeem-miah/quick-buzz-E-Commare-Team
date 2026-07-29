@@ -3,9 +3,13 @@ const ReviewController = require("../controller/review.controller");
 
 const router = Router();
 
-router.get("/", ReviewController.getAllReview)
-router.get("/:id", ReviewController.getSingleReview)
-router.post("/", ReviewController.createReview)
+const { verifyToken } = require("../middleware/auth");
+const { checkReviewEligibility } = require("../middleware/review.middleware");
+
+router.get("/", ReviewController.getAllReview);
+router.get("/:id", ReviewController.getSingleReview);
+router.get("/eligibility/:productId", verifyToken, ReviewController.checkEligibility);
+router.post("/", verifyToken, checkReviewEligibility, ReviewController.createReview);
 
 
 const ReviewRoutes = router;

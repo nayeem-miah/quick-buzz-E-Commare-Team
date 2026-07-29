@@ -35,6 +35,10 @@ export interface ProductReview {
   name?: string;
   photo?: string;
   timestamp?: string;
+  imageUrl?: string;
+  isVerifiedPurchase?: boolean;
+  createdAt?: string;
+  comment?: string;
 }
 
 export type ProductInfoTab = 'description' | 'specifications' | 'reviews';

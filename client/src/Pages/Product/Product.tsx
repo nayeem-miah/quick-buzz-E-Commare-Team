@@ -123,11 +123,8 @@ const Product = () => {
   );
 
   const productCategories = useMemo(
-    () =>
-      Array.from(
-        new Set(products.map((product) => product.category).filter(Boolean)),
-      ).sort(),
-    [products],
+    () => categoryOptions.map((cat) => cat.label).sort(),
+    [categoryOptions]
   );
 
   const searchableWords = useMemo(() => {
