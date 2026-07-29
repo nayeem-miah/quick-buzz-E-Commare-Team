@@ -39,8 +39,9 @@ const EnhancedBarChart: React.FC = () => {
       if (bookings.length === 0) {
         setError("No booking data available! Bar chart cannot be displayed.");
       }
-    } catch (error: any) {
-      setError("Error fetching data: " + (error.message || "Unknown error"));
+    } catch (error: unknown) {
+      const errMessage = error instanceof Error ? error.message : "Unknown error";
+      setError("Error fetching data: " + errMessage);
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
@@ -131,7 +132,7 @@ const EnhancedBarChart: React.FC = () => {
           <YAxis
             stroke="#9ca3af"
             tick={{ fontSize: 12, fill: '#6b7280' }}
-            tickFormatter={(value) => `$${value}`}
+            tickFormatter={(value) => `৳${value}`}
             tickLine={false}
             axisLine={false}
           />

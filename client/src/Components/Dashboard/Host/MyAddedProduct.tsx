@@ -131,8 +131,8 @@ const MyAddedProduct: React.FC = () => {
                         className="w-16 h-16 object-cover rounded-md"
                       />
                     </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      ${listing?.price}
+                    <td className="py-4 px-4 text-sm text-gray-600 font-semibold">
+                      ৳{listing?.price?.toLocaleString()}
                     </td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       {listing?.adminIsApproved}

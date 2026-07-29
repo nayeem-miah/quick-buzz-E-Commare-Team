@@ -68,7 +68,7 @@ const AllHostRequest: React.FC = () => {
           });
         }
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.log(err);
     }
   };
@@ -119,7 +119,7 @@ const AllHostRequest: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {sellerData?.map((sellData: any, id: string) => (
+              {sellerData?.map((sellData: SellerDetails, id: number) => (
                 <tr
                   key={sellData._id}
                   className="border-b hover:bg-gray-50 transition duration-300"

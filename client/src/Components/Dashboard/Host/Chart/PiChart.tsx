@@ -2,8 +2,8 @@ import React from "react";
 import { Chart } from "react-google-charts";
 
 interface Data {
-  data: any[];
-  adminManageProduct: any[];
+  data: unknown[];
+  adminManageProduct: unknown[];
 }
 
 const options = {

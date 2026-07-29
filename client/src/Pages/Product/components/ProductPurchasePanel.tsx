@@ -56,9 +56,9 @@ const ProductPurchasePanel = ({
     </button>
 
     <div className="mt-6 flex flex-wrap items-baseline gap-3">
-      <span className="text-4xl font-bold text-gray-950">${price.toFixed(2)}</span>
+      <span className="text-4xl font-bold text-gray-950">৳{price.toLocaleString()}</span>
       {originalPrice > price && (
-        <span className="text-lg font-medium text-gray-400 line-through">${originalPrice.toFixed(2)}</span>
+        <span className="text-lg font-medium text-gray-400 line-through">৳{originalPrice.toLocaleString()}</span>
       )}
     </div>
 
@@ -89,7 +89,7 @@ const ProductPurchasePanel = ({
       </div>
       <div className="text-right">
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Total</p>
-        <p className="mt-2 text-2xl font-bold text-gray-950">${total.toFixed(2)}</p>
+        <p className="mt-2 text-2xl font-bold text-gray-950">৳{total.toLocaleString()}</p>
       </div>
     </div>
 

@@ -52,7 +52,7 @@ const SellerRequest: React.FC = () => {
             });
         }
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.log(err);
     }
   };

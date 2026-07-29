@@ -15,7 +15,8 @@ export enum PaymentStatus {
 export enum ApprovalStatus {
   PENDING = "pending",
   APPROVED = "approve",
-  REJECTED = "rejected"
+  REJECTED = "rejected",
+  DRAFT = "draft"
 }
 
 export enum UserRole {

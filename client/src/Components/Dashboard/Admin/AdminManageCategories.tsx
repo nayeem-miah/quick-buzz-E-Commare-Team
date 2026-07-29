@@ -85,11 +85,12 @@ const AdminManageCategories: React.FC = () => {
       }
       closeModal();
       refetch();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errMessage = error instanceof Error ? error.message : "Something went wrong";
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: error.response?.data?.message || "Something went wrong",
+        text: errMessage,
         confirmButtonColor: "#f97316",
       });
     } finally {
@@ -117,11 +118,12 @@ const AdminManageCategories: React.FC = () => {
             icon: "success",
             confirmButtonColor: "#f97316",
           });
-        } catch (error: any) {
+        } catch (error: unknown) {
+          const errMessage = error instanceof Error ? error.message : "Could not delete category.";
           Swal.fire({
             icon: "error",
             title: "Error!",
-            text: error.response?.data?.message || "Could not delete category.",
+            text: errMessage,
             confirmButtonColor: "#f97316",
           });
         }

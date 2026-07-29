@@ -10,6 +10,9 @@ export const getShortDescription = (description = '', maxLength = 180) => {
   return description.length > maxLength ? `${description.slice(0, maxLength)}...` : description;
 };
 
-export const getProductImages = (image?: string) => {
-  return [image, image, image, image].filter(Boolean) as string[];
+export const getProductImages = (image?: string, imagesArray?: string[]) => {
+  if (Array.isArray(imagesArray) && imagesArray.length > 0) {
+    return imagesArray.filter(Boolean);
+  }
+  return image ? [image] : [];
 };

@@ -10,9 +10,9 @@ import Swal from "sweetalert2";
 import { ApprovalStatus, PaymentStatus } from "../../../constants/enums";
 interface Listing {
   [x: string]: ReactNode;
-  _id: number;
-  productTitle: any;
-  productImage: string;
+  _id: string | number;
+  productTitle: string | string[];
+  productImage: string | string[];
   hostIsApproved: string;
   hostPhoto: string;
   hostName: string;
@@ -28,8 +28,6 @@ const ManageBooking: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
 
-
-
   /* All Payment history  */
   const {
     data = [],
@@ -44,11 +42,8 @@ const ManageBooking: React.FC = () => {
     },
   });
 
-
-
   /* Product approve update */
-
-  const handleApproved = (product: any) => {
+  const handleApproved = (product: Listing) => {
     axiosPublic.patch(`/products/host-manage-product/${product._id}`)
       .then((res) => {
         if (res.data.data.modifiedCount > 0) {
@@ -56,7 +51,7 @@ const ManageBooking: React.FC = () => {
           Swal.fire({
             position: "top",
             icon: "success",
-            title: `${product.productTitle.slice(0, 20)} is approved now!`,
+            title: `${String(product.productTitle).slice(0, 20)} is approved now!`,
             showConfirmButton: false,
             timer: 1500,
           });
@@ -129,8 +124,8 @@ const ManageBooking: React.FC = () => {
                         <td className="py-4 px-4 text-sm text-gray-600">
                           {listing?.date}
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-600">
-                          ${listing?.totalPrice}
+                        <td className="py-4 px-4 text-sm text-gray-600 font-semibold">
+                          ৳{listing?.totalPrice?.toLocaleString()}
                         </td>
                         <td className="py-4 px-4 text-sm text-gray-600">
                           {listing?.hostIsApproved === ApprovalStatus.APPROVED ? (
@@ -260,8 +255,8 @@ const ManageBooking: React.FC = () => {
                 <p className="text-sm sm:text-base">
                   <span className="font-semibold text-gray-900">Products:</span>
                   <ul className="list-disc list-inside space-y-2">
-                    {selectedBooking?.productTitle?.map(
-                      (title: any, index: any) => (
+                    {(Array.isArray(selectedBooking?.productTitle) ? selectedBooking.productTitle : [selectedBooking?.productTitle]).map(
+                      (title: string, index: number) => (
                         <li key={index} className="flex items-start space-x-3">
                           <img
                             src={selectedBooking?.productImage?.[index] || ""}

@@ -50,7 +50,7 @@ const UserPaymentHistory: React.FC = () => {
     setTimeout(() => setCopiedTrx(null), 2000);
   };
 
-  const formatDate = (dateStr: any) => {
+  const formatDate = (dateStr?: string | number | Date) => {
     if (!dateStr) return "N/A";
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-US", {
@@ -60,10 +60,10 @@ const UserPaymentHistory: React.FC = () => {
     });
   };
 
-  const filteredPayments = PaymentHistoryData.filter((payment: any) => {
+  const filteredPayments = PaymentHistoryData.filter((payment: PaymentHistory) => {
     const matchesSearch = !searchQuery || (payment.transactionId && payment.transactionId.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesStatus = statusFilter === "all" || payment.status === statusFilter;
-    const matchesDate = !dateFilter || (payment.date && payment.date.startsWith(dateFilter)) || (payment.tran_date && payment.tran_date.startsWith(dateFilter));
+    const matchesDate = !dateFilter || (payment.date && String(payment.date).startsWith(dateFilter)) || (payment.tran_date && String(payment.tran_date).startsWith(dateFilter));
     return matchesSearch && matchesStatus && matchesDate;
   });
 

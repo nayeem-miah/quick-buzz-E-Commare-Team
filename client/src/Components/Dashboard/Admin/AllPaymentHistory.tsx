@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { FiCheck, FiCopy } from "react-icons/fi";
-import Swal from "sweetalert2";
+import Swal, { SweetAlertResult } from "sweetalert2";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Heading from "../../../Shared/Heading/Heading";
 import LoadingSpinner from "../../../Shared/Loading";
@@ -26,7 +25,7 @@ const AllPaymentHistory: React.FC = () => {
     setTimeout(() => setCopiedTrx(null), 2000);
   };
 
-  const formatDate = (dateStr: any) => {
+  const formatDate = (dateStr?: string | number | Date) => {
     if (!dateStr) return "N/A";
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-US", {
@@ -54,7 +53,7 @@ const AllPaymentHistory: React.FC = () => {
     setSelectedPayment(null);
   };
 
-  const handleMarkAsPaid = (payment: any) => {
+  const handleMarkAsPaid = (payment: PaymentHistory) => {
     Swal.fire({
       title: "Confirm Payment?",
       text: "Are you sure you want to mark this Cash on Delivery order as Paid?",
@@ -63,7 +62,7 @@ const AllPaymentHistory: React.FC = () => {
       confirmButtonColor: "#f97316",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, mark as Paid!",
-    }).then(async (result: any) => {
+    }).then(async (result: SweetAlertResult) => {
       if (result.isConfirmed) {
         try {
           await axiosSecure.patch(`/payments/${payment._id}/status`, { status: PaymentStatus.SUCCESS });
@@ -111,7 +110,7 @@ const AllPaymentHistory: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {paginatedPayments.map((payment: any, id: number) => (
+                {paginatedPayments.map((payment: PaymentHistory, id: number) => (
                   <tr
                     key={payment._id || id}
                     className="hover:bg-orange-50/10 transition-colors duration-200"
@@ -140,7 +139,7 @@ const AllPaymentHistory: React.FC = () => {
                       )}
                     </td>
                     <td className="py-4 px-6 text-sm font-semibold text-gray-800">
-                      ${payment?.amount || payment?.totalPrice}
+                      ৳{(payment?.amount || payment?.totalPrice)?.toLocaleString()}
                     </td>
                     <td className="py-4 px-6 text-center flex items-center justify-center gap-2">
                       <button
@@ -266,7 +265,7 @@ const AllPaymentHistory: React.FC = () => {
               <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-50">
                 <div>
                   <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Amount Paid</p>
-                  <p className="font-black text-gray-950 mt-0.5">${selectedPayment?.totalPrice?.toFixed(2)} {selectedPayment?.currency || "USD"}</p>
+                  <p className="font-black text-gray-950 mt-0.5">৳{selectedPayment?.totalPrice?.toLocaleString()} {selectedPayment?.currency || "BDT"}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Card Type</p>

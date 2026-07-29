@@ -86,9 +86,10 @@ const Profile: React.FC = () => {
       } else {
         toast.error("Session expired. Please log in again.");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      toast.error(err.message || "Failed to update password. Try logging in again.");
+      const message = err instanceof Error ? err.message : "Failed to update password. Try logging in again.";
+      toast.error(message);
     } finally {
       setIsUpdatingPassword(false);
     }

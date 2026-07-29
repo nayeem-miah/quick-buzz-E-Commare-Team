@@ -6,15 +6,24 @@ import { Link } from "react-router-dom";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import Card from "../../../Pages/Product/Card";
+import { ProductItem } from "../../../Pages/Product/types";
 import LoadingSpinner from "../../../Shared/Loading";
 import NoData from "../../../Shared/NoDataFound/NoData";
 import { OrderStatus, ApprovalStatus } from "../../../constants/enums";
+
+interface UserHomeOrder {
+  _id: string;
+  status: string;
+  total_amount: number;
+  date: string;
+}
+
 const UserHome: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
 
   // recommended-for-you-product
-  const { data: recommended = [], isLoading } = useQuery({
+  const { data: recommended = [], isLoading: recommendedLoading } = useQuery<ProductItem[]>({
     queryKey: ["recommended"],
     queryFn: async () => {
       const res = await axiosPublic.get("/products/recommended-for-you-product");
@@ -23,7 +32,7 @@ const UserHome: React.FC = () => {
   });
 
   // Fetch user orders for metrics
-  const { data: orders = [] } = useQuery({
+  const { data: orders = [], isLoading } = useQuery<UserHomeOrder[]>({
     queryKey: ["userOrders", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/orders/user/${user?.email}`);
@@ -32,16 +41,16 @@ const UserHome: React.FC = () => {
     enabled: !!user?.email
   });
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || recommendedLoading) return <LoadingSpinner />;
 
   const totalOrders = orders.length;
   const totalSpent = orders
-    .filter((order: any) => order.status !== OrderStatus.CANCELLED)
-    .reduce((sum: number, order: any) => sum + (order.total_amount || 0), 0);
+    .filter((order: UserHomeOrder) => order.status !== OrderStatus.CANCELLED)
+    .reduce((sum: number, order: UserHomeOrder) => sum + (order.total_amount || 0), 0);
   const pendingOrders = orders.filter(
-    (order: any) => order.status === OrderStatus.PENDING || order.status === OrderStatus.PROCESSING
+    (order: UserHomeOrder) => order.status === OrderStatus.PENDING || order.status === OrderStatus.PROCESSING
   ).length;
-  const completedOrders = orders.filter((order: any) => order.status === OrderStatus.DELIVERED).length;
+  const completedOrders = orders.filter((order: UserHomeOrder) => order.status === OrderStatus.DELIVERED).length;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -73,7 +82,7 @@ const UserHome: React.FC = () => {
           </div>
           <div>
             <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Total Spent</p>
-            <p className="text-lg font-black text-gray-950 mt-0.5">${totalSpent.toFixed(2)}</p>
+            <p className="text-lg font-black text-gray-950 mt-0.5">৳{totalSpent.toLocaleString()}</p>
           </div>
         </div>
 
@@ -169,7 +178,7 @@ const UserHome: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-100">
               <tbody className="divide-y divide-gray-100">
-                {orders.slice(0, 3).map((order: any) => (
+                {orders.slice(0, 3).map((order: UserHomeOrder) => (
                   <tr key={order._id} className="hover:bg-gray-50/50 transition duration-200">
                     <td className="py-3.5 text-sm font-semibold text-gray-950">
                       #{order._id.substring(order._id.length - 8)}
@@ -178,7 +187,7 @@ const UserHome: React.FC = () => {
                       {new Date(order.date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                     <td className="py-3.5 text-sm font-bold text-gray-950">
-                      ${order.total_amount?.toFixed(2)}
+                      ৳{order.total_amount?.toLocaleString()}
                     </td>
                     <td className="py-3.5 text-xs">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
@@ -216,7 +225,7 @@ const UserHome: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {recommended?.map(
-              (product: any) =>
+              (product: ProductItem) =>
                 product?.adminIsApproved === ApprovalStatus.APPROVED && (
                   <Card product={product} key={product._id} />
                 )

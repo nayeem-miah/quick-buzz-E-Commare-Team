@@ -8,12 +8,21 @@ import LoadingSpinner from "../../../Shared/Loading";
 import PiChart from "./Chart/PiChart";
 import { PaymentStatus, ApprovalStatus } from "../../../constants/enums";
 
+interface HostPayment {
+  status: string;
+  totalPrice: number;
+}
+
+interface HostProduct {
+  adminIsApproved: string;
+}
+
 const HostHome: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
 
   // Fetch payment history using email
-  const { data: PaymentHistoryData = [], isLoading } = useQuery({
+  const { data: PaymentHistoryData = [], isLoading } = useQuery<HostPayment[]>({
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/payments/host-payment-history/${user?.email}`);
@@ -23,17 +32,16 @@ const HostHome: React.FC = () => {
 
   // successful payment
   const successfulPaymentCount = PaymentHistoryData.filter(
-    (item: any) => item.status === PaymentStatus.SUCCESS
+    (item: HostPayment) => item.status === PaymentStatus.SUCCESS
   );
   // Calculate the total amount of successful payments
   const totalAmount = successfulPaymentCount.reduce(
     (total: number, item: { totalPrice: number }) => total + item.totalPrice,
     0
   );
-  // console.log("Total Amount of Successful Payments:", totalAmount);
 
   // get all product
-  const { data = [] } = useQuery({
+  const { data = [] } = useQuery<HostProduct[]>({
     queryKey: ["allProduct"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/products/host-product/${user?.email}`);
@@ -42,7 +50,7 @@ const HostHome: React.FC = () => {
   });
 
   const adminManageProduct = data.filter(
-    (item: any) => item.adminIsApproved === ApprovalStatus.APPROVED
+    (item: HostProduct) => item.adminIsApproved === ApprovalStatus.APPROVED
   );
 
 
@@ -63,7 +71,7 @@ const HostHome: React.FC = () => {
                 Total Sales
               </p>
               <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                ${totalAmount}
+                ৳{totalAmount?.toLocaleString()}
               </h4>
             </div>
           </div>

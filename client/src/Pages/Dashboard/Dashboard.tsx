@@ -41,7 +41,7 @@ const Sidebar: React.FC = () => {
   };
 
   const activeClass = "bg-orange-50 text-orange-600 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-bold";
-  const inactiveClass = "text-gray-600 hover:bg-gray-50 hover:text-orange-500 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-medium";
+  const inactiveClass = "text-gray-600 hover:bg-gray-50 hover:text-gray-900 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-medium";
 
   return (
     <>
@@ -94,7 +94,7 @@ const Sidebar: React.FC = () => {
               {singleUser?.role === "admin" && (
                 <>
                   <NavLink to="/dashboard" end className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
-                    <BsGraphUp className="w-5 h-5 text-gray-400 group-hover:text-orange-500" />
+                    <BsGraphUp className="w-5 h-5 text-gray-400 group-hover:text-gray-900" />
                     <span className="mx-4">Statistics</span>
                   </NavLink>
 

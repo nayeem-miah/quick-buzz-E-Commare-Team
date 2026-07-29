@@ -18,7 +18,7 @@ interface Product {
 }
 
 type ChildComponentProps = {
-  recentData: any;
+  recentData: Product[];
   isLoading: boolean;
 };
 

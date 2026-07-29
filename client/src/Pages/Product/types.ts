@@ -4,9 +4,11 @@ export interface ProductItem {
   _id: number | string;
   brandName: string;
   productImage: string;
+  productImages?: string[];
   name?: string;
   category: string;
   price: number | string;
+  quantity?: number | string;
   description: string;
   adminIsApproved: string;
   discount: number | string;

@@ -9,6 +9,16 @@ import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
 
+interface CartItem {
+  _id: string;
+  price?: number;
+  discount?: number;
+  quantity?: number;
+  productTitle?: string;
+  productImage?: string;
+  brandName?: string;
+}
+
 const MyAddedCart: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
@@ -22,8 +32,8 @@ const MyAddedCart: React.FC = () => {
     data: allsave = [],
     isLoading,
     refetch,
-  } = useQuery({
-    queryKey: ["allsave"],
+  } = useQuery<CartItem[]>({
+    queryKey: ["allsave", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/cart/${user?.email}`);
       return res.data.data;
@@ -31,12 +41,12 @@ const MyAddedCart: React.FC = () => {
   });
 
   const getQuantity = (id: string) => {
-    const item = allsave.find((i: any) => i._id === id);
+    const item = allsave.find((i: CartItem) => i._id === id);
     return quantities[id] !== undefined ? quantities[id] : (item?.quantity || 1);
   };
 
   const updateQuantity = async (id: string, amount: number) => {
-    const item = allsave.find((i: any) => i._id === id);
+    const item = allsave.find((i: CartItem) => i._id === id);
     if (!item) return;
 
     const currentQty = getQuantity(id);
@@ -58,12 +68,12 @@ const MyAddedCart: React.FC = () => {
 
   // Subtotal & Discount calculations
   const subtotal = allsave.reduce(
-    (total: number, save: any) => total + (save.price || 0) * getQuantity(save._id),
+    (total: number, save: CartItem) => total + (save.price || 0) * getQuantity(save._id),
     0
   );
 
   const discount = allsave.reduce(
-    (total: number, save: any) =>
+    (total: number, save: CartItem) =>
       total +
       (save.price || 0) *
         ((save.discount || 0) / 100) *
@@ -156,7 +166,7 @@ const MyAddedCart: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             {/* Cart Items List */}
             <div className="lg:col-span-2 space-y-4">
-              {allsave.map((save: any) => {
+              {allsave.map((save: CartItem) => {
                 const qty = getQuantity(save._id);
                 return (
                   <div
@@ -178,12 +188,12 @@ const MyAddedCart: React.FC = () => {
                         </p>
                         <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
                           <span className="text-sm font-bold text-orange-500">
-                            ${(save?.price * (1 - (save?.discount || 0) / 100)).toFixed(2)}
+                            ৳{(save?.price * (1 - (save?.discount || 0) / 100)).toLocaleString()}
                           </span>
                           {save?.discount > 0 && (
                             <>
                               <span className="text-xs text-gray-400 line-through">
-                                ${save?.price}
+                                ৳{save?.price?.toLocaleString()}
                               </span>
                               <span className="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
                                 {save?.discount}% Off
@@ -240,11 +250,11 @@ const MyAddedCart: React.FC = () => {
               <div className="space-y-3.5 text-sm">
                 <div className="flex justify-between text-gray-500">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-gray-800">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-gray-800">৳{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>Discount</span>
-                  <span className="font-semibold text-red-500">-${discount.toFixed(2)}</span>
+                  <span className="font-semibold text-red-500">-৳{discount.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>Shipping</span>
@@ -254,7 +264,7 @@ const MyAddedCart: React.FC = () => {
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-900">Total Price</span>
                   <span className="text-xl font-black text-orange-500">
-                    ${totalPrice.toFixed(2)}
+                    ৳{totalPrice.toLocaleString()}
                   </span>
                 </div>
               </div>

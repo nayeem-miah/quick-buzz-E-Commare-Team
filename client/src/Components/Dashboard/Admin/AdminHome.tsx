@@ -8,6 +8,7 @@ import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import LoadingSpinner from "../../../Shared/Loading";
 import ApexChart from "./Chart/ApexChart";
 import { PaymentStatus } from "../../../constants/enums";
+import { PaymentHistory } from "../../../types/payment";
 
 const AdminStatistics: React.FC = () => {
   const axiosSecure = UseAxiosSecure();
@@ -31,7 +32,7 @@ const AdminStatistics: React.FC = () => {
   });
 
   // Payments / Orders
-  const { data: PaymentHistoryData = [], isLoading } = useQuery({
+  const { data: PaymentHistoryData = [], isLoading } = useQuery<PaymentHistory[]>({
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
       const res = await axiosSecure.get("/payments");
@@ -50,12 +51,12 @@ const AdminStatistics: React.FC = () => {
 
   // Calculations
   const totalAmount = PaymentHistoryData.filter(
-    (item: any) => item.status === PaymentStatus.SUCCESS
-  ).reduce((total: number, item: any) => total + (item.totalPrice || 0), 0);
+    (item: PaymentHistory) => item.status === PaymentStatus.SUCCESS
+  ).reduce((total: number, item: PaymentHistory) => total + (item.totalPrice || 0), 0);
 
   const totalOrders = PaymentHistoryData.length;
   const pendingOrders = PaymentHistoryData.filter(
-    (item: any) => item.status === PaymentStatus.PENDING
+    (item: PaymentHistory) => item.status === PaymentStatus.PENDING
   ).length;
 
   if (isLoading) return <LoadingSpinner />;
@@ -82,7 +83,7 @@ const AdminStatistics: React.FC = () => {
             </div>
             <div>
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Sales</p>
-              <h4 className="text-xl font-bold text-gray-900 mt-0.5">${totalAmount.toFixed(2)}</h4>
+              <h4 className="text-xl font-bold text-gray-900 mt-0.5">৳{totalAmount.toLocaleString()}</h4>
             </div>
           </div>
 
@@ -165,13 +166,13 @@ const AdminStatistics: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="text-sm text-gray-700">
-                {PaymentHistoryData.slice(0, 5).map((order: any, idx: number) => (
+                {PaymentHistoryData.slice(0, 5).map((order: PaymentHistory, idx: number) => (
                   <tr key={idx} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
                     <td className="py-4 px-6 font-medium text-gray-900">#{order._id?.slice(-6) || "N/A"}</td>
                     <td className="py-4 px-6">{order.cus_name || order.cus_email || "Guest"}</td>
-                    <td className="py-4 px-6 font-semibold text-gray-900">${order.totalPrice}</td>
+                    <td className="py-4 px-6 font-semibold text-gray-900">৳{order.totalPrice?.toLocaleString()}</td>
                     <td className="py-4 px-6 text-gray-500">
-                      {new Date(order.date || order.tran_date).toLocaleDateString(undefined, {
+                      {new Date((order.tran_date || order.date) as string | number | Date).toLocaleDateString(undefined, {
                         year: 'numeric', month: 'short', day: 'numeric'
                       })}
                     </td>

@@ -7,7 +7,7 @@ import { PaymentHistory } from "../../../../types/payment";
 interface PaymentDetailsModalProps {
   payment: PaymentHistory | null;
   onClose: () => void;
-  formatDate: (dateStr: any) => string;
+  formatDate: (dateStr?: string | number | Date) => string;
   copiedTrx: string | null;
   onCopyTrx: (trxId: string) => void;
 }
@@ -82,7 +82,7 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
           <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-50">
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Amount Paid</p>
-              <p className="font-black text-gray-950 mt-0.5">${payment.totalPrice?.toFixed(2)} {payment.currency || "USD"}</p>
+              <p className="font-black text-gray-950 mt-0.5">৳{payment.totalPrice?.toLocaleString()} {payment.currency || "BDT"}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Card Type</p>

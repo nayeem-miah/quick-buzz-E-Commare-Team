@@ -75,7 +75,7 @@ const ProductDetailsPage = () => {
   const discount = toNumber(product.discount);
   const originalPrice = discount > 0 ? price / (1 - discount / 100) : 0;
   const total = price * quantity;
-  const images = getProductImages(product.productImage);
+  const images = getProductImages(product.productImage, product.productImages);
   const averageRating = getAverageRating(reviews);
   const shortDescription = getShortDescription(product.description);
   const isActionDisabled = singleUser?.role === 'admin' || singleUser?.role === 'Host';

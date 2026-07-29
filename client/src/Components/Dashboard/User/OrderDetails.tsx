@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { FiArrowLeft, FiCreditCard, FiPackage, FiRefreshCw, FiTruck, FiXCircle } from "react-icons/fi";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
+import Swal, { SweetAlertResult } from "sweetalert2";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
@@ -80,7 +79,7 @@ const OrderDetails: React.FC = () => {
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, cancel it!",
-    }).then(async (result: any) => {
+    }).then(async (result: SweetAlertResult) => {
       if (result.isConfirmed) {
         try {
           await axiosPublic.patch(`/orders/${id}/status`, { status: OrderStatus.CANCELLED });
@@ -299,11 +298,11 @@ const OrderDetails: React.FC = () => {
                   </div>
                   <div className="text-right sm:text-right w-full sm:w-auto flex sm:flex-col items-center justify-between sm:justify-center gap-2">
                     <span className="text-sm font-bold text-orange-500">
-                      ${((item.price || 0) * (1 - (item.discount || 0) / 100) * (item.quantity || 1)).toFixed(2)}
+                      ৳{((item.price || 0) * (1 - (item.discount || 0) / 100) * (item.quantity || 1)).toLocaleString()}
                     </span>
                     {item.discount !== undefined && item.discount > 0 && (
                       <div className="flex items-center gap-1 text-[10px]">
-                        <span className="text-gray-400 line-through">${(item.price * item.quantity).toFixed(2)}</span>
+                        <span className="text-gray-400 line-through">৳{(item.price * item.quantity).toLocaleString()}</span>
                         <span className="bg-orange-50 text-orange-600 font-bold px-1.5 py-0.5 rounded">
                           {item.discount}% Off
                         </span>
@@ -357,11 +356,11 @@ const OrderDetails: React.FC = () => {
             <div className="space-y-3.5 text-sm text-gray-700">
               <div className="flex justify-between text-gray-500">
                 <span>Subtotal</span>
-                <span className="font-semibold text-gray-800">${subtotal.toFixed(2)}</span>
+                <span className="font-semibold text-gray-800">৳{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-gray-500">
                 <span>Discount</span>
-                <span className="font-semibold text-red-500">-${totalDiscount.toFixed(2)}</span>
+                <span className="font-semibold text-red-500">-৳{totalDiscount.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-gray-500">
                 <span>Shipping</span>
@@ -371,7 +370,7 @@ const OrderDetails: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="font-bold text-gray-950">Total Paid</span>
                 <span className="text-lg font-black text-orange-500">
-                  ${order.total_amount?.toFixed(2)}
+                  ৳{order.total_amount?.toLocaleString()}
                 </span>
               </div>
             </div>

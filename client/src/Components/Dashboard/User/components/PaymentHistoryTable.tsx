@@ -6,7 +6,7 @@ import { PaymentHistory } from "../../../../types/payment";
 interface PaymentHistoryTableProps {
   payments: PaymentHistory[];
   onDetailsClick: (payment: PaymentHistory) => void;
-  formatDate: (dateStr: any) => string;
+  formatDate: (dateStr?: string | number | Date) => string;
 }
 
 export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
@@ -46,7 +46,7 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
                 {formatDate(payment?.date || payment?.tran_date)}
               </td>
               <td className="py-4 px-6 text-sm font-extrabold text-gray-950">
-                ${payment?.totalPrice?.toFixed(2)}
+                ৳{payment?.totalPrice?.toLocaleString()}
               </td>
               <td className="py-4 px-6 text-sm">
                 <span

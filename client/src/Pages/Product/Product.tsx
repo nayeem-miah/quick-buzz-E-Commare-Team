@@ -69,7 +69,7 @@ const Product = () => {
       return res.data;
     },
   });
-  const categoryOptions: CategoryOption[] = (categoryData?.data || []).map((cat: any) => ({
+  const categoryOptions: CategoryOption[] = (categoryData?.data || []).map((cat: { name: string; icon: string }) => ({
     label: cat.name,
     icon: cat.icon,
   }));

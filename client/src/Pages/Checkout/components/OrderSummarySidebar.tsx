@@ -1,9 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { ImSpinner9 } from "react-icons/im";
 
+export interface CheckoutItem {
+  _id: string;
+  productImage?: string;
+  productTitle?: string;
+  price?: number;
+  discount?: number;
+  quantity?: number;
+}
+
 interface OrderSummarySidebarProps {
-  cartItems: any[];
+  cartItems: CheckoutItem[];
   subtotal: number;
   discount: number;
   totalPrice: number;
@@ -27,7 +35,7 @@ export const OrderSummarySidebar: React.FC<OrderSummarySidebarProps> = ({
 
       {/* Items Preview */}
       <div className="space-y-4 max-h-48 overflow-y-auto pr-1">
-        {cartItems.map((item: any) => (
+        {cartItems.map((item: CheckoutItem) => (
           <div key={item._id} className="flex gap-3 items-center">
             <img
               src={item.productImage}
@@ -36,10 +44,10 @@ export const OrderSummarySidebar: React.FC<OrderSummarySidebarProps> = ({
             />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold text-gray-950 truncate">{item.productTitle}</p>
-              <p className="text-[10px] text-gray-400">Qty: {item.quantity}</p>
+              <p className="text-[10px] text-gray-400">Qty: {item.quantity || 1}</p>
             </div>
             <span className="text-xs font-bold text-gray-950">
-              ${(item.price * (1 - (item.discount || 0) / 100) * item.quantity).toFixed(2)}
+              ৳{((item.price || 0) * (1 - (item.discount || 0) / 100) * (item.quantity || 1)).toLocaleString()}
             </span>
           </div>
         ))}
@@ -51,11 +59,11 @@ export const OrderSummarySidebar: React.FC<OrderSummarySidebarProps> = ({
       <div className="space-y-3 text-sm">
         <div className="flex justify-between text-gray-500">
           <span>Subtotal</span>
-          <span className="font-semibold text-gray-800">${subtotal.toFixed(2)}</span>
+          <span className="font-semibold text-gray-800">৳{subtotal.toLocaleString()}</span>
         </div>
         <div className="flex justify-between text-gray-500">
           <span>Discount</span>
-          <span className="font-semibold text-red-500">-${discount.toFixed(2)}</span>
+          <span className="font-semibold text-red-500">-৳{discount.toLocaleString()}</span>
         </div>
         <div className="flex justify-between text-gray-500">
           <span>Shipping</span>
@@ -65,7 +73,7 @@ export const OrderSummarySidebar: React.FC<OrderSummarySidebarProps> = ({
         <div className="flex justify-between items-center">
           <span className="font-bold text-gray-900">Total Price</span>
           <span className="text-xl font-black text-orange-500">
-            ${totalPrice.toFixed(2)}
+            ৳{totalPrice.toLocaleString()}
           </span>
         </div>
       </div>

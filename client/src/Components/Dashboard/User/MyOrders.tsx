@@ -184,7 +184,7 @@ const MyOrders: React.FC = () => {
                           {order.payment_method}
                         </td>
                         <td className="py-4 px-6 text-sm font-bold text-gray-950">
-                          ${order.total_amount?.toFixed(2)}
+                          ৳{order.total_amount?.toLocaleString()}
                         </td>
                         <td className="py-4 px-6 text-sm">
                           <span className={`px-2.5 py-1 text-xs font-bold rounded-full border uppercase tracking-wider ${getStatusStyle(order.status)}`}>
@@ -243,7 +243,7 @@ const MyOrders: React.FC = () => {
                       </div>
                       <div className="col-span-2 pt-1">
                         <p className="text-gray-400">Total Price:</p>
-                        <p className="text-sm font-black text-orange-500">${order.total_amount?.toFixed(2)}</p>
+                        <p className="text-sm font-black text-orange-500">৳{order.total_amount?.toLocaleString()}</p>
                       </div>
                     </div>
 

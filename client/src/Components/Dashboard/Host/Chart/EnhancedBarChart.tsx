@@ -58,8 +58,9 @@ const EnhancedBarChart: React.FC = () => {
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
       );
       setData(chartData);
-    } catch (error: any) {
-      setError("Error fetching data: " + (error.message || "Unknown error"));
+    } catch (error: unknown) {
+      const errMessage = error instanceof Error ? error.message : "Unknown error";
+      setError("Error fetching data: " + errMessage);
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
@@ -95,7 +96,7 @@ const EnhancedBarChart: React.FC = () => {
         <YAxis
           stroke="#555"
           tick={{ fontSize: 12, fontWeight: 600 }}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => `৳${value}`}
         />
         <Tooltip
           contentStyle={{

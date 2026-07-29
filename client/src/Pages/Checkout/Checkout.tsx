@@ -37,7 +37,7 @@ const Checkout: React.FC = () => {
 
   const [paymentMethod, setPaymentMethod] = useState<string>("Cash on Delivery");
 
-  const { data: cartItems = [], isLoading } = useQuery({
+  const { data: cartItems = [], isLoading } = useQuery<CheckoutItem[]>({
     queryKey: ["cart", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/cart/${user?.email}`);
@@ -47,12 +47,12 @@ const Checkout: React.FC = () => {
   });
 
   const subtotal = cartItems.reduce(
-    (total: number, item: any) => total + (item.price || 0) * (item.quantity || 1),
+    (total: number, item: CheckoutItem) => total + (item.price || 0) * (item.quantity || 1),
     0
   );
 
   const discount = cartItems.reduce(
-    (total: number, item: any) =>
+    (total: number, item: CheckoutItem) =>
       total + (item.price || 0) * ((item.discount || 0) / 100) * (item.quantity || 1),
     0
   );
@@ -80,8 +80,8 @@ const Checkout: React.FC = () => {
     setIsSubmitting(true);
     const orderPayload = {
       email: user?.email,
-      items: cartItems.map((item: any) => ({
-        product_id: item.product_id,
+      items: cartItems.map((item: CheckoutItem & { product_id?: string }) => ({
+        product_id: item.product_id || item._id,
         productTitle: item.productTitle,
         productImage: item.productImage,
         brandName: item.brandName,
@@ -106,9 +106,9 @@ const Checkout: React.FC = () => {
           navigate("/success");
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Failed to place order");
+      toast.error("Failed to place order");
     } finally {
       setIsSubmitting(false);
     }
