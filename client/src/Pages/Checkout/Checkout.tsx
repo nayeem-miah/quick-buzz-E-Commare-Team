@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -11,29 +11,28 @@ import { ShippingAddressForm } from "./components/ShippingAddressForm";
 import { PaymentMethodSelector } from "./components/PaymentMethodSelector";
 import { OrderSummarySidebar } from "./components/OrderSummarySidebar";
 import { ShippingAddress, CheckoutItem } from "../../types/order";
+import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 
 const Checkout: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { singleUser } = useFetchSingleUser(user?.email as string);
 
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Error parsing shipping address:", e);
-      }
-    }
-    return {
-      name: user?.displayName || "",
-      phone: "",
-      address: "",
-      city: ""
-    };
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
+    name: user?.displayName || "",
+    phone: "",
+    address: "",
+    city: ""
   });
+
+  // Sync shipping address from DB once loaded
+  useEffect(() => {
+    if (singleUser?.shippingAddress) {
+      setShippingAddress(singleUser.shippingAddress);
+    }
+  }, [singleUser]);
 
   const [paymentMethod, setPaymentMethod] = useState<string>("Cash on Delivery");
 

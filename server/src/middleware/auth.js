@@ -26,7 +26,7 @@ const verifyAdmin = catchAsync(async (req, res, next) => {
     const email = req.user?.email;
     const user = await UserCollection.findOne({ email });
 
-    if (!user || user.role !== "admin") {
+    if (!user || user.role?.toLowerCase() !== "admin") {
         throw new AppError(403, "forbidden access (admin only)");
     }
 
@@ -38,7 +38,8 @@ const verifyHost = catchAsync(async (req, res, next) => {
     const email = req.user?.email;
     const user = await UserCollection.findOne({ email });
 
-    if (!user || user.role !== "seller") {
+    const role = user?.role?.toLowerCase();
+    if (!user || (role !== "seller" && role !== "host")) {
         throw new AppError(403, "forbidden access (host only)");
     }
 

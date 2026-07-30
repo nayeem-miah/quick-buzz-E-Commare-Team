@@ -15,55 +15,11 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
   userEmail,
   axiosSecure,
 }) => {
-  const [shippingName, setShippingName] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    if (saved) {
-      try {
-        return JSON.parse(saved).name || "";
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return "";
-  });
+  const [shippingName, setShippingName] = useState("");
+  const [shippingPhone, setShippingPhone] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
+  const [shippingCity, setShippingCity] = useState("");
 
-  const [shippingPhone, setShippingPhone] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    if (saved) {
-      try {
-        return JSON.parse(saved).phone || "";
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return "";
-  });
-
-  const [shippingAddress, setShippingAddress] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    if (saved) {
-      try {
-        return JSON.parse(saved).address || "";
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return "";
-  });
-
-  const [shippingCity, setShippingCity] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    if (saved) {
-      try {
-        return JSON.parse(saved).city || "";
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return "";
-  });
-
-  // Sync shipping address from DB once loaded
   useEffect(() => {
     if (dbShippingAddress) {
       setShippingName(dbShippingAddress.name || "");
@@ -83,10 +39,6 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
     };
 
     try {
-      // Save to localStorage for checkout integration
-      localStorage.setItem("quickbuzz_shipping_address", JSON.stringify(data));
-
-      // Save to MongoDB UserCollection
       await axiosSecure.patch(`/users/profile/${userEmail}`, {
         shippingAddress: data,
       });

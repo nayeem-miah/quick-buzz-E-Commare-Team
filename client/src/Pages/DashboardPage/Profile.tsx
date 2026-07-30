@@ -30,23 +30,11 @@ const Profile: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
-  // Shipping Address States (persisted in localStorage for checkout integration)
-  const [shippingName, setShippingName] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    return saved ? JSON.parse(saved).name : "";
-  });
-  const [shippingPhone, setShippingPhone] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    return saved ? JSON.parse(saved).phone : "";
-  });
-  const [shippingAddress, setShippingAddress] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    return saved ? JSON.parse(saved).address : "";
-  });
-  const [shippingCity, setShippingCity] = useState(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    return saved ? JSON.parse(saved).city : "";
-  });
+  // Shipping Address States
+  const [shippingName, setShippingName] = useState("");
+  const [shippingPhone, setShippingPhone] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
+  const [shippingCity, setShippingCity] = useState("");
 
 
   React.useEffect(() => {
@@ -159,9 +147,6 @@ const Profile: React.FC = () => {
     };
 
     try {
-      // Save to localStorage for checkout integration
-      localStorage.setItem("quickbuzz_shipping_address", JSON.stringify(data));
-
       // Save to MongoDB UserCollection
       await axiosSecure.patch(`/users/profile/${user?.email}`, {
         shippingAddress: data

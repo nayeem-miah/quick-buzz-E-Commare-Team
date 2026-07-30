@@ -31,7 +31,18 @@ const useFetchSingleUser = (email: string) => {
                 throw new Error("Email is required");
             }
             const res = await axiosSecure.get<ApiResponse<User>>(`/users/${email}`);
-            return res?.data?.data;
+            const user = res?.data?.data;
+            if (user && user.role) {
+                const lowerRole = user.role.toLowerCase();
+                if (lowerRole === "host" || lowerRole === "seller") {
+                    user.role = "Host";
+                } else if (lowerRole === "admin") {
+                    user.role = "admin";
+                } else if (lowerRole === "user") {
+                    user.role = "user";
+                }
+            }
+            return user;
         },
         enabled: !!email,
     });
