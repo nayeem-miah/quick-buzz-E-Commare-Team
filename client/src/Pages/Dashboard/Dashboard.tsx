@@ -17,6 +17,7 @@ import logo from "../../../src/assets/Image/logo2.png";
 import useAuth from "../../Hooks/UseAuth";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import LoadingSpinner from "../../Shared/Loading";
+import NotificationDropdown from "../../Shared/Navbar/NotificationDropdown";
 
 const Sidebar: React.FC = () => {
   const { logOut, user } = useAuth();
@@ -66,12 +67,15 @@ const Sidebar: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={handleToggle}
-          className="mobile-menu-button p-2 rounded-lg text-gray-600 focus:outline-none focus:bg-gray-50"
-        >
-          <AiOutlineBars className="h-6 w-6" />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationDropdown />
+          <button
+            onClick={handleToggle}
+            className="mobile-menu-button p-2 rounded-lg text-gray-600 focus:outline-none focus:bg-gray-50"
+          >
+            <AiOutlineBars className="h-6 w-6" />
+          </button>
+        </div>
       </div>
 
       {/* Sidebar */}

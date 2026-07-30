@@ -4,6 +4,7 @@ const { ObjectId } = require("mongodb");
 const sendResponse = require("../utils/sendResponse");
 const { sendSellerStatusEmail } = require("../utils/sendMail");
 const AppError = require("../utils/AppError");
+const createNotification = require("../utils/createNotification");
 
 const getAllSeller = catchAsync(async (req, res) => {
     const result = await SellerCollection.find().toArray();
@@ -141,13 +142,21 @@ const sellerDecline = catchAsync(async (req, res) => {
     }
     const result = await SellerCollection.updateOne(filter, updatedDoc)
 
-    // Send email
+     // Send email
     await sendSellerStatusEmail(
         sellerRequest.sellerEmail,
         sellerRequest.sellerName,
         "Declined",
         declineMessage.inputValue
     );
+
+    // Dispatch in-app notification
+    await createNotification(sellerRequest.sellerEmail, {
+        title: "Seller Application Declined",
+        message: `Your seller application has been declined. Reason: ${declineMessage.inputValue}`,
+        type: "warning",
+        actionUrl: "/dashboard/seller-request"
+    });
 
     sendResponse(res, {
         statusCode: 201,
@@ -189,6 +198,14 @@ const approveSeller = catchAsync(async (req, res) => {
         sellerRequest.sellerName,
         "Approved"
     );
+
+    // Dispatch in-app notification
+    await createNotification(sellerRequest.sellerEmail, {
+        title: "Seller Application Approved! 🎉",
+        message: "Congratulations! Your request to become a seller has been approved. You can now start listing products.",
+        type: "success",
+        actionUrl: "/dashboard"
+    });
 
     sendResponse(res, {
         statusCode: 200,

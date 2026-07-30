@@ -12,6 +12,7 @@ const CartRoutes = require("./routes/cart.route");
 const OrderRoutes = require("./routes/order.route");
 const UploadRoutes = require("./routes/upload.route");
 const CategoryRoutes = require("./routes/category.route");
+const NotificationRoutes = require("./routes/notification.route");
 const sendResponse = require("./utils/sendResponse");
 
 const app = express();
@@ -52,6 +53,7 @@ app.use("/api/v1/cart", CartRoutes);
 app.use("/api/v1/orders", OrderRoutes);
 app.use("/api/v1/upload", UploadRoutes);
 app.use("/api/v1/categories", CategoryRoutes);
+app.use("/api/v1/notifications", NotificationRoutes);
 
 
 // global error

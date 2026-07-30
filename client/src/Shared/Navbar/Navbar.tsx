@@ -8,6 +8,7 @@ import useAuth from "../../Hooks/UseAuth";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import MenuDropdown from "./MenuDropdawn";
+import NotificationDropdown from "./NotificationDropdown";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +79,7 @@ const Navbar: React.FC = () => {
           </NavLink>
         </div>
 
-        {/* Right: Cart and Dropdown (Desktop) or Hamburger + Cart (Mobile) */}
+        {/* Right: Cart, Notifications and Dropdown (Desktop) or Hamburger + Cart + Notifications (Mobile) */}
         <div className="flex items-center gap-3">
           {/* Cart Icon (Desktop) */}
           <div className="hidden md:block">
@@ -95,6 +96,11 @@ const Navbar: React.FC = () => {
                 )}
               </Link>
             )}
+          </div>
+
+          {/* Notifications Icon (Desktop) */}
+          <div className="hidden md:block">
+            <NotificationDropdown />
           </div>
 
           {/* Profile Dropdown (Desktop) */}
@@ -117,6 +123,11 @@ const Navbar: React.FC = () => {
                 )}
               </Link>
             )}
+          </div>
+
+          {/* Notifications Icon (Mobile) */}
+          <div className="block md:hidden flex items-center">
+            <NotificationDropdown />
           </div>
 
           {/* Hamburger Icon (Mobile) */}
