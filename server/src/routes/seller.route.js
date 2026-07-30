@@ -7,10 +7,11 @@ const { verifyToken, verifyAdmin } = require("../middleware/auth");
 router.get("/", verifyToken, verifyAdmin, SellerController.getAllSeller);
 router.get("/:id", verifyToken, SellerController.getSingleSeller);
 router.get("/single-seller/:email", verifyToken, SellerController.getSingleSellerByEmail);
-router.delete("/:id", verifyToken, verifyAdmin, SellerController.deleteSeller);
-router.patch("/:id", verifyToken, verifyAdmin, SellerController.updateSeller);
+router.patch("/:id", verifyToken, SellerController.updateSeller);
+router.delete("/:id", verifyToken, SellerController.deleteSeller);
 router.post("/", verifyToken, SellerController.createSeller);
 router.patch("/decline-message/:id", verifyToken, verifyAdmin, SellerController.sellerDecline);
+router.patch("/approve/:id", verifyToken, verifyAdmin, SellerController.approveSeller);
 
 
 

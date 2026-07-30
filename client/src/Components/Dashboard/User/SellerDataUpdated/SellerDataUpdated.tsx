@@ -19,13 +19,19 @@ const SellerDataUpdated: React.FC = () => {
   const [isDragActive, setIsDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: sellerData = [] } = useQuery({
+  const { data: sellerData = null } = useQuery({
     queryKey: ["sellerData"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/single-seller/${user?.email}`);
-      return res.data;
+      const res = await axiosPublic.get(`/seller/single-seller/${user?.email}`);
+      return res.data.data;
     },
   });
+
+  React.useEffect(() => {
+    if (sellerData?.imageUrl) {
+      setImagePreview(sellerData.imageUrl);
+    }
+  }, [sellerData]);
 
   const validateAndSetFile = (file: File) => {
     const validTypes = ["image/jpeg", "image/png", "image/jpg"];

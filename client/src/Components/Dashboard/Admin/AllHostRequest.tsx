@@ -1,15 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useQuery } from "@tanstack/react-query";
+import React, { useMemo, useState } from "react";
+import { FiInbox, FiSearch } from "react-icons/fi";
+import Swal from "sweetalert2";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import Heading from "../../../Shared/Heading/Heading";
 import LoadingSpinner from "../../../Shared/Loading";
-import { MdDeleteForever } from "react-icons/md";
-import { useState } from "react";
-import Swal from "sweetalert2";
-import NoData from "../../../Shared/NoDataFound/NoData";
-import { Link } from "react-router-dom";
-import Decline from "./Decline/Decline";
+import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
+import Pagination from "../../../Shared/Pagination/Pagination";
+
+// Subcomponents
+import { SellerRequestsTable } from "./components/SellerRequestsTable";
+import { SellerRequestsCards } from "./components/SellerRequestsCards";
+import { SellerRequestDetailsModal } from "./components/SellerRequestDetailsModal";
+
 import { ApprovalStatus } from "../../../constants/enums";
 
 interface SellerDetails {
@@ -23,18 +26,30 @@ interface SellerDetails {
   address: string;
   _id: number;
   adminIsApproved: string;
+  decline?: string;
 }
+
+const STATUS_FILTERS = [
+  { value: "All", label: "All Requests" },
+  { value: "Pending", label: "Pending" },
+  { value: "Approved", label: "Approved" },
+  { value: "Declined", label: "Declined" }
+];
+
 const AllHostRequest: React.FC = () => {
   const axiosPublic = useAxiosPublic();
-  const [selectedBooking, setSelectedBooking] = useState<SellerDetails | null>(
-    null
-  );
-  //    get host request data
+  const [selectedSeller, setSelectedSeller] = useState<SellerDetails | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [page, setPage] = useState(1);
+  const size = 10;
+
+  // get host request data
   const {
     data: sellerData = [],
     isLoading,
     refetch,
-  } = useQuery({
+  } = useQuery<SellerDetails[]>({
     queryKey: ["sellerData"],
     queryFn: async () => {
       const res = await axiosPublic.get("/seller");
@@ -42,250 +57,244 @@ const AllHostRequest: React.FC = () => {
     },
   });
 
-
-  /* delete data  */
-  const handleDelete = async (id: string) => {
-    try {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axiosPublic.delete(`/seller/${id}`).then((res) => {
-            if (res.data.deletedCount > 0) {
-              refetch();
-              Swal.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success",
-              });
-            }
-          });
+  const handleApprove = (seller: SellerDetails) => {
+    Swal.fire({
+      title: "Approve Seller?",
+      text: `Are you sure you want to approve ${seller.sellerName} as a seller? This will update their role and send them an approval email.`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#f97316",
+      cancelButtonColor: "#9ca3af",
+      confirmButtonText: "Yes, Approve",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await axiosPublic.patch(`/seller/approve/${seller._id}`);
+          if (res.data?.success) {
+            refetch();
+            setSelectedSeller(null);
+            Swal.fire({
+              title: "Approved!",
+              text: `${seller.sellerName} is now a seller. Email sent.`,
+              icon: "success",
+              confirmButtonColor: "#f97316",
+            });
+          }
+        } catch (error) {
+          console.error(error);
+          Swal.fire("Error", "Failed to approve request", "error");
         }
-      });
-    } catch (err: unknown) {
-      console.log(err);
-    }
+      }
+    });
   };
 
-
-
-
-  //   details modal
-  const handleDetailsClick = (listing: SellerDetails) => {
-    setSelectedBooking(listing);
+  const handleDecline = (seller: SellerDetails) => {
+    Swal.fire({
+      title: "Decline Request?",
+      text: `Enter the reason for declining ${seller.sellerName}'s request:`,
+      input: "textarea",
+      inputPlaceholder: "Reason for decline...",
+      inputAttributes: {
+        "aria-label": "Reason for decline"
+      },
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#9ca3af",
+      confirmButtonText: "Decline Application",
+      preConfirm: (inputValue) => {
+        if (!inputValue || inputValue.trim() === "") {
+          Swal.showValidationMessage("Please enter a reason for decline");
+        }
+        return inputValue;
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await axiosPublic.patch(`/seller/decline-message/${seller._id}`, { inputValue: result.value });
+          if (res.data?.success) {
+            refetch();
+            setSelectedSeller(null);
+            Swal.fire({
+              title: "Declined!",
+              text: "Application has been declined and email sent to user.",
+              icon: "success",
+              confirmButtonColor: "#f97316"
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          Swal.fire("Error", "Failed to decline request", "error");
+        }
+      }
+    });
   };
 
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this seller application record!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#9ca3af",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await axiosPublic.delete(`/seller/${id}`);
+          const count = res.data.data?.deletedCount ?? res.data?.deletedCount ?? 0;
+          if (count > 0) {
+            refetch();
+            Swal.fire({
+              title: "Deleted!",
+              text: "Seller application record deleted.",
+              icon: "success",
+              confirmButtonColor: "#f97316",
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          Swal.fire("Error", "Failed to delete seller record", "error");
+        }
+      }
+    });
+  };
+
+  const handleDetailsClick = (seller: SellerDetails) => {
+    setSelectedSeller(seller);
+  };
 
   const closeModal = () => {
-    setSelectedBooking(null);
+    setSelectedSeller(null);
   };
+
+  const filteredSellers = useMemo(() => {
+    const sellers = Array.isArray(sellerData) ? sellerData : [];
+    return sellers.filter((seller) => {
+      // Search by Name or Email
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch =
+        seller.sellerName?.toLowerCase().includes(searchLower) ||
+        seller.sellerEmail?.toLowerCase().includes(searchLower);
+
+      // Filter by Status
+      const isApproved = seller.adminIsApproved === ApprovalStatus.APPROVED;
+      const isDeclined = seller.decline ? seller.decline.trim().length > 0 : false;
+      const isPending = !isApproved && !isDeclined;
+
+      let matchesStatus = true;
+      if (statusFilter !== "All") {
+        if (statusFilter === "Approved") matchesStatus = isApproved;
+        else if (statusFilter === "Declined") matchesStatus = isDeclined;
+        else if (statusFilter === "Pending") matchesStatus = isPending;
+      }
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [sellerData, searchQuery, statusFilter]);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [searchQuery, statusFilter]);
+
+  const totalPages = Math.ceil(filteredSellers.length / size) || 1;
+  const paginatedSellers = filteredSellers.slice((page - 1) * size, page * size);
+
   if (isLoading) return <LoadingSpinner />;
+
   return (
-    <div>
-      <Heading title={"All seller request"} subtitle={""} />
-      {sellerData.length === 0 ? (
-        <NoData />
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-gray-800 text-white">
-              <tr>
-                <th className="py-3 px-4 text-sm font-medium text-left">sl</th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Name
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  email
-                </th>
-                {/* <th className="py-3 px-4 text-sm font-medium text-left">passport img</th> */}
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  status
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  decline
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  delete
-                </th>
-                <th className="py-3 px-4 text-sm font-medium text-left">
-                  Details
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sellerData?.map((sellData: SellerDetails, id: number) => (
-                <tr
-                  key={sellData._id}
-                  className="border-b hover:bg-gray-50 transition duration-300"
-                >
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {(id = id + 1)}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {sellData?.sellerName}
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {sellData?.sellerEmail}
-                  </td>
+    <div className="w-full block px-4 md:px-8 lg:px-12 xl:px-20 py-8">
+      <div className="mb-8">
+        <Heading title={"All Seller Requests"} subtitle={"Manage and verify applicant seller requests and documents."} />
+      </div>
 
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    {sellData?.adminIsApproved === ApprovalStatus.APPROVED ? (
-                      "Approve"
-                    ) : (
-                      <Link to={"/dashboard/manage-users"}>
-                        <button
-                          onClick={() => {
-                            // handleApproved(sellerData);
-                          }}
-                          className="px-4 sm:py-0 md:py-2 py-2 text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-md transition-all duration-300
-                hover:-translate-y-0.5"
-                        >
-                          approve
-                        </button>
-                      </Link>
-                    )}
-                  </td>
-                  <td className="py-4 px-4 text-sm">
-                    <Decline sellData={sellData} />
-                  </td>
-                  <td className="py-4 px-4 text-sm text-gray-600">
-                    <button
-                      onClick={() => {
-                        handleDelete(sellData?._id);
-                      }}
-                      className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
-                    >
-                      <MdDeleteForever />
-                    </button>
-                  </td>
-                  <td className="py-4 px-4 text-sm">
-                    <button
-                      onClick={() => handleDetailsClick(sellData)}
-                      className="  px-4 sm:py-0 md:py-2 py-2 text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-md transition-all duration-300
-                 hover:-translate-y-0.5"
-                    >
-                      Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* open details modal */}
-      {selectedBooking && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={closeModal}
-        >
-          <div
-            className="relative bg-white rounded-3xl shadow-2xl p-6 w-full max-w-3xl"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
-          >
-            {/* Modal Header */}
-            <div className="flex justify-between items-center border-b pb-4 mb-4">
-              <h3 className="text-2xl font-bold text-gray-800">
-                Seller Details
-              </h3>
-              <div
-                className="text-gray-600 hover:text-gray-900 cursor-pointer text-2xl"
-                onClick={closeModal}
-              >
-                ✕
+      <div className="w-full bg-white rounded-2xl border border-gray-150 mb-8">
+        {/* Filter Toolbar */}
+        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white">
+          <div className="flex w-full sm:w-80 gap-2">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <FiSearch className="text-gray-455 text-base" />
               </div>
-            </div>
-
-            {/* Modal Content */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Image Section */}
-              <div className="relative overflow-hidden  rounded-lg shadow-lg">
-                <img
-                  src={selectedBooking.imageUrl || "loading-image-url.jpg"}
-                  alt={selectedBooking.sellerName}
-                  className="rounded-2xl w-full mb-2  object-cover"
-                />
-                <span className=" text-sm  px-3 py-1 rounded-full">
-                  <h3>
-                    <span className="font-bold">
-                      Why should you become a seller?
-                    </span>
-                  </h3>
-                  {selectedBooking.reason ? (
-                    <span>{selectedBooking.reason}</span>
-                  ) : (
-                    "Reason not provided"
-                  )}
-                </span>
-              </div>
-
-              {/* Details Section */}
-              <div className="space-y-3 text-gray-700">
-                <p className="text-sm">
-                  <span className="font-bold text-gray-900">Seller Name:</span>{" "}
-                  {selectedBooking.sellerName || "Loading..."}
-                </p>
-                <p className="text-sm">
-                  <span className="font-bold text-gray-900">Email:</span>{" "}
-                  <span className="text-blue-600 underline">
-                    {selectedBooking.sellerEmail || "Loading..."}
-                  </span>
-                </p>
-                <p className="text-sm">
-                  <span className="font-bold text-gray-900">Mobile:</span>{" "}
-                  {selectedBooking.mobile || "N/A"}
-                </p>
-                <p className="text-sm">
-                  <span className="font-bold text-gray-900">Address:</span>{" "}
-                  {selectedBooking.address || "N/A"}
-                </p>
-
-                {/* Host Info */}
-                <div className="flex items-center space-x-3">
-                  <img
-                    className="h-12 w-12 rounded-full border-2 border-blue-500 shadow-md"
-                    src={selectedBooking.sellerPhoto || "default-photo.jpg"}
-                    alt={selectedBooking.sellerName}
-                  />
-                  <p className="text-sm font-semibold text-gray-800">
-                    {selectedBooking.sellerName || "Loading..."}
-                  </p>
-                </div>
-
-                <p className="text-sm">
-                  <span className="font-bold text-gray-900">
-                    Additional Info:
-                  </span>{" "}
-                  {selectedBooking.other || "No details provided"}
-                </p>
-              </div>
-            </div>
-
-            {/* Description Section */}
-            <div className="mt-4">
-              <h4 className="text-lg font-bold text-gray-900 mb-2">
-                Description
-              </h4>
-              <p className="text-sm text-gray-600">
-                {selectedBooking.reason || "No description available."}
-              </p>
+              <input
+                type="text"
+                placeholder="Search by name or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-11 pr-4 py-2 bg-gray-50/50 border border-gray-200/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all focus:bg-white"
+              />
             </div>
           </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto z-20">
+            <CustomDropdown
+              value={statusFilter}
+              onChange={(val) => setStatusFilter(val)}
+              options={STATUS_FILTERS}
+              className="w-full sm:w-40"
+              buttonClassName="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all shadow-sm"
+            />
+          </div>
         </div>
+
+        {filteredSellers.length === 0 ? (
+          <div className="p-16 flex flex-col items-center justify-center text-center">
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-100">
+              <FiInbox className="text-3xl text-gray-400" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">No seller requests found</h3>
+            <p className="text-sm text-gray-550 max-w-sm">
+              We couldn't find any seller requests matching your search or filters.
+            </p>
+            {(searchQuery || statusFilter !== "All") && (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setStatusFilter("All");
+                }}
+                className="mt-5 px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-sm font-medium transition-colors"
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
+        ) : (
+          <>
+            <SellerRequestsTable
+              sellers={paginatedSellers}
+              onDetailsClick={handleDetailsClick}
+              onApprove={handleApprove}
+              onDecline={handleDecline}
+              onDelete={handleDelete}
+            />
+
+            <SellerRequestsCards
+              sellers={paginatedSellers}
+              onDetailsClick={handleDetailsClick}
+              onApprove={handleApprove}
+              onDecline={handleDecline}
+              onDelete={handleDelete}
+            />
+
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              setPage={setPage}
+              size={size}
+              totalItems={filteredSellers.length}
+            />
+          </>
+        )}
+      </div>
+
+      {selectedSeller && (
+        <SellerRequestDetailsModal
+          seller={selectedSeller}
+          onClose={closeModal}
+          onApprove={handleApprove}
+          onDecline={handleDecline}
+        />
       )}
-
-
     </div>
   );
 };

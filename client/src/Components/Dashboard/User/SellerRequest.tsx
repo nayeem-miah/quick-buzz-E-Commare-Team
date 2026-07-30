@@ -120,7 +120,12 @@ const SellerRequest: React.FC = () => {
     address,
     other,
     imageUrl,
+    adminIsApproved,
+    decline,
   } = sellerData;
+
+  const isApproved = adminIsApproved === "Approved";
+  const isDeclined = adminIsApproved === "Declined" || (decline && decline.trim().length > 0);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -144,19 +149,41 @@ const SellerRequest: React.FC = () => {
 
         {/* Seller Details Section */}
         <div className="p-6 space-y-6">
-          <div className="flex items-center">
-            <img
-              src={sellerPhoto || "https://via.placeholder.com/150"}
-              alt={sellerName}
-              className="w-14 h-14 rounded-full object-cover mr-4 border border-gray-200"
-            />
-            <div>
-              <h2 className="text-lg font-bold text-gray-950">
-                {sellerName}
-              </h2>
-              <p className="text-xs text-gray-500 mt-0.5">{sellerEmail}</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <img
+                src={sellerPhoto || "https://via.placeholder.com/150"}
+                alt={sellerName}
+                className="w-14 h-14 rounded-full object-cover mr-4 border border-gray-200"
+              />
+              <div>
+                <h2 className="text-lg font-bold text-gray-950">
+                  {sellerName}
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">{sellerEmail}</p>
+              </div>
             </div>
+            
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-bold border ${
+                isApproved
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                  : isDeclined
+                  ? "bg-rose-50 text-rose-700 border-rose-100"
+                  : "bg-amber-50 text-amber-700 border-amber-100 animate-pulse"
+              }`}
+            >
+              {isApproved ? "Approved" : isDeclined ? "Declined" : "Pending Approval"}
+            </span>
           </div>
+
+          {/* Decline Reason Banner */}
+          {isDeclined && decline && (
+            <div className="bg-red-50/50 p-4 rounded-2xl border border-red-100/50 space-y-1">
+              <p className="text-xs text-red-500 font-bold uppercase tracking-wider">Decline Reason</p>
+              <p className="text-xs text-red-700 leading-relaxed font-semibold">{decline}</p>
+            </div>
+          )}
 
           <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100 text-sm">
             <div className="flex justify-between py-1 border-b border-gray-200/50">

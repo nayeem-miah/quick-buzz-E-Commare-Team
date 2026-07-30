@@ -125,9 +125,44 @@ const sendOrderStatusEmail = async (userEmail, userName, orderId, status) => {
     return sendMail({ to: userEmail, subject, html });
 };
 
+const sendSellerStatusEmail = async (sellerEmail, sellerName, status, reason = "") => {
+    const isApproved = status === "approve" || status === "APPROVED" || status === "Approved";
+    const subject = isApproved ? "Your Seller Application has been approved! 🎉" : "Update on your Seller Application";
+    const statusText = isApproved ? "approved! You can now list and sell products on quickBuzz." : `declined.${reason ? ` Reason: ${reason}` : ""}`;
+    const statusColor = isApproved ? "#22c55e" : "#ef4444";
+
+    const html = `
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; padding: 25px; border: 1px solid #f3f4f6; border-radius: 16px; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h1 style="color: #f97316; margin: 0; font-size: 28px; font-weight: 800;">quickBuzz</h1>
+            </div>
+            <div style="border-top: 4px solid #f97316; padding-top: 20px;">
+                <p style="font-size: 16px; color: #1f2937;">Hello <strong>${sellerName || "Seller"}</strong>,</p>
+                <p style="font-size: 15px; line-height: 1.6; color: #4b5563;">
+                    We wanted to inform you that your application to become a seller on quickBuzz has been:
+                </p>
+                <div style="background-color: #f9fafb; border-left: 4px solid ${statusColor}; padding: 12px 20px; margin: 15px 0; border-radius: 4px;">
+                    <span style="font-weight: 700; color: ${statusColor}; text-transform: uppercase; font-size: 14px;">${isApproved ? "Approved" : "Declined"}</span>
+                    ${!isApproved && reason ? `<p style="margin: 5px 0 0 0; font-size: 14px; color: #4b5563;">Reason: ${reason}</p>` : ""}
+                </div>
+                <p style="font-size: 15px; line-height: 1.6; color: #4b5563;">
+                    ${isApproved ? "You can now log into your dashboard and navigate to list products." : "If you wish to re-apply, please resolve the issues specified above and submit a new request."}
+                </p>
+                <p style="margin-top: 25px; font-size: 15px; color: #4b5563;">Best regards,<br/>The quickBuzz Team</p>
+            </div>
+            <div style="margin-top: 30px; border-top: 1px solid #f3f4f6; padding-top: 15px; text-align: center; font-size: 12px; color: #9ca3af;">
+                This is an automated notification. Please do not reply directly to this email.
+            </div>
+        </div>
+    `;
+
+    return sendMail({ to: sellerEmail, subject, html });
+};
+
 module.exports = {
     sendMail,
     sendProductStatusEmail,
     sendOrderConfirmationEmail,
-    sendOrderStatusEmail
+    sendOrderStatusEmail,
+    sendSellerStatusEmail
 };
