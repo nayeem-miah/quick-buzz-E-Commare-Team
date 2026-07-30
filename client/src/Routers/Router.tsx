@@ -13,7 +13,6 @@ import PrivateRoute from "./PribetRoute";
 import Profile from "../Pages/DashboardPage/Profile";
 import HostAddProduct from "../Components/Dashboard/Host/HostAddProduct";
 import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
-import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 import AdminManageBookings from "../Components/Dashboard/Admin/AdminManageBookings";
 import AdminManageCategories from "../Components/Dashboard/Admin/AdminManageCategories";
 import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
@@ -190,10 +189,6 @@ const router = createBrowserRouter([
       {
         path: "my-host-listings",
         element: <MyAddedProduct />,
-      },
-      {
-        path: "host-manage-booking",
-        element: <ManageBooking />,
       },
       {
         path: "update-product/:id",

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
-import { CreditCard, ShoppingBag, TrendingUp, X, DollarSign, Package, CheckCircle, Clock } from 'lucide-react';
+import { CheckCircle, Clock, CreditCard, DollarSign, Package, ShoppingBag, TrendingUp, X } from 'lucide-react';
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Area,
   AreaChart,
@@ -40,7 +39,6 @@ interface HostProduct {
 const HostHome: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
-  const navigate = useNavigate();
   const [timeRange, setTimeRange] = useState<'7days' | '30days'>('7days');
   const [selectedOrder, setSelectedOrder] = useState<HostPayment | null>(null);
 
@@ -315,13 +313,6 @@ const HostHome: React.FC = () => {
             <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Recent Orders</h2>
             <span className="text-[10px] text-slate-400">Latest successful transactions</span>
           </div>
-          <button
-            type="button"
-            className="text-xs font-semibold text-orange-500 hover:underline"
-            onClick={() => navigate('/dashboard/host-manage-booking')}
-          >
-            Manage
-          </button>
         </div>
 
         {recentOrders.length === 0 ? (

@@ -142,14 +142,14 @@ const Sidebar: React.FC = () => {
                     <span className="mx-4">Add Product</span>
                   </NavLink>
 
-                  <NavLink to="host-manage-booking" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
-                    <TbBrandBooking className="w-5 h-5 text-gray-400" />
-                    <span className="mx-4">Manage Booking</span>
-                  </NavLink>
-
                   <NavLink to="my-host-listings" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
                     <FaListAlt className="w-5 h-5 text-gray-400" />
                     <span className="mx-4">My Listings</span>
+                  </NavLink>
+
+                  <NavLink to="my-orders" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FiPackage className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">My Orders</span>
                   </NavLink>
                 </>
               )}
