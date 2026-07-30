@@ -8,15 +8,7 @@ import useAxiosPublic from '../../Hooks/UsePublic';
 import Slider from './Banner/Banner';
 import Categories from './Category/Category';
 import Uniqe from './Uniqe/Uniqe';
-
-interface Product {
-  _id: string;
-  productTitle: string;
-  brandName: string;
-  category: string;
-  createAt?: string;
-  imageUrl?: string;
-}
+import { ProductItem } from '../Product/types';
 
 interface ApiResponse<T> {
   statusCode: number;
@@ -29,10 +21,10 @@ const Home: React.FC = () => {
   const axiosPublic = useAxiosPublic();
 
   // recent product
-  const { data: recentData = [], isLoading } = useQuery<Product[], Error>({
+  const { data: recentData = [], isLoading } = useQuery<ProductItem[], Error>({
     queryKey: ['productData'],
     queryFn: async () => {
-      const res = await axiosPublic.get<ApiResponse<Product[]>>(
+      const res = await axiosPublic.get<ApiResponse<ProductItem[]>>(
         `/products/recent-product`,
       );
 
@@ -49,7 +41,7 @@ const Home: React.FC = () => {
         </Helmet>
         <Slider></Slider>
 
-        <div className="mx-auto mt-10 max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto mt-10 px-2 sm:px-4 lg:px-12">
           <div className="rounded-[20px] border border-slate-100 bg-white p-4 sm:p-5">
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-slate-900">
