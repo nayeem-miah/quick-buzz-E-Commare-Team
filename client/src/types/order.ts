@@ -38,3 +38,17 @@ export interface Payment {
   transaction_id?: string;
   date: string;
 }
+
+export interface CheckoutItem {
+  _id: string;
+  product_id: string;
+  email: string;
+  quantity: number;
+  productTitle: string;
+  productImage: string;
+  brandName?: string;
+  price: number;
+  discount?: number;
+  description?: string;
+  hostEmail?: string;
+}

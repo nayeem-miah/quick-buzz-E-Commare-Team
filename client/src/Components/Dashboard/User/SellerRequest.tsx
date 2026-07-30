@@ -143,29 +143,29 @@ const SellerRequest: React.FC = () => {
           <img
             src={imageUrl}
             alt="Seller Product"
-            className="w-full h-56 object-cover border-b border-gray-100"
+            className="w-full h-48 sm:h-64 object-contain bg-gray-50 border-b border-gray-100 p-2"
           />
         )}
 
         {/* Seller Details Section */}
-        <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+        <div className="p-4 sm:p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center w-full sm:w-auto">
               <img
                 src={sellerPhoto || "https://via.placeholder.com/150"}
                 alt={sellerName}
-                className="w-14 h-14 rounded-full object-cover mr-4 border border-gray-200"
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover mr-4 border border-gray-200"
               />
-              <div>
-                <h2 className="text-lg font-bold text-gray-950">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-base sm:text-lg font-bold text-gray-950 truncate">
                   {sellerName}
                 </h2>
-                <p className="text-xs text-gray-500 mt-0.5">{sellerEmail}</p>
+                <p className="text-xs text-gray-500 mt-0.5 truncate">{sellerEmail}</p>
               </div>
             </div>
             
             <span
-              className={`inline-block px-3 py-1 rounded-full text-xs font-bold border ${
+              className={`self-start sm:self-auto inline-block px-3 py-1 rounded-full text-xs font-bold border ${
                 isApproved
                   ? "bg-emerald-50 text-emerald-700 border-emerald-100"
                   : isDeclined
@@ -186,21 +186,21 @@ const SellerRequest: React.FC = () => {
           )}
 
           <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100 text-sm">
-            <div className="flex justify-between py-1 border-b border-gray-200/50">
-              <span className="text-gray-400 font-semibold">Mobile</span>
-              <span className="font-bold text-gray-700">{mobile || "N/A"}</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between py-1.5 sm:py-1 border-b border-gray-200/50 gap-1 sm:gap-4">
+              <span className="text-gray-400 font-semibold text-xs sm:text-sm">Mobile</span>
+              <span className="font-bold text-gray-700 text-xs sm:text-sm">{mobile || "N/A"}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-gray-200/50">
-              <span className="text-gray-400 font-semibold">Reason to Sell</span>
-              <span className="font-semibold text-gray-700">{reason || "N/A"}</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between py-1.5 sm:py-1 border-b border-gray-200/50 gap-1 sm:gap-4">
+              <span className="text-gray-400 font-semibold text-xs sm:text-sm">Reason to Sell</span>
+              <span className="font-semibold text-gray-700 text-xs sm:text-sm sm:text-right max-w-sm leading-relaxed">{reason || "N/A"}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-gray-200/50">
-              <span className="text-gray-400 font-semibold">Address</span>
-              <span className="font-semibold text-gray-700">{address || "N/A"}</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between py-1.5 sm:py-1 border-b border-gray-200/50 gap-1 sm:gap-4">
+              <span className="text-gray-400 font-semibold text-xs sm:text-sm">Address</span>
+              <span className="font-semibold text-gray-700 text-xs sm:text-sm sm:text-right">{address || "N/A"}</span>
             </div>
-            <div className="flex justify-between py-1">
-              <span className="text-gray-400 font-semibold">Other Details</span>
-              <span className="font-semibold text-gray-700">{other || "N/A"}</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between py-1.5 sm:py-1 gap-1 sm:gap-4">
+              <span className="text-gray-400 font-semibold text-xs sm:text-sm">Other Details</span>
+              <span className="font-semibold text-gray-700 text-xs sm:text-sm sm:text-right break-all max-w-sm">{other || "N/A"}</span>
             </div>
           </div>
 

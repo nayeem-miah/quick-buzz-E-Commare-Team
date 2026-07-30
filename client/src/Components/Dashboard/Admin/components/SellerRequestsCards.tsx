@@ -1,6 +1,5 @@
 import React from "react";
-import { FiCheck, FiX, FiTrash2, FiInfo, FiMapPin, FiPhone } from "react-icons/fi";
-import { ApprovalStatus } from "../../../../constants/enums";
+import { FiCheck, FiInfo, FiMapPin, FiPhone, FiTrash2, FiX } from "react-icons/fi";
 
 interface SellerDetails {
   sellerName: string;
@@ -34,8 +33,8 @@ export const SellerRequestsCards: React.FC<SellerRequestsCardsProps> = ({
   return (
     <div className="md:hidden flex flex-col p-4 gap-4 bg-gray-50/50 min-h-[480px]">
       {sellers.map((seller: SellerDetails, id: number) => {
-        const isApproved = seller.adminIsApproved === ApprovalStatus.APPROVED;
-        const isDeclined = seller.decline ? seller.decline.trim().length > 0 : false;
+        const isApproved = seller.adminIsApproved === "Approved";
+        const isDeclined = seller.adminIsApproved === "Declined" || (seller.decline ? seller.decline.trim().length > 0 : false);
         const isPending = !isApproved && !isDeclined;
 
         return (

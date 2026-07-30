@@ -1,10 +1,11 @@
 const { default: axios } = require("axios");
-const { PaymentCollection, OrderCollection, CartCollection } = require("../module/module");
+const { PaymentCollection, OrderCollection, CartCollection, UserCollection, OrderItemCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const sendResponse = require("../utils/sendResponse");
 const { PaymentStatus, ApprovalStatus, OrderStatus } = require("../constants/enums");
 const { sendOrderConfirmationEmail } = require("../utils/sendMail");
+const createNotification = require("../utils/createNotification");
 
 const getAllPayment = catchAsync(async (req, res) => {
     const result = await PaymentCollection.aggregate([
@@ -35,7 +36,7 @@ const getAllPayment = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
-            productTitle: hasOrderItems 
+            productTitle: hasOrderItems
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
             productImage: hasOrderItems
@@ -81,7 +82,7 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
     ]).toArray();
 
     const formatted = result.map(payment => {
-        const relevantItems = payment.orderItems 
+        const relevantItems = payment.orderItems
             ? payment.orderItems.filter(item => item.hostEmail === hostEmail)
             : [];
         const hasOrderItems = relevantItems.length > 0;
@@ -102,7 +103,7 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
-            productTitle: hasOrderItems 
+            productTitle: hasOrderItems
                 ? relevantItems.map(item => item.productTitle)
                 : (payment.hostName || []),
             productImage: hasOrderItems
@@ -158,7 +159,7 @@ const getSinglePayment = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
-            productTitle: hasOrderItems 
+            productTitle: hasOrderItems
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
             productImage: hasOrderItems
@@ -303,8 +304,52 @@ const successPayment = catchAsync(async (req, res) => {
             paymentRecord.amount || paymentRecord.totalPrice,
             paymentRecord.payment_method || "Card"
         ).catch(err => console.error("Email send failed:", err));
+
+        try {
+            await createNotification(paymentRecord.cus_email, {
+                title: "Payment Successful! 💳",
+                message: `Thank you! Your payment of BDT ${paymentRecord.amount || paymentRecord.totalPrice} for Order ID: ${paymentRecord.order_id} was successful.`,
+                type: "success",
+                actionUrl: "/dashboard/my-orders"
+            });
+        } catch (err) {
+            console.error("Failed to send payment success notification to buyer:", err);
+        }
+
+        try {
+            const orderIdObj = typeof paymentRecord.order_id === "string" ? new ObjectId(paymentRecord.order_id) : paymentRecord.order_id;
+            const orderItems = await OrderItemCollection.find({ order_id: orderIdObj }).toArray();
+            const uniqueHostEmails = [...new Set(orderItems.map(item => item.hostEmail).filter(Boolean))];
+            for (const hostEmail of uniqueHostEmails) {
+                const hostItems = orderItems.filter(item => item.hostEmail === hostEmail);
+                const itemsSummary = hostItems.map(item => `${item.productTitle} (Qty: ${item.quantity})`).join(", ");
+                await createNotification(hostEmail, {
+                    title: "New Paid Order Received! 📦",
+                    message: `You have received a new paid order for: ${itemsSummary} from ${paymentRecord.cus_name}.`,
+                    type: "info",
+                    actionUrl: "/dashboard/host-manage-booking"
+                });
+            }
+        } catch (err) {
+            console.error("Failed to send payment success notification to hosts:", err);
+        }
+
+        try {
+            const admins = await UserCollection.find({ role: "admin" }).toArray();
+            for (const admin of admins) {
+                if (admin.email) {
+                    await createNotification(admin.email, {
+                        title: "New Payment Completed 💳",
+                        message: `A payment of BDT ${paymentRecord.amount || paymentRecord.totalPrice} was completed by ${paymentRecord.cus_name} for Order ID: ${paymentRecord.order_id}.`,
+                        type: "info",
+                        actionUrl: "/dashboard/manage-bookings"
+                    });
+                }
+            }
+        } catch (err) {
+            console.error("Failed to send payment success notification to admins:", err);
+        }
     } else {
-        // Fallback for older legacy payment entries
         await PaymentCollection.updateOne(
             { transactionId: successData.tran_id },
             {

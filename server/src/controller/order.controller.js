@@ -1,10 +1,11 @@
-const { OrderCollection, OrderItemCollection, PaymentCollection, CartCollection } = require("../module/module");
+const { OrderCollection, OrderItemCollection, PaymentCollection, CartCollection, UserCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const axios = require("axios");
 const sendResponse = require("../utils/sendResponse");
 const { OrderStatus, PaymentStatus } = require("../constants/enums");
 const { sendOrderConfirmationEmail, sendOrderStatusEmail } = require("../utils/sendMail");
+const createNotification = require("../utils/createNotification");
 const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
 
@@ -39,7 +40,8 @@ const createOrder = catchAsync(async (req, res) => {
         brandName: item.brandName,
         quantity: parseInt(item.quantity) || 1,
         price: parseFloat(item.price),
-        discount: parseFloat(item.discount) || 0
+        discount: parseFloat(item.discount) || 0,
+        hostEmail: item.hostEmail
     }));
     await OrderItemCollection.insertMany(orderItems);
 
@@ -59,7 +61,7 @@ const createOrder = catchAsync(async (req, res) => {
     // If Cash on Delivery, clear cart and finish immediately
     if (payment_method === "Cash on Delivery") {
         await CartCollection.deleteMany({ email });
-        
+
         // Send order confirmation email
         sendOrderConfirmationEmail(
             email,
@@ -69,6 +71,50 @@ const createOrder = catchAsync(async (req, res) => {
             payment_method
         ).catch(err => console.error("Email send failed:", err));
 
+        try {
+            await createNotification(email, {
+                title: "Order Placed Successfully! 🛍️",
+                message: `Thank you! Your Cash on Delivery order has been placed. Order ID: ${orderId}, total amount: BDT ${total_amount}.`,
+                type: "success",
+                actionUrl: "/dashboard/my-orders"
+            });
+        } catch (err) {
+            console.error("Failed to send notification to buyer:", err);
+        }
+
+        try {
+            const uniqueHostEmails = [...new Set(orderItems.map(item => item.hostEmail).filter(Boolean))];
+            for (const hostEmail of uniqueHostEmails) {
+                const hostItems = orderItems.filter(item => item.hostEmail === hostEmail);
+                const itemsSummary = hostItems.map(item => `${item.productTitle} (Qty: ${item.quantity})`).join(", ");
+                await createNotification(hostEmail, {
+                    title: "New Order Received (COD) 📦",
+                    message: `You have received a new Cash on Delivery order for: ${itemsSummary} from ${shipping_address.name}.`,
+                    type: "info",
+                    actionUrl: "/dashboard/host-manage-booking"
+                });
+            }
+        } catch (err) {
+            console.error("Failed to send notifications to hosts:", err);
+        }
+
+        // 3. Notify admins
+        try {
+            const admins = await UserCollection.find({ role: "admin" }).toArray();
+            for (const admin of admins) {
+                if (admin.email) {
+                    await createNotification(admin.email, {
+                        title: "New Order Placed (COD) 🛒",
+                        message: `A new Cash on Delivery order of BDT ${total_amount} has been placed by ${shipping_address.name} (Order ID: ${orderId}).`,
+                        type: "info",
+                        actionUrl: "/dashboard/manage-bookings"
+                    });
+                }
+            }
+        } catch (err) {
+            console.error("Failed to send notifications to admins:", err);
+        }
+
         return sendResponse(res, {
             statusCode: 201,
             success: true,
@@ -77,7 +123,6 @@ const createOrder = catchAsync(async (req, res) => {
         });
     }
 
-    // Otherwise, initiate digital payment gateway (SSLCommerz)
     const intentData = {
         store_id,
         store_passwd,
@@ -187,7 +232,7 @@ const updateOrderStatus = catchAsync(async (req, res) => {
         { $set: { status } }
     );
 
-    // Fetch updated order details to send email
+    // Fetch updated order details to send email and notification
     const order = await OrderCollection.findOne({ _id: new ObjectId(id) });
     if (order && order.email) {
         sendOrderStatusEmail(
@@ -196,6 +241,18 @@ const updateOrderStatus = catchAsync(async (req, res) => {
             id,
             status
         ).catch(err => console.error("Email send failed:", err));
+
+        // Dispatch in-app notification
+        try {
+            await createNotification(order.email, {
+                title: "Order Status Updated 📦",
+                message: `Your Order (ID: ${id}) status has been updated to "${status}".`,
+                type: "info",
+                actionUrl: "/dashboard/my-orders"
+            });
+        } catch (err) {
+            console.error("Failed to send order status update notification:", err);
+        }
     }
 
     sendResponse(res, {

@@ -1,19 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
 import { FiInbox, FiSearch } from "react-icons/fi";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../../Hooks/UsePublic";
+import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
 import Heading from "../../../Shared/Heading/Heading";
 import LoadingSpinner from "../../../Shared/Loading";
-import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
 import Pagination from "../../../Shared/Pagination/Pagination";
 
 // Subcomponents
-import { SellerRequestsTable } from "./components/SellerRequestsTable";
-import { SellerRequestsCards } from "./components/SellerRequestsCards";
 import { SellerRequestDetailsModal } from "./components/SellerRequestDetailsModal";
+import { SellerRequestsCards } from "./components/SellerRequestsCards";
+import { SellerRequestsTable } from "./components/SellerRequestsTable";
 
-import { ApprovalStatus } from "../../../constants/enums";
 
 interface SellerDetails {
   sellerName: string;
@@ -66,24 +66,29 @@ const AllHostRequest: React.FC = () => {
       confirmButtonColor: "#f97316",
       cancelButtonColor: "#9ca3af",
       confirmButtonText: "Yes, Approve",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
         try {
           const res = await axiosPublic.patch(`/seller/approve/${seller._id}`);
-          if (res.data?.success) {
-            refetch();
-            setSelectedSeller(null);
-            Swal.fire({
-              title: "Approved!",
-              text: `${seller.sellerName} is now a seller. Email sent.`,
-              icon: "success",
-              confirmButtonColor: "#f97316",
-            });
+          if (!res.data?.success) {
+            throw new Error("Failed to approve");
           }
-        } catch (error) {
-          console.error(error);
-          Swal.fire("Error", "Failed to approve request", "error");
+          return res.data;
+        } catch (error: any) {
+          Swal.showValidationMessage(`Request failed: ${error.message || error}`);
         }
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        refetch();
+        setSelectedSeller(null);
+        Swal.fire({
+          title: "Approved!",
+          text: `${seller.sellerName} is now a seller. Email sent.`,
+          icon: "success",
+          confirmButtonColor: "#f97316",
+        });
       }
     });
   };
@@ -101,30 +106,33 @@ const AllHostRequest: React.FC = () => {
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#9ca3af",
       confirmButtonText: "Decline Application",
-      preConfirm: (inputValue) => {
+      showLoaderOnConfirm: true,
+      preConfirm: async (inputValue) => {
         if (!inputValue || inputValue.trim() === "") {
           Swal.showValidationMessage("Please enter a reason for decline");
+          return false;
         }
-        return inputValue;
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
         try {
-          const res = await axiosPublic.patch(`/seller/decline-message/${seller._id}`, { inputValue: result.value });
-          if (res.data?.success) {
-            refetch();
-            setSelectedSeller(null);
-            Swal.fire({
-              title: "Declined!",
-              text: "Application has been declined and email sent to user.",
-              icon: "success",
-              confirmButtonColor: "#f97316"
-            });
+          const res = await axiosPublic.patch(`/seller/decline-message/${seller._id}`, { inputValue });
+          if (!res.data?.success) {
+            throw new Error("Failed to decline");
           }
-        } catch (err) {
-          console.error(err);
-          Swal.fire("Error", "Failed to decline request", "error");
+          return res.data;
+        } catch (error: any) {
+          Swal.showValidationMessage(`Request failed: ${error.message || error}`);
         }
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        refetch();
+        setSelectedSeller(null);
+        Swal.fire({
+          title: "Declined!",
+          text: "Application has been declined and email sent to user.",
+          icon: "success",
+          confirmButtonColor: "#f97316"
+        });
       }
     });
   };
@@ -138,24 +146,29 @@ const AllHostRequest: React.FC = () => {
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#9ca3af",
       confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
         try {
           const res = await axiosPublic.delete(`/seller/${id}`);
           const count = res.data.data?.deletedCount ?? res.data?.deletedCount ?? 0;
-          if (count > 0) {
-            refetch();
-            Swal.fire({
-              title: "Deleted!",
-              text: "Seller application record deleted.",
-              icon: "success",
-              confirmButtonColor: "#f97316",
-            });
+          if (count === 0) {
+            throw new Error("Record not found or already deleted");
           }
-        } catch (err) {
-          console.error(err);
-          Swal.fire("Error", "Failed to delete seller record", "error");
+          return res.data;
+        } catch (error: any) {
+          Swal.showValidationMessage(`Request failed: ${error.message || error}`);
         }
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        refetch();
+        Swal.fire({
+          title: "Deleted!",
+          text: "Seller application record deleted.",
+          icon: "success",
+          confirmButtonColor: "#f97316",
+        });
       }
     });
   };
@@ -178,8 +191,8 @@ const AllHostRequest: React.FC = () => {
         seller.sellerEmail?.toLowerCase().includes(searchLower);
 
       // Filter by Status
-      const isApproved = seller.adminIsApproved === ApprovalStatus.APPROVED;
-      const isDeclined = seller.decline ? seller.decline.trim().length > 0 : false;
+      const isApproved = seller.adminIsApproved === "Approved";
+      const isDeclined = seller.adminIsApproved === "Declined" || (seller.decline ? seller.decline.trim().length > 0 : false);
       const isPending = !isApproved && !isDeclined;
 
       let matchesStatus = true;

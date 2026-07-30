@@ -53,7 +53,12 @@ const deleteSeller = catchAsync(async (req, res) => {
         throw new AppError(404, "Seller request not found");
     }
 
-    if (req.user.role !== "admin" && sellerRequest.sellerEmail !== req.user.email) {
+    const loggedInUser = await UserCollection.findOne({ email: req.user.email });
+    if (!loggedInUser) {
+        throw new AppError(404, "User not found");
+    }
+
+    if (loggedInUser.role !== "admin" && sellerRequest.sellerEmail !== req.user.email) {
         throw new AppError(403, "You do not have permission to delete this request");
     }
 
@@ -77,7 +82,12 @@ const updateSeller = catchAsync(async (req, res) => {
         throw new AppError(404, "Seller request not found");
     }
 
-    if (req.user.role !== "admin" && sellerRequest.sellerEmail !== req.user.email) {
+    const loggedInUser = await UserCollection.findOne({ email: req.user.email });
+    if (!loggedInUser) {
+        throw new AppError(404, "User not found");
+    }
+
+    if (loggedInUser.role !== "admin" && sellerRequest.sellerEmail !== req.user.email) {
         throw new AppError(403, "You do not have permission to update this request");
     }
 
@@ -95,6 +105,22 @@ const updateSeller = catchAsync(async (req, res) => {
     }
 
     const result = await SellerCollection.updateOne(filter, updatedDoc);
+
+    try {
+        const admins = await UserCollection.find({ role: "admin" }).toArray();
+        for (const admin of admins) {
+            if (admin.email) {
+                await createNotification(admin.email, {
+                    title: "Seller Application Resubmitted 🏪",
+                    message: `${sellerData.sellerName || sellerRequest.sellerName} (${sellerRequest.sellerEmail}) has updated and resubmitted their seller application.`,
+                    type: "info",
+                    actionUrl: "/dashboard/all-host-request"
+                });
+            }
+        }
+    } catch (err) {
+        console.error("Failed to notify admins of updated seller request:", err);
+    }
 
     sendResponse(res, {
         statusCode: 200,
@@ -115,6 +141,22 @@ const createSeller = catchAsync(async (req, res) => {
         });
     }
     const result = await SellerCollection.insertOne(seller);
+
+    try {
+        const admins = await UserCollection.find({ role: "admin" }).toArray();
+        for (const admin of admins) {
+            if (admin.email) {
+                await createNotification(admin.email, {
+                    title: "New Seller Application 🏪",
+                    message: `${seller.sellerName} (${seller.sellerEmail}) has applied to become a seller.`,
+                    type: "info",
+                    actionUrl: "/dashboard/all-host-request"
+                });
+            }
+        }
+    } catch (err) {
+        console.error("Failed to notify admins of new seller request:", err);
+    }
 
     sendResponse(res, {
         statusCode: 200,

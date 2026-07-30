@@ -1,6 +1,5 @@
 import React from "react";
 import { FiCheck, FiMail, FiMapPin, FiPhone, FiX } from "react-icons/fi";
-import { ApprovalStatus } from "../../../../constants/enums";
 
 interface SellerDetails {
   sellerName: string;
@@ -29,8 +28,8 @@ export const SellerRequestDetailsModal: React.FC<SellerRequestDetailsModalProps>
   onApprove,
   onDecline,
 }) => {
-  const isApproved = seller.adminIsApproved === ApprovalStatus.APPROVED;
-  const isDeclined = seller.decline ? seller.decline.trim().length > 0 : false;
+  const isApproved = seller.adminIsApproved === "Approved";
+  const isDeclined = seller.adminIsApproved === "Declined" || (seller.decline ? seller.decline.trim().length > 0 : false);
   const isPending = !isApproved && !isDeclined;
 
   return (

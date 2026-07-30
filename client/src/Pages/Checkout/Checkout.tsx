@@ -10,7 +10,7 @@ import LoadingSpinner from "../../Shared/Loading";
 import { ShippingAddressForm } from "./components/ShippingAddressForm";
 import { PaymentMethodSelector } from "./components/PaymentMethodSelector";
 import { OrderSummarySidebar } from "./components/OrderSummarySidebar";
-import { ShippingAddress } from "../../types/order";
+import { ShippingAddress, CheckoutItem } from "../../types/order";
 
 const Checkout: React.FC = () => {
   const { user } = useAuth();
@@ -80,14 +80,15 @@ const Checkout: React.FC = () => {
     setIsSubmitting(true);
     const orderPayload = {
       email: user?.email,
-      items: cartItems.map((item: CheckoutItem & { product_id?: string }) => ({
+      items: cartItems.map((item: CheckoutItem) => ({
         product_id: item.product_id || item._id,
         productTitle: item.productTitle,
         productImage: item.productImage,
         brandName: item.brandName,
         quantity: item.quantity,
         price: item.price,
-        discount: item.discount
+        discount: item.discount,
+        hostEmail: item.hostEmail
       })),
       total_amount: totalPrice,
       shipping_address: shippingAddress,

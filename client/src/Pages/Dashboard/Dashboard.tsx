@@ -49,7 +49,7 @@ const Sidebar: React.FC = () => {
       {/* Mobile Sidebar Backdrop Overlay */}
       {isActive && (
         <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-20 md:hidden transition-all duration-300"
+          className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40 md:hidden transition-all duration-300"
           onClick={handleToggle}
         />
       )}
@@ -80,7 +80,7 @@ const Sidebar: React.FC = () => {
 
       {/* Sidebar */}
       <div
-        className={`z-30 fixed flex flex-col justify-between overflow-y-auto bg-white w-64 space-y-6 px-3 py-6 inset-y-0 left-0 transform ${
+        className={`z-50 fixed flex flex-col justify-between overflow-y-auto bg-white w-64 space-y-6 px-3 py-6 inset-y-0 left-0 transform ${
           isActive ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition duration-300 ease-in-out border-r border-gray-100 h-screen`}
       >
