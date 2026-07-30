@@ -9,6 +9,7 @@ const createNotification = require("../utils/createNotification");
 
 const getAllPayment = catchAsync(async (req, res) => {
     const result = await PaymentCollection.aggregate([
+        { $sort: { _id: -1 } },
         {
             $lookup: {
                 from: "order_items",
@@ -78,7 +79,8 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
                     { "orderItems.hostEmail": hostEmail }
                 ]
             }
-        }
+        },
+        { $sort: { _id: -1 } }
     ]).toArray();
 
     const formatted = result.map(payment => {
@@ -132,6 +134,7 @@ const getSinglePayment = catchAsync(async (req, res) => {
 
     const result = await PaymentCollection.aggregate([
         { $match: query },
+        { $sort: { _id: -1 } },
         {
             $lookup: {
                 from: "order_items",
@@ -327,7 +330,7 @@ const successPayment = catchAsync(async (req, res) => {
                     title: "New Paid Order Received! 📦",
                     message: `You have received a new paid order for: ${itemsSummary} from ${paymentRecord.cus_name}.`,
                     type: "info",
-                    actionUrl: "/dashboard/host-manage-booking"
+                    actionUrl: "/dashboard"
                 });
             }
         } catch (err) {

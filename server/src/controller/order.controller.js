@@ -91,7 +91,7 @@ const createOrder = catchAsync(async (req, res) => {
                     title: "New Order Received (COD) 📦",
                     message: `You have received a new Cash on Delivery order for: ${itemsSummary} from ${shipping_address.name}.`,
                     type: "info",
-                    actionUrl: "/dashboard/host-manage-booking"
+                    actionUrl: "/dashboard"
                 });
             }
         } catch (err) {

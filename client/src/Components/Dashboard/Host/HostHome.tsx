@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle, Clock, CreditCard, DollarSign, Package, ShoppingBag, TrendingUp, X } from 'lucide-react';
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 import {
   Area,
   AreaChart,
@@ -43,7 +44,7 @@ const HostHome: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<HostPayment | null>(null);
 
   // Fetch payment history using email
-  const { data: PaymentHistoryData = [], isLoading: isPaymentLoading } = useQuery<HostPayment[]>({
+  const { data: PaymentHistoryData = [], isLoading: isPaymentLoading, refetch: refetchPayments } = useQuery<HostPayment[]>({
     queryKey: ["PaymentHistoryData", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/payments/host-payment-history/${user?.email}`);
@@ -51,6 +52,30 @@ const HostHome: React.FC = () => {
     },
     enabled: !!user?.email,
   });
+
+  const handleApproveOrder = async (orderId: string, productTitle: string) => {
+    try {
+      const res = await axiosPublic.patch(`/products/host-manage-product/${orderId}`);
+      if (res.data.data.modifiedCount > 0) {
+        refetchPayments();
+        setSelectedOrder(prev => prev ? { ...prev, hostIsApproved: ApprovalStatus.APPROVED } : null);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${String(productTitle).slice(0, 20)} is approved now!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to approve order:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to approve order. Please try again.",
+      });
+    }
+  };
 
   // Successful payments count and amount
   const successfulPayments = PaymentHistoryData.filter(
@@ -356,17 +381,28 @@ const HostHome: React.FC = () => {
                           ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
                           : 'bg-amber-50 text-amber-600 border border-amber-100'
                       }`}>
-                        {order.hostIsApproved === ApprovalStatus.APPROVED ? 'Approved' : 'Pending'}
+                        {order.hostIsApproved === ApprovalStatus.APPROVED ? 'Seller: Approved' : 'Seller: Pending'}
                       </span>
                     </td>
                     <td className="py-3 text-center">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedOrder(order)}
-                        className="text-orange-500 hover:underline font-semibold"
-                      >
-                        View
-                      </button>
+                      <div className="flex items-center justify-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedOrder(order)}
+                          className="text-slate-500 hover:text-slate-900 font-semibold"
+                        >
+                          View
+                        </button>
+                        {order.hostIsApproved !== ApprovalStatus.APPROVED && (
+                          <button
+                            type="button"
+                            onClick={() => handleApproveOrder(order._id, Array.isArray(order.productTitle) ? order.productTitle[0] : (order.productTitle || ""))}
+                            className="text-orange-500 hover:text-orange-600 font-semibold"
+                          >
+                            Approve
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -432,20 +468,31 @@ const HostHome: React.FC = () => {
               {/* Status and Total */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-orange-50/50 rounded-lg border border-orange-100/30 gap-4">
                 <div>
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Status</p>
+                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Approval & Payment Status</p>
                   <div className="flex gap-2 mt-1">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100">
-                      Payment Success
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100">
+                      Payment: Success
                     </span>
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[9px] font-semibold ${
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[9px] font-semibold ${
                       selectedOrder.hostIsApproved === ApprovalStatus.APPROVED
                         ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
                         : 'bg-amber-50 text-amber-600 border border-amber-100'
                     }`}>
-                      {selectedOrder.hostIsApproved === ApprovalStatus.APPROVED ? 'Approved' : 'Pending'}
+                      {selectedOrder.hostIsApproved === ApprovalStatus.APPROVED ? 'Seller: Approved' : 'Seller: Pending Approval'}
                     </span>
                   </div>
                 </div>
+
+                {selectedOrder.hostIsApproved !== ApprovalStatus.APPROVED && (
+                  <button
+                    type="button"
+                    onClick={() => handleApproveOrder(selectedOrder._id, Array.isArray(selectedOrder.productTitle) ? selectedOrder.productTitle[0] : (selectedOrder.productTitle || ""))}
+                    className="bg-orange-500 hover:bg-orange-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition active:scale-95"
+                  >
+                    Approve Order
+                  </button>
+                )}
+
                 <div className="text-left sm:text-right">
                   <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Total Amount</p>
                   <p className="text-lg font-bold text-slate-900 mt-0.5">৳{selectedOrder.totalPrice?.toLocaleString()}</p>
