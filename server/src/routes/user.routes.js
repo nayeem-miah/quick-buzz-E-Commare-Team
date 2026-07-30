@@ -9,6 +9,7 @@ router.get("/:email", verifyToken, UserController.getSingleUser);
 router.post("/", UserController.createUser);
 router.patch("/role/:id", verifyToken, verifyAdmin, UserController.updateUsers);
 router.patch("/status/:id", verifyToken, verifyAdmin, UserController.updateUserStatus);
+router.patch("/profile/:email", verifyToken, UserController.updateProfile);
 
 
 

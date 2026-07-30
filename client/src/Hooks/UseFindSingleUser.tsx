@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import UseAxiosSecure from "./UseAxiosSecure";
+import { ShippingAddress } from "../types/order";
 
 export interface User {
     _id?: string;
@@ -9,6 +10,7 @@ export interface User {
     role?: string;
     image?: string;
     status?: string;
+    shippingAddress?: ShippingAddress;
     [key: string]: unknown;
 }
 
@@ -22,7 +24,7 @@ interface ApiResponse<T> {
 const useFetchSingleUser = (email: string) => {
     const axiosSecure = UseAxiosSecure();
 
-    const { data: singleUser, isLoading: loading } = useQuery<User>({
+    const { data: singleUser, isLoading: loading, refetch } = useQuery<User>({
         queryKey: [email, 'singleUserInfo'],
         queryFn: async () => {
             if (!email) {
@@ -34,7 +36,7 @@ const useFetchSingleUser = (email: string) => {
         enabled: !!email,
     });
 
-    return { singleUser, loading };
+    return { singleUser, loading, refetch };
 };
 
 export default useFetchSingleUser;

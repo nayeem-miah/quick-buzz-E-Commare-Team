@@ -188,12 +188,12 @@ const MyAddedCart: React.FC = () => {
                         </p>
                         <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
                           <span className="text-sm font-bold text-orange-500">
-                            ৳{(save?.price * (1 - (save?.discount || 0) / 100)).toLocaleString()}
+                            ৳{((save?.price || 0) * (1 - (save?.discount || 0) / 100)).toLocaleString()}
                           </span>
-                          {save?.discount > 0 && (
+                          {(save?.discount || 0) > 0 && (
                             <>
                               <span className="text-xs text-gray-400 line-through">
-                                ৳{save?.price?.toLocaleString()}
+                                ৳{(save?.price || 0).toLocaleString()}
                               </span>
                               <span className="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
                                 {save?.discount}% Off

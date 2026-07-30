@@ -1,23 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { getAuth, updatePassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { FiLock, FiLogOut, FiMail, FiMapPin, FiSave, FiShield, FiUser } from "react-icons/fi";
+import { ImSpinner9 } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
+import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
+import useAxiosPublic from "../../Hooks/UsePublic";
 import LoadingSpinner from "../../Shared/Loading";
 
 const Profile: React.FC = () => {
   const { user, logOut, updateUserProfile } = useAuth();
   const { singleUser, loading: isUserLoading } = useFetchSingleUser(user?.email as string);
   const navigate = useNavigate();
+  const axiosSecure = UseAxiosSecure();
+  const axiosPublic = useAxiosPublic();
 
   // Profile Edit States
   const [editName, setEditName] = useState(user?.displayName || "");
   const [editPhoto, setEditPhoto] = useState(user?.photoURL || "");
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   // Password States
   const [newPassword, setNewPassword] = useState("");
@@ -42,19 +48,67 @@ const Profile: React.FC = () => {
     return saved ? JSON.parse(saved).city : "";
   });
 
+
+  React.useEffect(() => {
+    if (singleUser?.shippingAddress) {
+      setShippingName(singleUser.shippingAddress.name || "");
+      setShippingPhone(singleUser.shippingAddress.phone || "");
+      setShippingAddress(singleUser.shippingAddress.address || "");
+      setShippingCity(singleUser.shippingAddress.city || "");
+    }
+  }, [singleUser]);
+
   const handleLogout = () => {
     logOut().then(() => navigate("/login"));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setIsUploadingImage(true);
+      const res = await axiosPublic.post("/upload/image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.data.success) {
+        const url = res.data.data.display_url;
+        setEditPhoto(url);
+        toast.success("Profile picture uploaded successfully!");
+      } else {
+        toast.error("Image upload failed.");
+      }
+    } catch (err) {
+      console.error("Image upload error:", err);
+      toast.error("Image upload failed. Please try again.");
+    } finally {
+      setIsUploadingImage(false);
+    }
   };
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editName.trim() || !editPhoto.trim()) {
-      toast.error("Full Name and Photo URL are required.");
+      toast.error("Full Name and Photo URL/Upload are required.");
       return;
     }
     try {
       setIsUpdatingProfile(true);
+
+      // Update Firebase
       await updateUserProfile(editName, editPhoto);
+
+      // Update MongoDB UserCollection
+      await axiosSecure.patch(`/users/profile/${user?.email}`, {
+        name: editName,
+        photo: editPhoto
+      });
+
       toast.success("Profile updated successfully!");
     } catch (err) {
       console.error(err);
@@ -95,7 +149,7 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleShippingSubmit = (e: React.FormEvent) => {
+  const handleShippingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const data = {
       name: shippingName,
@@ -103,8 +157,21 @@ const Profile: React.FC = () => {
       address: shippingAddress,
       city: shippingCity
     };
-    localStorage.setItem("quickbuzz_shipping_address", JSON.stringify(data));
-    toast.success("Shipping address saved for checkout!");
+
+    try {
+      // Save to localStorage for checkout integration
+      localStorage.setItem("quickbuzz_shipping_address", JSON.stringify(data));
+
+      // Save to MongoDB UserCollection
+      await axiosSecure.patch(`/users/profile/${user?.email}`, {
+        shippingAddress: data
+      });
+
+      toast.success("Shipping address saved successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save shipping address.");
+    }
   };
 
   if (!user?.email) {
@@ -197,14 +264,34 @@ const Profile: React.FC = () => {
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Profile Picture URL</label>
-                  <input
-                    type="text"
-                    value={editPhoto}
-                    onChange={(e) => setEditPhoto(e.target.value)}
-                    placeholder="Photo URL"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition text-sm text-gray-800"
-                    required
-                  />
+                  <div className="flex gap-2.5">
+                    <input
+                      type="text"
+                      value={editPhoto}
+                      onChange={(e) => setEditPhoto(e.target.value)}
+                      placeholder="Photo URL"
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition text-sm text-gray-800"
+                      required
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={isUploadingImage}
+                      className="hidden"
+                      id="profile-picture-upload"
+                    />
+                    <label
+                      htmlFor="profile-picture-upload"
+                      className={`cursor-pointer px-4 py-2.5 bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 ${isUploadingImage ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      {isUploadingImage ? (
+                        <ImSpinner9 className="animate-spin text-sm" />
+                      ) : (
+                        "Upload"
+                      )}
+                    </label>
+                  </div>
                 </div>
               </div>
               <button

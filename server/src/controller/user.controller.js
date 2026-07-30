@@ -111,12 +111,40 @@ const updateUserStatus = catchAsync(async (req, res) => {
     });
 });
 
+const updateProfile = catchAsync(async (req, res) => {
+    const { email } = req.params;
+    const { name, photo, shippingAddress } = req.body;
+
+    const query = { email };
+    const updatedDoc = {
+        $set: {}
+    };
+
+    if (name) updatedDoc.$set.name = name;
+    if (photo) updatedDoc.$set.photo = photo;
+    if (shippingAddress) updatedDoc.$set.shippingAddress = shippingAddress;
+
+    if (Object.keys(updatedDoc.$set).length === 0) {
+        throw new AppError(400, "No fields to update");
+    }
+
+    const result = await UserCollection.updateOne(query, updatedDoc);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Profile updated successfully",
+        data: result
+    });
+});
+
 const UserController = {
     getUser,
     getSingleUser,
     createUser,
     updateUsers,
-    updateUserStatus
+    updateUserStatus,
+    updateProfile
 };
 
 module.exports = UserController;
