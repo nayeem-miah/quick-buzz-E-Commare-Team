@@ -5,11 +5,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  accent-color: #f97316;
+}
+
 /* Set Roboto globally */
 html,
 body {
   @apply font-sans;
   overflow-x: hidden;
+  accent-color: #f97316;
 }
 
 @layer utilities {
@@ -23,3 +28,126 @@ body {
     scrollbar-width: none;  /* Firefox */
   }
 }
+
+/* Global Form Controls Accent Color & Date Picker styling */
+input {
+  accent-color: #f97316;
+}
+
+input[type="date"] {
+  accent-color: #f97316 !important;
+  color-scheme: light !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(53%) sepia(87%) saturate(1637%) hue-rotate(357deg) brightness(98%) contrast(98%);
+  transition: opacity 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.8;
+}
+
+/* ==============================
+   react-date-range Calendar Theme
+   ============================== */
+.custom-date-picker .rdrCalendarWrapper {
+  font-family: inherit;
+  border-radius: 1rem;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.custom-date-picker .rdrDateDisplayWrapper {
+  display: none;
+}
+
+.custom-date-picker .rdrMonthAndYearPickers select {
+  font-weight: 700;
+  color: #111827;
+  font-size: 0.875rem;
+}
+
+.custom-date-picker .rdrMonthAndYearPickers select:hover {
+  background-color: #fff7ed;
+}
+
+.custom-date-picker .rdrNextPrevButton {
+  background: #fff7ed;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+
+.custom-date-picker .rdrNextPrevButton:hover {
+  background: #f97316;
+}
+
+.custom-date-picker .rdrNextPrevButton:hover i {
+  border-color: transparent #ffffff transparent transparent;
+}
+
+.custom-date-picker .rdrPprevButton:hover i {
+  border-color: transparent transparent transparent #ffffff;
+}
+
+.custom-date-picker .rdrDayToday .rdrDayNumber span:after {
+  background: #f97316;
+}
+
+.custom-date-picker .rdrDay:not(.rdrDayPassive) .rdrDayNumber span {
+  color: #111827;
+  font-weight: 600;
+}
+
+.custom-date-picker .rdrDay:not(.rdrDayDisabled):not(.rdrDayPassive):hover .rdrDayNumber span {
+  color: #f97316;
+}
+
+.custom-date-picker .rdrSelected,
+.custom-date-picker .rdrStartEdge,
+.custom-date-picker .rdrEndEdge {
+  background: #f97316;
+}
+
+.custom-date-picker .rdrDayStartPreview,
+.custom-date-picker .rdrDayInPreview,
+.custom-date-picker .rdrDayEndPreview {
+  border-color: #f97316;
+}
+
+.custom-date-picker .rdrDayHovered .rdrDayNumber:after {
+  background: #fff7ed;
+}
+
+.custom-date-picker .rdrDayNumber span {
+  font-size: 0.8125rem;
+}
+
+.custom-date-picker .rdrWeekDay {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.custom-date-picker .rdrMonthText,
+.custom-date-picker .rdrYearPicker {
+  font-size: 0.875rem;
+}
+
+/* Mobile: scale down calendar to fit small screens */
+@media (max-width: 480px) {
+  .custom-date-picker .rdrCalendarWrapper {
+    font-size: 11px;
+    transform-origin: top left;
+  }
+
+  .custom-date-picker .rdrMonth {
+    width: 272px !important;
+  }
+
+  .custom-date-picker .rdrDayNumber {
+    font-size: 11px;
+  }
+}
+
