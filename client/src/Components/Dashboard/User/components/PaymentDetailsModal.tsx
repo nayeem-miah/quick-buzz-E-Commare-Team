@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
+import { createPortal } from "react-dom";
 import { FiCheck, FiCopy, FiX, FiCalendar, FiCreditCard, FiDollarSign, FiTag, FiShoppingBag } from "react-icons/fi";
 import { PaymentStatus, ApprovalStatus } from "../../../../constants/enums";
 import { PaymentHistory } from "../../../../types/payment";
@@ -32,9 +33,9 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
   const isFailed = payment.status === PaymentStatus.FAILED;
   const isApproved = payment.hostIsApproved === ApprovalStatus.APPROVED;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <div
@@ -190,6 +191,7 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

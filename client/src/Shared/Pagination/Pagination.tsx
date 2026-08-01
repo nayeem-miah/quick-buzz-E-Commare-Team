@@ -18,39 +18,43 @@ const Pagination: React.FC<PaginationProps> = ({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex justify-between items-center px-6 py-4 border-t border-gray-100 bg-white">
-      <p className="text-xs text-gray-500 hidden sm:block">
-        Showing <span className="font-semibold text-gray-955">{(page - 1) * size + 1}</span> to{" "}
-        <span className="font-semibold text-gray-955">{Math.min(page * size, totalItems)}</span> of{" "}
-        <span className="font-semibold text-gray-955">{totalItems}</span> items
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-xs">
+      <p className="text-gray-400">
+        Showing <span className="font-bold text-gray-700">{(page - 1) * size + 1}</span> to{" "}
+        <span className="font-bold text-gray-700">{Math.min(page * size, totalItems)}</span> of{" "}
+        <span className="font-bold text-gray-700">{totalItems}</span> items
       </p>
-      <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+
+      <div className="flex items-center gap-1.5 flex-wrap justify-center">
         <button
-          className={`flex items-center justify-center px-4 py-2 text-xs font-semibold transition-colors rounded-xl border 
-          ${
-            page <= 1
-              ? "bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed"
-              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:text-orange-600 hover:border-orange-200"
-          }`}
-          disabled={page <= 1}
+          type="button"
           onClick={() => setPage(page - 1)}
+          disabled={page <= 1}
+          className="px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 disabled:opacity-40 font-bold transition duration-200"
         >
           Previous
         </button>
 
-        <div className="flex items-center justify-center px-4 py-2 text-xs font-bold bg-orange-50 text-orange-600 border border-orange-100 rounded-xl sm:hidden">
-          {page} / {totalPages}
-        </div>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+          <button
+            type="button"
+            key={p}
+            onClick={() => setPage(p)}
+            className={`w-9 h-9 rounded-xl font-bold transition duration-200 ${
+              page === p
+                ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
+                : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-600"
+            }`}
+          >
+            {p}
+          </button>
+        ))}
 
         <button
-          className={`flex items-center justify-center px-4 py-2 text-xs font-semibold transition-colors rounded-xl border
-          ${
-            page >= totalPages
-              ? "bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed"
-              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:text-orange-600 hover:border-orange-200"
-          }`}
-          disabled={page >= totalPages}
+          type="button"
           onClick={() => setPage(page + 1)}
+          disabled={page >= totalPages}
+          className="px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 disabled:opacity-40 font-bold transition duration-200"
         >
           Next
         </button>

@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle, Clock, CreditCard, DollarSign, Package, ShoppingBag, TrendingUp, X } from 'lucide-react';
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import Swal from "sweetalert2";
 import {
   Area,
@@ -156,100 +157,53 @@ const HostHome: React.FC = () => {
   if (isPaymentLoading || isProductsLoading) return <LoadingSpinner />;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 bg-white/50 min-h-screen">
+    <div className="w-full px-4 md:px-8 py-8 space-y-8">
       {/* Title */}
       <div>
-        <h1 className="text-xl font-semibold text-slate-900 tracking-tight">Overview</h1>
-        <p className="text-xs text-slate-400 mt-0.5">
-          Store summary for <span className="text-orange-500 font-medium">{user?.displayName || "Seller"}</span>
+        <h1 className="text-2xl font-extrabold text-gray-900">Overview</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Store summary for <span className="text-orange-500 font-semibold">{user?.displayName || "Seller"}</span>
         </p>
       </div>
 
       {/* Grid of Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-        {/* Total Sales */}
-        <div className="bg-white p-5 rounded-xl border border-slate-100 flex justify-between items-center shadow-sm">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Total Sales</span>
-            <span className="text-lg font-bold text-slate-900 mt-1">
-              ৳{totalAmount?.toLocaleString()}
-            </span>
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        {[
+          { label: "Total Sales",    value: `৳${totalAmount?.toLocaleString()}`, icon: <DollarSign className="w-5 h-5" />, color: "text-blue-500",   bg: "bg-blue-50" },
+          { label: "Total Products", value: productsData?.length || 0,           icon: <Package className="w-5 h-5" />,     color: "text-violet-500",  bg: "bg-violet-50" },
+          { label: "Approved",       value: approvedProductsCount,               icon: <CheckCircle className="w-5 h-5" />, color: "text-emerald-500", bg: "bg-emerald-50" },
+          { label: "Pending",        value: pendingProductsCount,                icon: <Clock className="w-5 h-5" />,       color: "text-amber-500",  bg: "bg-amber-50" },
+          { label: "Total Orders",   value: successfulPayments.length,           icon: <ShoppingBag className="w-5 h-5" />, color: "text-indigo-500",  bg: "bg-indigo-50", span: true },
+        ].map((stat) => (
+          <div key={stat.label} className={`bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 ${stat.span ? "col-span-2 lg:col-span-1" : ""}`}>
+            <div className={`p-2.5 sm:p-3 ${stat.bg} ${stat.color} rounded-xl flex-shrink-0`}>
+              {stat.icon}
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider truncate">{stat.label}</p>
+              <p className="text-base sm:text-xl font-black text-gray-950 mt-0.5">{stat.value}</p>
+            </div>
           </div>
-          <div className="bg-orange-50 text-orange-500 p-2 rounded-lg">
-            <DollarSign className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Total Products */}
-        <div className="bg-white p-5 rounded-xl border border-slate-100 flex justify-between items-center shadow-sm">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Total Products</span>
-            <span className="text-lg font-bold text-slate-900 mt-1">
-              {productsData?.length || 0}
-            </span>
-          </div>
-          <div className="bg-orange-50 text-orange-500 p-2 rounded-lg">
-            <Package className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Approved Products */}
-        <div className="bg-white p-5 rounded-xl border border-slate-100 flex justify-between items-center shadow-sm">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Approved</span>
-            <span className="text-lg font-bold text-emerald-600 mt-1">
-              {approvedProductsCount}
-            </span>
-          </div>
-          <div className="bg-emerald-50 text-emerald-600 p-2 rounded-lg">
-            <CheckCircle className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Pending Products */}
-        <div className="bg-white p-5 rounded-xl border border-slate-100 flex justify-between items-center shadow-sm">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Pending</span>
-            <span className="text-lg font-bold text-amber-500 mt-1">
-              {pendingProductsCount}
-            </span>
-          </div>
-          <div className="bg-amber-50 text-amber-500 p-2 rounded-lg">
-            <Clock className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Total Orders */}
-        <div className="bg-white p-5 rounded-xl border border-slate-100 flex justify-between items-center shadow-sm col-span-2 sm:col-span-1">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Total Orders</span>
-            <span className="text-lg font-bold text-slate-900 mt-1">
-              {successfulPayments.length}
-            </span>
-          </div>
-          <div className="bg-orange-50 text-orange-500 p-2 rounded-lg">
-            <ShoppingBag className="w-4 h-4" />
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Chart and distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-100">
+        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Sales Revenue</h2>
-              <span className="text-[10px] text-slate-400">Daily earnings tracking</span>
+              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Sales Revenue</h2>
+              <span className="text-[10px] text-gray-400">Daily earnings tracking</span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               <button
                 type="button"
                 onClick={() => setTimeRange('7days')}
-                className={`text-[10px] px-2.5 py-1 rounded transition-colors ${
+                className={`text-[10px] px-3 py-1.5 rounded-lg font-bold transition-colors ${
                   timeRange === '7days'
-                    ? 'bg-orange-500 text-white font-medium'
-                    : 'text-slate-600 hover:bg-slate-50'
+                    ? 'bg-orange-500 text-white shadow-sm shadow-orange-500/20'
+                    : 'text-gray-500 hover:bg-gray-50 border border-gray-200'
                 }`}
               >
                 7d
@@ -257,10 +211,10 @@ const HostHome: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setTimeRange('30days')}
-                className={`text-[10px] px-2.5 py-1 rounded transition-colors ${
+                className={`text-[10px] px-3 py-1.5 rounded-lg font-bold transition-colors ${
                   timeRange === '30days'
-                    ? 'bg-orange-500 text-white font-medium'
-                    : 'text-slate-600 hover:bg-slate-50'
+                    ? 'bg-orange-500 text-white shadow-sm shadow-orange-500/20'
+                    : 'text-gray-500 hover:bg-gray-50 border border-gray-200'
                 }`}
               >
                 30d
@@ -303,230 +257,261 @@ const HostHome: React.FC = () => {
         </div>
 
         {/* Minimal Distribution */}
-        <div className="bg-white p-6 rounded-xl border border-slate-100 flex flex-col justify-between">
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between">
           <div>
-            <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Product Status</h2>
-            <span className="text-[10px] text-slate-400">Ratio of current listings</span>
+            <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Product Status</h2>
+            <span className="text-[10px] text-gray-400">Ratio of current listings</span>
           </div>
 
           <div className="space-y-4 my-6">
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-slate-500">Approved</span>
-              <span className="font-semibold text-slate-900">{approvedProductsCount} ({productsData.length ? Math.round((approvedProductsCount / productsData.length) * 100) : 0}%)</span>
-            </div>
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-slate-500">Pending</span>
-              <span className="font-semibold text-slate-900">{pendingProductsCount} ({productsData.length ? Math.round((pendingProductsCount / productsData.length) * 100) : 0}%)</span>
-            </div>
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-slate-500">Rejected</span>
-              <span className="font-semibold text-slate-900">{rejectedProductsCount} ({productsData.length ? Math.round((rejectedProductsCount / productsData.length) * 100) : 0}%)</span>
-            </div>
+            {[
+              { label: "Approved", count: approvedProductsCount, color: "text-emerald-600" },
+              { label: "Pending",  count: pendingProductsCount,  color: "text-amber-500" },
+              { label: "Rejected", count: rejectedProductsCount, color: "text-red-500" },
+            ].map((row) => (
+              <div key={row.label} className="flex justify-between items-center">
+                <span className={`text-xs font-semibold ${row.color}`}>{row.label}</span>
+                <span className="text-xs font-bold text-gray-900">
+                  {row.count} ({productsData.length ? Math.round((row.count / productsData.length) * 100) : 0}%)
+                </span>
+              </div>
+            ))}
           </div>
 
-          <div className="text-[10px] text-slate-400 border-t border-slate-100 pt-4 flex justify-between">
-            <span className="uppercase tracking-wider">Total Listings:</span>
-            <span className="font-semibold text-slate-700">{productsData.length}</span>
+          <div className="text-[10px] text-gray-400 border-t border-gray-100 pt-4 flex justify-between">
+            <span className="uppercase tracking-wider font-bold">Total Listings</span>
+            <span className="font-bold text-gray-700">{productsData.length}</span>
           </div>
         </div>
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white p-6 rounded-xl border border-slate-100">
-        <div className="flex justify-between items-center mb-6">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="flex justify-between items-center px-6 py-5 border-b border-gray-100">
           <div>
-            <h2 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Recent Orders</h2>
-            <span className="text-[10px] text-slate-400">Latest successful transactions</span>
+            <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Recent Orders</h2>
+            <span className="text-[10px] text-gray-400">Latest successful transactions</span>
           </div>
         </div>
 
         {recentOrders.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 border border-dashed border-slate-100 rounded-xl bg-slate-50/20">
-            <span className="p-2.5 bg-orange-50 rounded-full text-orange-500 mb-2">
-              <ShoppingBag className="w-4 h-4" />
+          <div className="flex flex-col items-center justify-center py-12 mx-6 mb-6 border border-dashed border-gray-200 rounded-2xl bg-gray-50/30">
+            <span className="p-3 bg-orange-50 rounded-xl text-orange-500 mb-3">
+              <ShoppingBag className="w-5 h-5" />
             </span>
-            <h3 className="text-xs font-semibold text-slate-800">No Orders Found</h3>
-            <p className="text-[10px] text-slate-400 max-w-[240px] text-center mt-1">
-              You haven't received any orders yet. When customers buy your products, they will show up here.
+            <h3 className="text-sm font-bold text-gray-800">No Orders Found</h3>
+            <p className="text-xs text-gray-400 max-w-[240px] text-center mt-1">
+              You haven't received any orders yet.
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100 text-xs">
-              <thead>
-                <tr className="text-left font-semibold text-slate-400 uppercase tracking-wider">
-                  <th className="pb-3 text-left">Customer</th>
-                  <th className="pb-3 text-left">Date</th>
-                  <th className="pb-3 text-right">Amount</th>
-                  <th className="pb-3 text-center">Status</th>
-                  <th className="pb-3 text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {recentOrders.map((order: HostPayment, idx: number) => (
-                  <tr key={order._id || idx} className="text-slate-600 hover:bg-slate-50/50 transition-colors duration-150">
-                    <td className="py-3 text-left">
-                      <div className="font-semibold text-slate-900">{order.cus_name || "Guest Customer"}</div>
-                      <div className="text-slate-400 text-[10px]">{order.cus_email}</div>
-                    </td>
-                    <td className="py-3 text-left text-slate-400">
-                      {order.tran_date ? new Date(order.tran_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "N/A"}
-                    </td>
-                    <td className="py-3 text-right font-semibold text-slate-900">
-                      ৳{order.totalPrice?.toLocaleString()}
-                    </td>
-                    <td className="py-3 text-center">
-                      <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold ${
-                        order.hostIsApproved === ApprovalStatus.APPROVED
-                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                          : 'bg-amber-50 text-amber-600 border border-amber-100'
-                      }`}>
-                        {order.hostIsApproved === ApprovalStatus.APPROVED ? 'Seller: Approved' : 'Seller: Pending'}
-                      </span>
-                    </td>
-                    <td className="py-3 text-center">
-                      <div className="flex items-center justify-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedOrder(order)}
-                          className="text-slate-500 hover:text-slate-900 font-semibold"
-                        >
-                          View
-                        </button>
-                        {order.hostIsApproved !== ApprovalStatus.APPROVED && (
-                          <button
-                            type="button"
-                            onClick={() => handleApproveOrder(order._id, Array.isArray(order.productTitle) ? order.productTitle[0] : (order.productTitle || ""))}
-                            className="text-orange-500 hover:text-orange-600 font-semibold"
-                          >
-                            Approve
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+            {recentOrders.map((order: HostPayment, idx: number) => (
+              <div
+                key={order._id || idx}
+                className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-100 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  {/* Card Header: Customer Info and Status */}
+                  <div className="flex justify-between items-start gap-2 mb-4">
+                    <div className="min-w-0">
+                      <p className="text-sm font-extrabold text-gray-900 truncate">
+                        {order.cus_name || "Guest Customer"}
+                      </p>
+                      <p className="text-xs text-gray-400 truncate mt-0.5">{order.cus_email}</p>
+                    </div>
+                    <span className={`inline-flex px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase tracking-wider flex-shrink-0 ${
+                      order.hostIsApproved === ApprovalStatus.APPROVED
+                        ? 'bg-green-50 text-green-700 border-green-200'
+                        : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                    }`}>
+                      {order.hostIsApproved === ApprovalStatus.APPROVED ? 'Approved' : 'Pending'}
+                    </span>
+                  </div>
+
+                  {/* Card Body: Date and Amount */}
+                  <div className="grid grid-cols-2 gap-4 py-3 border-t border-b border-gray-50 text-xs mb-4">
+                    <div>
+                      <p className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Date</p>
+                      <p className="font-semibold text-gray-700 mt-1">
+                        {order.tran_date ? new Date(order.tran_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 font-bold uppercase tracking-wider text-[10px] text-right">Amount</p>
+                      <p className="font-black text-orange-500 text-right mt-1">
+                        ৳{order.totalPrice?.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card Footer: Action Buttons */}
+                <div className="flex gap-2 mt-auto">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedOrder(order)}
+                    className="flex-1 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 border border-gray-200 rounded-xl text-xs font-semibold transition"
+                  >
+                    View
+                  </button>
+                  {order.hostIsApproved !== ApprovalStatus.APPROVED && (
+                    <button
+                      type="button"
+                      onClick={() => handleApproveOrder(order._id, Array.isArray(order.productTitle) ? order.productTitle[0] : (order.productTitle || ""))}
+                      className="flex-1 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs font-bold transition shadow-sm shadow-orange-500/20"
+                    >
+                      Approve
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
 
       {/* Order Details Modal */}
-      {selectedOrder && (
+      {selectedOrder && createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/20 backdrop-blur-[1px]"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
           onClick={() => setSelectedOrder(null)}
         >
           <div
-            className="relative bg-white rounded-xl p-6 w-full max-w-xl mx-4 overflow-hidden border border-slate-100 shadow-lg"
+            className="relative bg-white rounded-3xl border border-gray-100 shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex justify-between items-start border-b border-slate-100 pb-3 mb-4">
-              <div>
-                <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">
-                  Order Details
-                </h3>
-                <p className="text-[10px] text-slate-400 mt-0.5">Transaction ID: <span className="font-mono text-slate-600">{selectedOrder.transactionId || "N/A"}</span></p>
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center">
+                  <CreditCard className="w-4 h-4 text-orange-500" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-gray-900">Order Details</h3>
+                  <p className="text-xs text-gray-400 font-medium mt-0.5">Transaction summary</p>
+                </div>
               </div>
               <button
                 type="button"
-                className="text-slate-400 hover:text-slate-900 transition-colors"
                 onClick={() => setSelectedOrder(null)}
+                className="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-red-50 text-gray-400 hover:text-red-500 transition-all duration-200"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Content */}
-            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-lg">
+            {/* Scrollable Body */}
+            <div className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
+              {/* Amount Hero */}
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 rounded-2xl p-4 flex items-center justify-between">
                 <div>
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Customer Name</p>
-                  <p className="font-bold text-slate-800 mt-0.5">{selectedOrder.cus_name || "N/A"}</p>
+                  <p className="text-xs text-orange-400 font-bold uppercase tracking-wider">Total Amount</p>
+                  <p className="text-2xl font-black text-gray-900 mt-1">৳{selectedOrder.totalPrice?.toLocaleString()}</p>
                 </div>
-                <div>
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Customer Email</p>
-                  <p className="font-medium text-slate-700 mt-0.5">{selectedOrder.cus_email || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Payment Date</p>
-                  <p className="font-medium text-slate-700 mt-0.5">
-                    {selectedOrder.tran_date ? new Date(selectedOrder.tran_date).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Payment Method</p>
-                  <p className="font-semibold text-slate-800 mt-0.5 flex items-center gap-1">
-                    <CreditCard className="w-3.5 h-3.5 text-orange-500" />
-                    <span>{selectedOrder.card_type || "N/A"}</span>
-                  </p>
+                <div className="flex flex-col items-end gap-2">
+                  <span className="inline-flex px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase tracking-wider bg-green-50 text-green-700 border-green-200">
+                    Payment: Success
+                  </span>
+                  <span className={`inline-flex px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase tracking-wider ${
+                    selectedOrder.hostIsApproved === ApprovalStatus.APPROVED
+                      ? 'bg-green-50 text-green-700 border-green-200'
+                      : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                  }`}>
+                    {selectedOrder.hostIsApproved === ApprovalStatus.APPROVED ? 'Approved' : 'Pending'}
+                  </span>
                 </div>
               </div>
 
-              {/* Status and Total */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-orange-50/50 rounded-lg border border-orange-100/30 gap-4">
-                <div>
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Approval & Payment Status</p>
-                  <div className="flex gap-2 mt-1">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100">
-                      Payment: Success
-                    </span>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[9px] font-semibold ${
-                      selectedOrder.hostIsApproved === ApprovalStatus.APPROVED
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                        : 'bg-amber-50 text-amber-600 border border-amber-100'
-                    }`}>
-                      {selectedOrder.hostIsApproved === ApprovalStatus.APPROVED ? 'Seller: Approved' : 'Seller: Pending Approval'}
-                    </span>
+              {/* Customer Info */}
+              <div className="bg-gray-50/50 rounded-2xl p-4 space-y-3 border border-gray-100">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Customer Info</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Name</p>
+                    <p className="text-sm font-semibold text-gray-800">{selectedOrder.cus_name || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Email</p>
+                    <p className="text-sm font-semibold text-gray-700 break-all">{selectedOrder.cus_email || "N/A"}</p>
                   </div>
                 </div>
+              </div>
 
-                {selectedOrder.hostIsApproved !== ApprovalStatus.APPROVED && (
-                  <button
-                    type="button"
-                    onClick={() => handleApproveOrder(selectedOrder._id, Array.isArray(selectedOrder.productTitle) ? selectedOrder.productTitle[0] : (selectedOrder.productTitle || ""))}
-                    className="bg-orange-500 hover:bg-orange-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition active:scale-95"
-                  >
-                    Approve Order
-                  </button>
-                )}
-
-                <div className="text-left sm:text-right">
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Total Amount</p>
-                  <p className="text-lg font-bold text-slate-900 mt-0.5">৳{selectedOrder.totalPrice?.toLocaleString()}</p>
+              {/* Transaction Info */}
+              <div className="bg-gray-50/50 rounded-2xl p-4 space-y-3 border border-gray-100">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Transaction Info</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Date</p>
+                    <p className="text-sm font-semibold text-gray-800">
+                      {selectedOrder.tran_date ? new Date(selectedOrder.tran_date).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Payment Method</p>
+                    <p className="text-sm font-semibold text-gray-800">{selectedOrder.card_type || "N/A"}</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Transaction ID</p>
+                    <div className="bg-white border border-gray-200 rounded-xl px-3 py-2">
+                      <p className="font-mono text-xs font-bold text-orange-500 truncate">{selectedOrder.transactionId || "N/A"}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Products List */}
-              <div>
-                <h4 className="text-[10px] font-semibold text-slate-900 mb-2 uppercase tracking-wider">Products in Order</h4>
-                <ul className="divide-y divide-slate-100">
-                  {(Array.isArray(selectedOrder.productTitle) ? selectedOrder.productTitle : [selectedOrder.productTitle]).map(
-                    (title: string | undefined, index: number) => (
-                      <li key={index} className="flex items-center gap-3 py-2">
-                        <img
-                          src={selectedOrder.productImage?.[index] || ""}
-                          alt={title || "Product"}
-                          className="w-10 h-10 object-cover rounded-lg border border-slate-100 bg-slate-50"
-                        />
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-800 text-xs leading-snug">
-                            {title || "Unnamed Product"}
-                          </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">
-                            Brand: <span className="font-medium text-slate-600">{selectedOrder.brandName?.[index] || "No Brand"}</span>
-                          </p>
+              {/* Products */}
+              {selectedOrder.productTitle && (
+                <div className="space-y-2">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    Products ({Array.isArray(selectedOrder.productTitle) ? selectedOrder.productTitle.length : 1})
+                  </p>
+                  <div className="space-y-2">
+                    {(Array.isArray(selectedOrder.productTitle) ? selectedOrder.productTitle : [selectedOrder.productTitle]).map(
+                      (title: string | undefined, index: number) => (
+                        <div key={index} className="flex items-center gap-3 bg-gray-50 border border-gray-100 hover:border-orange-100 hover:bg-orange-50/30 p-3 rounded-xl transition-colors duration-150">
+                          <img
+                            src={selectedOrder.productImage?.[index] || ""}
+                            alt={title || "Product"}
+                            className="w-11 h-11 object-cover rounded-lg border border-gray-200 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-xs text-gray-900 truncate">{title || "Unnamed Product"}</p>
+                            <p className="text-[10px] text-gray-400 font-semibold mt-0.5">
+                              Brand: {selectedOrder.brandName?.[index] || "No Brand"}
+                            </p>
+                          </div>
                         </div>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 border-t border-gray-100 flex-shrink-0 flex gap-3">
+              {selectedOrder.hostIsApproved !== ApprovalStatus.APPROVED && (
+                <button
+                  type="button"
+                  onClick={() => handleApproveOrder(selectedOrder._id, Array.isArray(selectedOrder.productTitle) ? selectedOrder.productTitle[0] : (selectedOrder.productTitle || ""))}
+                  className="flex-1 py-2.5 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm rounded-xl transition-all duration-200 shadow-md shadow-orange-500/30"
+                >
+                  Approve Order
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setSelectedOrder(null)}
+                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm rounded-xl transition-all duration-200"
+              >
+                Close
+              </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
