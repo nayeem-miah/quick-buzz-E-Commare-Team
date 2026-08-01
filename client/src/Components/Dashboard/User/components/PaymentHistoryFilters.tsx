@@ -1,5 +1,7 @@
 import React from "react";
 import { PaymentStatus } from "../../../../constants/enums";
+import CustomDropdown from "../../../../Shared/Dropdown/CustomDropdown";
+import CustomDatePicker from "../../../../Shared/DatePicker/CustomDatePicker";
 
 interface PaymentHistoryFiltersProps {
   searchQuery: string;
@@ -32,24 +34,25 @@ export const PaymentHistoryFilters: React.FC<PaymentHistoryFiltersProps> = ({
       </div>
       <div className="space-y-1.5">
         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Filter by Status</label>
-        <select
+        <CustomDropdown
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition text-sm text-gray-700 bg-white"
-        >
-          <option value="all">All Statuses</option>
-          <option value={PaymentStatus.SUCCESS}>Paid</option>
-          <option value={PaymentStatus.PENDING}>Pending</option>
-          <option value={PaymentStatus.FAILED}>Failed</option>
-        </select>
+          onChange={setStatusFilter}
+          options={[
+            { value: "all", label: "All Statuses" },
+            { value: PaymentStatus.SUCCESS, label: "Paid" },
+            { value: PaymentStatus.PENDING, label: "Pending" },
+            { value: PaymentStatus.FAILED, label: "Failed" },
+          ]}
+          className="w-full"
+          buttonClassName="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition text-sm text-gray-700 bg-white flex justify-between items-center cursor-pointer"
+        />
       </div>
       <div className="space-y-1.5">
         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Filter by Date</label>
-        <input
-          type="date"
+        <CustomDatePicker
           value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition text-sm text-gray-600 bg-white"
+          onChange={setDateFilter}
+          placeholder="Pick a date..."
         />
       </div>
     </div>
