@@ -52,3 +52,13 @@ export interface CheckoutItem {
   description?: string;
   hostEmail?: string;
 }
+
+export interface OrderStatusHistory {
+  _id: string;
+  order_id: string;
+  old_status: string;
+  new_status: string;
+  changed_by_user_id: string;
+  changed_by_role: string;
+  timestamp: string;
+}

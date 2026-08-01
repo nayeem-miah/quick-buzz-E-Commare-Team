@@ -151,3 +151,56 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+/* ==============================
+   SweetAlert2 Custom Theme
+   ============================== */
+.swal-themed-popup {
+  border-radius: 1.5rem !important;
+  padding: 1.75rem 2rem !important;
+  border: 1px solid #f3f4f6 !important;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.12), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+}
+
+.swal-themed-title {
+  color: #111827 !important;
+  font-size: 1.125rem !important;
+  font-weight: 800 !important;
+  padding: 0 0 0.25rem !important;
+}
+
+.swal-themed-text {
+  color: #6b7280 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+}
+
+.swal-themed-danger-confirm {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border-radius: 0.75rem !important;
+  padding: 0.625rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 6px -1px rgb(239 68 68 / 0.35) !important;
+  transition: background-color 0.2s ease;
+}
+
+.swal-themed-danger-confirm:hover {
+  background-color: #dc2626 !important;
+}
+
+.swal-themed-cancel {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+  border-radius: 0.75rem !important;
+  padding: 0.625rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  transition: background-color 0.2s ease;
+}
+
+.swal-themed-cancel:hover {
+  background-color: #e5e7eb !important;
+}
+

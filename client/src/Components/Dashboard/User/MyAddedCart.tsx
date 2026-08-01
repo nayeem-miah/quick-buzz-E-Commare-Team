@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { MdDeleteForever, MdLocalGroceryStore } from "react-icons/md";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
@@ -26,6 +26,8 @@ const MyAddedCart: React.FC = () => {
 
   // Local quantity state
   const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+  const [deletingItemTitle, setDeletingItemTitle] = useState<string>("");
 
   // Query data
   const {
@@ -88,39 +90,25 @@ const MyAddedCart: React.FC = () => {
   }
 
   /* My added product is deleted */
-  const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#f97316",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic
-          .delete(`/cart/${id}`)
-          .then(() => {
-            refetch();
-            queryClient.invalidateQueries({ queryKey: ["allsave"] });
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your cart item has been deleted.",
-              icon: "success",
-              confirmButtonColor: "#f97316",
-            });
-          })
-          .catch((error) => {
-            console.error("Delete error:", error.response?.data || error.message);
-            Swal.fire({
-              title: "Error",
-              text: "Failed to delete the item. Please check your connection or try again.",
-              icon: "error",
-            });
-          });
-      }
-    });
+  const handleDelete = (id: string, title: string) => {
+    setDeletingItemTitle(title);
+    setDeletingItemId(id);
+  };
+
+  const confirmDelete = () => {
+    if (!deletingItemId) return;
+    axiosPublic
+      .delete(`/cart/${deletingItemId}`)
+      .then(() => {
+        refetch();
+        queryClient.invalidateQueries({ queryKey: ["allsave"] });
+        toast.success("Item removed from cart");
+        setDeletingItemId(null);
+      })
+      .catch((error) => {
+        console.error("Delete error:", error.response?.data || error.message);
+        toast.error("Failed to remove item. Please try again.");
+      });
   };
 
   // Render Empty State
@@ -228,7 +216,7 @@ const MyAddedCart: React.FC = () => {
                       {/* Action buttons */}
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handleDelete(save?._id)}
+                          onClick={() => handleDelete(save?._id, save?.productTitle || "")}
                           className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
                           title="Remove Item"
                         >
@@ -280,6 +268,43 @@ const MyAddedCart: React.FC = () => {
           </div>
         </div>
       )}
+      {deletingItemId &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={() => setDeletingItemId(null)}
+          >
+            <div
+              className="relative bg-white rounded-3xl border border-gray-100 shadow-2xl w-full max-w-sm flex flex-col p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 mx-auto mb-4">
+                <MdDeleteForever size={28} />
+              </div>
+              <h3 className="text-lg font-extrabold text-gray-900 text-center">Remove Item?</h3>
+              <p className="text-sm text-gray-500 text-center mt-2">
+                Are you sure you want to remove <span className="font-semibold text-gray-800">"{deletingItemTitle}"</span> from your cart?
+              </p>
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setDeletingItemId(null)}
+                  className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm rounded-xl transition duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  className="flex-1 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm rounded-xl transition duration-200 shadow-md shadow-orange-500/20"
+                >
+                  Yes, Remove
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

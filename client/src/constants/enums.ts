@@ -24,3 +24,9 @@ export enum UserRole {
   ADMIN = "admin",
   SELLER = "seller"
 }
+
+export enum PaymentMethod {
+  COD = "Cash on Delivery",
+  ONLINE = "SSLCommerz",
+  CARD = "Card"
+}

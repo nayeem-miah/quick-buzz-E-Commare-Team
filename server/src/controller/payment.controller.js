@@ -1,11 +1,12 @@
 const { default: axios } = require("axios");
-const { PaymentCollection, OrderCollection, CartCollection, UserCollection, OrderItemCollection } = require("../module/module");
+const { PaymentCollection, OrderCollection, CartCollection, UserCollection, OrderItemCollection, OrderStatusHistoryCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const sendResponse = require("../utils/sendResponse");
 const { PaymentStatus, ApprovalStatus, OrderStatus } = require("../constants/enums");
 const { sendOrderConfirmationEmail } = require("../utils/sendMail");
 const createNotification = require("../utils/createNotification");
+const { updateHostWallet, getItemTotal } = require("./order.controller");
 
 const getAllPayment = catchAsync(async (req, res) => {
     const result = await PaymentCollection.aggregate([
@@ -22,6 +23,14 @@ const getAllPayment = catchAsync(async (req, res) => {
 
     const formatted = result.map(payment => {
         const hasOrderItems = payment.orderItems && payment.orderItems.length > 0;
+        const orderStatus = hasOrderItems && payment.orderItems[0].status
+            ? payment.orderItems[0].status
+            : (payment.status === PaymentStatus.SUCCESS ? OrderStatus.PROCESSING : OrderStatus.PENDING);
+
+        const trackingId = hasOrderItems && payment.orderItems[0].tracking_id
+            ? payment.orderItems[0].tracking_id
+            : "";
+
         return {
             _id: payment._id,
             order_id: payment.order_id,
@@ -37,6 +46,8 @@ const getAllPayment = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
+            orderStatus,
+            trackingId,
             productTitle: hasOrderItems
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
@@ -90,6 +101,14 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
         const hasOrderItems = relevantItems.length > 0;
         const hostItemsTotal = relevantItems.reduce((sum, item) => sum + (item.price * (1 - (item.discount || 0) / 100) * item.quantity), 0);
 
+        const orderStatus = hasOrderItems && relevantItems[0].status
+            ? relevantItems[0].status
+            : (payment.status === PaymentStatus.SUCCESS ? OrderStatus.PROCESSING : OrderStatus.PENDING);
+
+        const trackingId = hasOrderItems && relevantItems[0].tracking_id
+            ? relevantItems[0].tracking_id
+            : "";
+
         return {
             _id: payment._id,
             order_id: payment.order_id,
@@ -105,6 +124,8 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
+            orderStatus,
+            trackingId,
             productTitle: hasOrderItems
                 ? relevantItems.map(item => item.productTitle)
                 : (payment.hostName || []),
@@ -147,6 +168,14 @@ const getSinglePayment = catchAsync(async (req, res) => {
 
     const formatted = result.map(payment => {
         const hasOrderItems = payment.orderItems && payment.orderItems.length > 0;
+        const orderStatus = hasOrderItems && payment.orderItems[0].status
+            ? payment.orderItems[0].status
+            : (payment.status === PaymentStatus.SUCCESS ? OrderStatus.PROCESSING : OrderStatus.PENDING);
+
+        const trackingId = hasOrderItems && payment.orderItems[0].tracking_id
+            ? payment.orderItems[0].tracking_id
+            : "";
+
         return {
             _id: payment._id,
             order_id: payment.order_id,
@@ -162,6 +191,8 @@ const getSinglePayment = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
+            orderStatus,
+            trackingId,
             productTitle: hasOrderItems
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
@@ -258,6 +289,41 @@ const createPayment = catchAsync(async (req, res) => {
 
 });
 
+const processSuccessfulOrderPayment = async (orderId) => {
+    if (!orderId) return;
+    const orderIdObj = typeof orderId === "string" ? new ObjectId(orderId) : orderId;
+    const orderItems = await OrderItemCollection.find({ order_id: orderIdObj }).toArray();
+    const unprocessedItems = orderItems.filter(item => (item.status || OrderStatus.PENDING) === OrderStatus.PENDING);
+
+    if (unprocessedItems.length > 0) {
+        await OrderItemCollection.updateMany(
+            { order_id: orderIdObj, $or: [{ status: { $exists: false } }, { status: OrderStatus.PENDING }] },
+            { $set: { status: OrderStatus.PROCESSING } }
+        );
+
+        const hostGroups = {};
+        for (const item of unprocessedItems) {
+            const email = item.hostEmail;
+            if (!email) continue;
+            const total = getItemTotal(item);
+            hostGroups[email] = (hostGroups[email] || 0) + total;
+
+            await OrderStatusHistoryCollection.insertOne({
+                order_id: orderIdObj,
+                old_status: item.status || OrderStatus.PENDING,
+                new_status: OrderStatus.PROCESSING,
+                changed_by_user_id: "system/payment-gateway",
+                changed_by_role: "system",
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        for (const [email, amount] of Object.entries(hostGroups)) {
+            await updateHostWallet(email, amount, 0);
+        }
+    }
+};
+
 const successPayment = catchAsync(async (req, res) => {
     const successData = req.body;
 
@@ -292,6 +358,7 @@ const successPayment = catchAsync(async (req, res) => {
                 { _id: paymentRecord.order_id },
                 { $set: { status: OrderStatus.PROCESSING } }
             );
+            await processSuccessfulOrderPayment(paymentRecord.order_id);
         }
 
         // Clear user cart

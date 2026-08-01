@@ -17,7 +17,10 @@ createRoot(document.getElementById("root")!).render(
             <div className="max-w-screen-xl mx-auto">
               <RouterProvider router={router} />
             </div>
-            <Toaster></Toaster>
+            <Toaster
+              containerStyle={{ zIndex: 100000 }}
+              toastOptions={{ style: { zIndex: 100000 } }}
+            ></Toaster>
           </HelmetProvider>
         </AuthProvider>
       </div>

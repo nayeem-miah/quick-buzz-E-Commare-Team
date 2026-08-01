@@ -1,13 +1,14 @@
-const { OrderCollection, OrderItemCollection, PaymentCollection, CartCollection, UserCollection } = require("../module/module");
+const { OrderCollection, OrderItemCollection, PaymentCollection, CartCollection, UserCollection, HostWalletCollection, OrderStatusHistoryCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const axios = require("axios");
 const sendResponse = require("../utils/sendResponse");
-const { OrderStatus, PaymentStatus } = require("../constants/enums");
+const { OrderStatus, PaymentStatus, PaymentMethod, ApprovalStatus } = require("../constants/enums");
 const { sendOrderConfirmationEmail, sendOrderStatusEmail } = require("../utils/sendMail");
 const createNotification = require("../utils/createNotification");
 const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
+const AppError = require("../utils/AppError");
 
 // Create Order
 const createOrder = catchAsync(async (req, res) => {
@@ -58,8 +59,8 @@ const createOrder = catchAsync(async (req, res) => {
     };
     await PaymentCollection.insertOne(paymentData);
 
-    // If Cash on Delivery, clear cart and finish immediately
-    if (payment_method === "Cash on Delivery") {
+
+    if (payment_method === PaymentMethod.COD) {
         await CartCollection.deleteMany({ email });
 
         // Send order confirmation email
@@ -263,9 +264,433 @@ const updateOrderStatus = catchAsync(async (req, res) => {
     });
 });
 
+
+const logStatusHistory = async ({ order_id, old_status, new_status, changed_by_user_id, changed_by_role }) => {
+    await OrderStatusHistoryCollection.insertOne({
+        order_id: new ObjectId(order_id),
+        old_status,
+        new_status,
+        changed_by_user_id,
+        changed_by_role,
+        timestamp: new Date().toISOString()
+    });
+};
+
+// Notify buyer, all hosts, and admins when an order status changes
+const notifyOrderStatusChange = async ({ orderId, order, items, statusName, actorEmail }) => {
+    try {
+        // Notify buyer
+        if (order?.email) {
+            await createNotification(order.email, {
+                title: `Order ${statusName} 📦`,
+                message: `Your Order (ID: ${orderId}) has been ${statusName.toLowerCase()}.`,
+                type: "info",
+                actionUrl: "/dashboard/my-orders"
+            });
+        }
+
+        // Notify all hosts involved in the order
+        const hostEmails = [...new Set((items || []).map(item => item.hostEmail).filter(Boolean))];
+        for (const hostEmail of hostEmails) {
+            await createNotification(hostEmail, {
+                title: `Order ${statusName} 📦`,
+                message: `Order (ID: ${orderId}) has been ${statusName.toLowerCase()}.`,
+                type: "info",
+                actionUrl: "/dashboard/host-orders"
+            });
+        }
+
+        // Notify all admins
+        const admins = await UserCollection.find({ role: "admin" }).toArray();
+        for (const admin of admins) {
+            if (!admin.email) continue;
+            await createNotification(admin.email, {
+                title: `Order ${statusName} 📦`,
+                message: `Order (ID: ${orderId}) has been ${statusName.toLowerCase()} by ${actorEmail || "system"}.`,
+                type: "info",
+                actionUrl: "/dashboard/manage-bookings"
+            });
+        }
+    } catch (err) {
+        console.error("Failed to send order status notifications:", err);
+    }
+};
+
+const updateHostWallet = async (hostEmail, pendingChange, availableChange) => {
+    await HostWalletCollection.updateOne(
+        { hostEmail },
+        {
+            $setOnInsert: { pending_balance: 0, available_balance: 0 }
+        },
+        { upsert: true }
+    );
+    await HostWalletCollection.updateOne(
+        { hostEmail },
+        {
+            $inc: {
+                pending_balance: parseFloat(pendingChange) || 0,
+                available_balance: parseFloat(availableChange) || 0
+            }
+        }
+    );
+};
+
+const getItemTotal = (item) => {
+    const price = parseFloat(item.price) || 0;
+    const discount = parseFloat(item.discount) || 0;
+    const quantity = parseInt(item.quantity) || 1;
+    return price * (1 - discount / 100) * quantity;
+};
+
+
+const approveOrder = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const hostEmail = req.user?.email;
+
+    if (!ObjectId.isValid(id)) {
+        throw new AppError(400, "Invalid Order ID format");
+    }
+
+    const order = await OrderCollection.findOne({ _id: new ObjectId(id) });
+    if (!order) {
+        throw new AppError(404, "Order not found");
+    }
+
+    if (order.payment_method !== PaymentMethod.COD) {
+        throw new AppError(400, "Only Cash on Delivery orders need approval");
+    }
+
+    const hostItems = await OrderItemCollection.find({
+        order_id: new ObjectId(id),
+        hostEmail: hostEmail
+    }).toArray();
+
+    if (hostItems.length === 0) {
+        throw new AppError(403, "Forbidden: You do not own items in this order");
+    }
+
+    // Verify all host items are currently in 'pending' status (or undefined/null which defaults to pending)
+    const invalidItems = hostItems.filter(item => item.status && item.status !== OrderStatus.PENDING);
+    if (invalidItems.length > 0) {
+        throw new AppError(400, "Invalid state transition: Some items are already approved or cancelled");
+    }
+
+    // Update status to processing
+    await OrderItemCollection.updateMany(
+        { order_id: new ObjectId(id), hostEmail: hostEmail },
+        { $set: { status: OrderStatus.PROCESSING } }
+    );
+
+    // Calculate total price of host's approved items
+    let hostTotal = 0;
+    for (const item of hostItems) {
+        hostTotal += getItemTotal(item);
+        await logStatusHistory({
+            order_id: id,
+            old_status: item.status || OrderStatus.PENDING,
+            new_status: OrderStatus.PROCESSING,
+            changed_by_user_id: hostEmail,
+            changed_by_role: req.user?.role || "host"
+        });
+    }
+
+    // Add to host's pending balance
+    await updateHostWallet(hostEmail, hostTotal, 0);
+
+    // Update overall payment record hostIsApproved status
+    await PaymentCollection.updateOne(
+        { order_id: new ObjectId(id), hostEmail: hostEmail },
+        { $set: { hostIsApproved: ApprovalStatus.APPROVED } }
+    );
+
+    // Check if all items in order are now processing/approved
+    const allItems = await OrderItemCollection.find({ order_id: new ObjectId(id) }).toArray();
+    const remainingPending = allItems.filter(item => (item.status || OrderStatus.PENDING) === OrderStatus.PENDING);
+    if (remainingPending.length === 0) {
+        await OrderCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { status: OrderStatus.PROCESSING } }
+        );
+    }
+
+    await notifyOrderStatusChange({
+        orderId: id,
+        order,
+        items: allItems,
+        statusName: "Approved",
+        actorEmail: hostEmail
+    });
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Order items approved and moved to processing status successfully",
+        data: { hostTotal }
+    });
+});
+
+
+const shipOrder = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const { tracking_id } = req.body;
+    const hostEmail = req.user?.email;
+
+    if (!ObjectId.isValid(id)) {
+        throw new AppError(400, "Invalid Order ID format");
+    }
+
+    if (!tracking_id || typeof tracking_id !== "string" || tracking_id.trim() === "") {
+        throw new AppError(400, "Tracking ID/courier info is mandatory to ship");
+    }
+
+    const hostItems = await OrderItemCollection.find({
+        order_id: new ObjectId(id),
+        hostEmail: hostEmail
+    }).toArray();
+
+    if (hostItems.length === 0) {
+        throw new AppError(403, "Forbidden: You do not own items in this order");
+    }
+
+
+    const invalidItems = hostItems.filter(item => (item.status || OrderStatus.PENDING) !== OrderStatus.PROCESSING);
+    if (invalidItems.length > 0) {
+        throw new AppError(400, "Invalid state transition: Some items are not in processing status");
+    }
+
+
+    await OrderItemCollection.updateMany(
+        { order_id: new ObjectId(id), hostEmail: hostEmail },
+        {
+            $set: {
+                status: OrderStatus.SHIPPED,
+                tracking_id: tracking_id.trim(),
+                shipped_at: new Date().toISOString()
+            }
+        }
+    );
+
+    for (const item of hostItems) {
+        await logStatusHistory({
+            order_id: id,
+            old_status: OrderStatus.PROCESSING,
+            new_status: OrderStatus.SHIPPED,
+            changed_by_user_id: hostEmail,
+            changed_by_role: req.user?.role || "host"
+        });
+    }
+
+
+    const allItems = await OrderItemCollection.find({ order_id: new ObjectId(id) }).toArray();
+    const nonShipped = allItems.filter(item => (item.status || OrderStatus.PENDING) !== OrderStatus.SHIPPED && (item.status || OrderStatus.PENDING) !== OrderStatus.DELIVERED);
+    if (nonShipped.length === 0) {
+        await OrderCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { status: OrderStatus.SHIPPED } }
+        );
+    }
+
+    const order = await OrderCollection.findOne({ _id: new ObjectId(id) });
+    await notifyOrderStatusChange({
+        orderId: id,
+        order,
+        items: allItems,
+        statusName: "Shipped",
+        actorEmail: hostEmail
+    });
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Order items marked as shipped successfully",
+        data: { tracking_id }
+    });
+});
+
+
+const deliverOrder = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const { hostEmail } = req.body;
+
+    if (!ObjectId.isValid(id)) {
+        throw new AppError(400, "Invalid Order ID format");
+    }
+
+    const query = { order_id: new ObjectId(id), status: OrderStatus.SHIPPED };
+    if (hostEmail) {
+        query.hostEmail = hostEmail;
+    }
+
+    const shippedItems = await OrderItemCollection.find(query).toArray();
+    if (shippedItems.length === 0) {
+        throw new AppError(400, "No shipped items found to deliver for this request");
+    }
+
+
+    await OrderItemCollection.updateMany(
+        query,
+        {
+            $set: {
+                status: OrderStatus.DELIVERED,
+                delivered_at: new Date().toISOString()
+            }
+        }
+    );
+
+
+    const hostGroups = {};
+    for (const item of shippedItems) {
+        const email = item.hostEmail;
+        const total = getItemTotal(item);
+        hostGroups[email] = (hostGroups[email] || 0) + total;
+
+        await logStatusHistory({
+            order_id: id,
+            old_status: OrderStatus.SHIPPED,
+            new_status: OrderStatus.DELIVERED,
+            changed_by_user_id: req.user?.email || "admin",
+            changed_by_role: "admin"
+        });
+    }
+
+    for (const [email, amount] of Object.entries(hostGroups)) {
+        await updateHostWallet(email, -amount, amount);
+    }
+    const allItems = await OrderItemCollection.find({ order_id: new ObjectId(id) }).toArray();
+    const nonDelivered = allItems.filter(item => (item.status || OrderStatus.PENDING) !== OrderStatus.DELIVERED);
+    if (nonDelivered.length === 0) {
+        await OrderCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { status: OrderStatus.DELIVERED } }
+        );
+    }
+
+    const order = await OrderCollection.findOne({ _id: new ObjectId(id) });
+    await notifyOrderStatusChange({
+        orderId: id,
+        order,
+        items: allItems,
+        statusName: "Delivered",
+        actorEmail: req.user?.email || "admin"
+    });
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Order items marked as delivered and escrow balances released successfully",
+        data: { releasedBalances: hostGroups }
+    });
+});
+
+
+const cancelOrder = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const userEmail = req.user?.email;
+    const userRole = req.user?.role?.toLowerCase();
+
+    if (!ObjectId.isValid(id)) {
+        throw new AppError(400, "Invalid Order ID format");
+    }
+
+    const isHost = userRole === "seller" || userRole === "host";
+    const query = { order_id: new ObjectId(id) };
+    if (isHost) {
+        query.hostEmail = userEmail;
+    }
+
+    const targetItems = await OrderItemCollection.find(query).toArray();
+    if (targetItems.length === 0) {
+        throw new AppError(403, "Forbidden: No items found belonging to you in this order");
+    }
+
+    const invalidItems = targetItems.filter(item => {
+        const s = item.status || OrderStatus.PENDING;
+        return s === OrderStatus.SHIPPED || s === OrderStatus.DELIVERED || s === OrderStatus.CANCELLED;
+    });
+
+    if (invalidItems.length > 0) {
+        throw new AppError(400, "Cancellation blocked: Some items are already shipped, delivered, or cancelled");
+    }
+
+
+    for (const item of targetItems) {
+        const oldStatus = item.status || OrderStatus.PENDING;
+
+        await OrderItemCollection.updateOne(
+            { _id: item._id },
+            { $set: { status: OrderStatus.CANCELLED } }
+        );
+
+        await logStatusHistory({
+            order_id: id,
+            old_status: oldStatus,
+            new_status: OrderStatus.CANCELLED,
+            changed_by_user_id: userEmail,
+            changed_by_role: req.user?.role || "host"
+        });
+
+        if (oldStatus === OrderStatus.PROCESSING) {
+            const amount = getItemTotal(item);
+            await updateHostWallet(item.hostEmail, -amount, 0);
+        }
+    }
+
+
+    const allItems = await OrderItemCollection.find({ order_id: new ObjectId(id) }).toArray();
+    const nonCancelled = allItems.filter(item => (item.status || OrderStatus.PENDING) !== OrderStatus.CANCELLED);
+    if (nonCancelled.length === 0) {
+        await OrderCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { status: OrderStatus.CANCELLED } }
+        );
+    }
+
+    const order = await OrderCollection.findOne({ _id: new ObjectId(id) });
+    await notifyOrderStatusChange({
+        orderId: id,
+        order,
+        items: allItems,
+        statusName: "Cancelled",
+        actorEmail: userEmail
+    });
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Order items cancelled successfully"
+    });
+});
+
+
+const getOrderHistory = catchAsync(async (req, res) => {
+    const { id } = req.params;
+
+    if (!ObjectId.isValid(id)) {
+        throw new AppError(400, "Invalid Order ID format");
+    }
+
+    const history = await OrderStatusHistoryCollection.find({
+        order_id: new ObjectId(id)
+    }).sort({ timestamp: 1 }).toArray();
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Order status history fetched successfully",
+        data: history
+    });
+});
+
 module.exports = {
     createOrder,
     getUserOrders,
     getOrderDetails,
-    updateOrderStatus
+    updateOrderStatus,
+    approveOrder,
+    shipOrder,
+    deliverOrder,
+    cancelOrder,
+    getOrderHistory,
+    updateHostWallet,
+    getItemTotal
 };
