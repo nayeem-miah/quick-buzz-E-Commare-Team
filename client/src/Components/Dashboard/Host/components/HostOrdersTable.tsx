@@ -17,6 +17,7 @@ interface HostOrder {
   hostIsApproved?: string;
   orderStatus?: string;
   trackingId?: string;
+  currency?: string;
 }
 
 interface HostOrdersTableProps {

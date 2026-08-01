@@ -4,7 +4,6 @@ import { FiSearch, FiUsers } from "react-icons/fi";
 import Swal from "sweetalert2";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
-import Heading from "../../../Shared/Heading/Heading";
 import LoadingSpinner from "../../../Shared/Loading";
 import Pagination from "../../../Shared/Pagination/Pagination";
 
@@ -180,12 +179,15 @@ const ManageUsers: React.FC = () => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="w-full block px-4 md:px-8 lg:px-12 xl:px-20 py-8">
-      <div className="mb-8">
-        <Heading title={"Manage Users"} subtitle={"Minimalist view, filter and manage all users."} />
+    <div className="w-full px-4 md:px-8 py-8 space-y-8 animate-fadeIn">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-900">Manage Users</h1>
+          <p className="text-sm text-gray-500 mt-1">Minimalist view, filter and manage all users.</p>
+        </div>
       </div>
 
-      <div className="w-full bg-white rounded-2xl border border-gray-150 mb-8">
+      <div className="w-full bg-white rounded-2xl border border-gray-100">
         <div className="p-5 border-b border-gray-100 flex flex-col md:flex-row gap-4 justify-between items-center">
           <div className="flex w-full md:w-96 gap-2">
             <div className="relative flex-1">

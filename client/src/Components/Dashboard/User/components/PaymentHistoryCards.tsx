@@ -53,7 +53,9 @@ export const PaymentHistoryCards: React.FC<PaymentHistoryCardsProps> = ({
             </div>
             <div className="col-span-2">
               <p className="text-gray-400 mb-0.5">Amount</p>
-              <p className="text-sm font-black text-orange-500">৳{payment.totalPrice?.toLocaleString()}</p>
+              <p className="text-sm font-black text-orange-500">
+                ৳{payment.totalPrice?.toLocaleString()}
+              </p>
             </div>
           </div>
 

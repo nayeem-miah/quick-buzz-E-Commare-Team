@@ -70,7 +70,7 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
               <p className="text-xs text-orange-400 font-bold uppercase tracking-wider">Amount Paid</p>
               <p className="text-2xl font-black text-gray-900 mt-1">
                 ৳{payment.totalPrice?.toLocaleString()}
-                <span className="text-xs font-semibold text-gray-400 ml-1.5">{payment.currency || "BDT"}</span>
+                <span className="text-xs font-semibold text-gray-400 ml-1.5">BDT</span>
               </p>
             </div>
             <div className="flex flex-col items-end gap-2">

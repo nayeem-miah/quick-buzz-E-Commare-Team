@@ -134,18 +134,18 @@ const AdminManageCategories: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-4 lg:p-8 font-sans text-gray-800">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full px-4 md:px-8 py-8 space-y-8 animate-fadeIn">
+      <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Manage Categories</h1>
-            <p className="text-gray-500 mt-1 text-sm">Add, edit, or remove product categories.</p>
+            <h1 className="text-2xl font-extrabold text-gray-900">Manage Categories</h1>
+            <p className="text-sm text-gray-500 mt-1">Add, edit, or remove product categories.</p>
           </div>
           <button
             onClick={() => openModal()}
-            className="flex items-center gap-2 bg-orange-500 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm shadow-orange-500/30 hover:bg-orange-600 transition-all duration-300"
+            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 shadow-md shadow-orange-500/30 self-start md:self-auto flex-shrink-0"
           >
-            <FiPlus size={18} /> Add New Category
+            <FiPlus size={16} /> Add New Category
           </button>
         </div>
 

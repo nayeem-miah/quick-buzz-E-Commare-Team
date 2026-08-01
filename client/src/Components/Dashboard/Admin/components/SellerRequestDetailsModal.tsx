@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { FiCheck, FiMail, FiMapPin, FiPhone, FiX } from "react-icons/fi";
 
 interface SellerDetails {
@@ -32,13 +33,13 @@ export const SellerRequestDetailsModal: React.FC<SellerRequestDetailsModalProps>
   const isDeclined = seller.adminIsApproved === "Declined" || (seller.decline ? seller.decline.trim().length > 0 : false);
   const isPending = !isApproved && !isDeclined;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="relative bg-white rounded-3xl border border-gray-100 shadow-2xl p-6 w-full max-w-2xl overflow-y-auto max-h-[90vh] animate-scaleIn"
+        className="relative bg-white rounded-3xl border border-gray-100 shadow-2xl p-6 w-full max-w-lg overflow-y-auto max-h-[90vh] animate-scaleIn flex flex-col gap-5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -168,6 +169,7 @@ export const SellerRequestDetailsModal: React.FC<SellerRequestDetailsModalProps>
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

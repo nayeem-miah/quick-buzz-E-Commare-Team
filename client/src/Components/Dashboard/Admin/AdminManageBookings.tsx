@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import LoadingSpinner from "../../../Shared/Loading";
 import { Listing } from "../../../types/listing.type";
@@ -108,13 +109,7 @@ const AdminManageBookings: React.FC = () => {
     axiosSecure.patch(`/products/admin-product/${product._id}`, { status }).then((res) => {
       if (res.data.data.modifiedCount > 0) {
         refetch();
-        Swal.fire({
-          position: "top",
-          icon: "success",
-          title: `Product marked as ${status}!`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        toast.success(`Product marked as ${status}!`);
 
         // update modal state if open
         if (selectedBooking && selectedBooking._id === product._id) {
@@ -133,8 +128,8 @@ const AdminManageBookings: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-4 lg:p-8 font-sans text-gray-800">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full px-4 md:px-8 py-8 space-y-8 animate-fadeIn">
+      <div className="space-y-6">
         <ManageBookingsHeader />
 
         {/* Filters and Search Bar */}

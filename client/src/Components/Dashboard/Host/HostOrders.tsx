@@ -33,6 +33,7 @@ interface HostOrder {
   orderStatus?: string;
   trackingId?: string;
   payment_method?: string;
+  currency?: string;
 }
 
 const HostOrders: React.FC = () => {

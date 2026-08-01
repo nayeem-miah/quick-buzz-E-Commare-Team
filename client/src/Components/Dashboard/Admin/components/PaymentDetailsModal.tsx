@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { FiDollarSign, FiCalendar, FiCheck, FiCopy, FiCreditCard } from "react-icons/fi";
 import { PaymentHistory } from "../../../../types/payment";
 import { PaymentStatus, ApprovalStatus } from "../../../../constants/enums";
@@ -18,9 +19,9 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
   onCopyTrx,
   copiedTrx,
 }) => {
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto"
       onClick={onClose}
     >
       <div
@@ -43,7 +44,7 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
 
         {/* Modal Content */}
         <div className="space-y-4 text-sm text-gray-700">
-          <div className="grid grid-cols-2 gap-4 pb-3 border-b border-gray-50">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-gray-50">
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Customer Name</p>
               <p className="font-bold text-gray-955 mt-0.5">{payment?.cus_name || "N/A"}</p>
@@ -54,7 +55,7 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pb-3 border-b border-gray-50">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-gray-50">
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Payment Date</p>
               <p className="font-semibold text-gray-700 mt-0.5 flex items-center gap-1.5">
@@ -82,10 +83,12 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pb-3 border-b border-gray-50">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-gray-50">
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Amount Paid</p>
-              <p className="font-black text-gray-955 mt-0.5">৳{(payment?.amount || payment?.totalPrice)?.toLocaleString()} {payment?.currency || "BDT"}</p>
+              <p className="font-black text-gray-955 mt-0.5">
+                ৳{(payment?.amount || payment?.totalPrice)?.toLocaleString()} BDT
+              </p>
             </div>
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Payment Method</p>
@@ -96,7 +99,7 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pb-3 border-b border-gray-50">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-gray-50">
             <div>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Payment Status</p>
               <span
@@ -155,6 +158,7 @@ export const PaymentDetailsModal: React.FC<PaymentDetailsModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

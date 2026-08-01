@@ -13,7 +13,7 @@ const DashboardLayout: React.FC = () => {
       <Sidebar />
 
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
-        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 py-2.5 px-6 hidden md:flex justify-end items-center z-40">
+        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 h-16 px-6 hidden md:flex justify-end items-center z-40">
           <div className="flex items-center gap-4">
             <NotificationDropdown />
             

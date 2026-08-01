@@ -33,7 +33,9 @@ export const AllPaymentHistoryCards: React.FC<AllPaymentHistoryCardsProps> = ({
                 <p className="text-xs text-gray-500">{payment.cus_email}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-black text-gray-955">৳{amount.toLocaleString()}</p>
+                <p className="text-sm font-black text-gray-955">
+                  ৳{amount.toLocaleString()}
+                </p>
                 <p className="text-[10px] text-gray-400 font-semibold uppercase">
                   {payment.payment_method || "Card"}
                 </p>

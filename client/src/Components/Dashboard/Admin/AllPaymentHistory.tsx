@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 import { FiInbox, FiSearch } from "react-icons/fi";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
-import Heading from "../../../Shared/Heading/Heading";
+import CustomDatePicker from "../../../Shared/DatePicker/CustomDatePicker";
 import LoadingSpinner from "../../../Shared/Loading";
 import Pagination from "../../../Shared/Pagination/Pagination";
 
@@ -143,12 +143,15 @@ const AllPaymentHistory: React.FC = () => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="w-full block px-4 md:px-8 lg:px-12 xl:px-20 py-8">
-      <div className="mb-8">
-        <Heading title={"All Payment History"} subtitle={"View, sort, filter and verify customer transaction histories."} />
+    <div className="w-full px-4 md:px-8 py-8 space-y-8 animate-fadeIn">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-900">All Payment History</h1>
+          <p className="text-sm text-gray-500 mt-1">View, sort, filter and verify customer transaction histories.</p>
+        </div>
       </div>
 
-      <div className="w-full bg-white rounded-2xl border border-gray-150 mb-8">
+      <div className="w-full bg-white rounded-2xl border border-gray-100">
         {/* Filter Toolbar */}
         <div className="p-5 border-b border-gray-100 flex flex-col xl:flex-row gap-4 justify-between items-center bg-white">
           <div className="flex w-full xl:w-80 gap-2">
@@ -183,23 +186,12 @@ const AllPaymentHistory: React.FC = () => {
               buttonClassName="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all shadow-sm"
             />
 
-            <div className="relative w-full sm:w-44">
-              <input
-                type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                className="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm"
-              />
-              {dateFilter && (
-                <button
-                  onClick={() => setDateFilter("")}
-                  className="absolute right-8 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-orange-500"
-                  title="Clear Date"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
+            <CustomDatePicker
+              value={dateFilter}
+              onChange={setDateFilter}
+              placeholder="Pick a date..."
+              className="w-full sm:w-44"
+            />
           </div>
         </div>
 
