@@ -6,6 +6,7 @@ import LoadingSpinner from '../../../Shared/Loading';
 import { toNumber } from '../product.utils';
 import { ProductReview, ProductUser } from '../types';
 import StarRating from './StarRating';
+import CustomDropdown from '../../../Shared/Dropdown/CustomDropdown';
 
 interface ProductReviewsPanelProps {
   reviews: ProductReview[];
@@ -160,37 +161,34 @@ const ProductReviewsPanel = ({
 
             <div className="flex items-center gap-3">
               {/* Star Filter Dropdown */}
-              <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-xl text-sm">
-                <Filter className="h-4 w-4 text-gray-500" />
-                <select
-                  value={filterStar}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setFilterStar(val === 'all' ? 'all' : parseInt(val));
-                  }}
-                  className="bg-transparent font-medium text-gray-700 outline-none cursor-pointer"
-                >
-                  <option value="all">All Stars</option>
-                  <option value="5">5 Stars</option>
-                  <option value="4">4 Stars</option>
-                  <option value="3">3 Stars</option>
-                  <option value="2">2 Stars</option>
-                  <option value="1">1 Star</option>
-                </select>
-              </div>
+              <CustomDropdown
+                value={filterStar.toString()}
+                onChange={(val) => setFilterStar(val === 'all' ? 'all' : parseInt(val))}
+                options={[
+                  { value: 'all', label: 'All Stars' },
+                  { value: '5', label: '5 Stars' },
+                  { value: '4', label: '4 Stars' },
+                  { value: '3', label: '3 Stars' },
+                  { value: '2', label: '2 Stars' },
+                  { value: '1', label: '1 Star' },
+                ]}
+                className="w-36 md:w-40"
+                buttonClassName="w-full bg-gray-50 border border-gray-100 text-gray-700 text-sm font-semibold rounded-xl px-3.5 py-1.5 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all"
+                leftIcon={<Filter className="h-4 w-4 text-gray-500 flex-shrink-0" />}
+              />
 
               {/* Sorting */}
-              <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-xl text-sm">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-transparent font-medium text-gray-700 outline-none cursor-pointer"
-                >
-                  <option value="recent">Most Recent</option>
-                  <option value="highest">Highest Rating</option>
-                  <option value="lowest">Lowest Rating</option>
-                </select>
-              </div>
+              <CustomDropdown
+                value={sortBy}
+                onChange={(val) => setSortBy(val as any)}
+                options={[
+                  { value: 'recent', label: 'Most Recent' },
+                  { value: 'highest', label: 'Highest Rating' },
+                  { value: 'lowest', label: 'Lowest Rating' },
+                ]}
+                className="w-36 md:w-44"
+                buttonClassName="w-full bg-gray-50 border border-gray-100 text-gray-700 text-sm font-semibold rounded-xl px-3.5 py-1.5 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all"
+              />
             </div>
           </div>
 

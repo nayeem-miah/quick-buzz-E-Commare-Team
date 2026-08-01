@@ -13,9 +13,10 @@ interface CustomDropdownProps {
   className?: string;
   searchable?: boolean;
   buttonClassName?: string;
+  leftIcon?: React.ReactNode;
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, options, className, searchable = false, buttonClassName }) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, options, className, searchable = false, buttonClassName, leftIcon }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -50,7 +51,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, option
         onClick={() => setIsOpen(!isOpen)}
         className={buttonClassName || "w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-3 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all"}
       >
-        <span className="truncate">{selectedOption?.label || "Select..."}</span>
+        <span className="flex items-center gap-1.5 truncate">
+          {leftIcon}
+          <span className="truncate">{selectedOption?.label || "Select..."}</span>
+        </span>
         <FiChevronDown
           className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         />
