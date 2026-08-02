@@ -72,36 +72,6 @@ const AllPaymentHistory: React.FC = () => {
     setSelectedPayment(null);
   };
 
-  const handleMarkAsPaid = (payment: PaymentHistory) => {
-    import("sweetalert2").then((Swal) => {
-      Swal.default.fire({
-        title: "Confirm Payment?",
-        text: "Are you sure you want to mark this Cash on Delivery order as Paid?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#f97316",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, mark as Paid!",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            await axiosSecure.patch(`/payments/${payment._id}/status`, { status: PaymentStatus.SUCCESS });
-            Swal.default.fire({
-              title: "Paid!",
-              text: "Payment has been marked as successful.",
-              icon: "success",
-              confirmButtonColor: "#f97316",
-            });
-            refetch();
-          } catch (error) {
-            console.error(error);
-            Swal.default.fire("Error", "Failed to update payment status.", "error");
-          }
-        }
-      });
-    }).catch(console.error);
-  };
-
   const filteredPayments = useMemo(() => {
     return PaymentHistoryData.filter((payment: PaymentHistory) => {
       const searchLower = searchQuery.toLowerCase();
@@ -147,7 +117,7 @@ const AllPaymentHistory: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">All Payment History</h1>
-          <p className="text-sm text-gray-500 mt-1">View, sort, filter and verify customer transaction histories.</p>
+          <p className="text-sm text-gray-505 mt-1">View, sort, filter and verify customer transaction histories.</p>
         </div>
       </div>
 
@@ -201,7 +171,7 @@ const AllPaymentHistory: React.FC = () => {
               <FiInbox className="text-3xl text-gray-400" />
             </div>
             <h3 className="text-lg font-bold text-gray-900 mb-1">No payments found</h3>
-            <p className="text-sm text-gray-550 max-w-sm">
+            <p className="text-sm text-gray-555 max-w-sm">
               We couldn't find any transactions matching your parameters.
             </p>
             {(searchQuery || statusFilter !== "All" || methodFilter !== "All" || dateFilter) && (
@@ -224,7 +194,6 @@ const AllPaymentHistory: React.FC = () => {
               payments={paginatedPayments}
               formatDate={formatDate}
               onDetailsClick={handleDetailsClick}
-              onMarkAsPaid={handleMarkAsPaid}
               page={page}
               size={size}
             />
@@ -233,7 +202,6 @@ const AllPaymentHistory: React.FC = () => {
               payments={paginatedPayments}
               formatDate={formatDate}
               onDetailsClick={handleDetailsClick}
-              onMarkAsPaid={handleMarkAsPaid}
             />
 
             <Pagination

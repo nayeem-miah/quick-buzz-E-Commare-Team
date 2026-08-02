@@ -7,7 +7,6 @@ interface AllPaymentHistoryTableProps {
   payments: PaymentHistory[];
   formatDate: (date?: string | number | Date) => string;
   onDetailsClick: (payment: PaymentHistory) => void;
-  onMarkAsPaid: (payment: PaymentHistory) => void;
   page: number;
   size: number;
 }
@@ -16,7 +15,6 @@ export const AllPaymentHistoryTable: React.FC<AllPaymentHistoryTableProps> = ({
   payments,
   formatDate,
   onDetailsClick,
-  onMarkAsPaid,
 }) => {
   return (
     <div className="hidden md:block overflow-visible w-full min-h-[480px]">
@@ -92,14 +90,6 @@ export const AllPaymentHistoryTable: React.FC<AllPaymentHistoryTableProps> = ({
                     >
                       Details
                     </button>
-                    {!isPaid && payment.payment_method === "Cash on Delivery" && (
-                      <button
-                        onClick={() => onMarkAsPaid(payment)}
-                        className="px-2.5 py-1 text-xs text-white bg-orange-500 hover:bg-orange-600 rounded-lg font-semibold shadow-sm transition-colors"
-                      >
-                        Pay
-                      </button>
-                    )}
                   </div>
                 </td>
               </tr>
