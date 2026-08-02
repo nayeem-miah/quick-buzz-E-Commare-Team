@@ -1,9 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 export const ManageBookingsHeader: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
       <div>

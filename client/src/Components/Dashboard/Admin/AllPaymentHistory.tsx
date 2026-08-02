@@ -56,7 +56,7 @@ const AllPaymentHistory: React.FC = () => {
     });
   };
 
-  const { data: PaymentHistoryData = [], isLoading, refetch } = useQuery({
+  const { data: PaymentHistoryData = [], isLoading } = useQuery({
     queryKey: ["PaymentHistoryData"],
     queryFn: async () => {
       const res = await axiosSecure.get("/payments");
