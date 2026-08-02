@@ -563,6 +563,19 @@ const deliverOrder = catchAsync(async (req, res) => {
             { _id: new ObjectId(id) },
             { $set: { status: OrderStatus.DELIVERED } }
         );
+
+        const deliveredOrder = await OrderCollection.findOne({ _id: new ObjectId(id) });
+        if (deliveredOrder && deliveredOrder.payment_method === PaymentMethod.COD) {
+            await PaymentCollection.updateOne(
+                { order_id: new ObjectId(id) },
+                {
+                    $set: {
+                        status: PaymentStatus.SUCCESS,
+                        tran_date: new Date().toISOString(),
+                    }
+                }
+            );
+        }
     }
 
     const order = await OrderCollection.findOne({ _id: new ObjectId(id) });

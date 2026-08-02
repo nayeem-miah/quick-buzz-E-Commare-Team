@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import LoadingSpinner from "../../../Shared/Loading";
@@ -14,14 +13,22 @@ import { ManageBookingsHeader } from "./components/ManageBookingsHeader";
 import { ManageBookingsTable } from "./components/ManageBookingsTable";
 import { ProductDetailsModal } from "./components/ProductDetailsModal";
 import Pagination from "../../../Shared/Pagination/Pagination";
+import DeleteConfirmModal from "../../../Shared/DeleteConfirmModal";
 
 interface Category {
   _id?: string;
   name: string;
 }
 
+interface ProductDeleteTarget {
+  id: string | number;
+  productTitle: string;
+}
+
 const AdminManageBookings: React.FC = () => {
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ProductDeleteTarget | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const axiosSecure = UseAxiosSecure();
   const [params] = useSearchParams();
 
@@ -80,29 +87,28 @@ const AdminManageBookings: React.FC = () => {
 
   // handle delete
   const handleDelete = (id: string | number) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#f97316",
-      cancelButtonColor: "#ef4444",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosSecure.delete(`/products/${id}`).then((res) => {
-          if (res.data.data.deletedCount > 0) {
-            refetch();
-            Swal.fire({
-              title: "Deleted!",
-              text: "Product has been deleted.",
-              icon: "success",
-              confirmButtonColor: "#f97316",
-            });
-          }
-        });
+    const product = products.find((item) => String(item._id) === String(id)) || null;
+    setDeleteTarget({ id, productTitle: product?.productTitle || "Selected product" });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+
+    setIsDeleting(true);
+    try {
+      const res = await axiosSecure.delete(`/products/${deleteTarget.id}`);
+      if (res.data.data.deletedCount > 0) {
+        await refetch();
+        toast.success("Product has been deleted.");
+        setDeleteTarget(null);
+      } else {
+        toast.error("Product could not be deleted.");
       }
-    });
+    } catch {
+      toast.error("Failed to delete product.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleStatusChange = (product: Listing, status: string) => {
@@ -207,6 +213,14 @@ const AdminManageBookings: React.FC = () => {
           onDelete={handleDelete}
         />
       )}
+
+      <DeleteConfirmModal
+        isOpen={!!deleteTarget}
+        itemName={deleteTarget?.productTitle}
+        isDeleting={isDeleting}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

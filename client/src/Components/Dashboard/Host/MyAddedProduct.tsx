@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
@@ -13,6 +13,7 @@ import { HostListingsCards } from "./components/HostListingsCards";
 import { HostListingsModal } from "./components/HostListingsModal";
 import Pagination from "../../../Shared/Pagination/Pagination";
 import { Package } from "lucide-react";
+import DeleteConfirmModal from "../../../Shared/DeleteConfirmModal";
 
 export interface Listing {
   _id: string;
@@ -39,6 +40,8 @@ const MyAddedProduct: React.FC = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Listing | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,29 +71,28 @@ const MyAddedProduct: React.FC = () => {
 
   // Handle delete
   const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#f97316",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic.delete(`/pro/${id}`).then((res) => {
-          if (res.data.deletedCount > 0) {
-            refetch();
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your product has been deleted.",
-              icon: "success",
-              confirmButtonColor: "#f97316",
-            });
-          }
-        });
+    const product = products.find((item) => item._id === id) || null;
+    setDeleteTarget(product || ({ _id: id, productTitle: "Selected product" } as Listing));
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+
+    setIsDeleting(true);
+    try {
+      const res = await axiosPublic.delete(`/pro/${deleteTarget._id}`);
+      if (res.data.deletedCount > 0) {
+        await refetch();
+        toast.success("Your product has been deleted.");
+        setDeleteTarget(null);
+      } else {
+        toast.error("Product could not be deleted.");
       }
-    });
+    } catch {
+      toast.error("Failed to delete product.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const closeModal = () => {
@@ -204,6 +206,14 @@ const MyAddedProduct: React.FC = () => {
         selectedBooking={selectedBooking}
         onClose={closeModal}
         onDelete={handleDelete}
+      />
+
+      <DeleteConfirmModal
+        isOpen={!!deleteTarget}
+        itemName={deleteTarget?.productTitle}
+        isDeleting={isDeleting}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
       />
     </div>
   );
