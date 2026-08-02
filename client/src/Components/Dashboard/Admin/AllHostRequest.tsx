@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
-import { FiInbox, FiSearch } from "react-icons/fi";
-import Swal from "sweetalert2";
+import { FiInbox, FiSearch, FiX } from "react-icons/fi";
+import toast from "react-hot-toast";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
 import Heading from "../../../Shared/Heading/Heading";
@@ -44,6 +44,14 @@ const AllHostRequest: React.FC = () => {
   const [page, setPage] = useState(1);
   const size = 10;
 
+  // Custom confirmation dialog state
+  const [confirmDialog, setConfirmDialog] = useState<{
+    type: "approve" | "decline" | "delete";
+    seller: SellerDetails;
+    declineReason?: string;
+    loading?: boolean;
+  } | null>(null);
+
   // get host request data
   const {
     data: sellerData = [],
@@ -58,120 +66,29 @@ const AllHostRequest: React.FC = () => {
   });
 
   const handleApprove = (seller: SellerDetails) => {
-    Swal.fire({
-      title: "Approve Seller?",
-      text: `Are you sure you want to approve ${seller.sellerName} as a seller? This will update their role and send them an approval email.`,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#f97316",
-      cancelButtonColor: "#9ca3af",
-      confirmButtonText: "Yes, Approve",
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        try {
-          const res = await axiosPublic.patch(`/seller/approve/${seller._id}`);
-          if (!res.data?.success) {
-            throw new Error("Failed to approve");
-          }
-          return res.data;
-        } catch (error: any) {
-          Swal.showValidationMessage(`Request failed: ${error.message || error}`);
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        refetch();
-        setSelectedSeller(null);
-        Swal.fire({
-          title: "Approved!",
-          text: `${seller.sellerName} is now a seller. Email sent.`,
-          icon: "success",
-          confirmButtonColor: "#f97316",
-        });
-      }
+    setConfirmDialog({
+      type: "approve",
+      seller,
     });
   };
 
   const handleDecline = (seller: SellerDetails) => {
-    Swal.fire({
-      title: "Decline Request?",
-      text: `Enter the reason for declining ${seller.sellerName}'s request:`,
-      input: "textarea",
-      inputPlaceholder: "Reason for decline...",
-      inputAttributes: {
-        "aria-label": "Reason for decline"
-      },
-      showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#9ca3af",
-      confirmButtonText: "Decline Application",
-      showLoaderOnConfirm: true,
-      preConfirm: async (inputValue) => {
-        if (!inputValue || inputValue.trim() === "") {
-          Swal.showValidationMessage("Please enter a reason for decline");
-          return false;
-        }
-        try {
-          const res = await axiosPublic.patch(`/seller/decline-message/${seller._id}`, { inputValue });
-          if (!res.data?.success) {
-            throw new Error("Failed to decline");
-          }
-          return res.data;
-        } catch (error: any) {
-          Swal.showValidationMessage(`Request failed: ${error.message || error}`);
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        refetch();
-        setSelectedSeller(null);
-        Swal.fire({
-          title: "Declined!",
-          text: "Application has been declined and email sent to user.",
-          icon: "success",
-          confirmButtonColor: "#f97316"
-        });
-      }
+    setConfirmDialog({
+      type: "decline",
+      seller,
+      declineReason: "",
     });
   };
 
   const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this seller application record!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#9ca3af",
-      confirmButtonText: "Yes, delete it!",
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        try {
-          const res = await axiosPublic.delete(`/seller/${id}`);
-          const count = res.data.data?.deletedCount ?? res.data?.deletedCount ?? 0;
-          if (count === 0) {
-            throw new Error("Record not found or already deleted");
-          }
-          return res.data;
-        } catch (error: any) {
-          Swal.showValidationMessage(`Request failed: ${error.message || error}`);
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        refetch();
-        Swal.fire({
-          title: "Deleted!",
-          text: "Seller application record deleted.",
-          icon: "success",
-          confirmButtonColor: "#f97316",
-        });
-      }
+    const seller = sellerData.find((s) => String(s._id) === id);
+    if (!seller) return;
+    setConfirmDialog({
+      type: "delete",
+      seller,
     });
   };
+
 
   const handleDetailsClick = (seller: SellerDetails) => {
     setSelectedSeller(seller);
@@ -308,8 +225,140 @@ const AllHostRequest: React.FC = () => {
           onDecline={handleDecline}
         />
       )}
+
+      {confirmDialog && (
+        <div
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto"
+          onClick={() => setConfirmDialog(null)}
+        >
+          <div
+            className="relative bg-white rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(15,23,42,0.15)] p-6 w-full max-w-md overflow-hidden animate-scaleIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start pb-4 border-b border-slate-100">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  {confirmDialog.type === "approve" && "Approve Seller"}
+                  {confirmDialog.type === "decline" && "Decline Request"}
+                  {confirmDialog.type === "delete" && "Delete Application Record"}
+                </h3>
+                <p className="text-xs text-slate-400 font-medium mt-0.5">
+                  Seller: {confirmDialog.seller.sellerName}
+                </p>
+              </div>
+              <button
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition"
+                onClick={() => setConfirmDialog(null)}
+              >
+                <FiX size={18} />
+              </button>
+            </div>
+
+            <div className="py-5 text-sm text-slate-600 space-y-4">
+              {confirmDialog.type === "approve" && (
+                <p className="text-slate-600 leading-relaxed">
+                  Are you sure you want to approve <strong className="text-slate-900">{confirmDialog.seller.sellerName}</strong> as a seller? This will update their role and send them an approval email.
+                </p>
+              )}
+
+              {confirmDialog.type === "delete" && (
+                <p className="text-slate-600 leading-relaxed">
+                  Are you sure you want to delete <strong className="text-slate-900">{confirmDialog.seller.sellerName}</strong>'s seller application record? This action cannot be undone.
+                </p>
+              )}
+
+              {confirmDialog.type === "decline" && (
+                <div className="space-y-2">
+                  <p className="text-slate-600 leading-relaxed">
+                    Enter the reason for declining <strong className="text-slate-900">{confirmDialog.seller.sellerName}</strong>'s request:
+                  </p>
+                  <textarea
+                    className="w-full min-h-[100px] bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all font-medium text-slate-800 placeholder-slate-400"
+                    placeholder="Reason for decline (e.g. invalid document, missing information)..."
+                    value={confirmDialog.declineReason || ""}
+                    onChange={(e) => setConfirmDialog({ ...confirmDialog, declineReason: e.target.value })}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+              <button
+                onClick={() => setConfirmDialog(null)}
+                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200/60 transition"
+                disabled={confirmDialog.loading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (confirmDialog.type === "decline" && (!confirmDialog.declineReason || !confirmDialog.declineReason.trim())) {
+                    toast.error("Please enter a reason for declining the application.");
+                    return;
+                  }
+                  
+                  // Set loading
+                  setConfirmDialog(prev => prev ? { ...prev, loading: true } : null);
+                  const loadToast = toast.loading("Processing request...");
+
+                  try {
+                    if (confirmDialog.type === "approve") {
+                      const res = await axiosPublic.patch(`/seller/approve/${confirmDialog.seller._id}`);
+                      if (res.data?.success) {
+                        toast.success(`${confirmDialog.seller.sellerName} has been approved as a seller!`, { id: loadToast });
+                        refetch();
+                        setSelectedSeller(null);
+                        setConfirmDialog(null);
+                      } else {
+                        throw new Error(res.data?.message || "Failed to approve");
+                      }
+                    } else if (confirmDialog.type === "decline") {
+                      const res = await axiosPublic.patch(`/seller/decline-message/${confirmDialog.seller._id}`, {
+                        inputValue: confirmDialog.declineReason
+                      });
+                      if (res.data?.success) {
+                        toast.success("Application has been declined and email sent to user.", { id: loadToast });
+                        refetch();
+                        setSelectedSeller(null);
+                        setConfirmDialog(null);
+                      } else {
+                        throw new Error(res.data?.message || "Failed to decline");
+                      }
+                    } else if (confirmDialog.type === "delete") {
+                      const res = await axiosPublic.delete(`/seller/${confirmDialog.seller._id}`);
+                      const count = res.data.data?.deletedCount ?? res.data?.deletedCount ?? 0;
+                      if (count > 0 || res.data?.success) {
+                        toast.success("Seller application record deleted successfully.", { id: loadToast });
+                        refetch();
+                        setConfirmDialog(null);
+                      } else {
+                        throw new Error("Record not found or already deleted");
+                      }
+                    }
+                  } catch (error: any) {
+                    toast.error(`Request failed: ${error.message || error}`, { id: loadToast });
+                    setConfirmDialog(prev => prev ? { ...prev, loading: false } : null);
+                  }
+                }}
+                className={`px-4 py-2 text-xs font-bold text-white rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5 ${
+                  confirmDialog.type === "approve"
+                    ? "bg-orange-500 hover:bg-orange-600 shadow-orange-500/10"
+                    : "bg-red-500 hover:bg-red-600 shadow-red-500/10"
+                }`}
+                disabled={confirmDialog.loading}
+              >
+                {confirmDialog.loading ? "Processing..." : (
+                  confirmDialog.type === "approve" ? "Approve" :
+                  confirmDialog.type === "decline" ? "Decline" : "Delete"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default AllHostRequest;
+

@@ -10,7 +10,6 @@ const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
 const AppError = require("../utils/AppError");
 
-// Create Order
 const createOrder = catchAsync(async (req, res) => {
     const { email, items, total_amount, shipping_address, payment_method } = req.body;
 
@@ -170,7 +169,6 @@ const createOrder = catchAsync(async (req, res) => {
     }
 });
 
-// Get user orders
 const getUserOrders = catchAsync(async (req, res) => {
     const { email } = req.params;
     if (!email) {
@@ -187,7 +185,18 @@ const getUserOrders = catchAsync(async (req, res) => {
     });
 });
 
-// Get single order details with items
+const getAllOrders = catchAsync(async (req, res) => {
+    const result = await OrderCollection.find({}).sort({ date: -1 }).toArray();
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "All orders fetched successfully",
+        data: result
+    });
+});
+
+
 const getOrderDetails = catchAsync(async (req, res) => {
     const { id } = req.params;
     if (!ObjectId.isValid(id)) {
@@ -243,17 +252,32 @@ const updateOrderStatus = catchAsync(async (req, res) => {
             status
         ).catch(err => console.error("Email send failed:", err));
 
-        // Dispatch in-app notification
-        try {
-            await createNotification(order.email, {
-                title: "Order Status Updated 📦",
-                message: `Your Order (ID: ${id}) status has been updated to "${status}".`,
-                type: "info",
-                actionUrl: "/dashboard/my-orders"
+        // Update all order items and log status history
+        const orderItems = await OrderItemCollection.find({ order_id: new ObjectId(id) }).toArray();
+        for (const item of orderItems) {
+            await logStatusHistory({
+                order_id: id,
+                old_status: item.status || OrderStatus.PENDING,
+                new_status: status,
+                changed_by_user_id: req.user?.email || "admin",
+                changed_by_role: req.user?.role || "admin"
             });
-        } catch (err) {
-            console.error("Failed to send order status update notification:", err);
         }
+
+        await OrderItemCollection.updateMany(
+            { order_id: new ObjectId(id) },
+            { $set: { status } }
+        );
+
+        // Dispatch in-app notifications to all parties (buyer, hosts, and admins)
+        const capitalizedStatusName = status.charAt(0).toUpperCase() + status.slice(1);
+        await notifyOrderStatusChange({
+            orderId: id,
+            order,
+            items: orderItems,
+            statusName: capitalizedStatusName,
+            actorEmail: req.user?.email || "admin"
+        });
     }
 
     sendResponse(res, {
@@ -697,6 +721,7 @@ const getOrderHistory = catchAsync(async (req, res) => {
 module.exports = {
     createOrder,
     getUserOrders,
+    getAllOrders,
     getOrderDetails,
     updateOrderStatus,
     approveOrder,

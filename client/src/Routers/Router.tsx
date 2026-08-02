@@ -17,6 +17,8 @@ import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
 import AdminManageBookings from "../Components/Dashboard/Admin/AdminManageBookings";
 import AdminManageCategories from "../Components/Dashboard/Admin/AdminManageCategories";
 import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
+import AdminManageOrders from "../Components/Dashboard/Admin/AdminManageOrders";
+import AdminOrderDetails from "../Components/Dashboard/Admin/AdminOrderDetails";
 import MyAddedCart from "../Components/Dashboard/User/MyAddedCart";
 import UserPaymentHistory from "../Components/Dashboard/User/UserPaymentHistory";
 import ProductPage from "../Pages/Product/ProductDetailsPage";
@@ -182,6 +184,22 @@ const router = createBrowserRouter([
         element: (
           <RoleProtectedRoute allowedRoles={["admin"]}>
             <AllPaymentHistory />
+          </RoleProtectedRoute>
+        ),
+      },
+      {
+        path: "manage-orders",
+        element: (
+          <RoleProtectedRoute allowedRoles={["admin"]}>
+            <AdminManageOrders />
+          </RoleProtectedRoute>
+        ),
+      },
+      {
+        path: "admin-order/:id",
+        element: (
+          <RoleProtectedRoute allowedRoles={["admin"]}>
+            <AdminOrderDetails />
           </RoleProtectedRoute>
         ),
       },

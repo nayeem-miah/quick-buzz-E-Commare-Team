@@ -6,6 +6,7 @@ const router = Router();
 const { verifyToken, verifyAdmin, verifyHost } = require("../middleware/auth");
 
 router.get("/user/:email", verifyToken, OrderController.getUserOrders);
+router.get("/", verifyToken, verifyAdmin, OrderController.getAllOrders);
 router.get("/:id", verifyToken, OrderController.getOrderDetails);
 router.post("/", verifyToken, OrderController.createOrder);
 router.patch("/:id/status", verifyToken, verifyAdmin, OrderController.updateOrderStatus);

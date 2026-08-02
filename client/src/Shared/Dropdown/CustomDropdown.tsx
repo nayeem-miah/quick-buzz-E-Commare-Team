@@ -19,8 +19,22 @@ interface CustomDropdownProps {
 const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, options, className, searchable = false, buttonClassName, leftIcon }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [openUp, setOpenUp] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const selectedOption = options.find((opt) => opt.value === value) || options[0];
+
+  const updateDropdownPlacement = () => {
+    if (!dropdownRef.current) return;
+
+    const rect = dropdownRef.current.getBoundingClientRect();
+    const optionHeight = 42;
+    const searchHeight = searchable ? 64 : 0;
+    const estimatedHeight = Math.min(options.length * optionHeight + searchHeight + 16, 240);
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    setOpenUp(spaceBelow < estimatedHeight + 16 && spaceAbove > spaceBelow);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,8 +51,18 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, option
   useEffect(() => {
     if (!isOpen) {
       setSearchQuery("");
+      return;
     }
-  }, [isOpen]);
+
+    updateDropdownPlacement();
+    window.addEventListener("resize", updateDropdownPlacement);
+    window.addEventListener("scroll", updateDropdownPlacement, true);
+
+    return () => {
+      window.removeEventListener("resize", updateDropdownPlacement);
+      window.removeEventListener("scroll", updateDropdownPlacement, true);
+    };
+  }, [isOpen, options.length, searchable]);
 
   const filteredOptions = searchable 
     ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -48,7 +72,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, option
     <div className={`relative ${className || "w-full md:w-48"}`} ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!isOpen) updateDropdownPlacement();
+          setIsOpen(!isOpen);
+        }}
         className={buttonClassName || "w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-3 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all"}
       >
         <span className="flex items-center gap-1.5 truncate">
@@ -60,7 +87,11 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ value, onChange, option
         />
       </button>
       {isOpen && (
-        <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-lg py-2 max-h-60 flex flex-col">
+        <div
+          className={`absolute z-50 w-full bg-white border border-gray-100 rounded-xl shadow-lg py-2 max-h-60 flex flex-col ${
+            openUp ? "bottom-full mb-2" : "top-full mt-2"
+          }`}
+        >
           {searchable && (
             <div className="px-3 pb-2 mb-1 border-b border-gray-50 sticky top-0 bg-white">
               <div className="relative">
