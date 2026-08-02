@@ -86,7 +86,7 @@ export default function Carousel(): JSX.Element {
       {/* Custom Sleek Navigation Buttons */}
       <button
         onClick={() => swiper?.slidePrev()}
-        className="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-orange-500 backdrop-blur-md border border-white/10 text-white flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer md:opacity-0 md:group-hover/banner:opacity-100 shadow-lg shadow-black/20 focus:outline-none"
+        className="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-orange-500 backdrop-blur-md border border-white/10 text-white hidden md:flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer md:opacity-0 md:group-hover/banner:opacity-100 shadow-lg shadow-black/20 focus:outline-none"
         aria-label="Previous slide"
       >
         <FiChevronLeft className="text-2xl" />
@@ -94,7 +94,7 @@ export default function Carousel(): JSX.Element {
 
       <button
         onClick={() => swiper?.slideNext()}
-        className="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-orange-500 backdrop-blur-md border border-white/10 text-white flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer md:opacity-0 md:group-hover/banner:opacity-100 shadow-lg shadow-black/20 focus:outline-none"
+        className="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-orange-500 backdrop-blur-md border border-white/10 text-white hidden md:flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer md:opacity-0 md:group-hover/banner:opacity-100 shadow-lg shadow-black/20 focus:outline-none"
         aria-label="Next slide"
       >
         <FiChevronRight className="text-2xl" />
