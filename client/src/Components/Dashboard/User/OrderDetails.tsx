@@ -2,15 +2,25 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
-import { FiArrowLeft, FiCreditCard, FiPackage, FiRefreshCw, FiTruck, FiXCircle } from "react-icons/fi";
+import { FiArrowLeft, FiRefreshCw, FiXCircle } from "react-icons/fi";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Swal, { SweetAlertResult } from "sweetalert2";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
+import DeleteConfirmModal from "../../../Shared/DeleteConfirmModal";
 
+// Sub-components
+import { OrderTimeline } from "./components/OrderTimeline";
+import { OrderActivityLog } from "./components/OrderActivityLog";
+import { ShippingDetailsCard } from "./components/ShippingDetailsCard";
+import { ItemsOrderedCard } from "./components/ItemsOrderedCard";
+import { PaymentDetailsCard } from "./components/PaymentDetailsCard";
+import { BillingSummaryCard } from "./components/BillingSummaryCard";
+
+// Types & Enums
 import { Order, OrderItem, OrderStatusHistory, Payment } from "../../../types/order";
-import { OrderStatus, PaymentStatus } from "../../../constants/enums";
+import { OrderStatus } from "../../../constants/enums";
+
 interface OrderInfoResponse {
   order: Order;
   items: OrderItem[];
@@ -23,6 +33,8 @@ const OrderDetails: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const [isReordering, setIsReordering] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   // Fetch single order details
   const { data: orderInfo, isLoading, refetch } = useQuery({
@@ -81,31 +93,22 @@ const OrderDetails: React.FC = () => {
   };
 
   const handleCancelOrder = () => {
-    Swal.fire({
-      title: "Cancel Order?",
-      text: "Are you sure you want to cancel this order? This action cannot be undone.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, cancel it!",
-    }).then(async (result: SweetAlertResult) => {
-      if (result.isConfirmed) {
-        try {
-          await axiosPublic.patch(`/orders/${id}/cancel`);
-          Swal.fire({
-            title: "Cancelled!",
-            text: "Your order has been cancelled successfully.",
-            icon: "success",
-            confirmButtonColor: "#f97316",
-          });
-          refetch();
-        } catch (error) {
-          console.error(error);
-          Swal.fire("Error", "Failed to cancel order.", "error");
-        }
-      }
-    });
+    setIsCancelModalOpen(true);
+  };
+
+  const confirmCancelOrder = async () => {
+    setIsCancelling(true);
+    try {
+      await axiosPublic.patch(`/orders/${id}/cancel`);
+      toast.success("Your order has been cancelled successfully.");
+      refetch();
+      setIsCancelModalOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to cancel order.");
+    } finally {
+      setIsCancelling(false);
+    }
   };
 
   const handleReorder = async () => {
@@ -216,223 +219,62 @@ const OrderDetails: React.FC = () => {
       </div>
 
       {/* Status Timeline */}
-      {order.status === OrderStatus.CANCELLED ? (
-        <div className="bg-red-50 text-red-700 p-5 rounded-2xl border border-red-100 text-center font-bold text-sm">
-          This order has been cancelled.
-        </div>
-      ) : (
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-6">Order Status Timeline</p>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 relative">
-            {/* Horizontal progress connectors */}
-            <div className="absolute top-[15px] left-0 right-0 h-1 bg-gray-100 -translate-y-1/2 hidden md:block z-0" />
-            <div
-              className="absolute top-[15px] left-0 h-1 bg-orange-500 -translate-y-1/2 hidden md:block z-0 transition-all duration-500"
-              style={{ width: `${currentStep >= 0 ? (currentStep / (steps.length - 1)) * 100 : 0}%` }}
-            />
-
-            {steps.map((step, idx) => {
-              const isCompleted = idx <= currentStep;
-              const isActive = idx === currentStep;
-              return (
-                <div key={idx} className="flex flex-row md:flex-col items-center gap-4 md:gap-3 z-10 w-full md:w-auto">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border-2 transition-all duration-300 ${
-                    isCompleted
-                      ? "bg-orange-500 text-white border-orange-500 shadow-md shadow-orange-500/20"
-                      : "bg-white text-gray-400 border-gray-200"
-                  }`}>
-                    {idx + 1}
-                  </div>
-                  <div className="text-left md:text-center">
-                    <p className={`text-xs font-bold ${isCompleted ? "text-gray-900" : "text-gray-400"}`}>
-                      {step.label}
-                    </p>
-                    {isActive && (
-                      <span className="inline-block mt-1 px-2 py-0.5 text-[9px] font-semibold bg-orange-50 text-orange-600 rounded border border-orange-100">
-                        Current State
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <OrderTimeline
+        status={order.status}
+        steps={steps}
+        currentStep={currentStep}
+      />
 
       {/* Activity Log */}
-      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-6">Activity Log</p>
-        <ol className="relative space-y-6 border-l-2 border-orange-100 ml-3">
-          {/* Order placed event */}
-          <li className="ml-6 relative">
-            <span className="absolute -left-[27px] top-0.5 w-4 h-4 rounded-full bg-orange-500 border-2 border-white shadow-sm shadow-orange-500/30" />
-            <p className="font-bold text-sm text-gray-900">Order Placed</p>
-            <p className="text-xs text-gray-400">
-              by <span className="font-semibold text-gray-600">{order.email}</span>
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {formatDate(order.date)} at {formatTime(order.date)}
-            </p>
-          </li>
-
-          {/* Status change events */}
-          {history.map((entry) => {
-            const isCancelled = (entry.new_status || "").toLowerCase() === OrderStatus.CANCELLED;
-            return (
-              <li key={entry._id} className="ml-6 relative">
-                <span
-                  className={`absolute -left-[27px] top-0.5 w-4 h-4 rounded-full border-2 border-white shadow-sm ${
-                    isCancelled ? "bg-red-500" : "bg-gray-300"
-                  }`}
-                />
-                <p className="font-bold text-sm text-gray-900 capitalize">
-                  {entry.new_status}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {entry.old_status && entry.old_status !== entry.new_status && (
-                    <>
-                      <span className="line-through">{entry.old_status}</span> →{" "}
-                    </>
-                  )}
-                  by <span className="font-semibold text-gray-600 capitalize">{entry.changed_by_role}</span>
-                </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {formatDate(entry.timestamp)} at {formatTime(entry.timestamp)}
-                </p>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+      <OrderActivityLog
+        email={order.email}
+        date={order.date}
+        history={history}
+        formatDate={formatDate}
+        formatTime={formatTime}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left Column: Address and Ordered items */}
         <div className="lg:col-span-2 space-y-6">
           {/* Shipping Address */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-gray-950 flex items-center gap-2 pb-2 border-b border-gray-50">
-              <FiTruck className="text-gray-400" /> Shipping Details
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-gray-400 font-medium">Receiver Name</p>
-                <p className="font-bold text-gray-800 mt-0.5">{order.shipping_address?.name}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 font-medium">Phone Number</p>
-                <p className="font-bold text-gray-800 mt-0.5">{order.shipping_address?.phone}</p>
-              </div>
-              <div className="sm:col-span-2">
-                <p className="text-gray-400 font-medium">Address</p>
-                <p className="font-bold text-gray-800 mt-0.5">
-                  {order.shipping_address?.address}, {order.shipping_address?.city}
-                </p>
-              </div>
-            </div>
-          </div>
+          <ShippingDetailsCard shippingAddress={order.shipping_address} />
 
           {/* Ordered items */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-gray-950 flex items-center gap-2 pb-2 border-b border-gray-50">
-              <FiPackage className="text-gray-400" /> Items Ordered
-            </h2>
-            <div className="divide-y divide-gray-100">
-              {items.map((item: OrderItem) => (
-                <div key={item._id} className="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 first:pt-0 last:pb-0">
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={item.productImage}
-                      alt={item.productTitle}
-                      className="w-16 h-16 object-cover rounded-xl border border-gray-50 flex-shrink-0"
-                    />
-                    <div className="space-y-0.5">
-                      <h4 className="text-sm font-bold text-gray-950 line-clamp-1">{item.productTitle}</h4>
-                      <p className="text-xs text-gray-400">Brand: <span className="font-semibold text-gray-700">{item.brandName || "Unknown"}</span></p>
-                      <p className="text-xs text-gray-400">Qty: <span className="font-bold text-gray-800">{item.quantity}</span></p>
-                    </div>
-                  </div>
-                  <div className="text-right sm:text-right w-full sm:w-auto flex sm:flex-col items-center justify-between sm:justify-center gap-2">
-                    <span className="text-sm font-bold text-orange-500">
-                      ৳{((item.price || 0) * (1 - (item.discount || 0) / 100) * (item.quantity || 1)).toLocaleString()}
-                    </span>
-                    {item.discount !== undefined && item.discount > 0 && (
-                      <div className="flex items-center gap-1 text-[10px]">
-                        <span className="text-gray-400 line-through">৳{(item.price * item.quantity).toLocaleString()}</span>
-                        <span className="bg-orange-50 text-orange-600 font-bold px-1.5 py-0.5 rounded">
-                          {item.discount}% Off
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ItemsOrderedCard items={items} />
         </div>
 
-        {/* Right Column: Payment and Summary */}
+        {/* Right Column: Payment Details and Billing Summary */}
         <div className="space-y-6">
           {/* Payment Details */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-gray-950 flex items-center gap-2 pb-2 border-b border-gray-50">
-              <FiCreditCard className="text-gray-400" /> Payment Details
-            </h2>
-            <div className="space-y-3.5 text-sm text-gray-700">
-              <div className="flex justify-between">
-                <span className="text-gray-400 font-medium">Method</span>
-                <span className="font-bold text-gray-800">{order.payment_method}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400 font-medium">Status</span>
-                <span className={`px-2.5 py-0.5 text-xs font-bold rounded-full border uppercase tracking-wider ${
-                  payment?.status === PaymentStatus.SUCCESS
-                    ? "bg-green-50 text-green-700 border-green-200"
-                    : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                }`}>
-                  {payment?.status === PaymentStatus.SUCCESS ? "Paid" : "Pending"}
-                </span>
-              </div>
-              {payment?.transaction_id && (
-                <div className="flex justify-between">
-                  <span className="text-gray-400 font-medium">Transaction ID</span>
-                  <span className="font-mono text-xs text-gray-700 max-w-[120px] truncate" title={payment.transaction_id}>
-                    {payment.transaction_id}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
+          <PaymentDetailsCard
+            paymentMethod={order.payment_method}
+            payment={payment}
+            formatDate={formatDate}
+            formatTime={formatTime}
+          />
 
           {/* Pricing calculations summary */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-gray-950 pb-2 border-b border-gray-50">
-              Billing Summary
-            </h2>
-            <div className="space-y-3.5 text-sm text-gray-700">
-              <div className="flex justify-between text-gray-500">
-                <span>Subtotal</span>
-                <span className="font-semibold text-gray-800">৳{subtotal.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-gray-500">
-                <span>Discount</span>
-                <span className="font-semibold text-red-500">-৳{totalDiscount.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-gray-500">
-                <span>Shipping</span>
-                <span className="font-semibold text-green-600">Free</span>
-              </div>
-              <hr className="border-gray-50 my-1" />
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-gray-950">Total Paid</span>
-                <span className="text-lg font-black text-orange-500">
-                  ৳{order.total_amount?.toLocaleString()}
-                </span>
-              </div>
-            </div>
-          </div>
+          <BillingSummaryCard
+            subtotal={subtotal}
+            totalDiscount={totalDiscount}
+            totalAmount={order.total_amount || 0}
+          />
         </div>
       </div>
+
+      {/* Confirm cancel modal */}
+      <DeleteConfirmModal
+        isOpen={isCancelModalOpen}
+        title="Cancel Order?"
+        message="Are you sure you want to cancel this order? This action cannot be undone."
+        confirmText="Yes, cancel it!"
+        itemName={`Order ID: ${id}`}
+        isDeleting={isCancelling}
+        loadingText="Cancelling..."
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={confirmCancelOrder}
+      />
     </div>
   );
 };

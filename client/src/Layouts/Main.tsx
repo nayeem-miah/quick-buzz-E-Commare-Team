@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "../Shared/Footer/Footer";
 import Navbar from "../Shared/Navbar/Navbar";
+import { AiSuggestionsChatbot } from "../Shared/Chatbot/AiSuggestionsChatbot";
 
 const Main: React.FC = () => {
   return (
@@ -14,6 +15,9 @@ const Main: React.FC = () => {
       <div className="mt-10">
         <Footer></Footer>
       </div>
+
+      {/* Floating AI Assistant Chatbot */}
+      <AiSuggestionsChatbot />
     </div>
   );
 };

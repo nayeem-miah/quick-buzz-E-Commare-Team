@@ -10,6 +10,9 @@ const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
 const AppError = require("../utils/AppError");
 
+const BACKEND_URL = process.env.BACKEND_URL || "https://quick-bazz.vercel.app";
+const CLIENT_URL = process.env.CLIENT_URL || "https://quick-bus-bd.web.app";
+
 const createOrder = catchAsync(async (req, res) => {
     const { email, items, total_amount, shipping_address, payment_method } = req.body;
 
@@ -129,9 +132,9 @@ const createOrder = catchAsync(async (req, res) => {
         total_amount: parseFloat(total_amount),
         currency: "USD",
         tran_id: trxId,
-        success_url: "http://localhost:3000/api/v1/payments/success-payment",
-        fail_url: "http://localhost:3000/api/v1/payments/fail",
-        cancel_url: "http://localhost:3000/api/v1/payments/cancel",
+        success_url: `${BACKEND_URL}/api/v1/payments/success-payment`,
+        fail_url: `${BACKEND_URL}/api/v1/payments/fail`,
+        cancel_url: `${BACKEND_URL}/api/v1/payments/cancel`,
         emi_option: 0,
         cus_name: shipping_address.name,
         cus_email: email,

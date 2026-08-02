@@ -37,6 +37,8 @@ export interface Payment {
   status: string;
   transaction_id?: string;
   date: string;
+  tran_date?: string;
+  card_type?: string;
 }
 
 export interface CheckoutItem {

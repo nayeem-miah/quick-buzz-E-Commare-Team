@@ -8,6 +8,9 @@ const { sendOrderConfirmationEmail } = require("../utils/sendMail");
 const createNotification = require("../utils/createNotification");
 const { updateHostWallet, getItemTotal } = require("./order.controller");
 
+const BACKEND_URL = process.env.BACKEND_URL || "https://quick-bazz.vercel.app";
+const CLIENT_URL = process.env.CLIENT_URL || "https://quick-bus-bd.web.app";
+
 const getAllPayment = catchAsync(async (req, res) => {
     const result = await PaymentCollection.aggregate([
         { $sort: { _id: -1 } },
@@ -236,9 +239,9 @@ const createPayment = catchAsync(async (req, res) => {
         total_amount: totalPrice,
         currency: paymentInfo?.currency || "USD",
         tran_id: trxId,
-        success_url: "http://localhost:3000/api/v1/payments/success-payment",
-        fail_url: "http://localhost:3000/api/v1/payments/fail",
-        cancel_url: "http://localhost:3000/api/v1/payments/cancel",
+        success_url: `${BACKEND_URL}/api/v1/payments/success-payment`,
+        fail_url: `${BACKEND_URL}/api/v1/payments/fail`,
+        cancel_url: `${BACKEND_URL}/api/v1/payments/cancel`,
         emi_option: 0,
         cus_name: displayName,
         cus_email: email,
@@ -433,16 +436,15 @@ const successPayment = catchAsync(async (req, res) => {
         );
     }
 
-    res.redirect("http://localhost:5173/success");
+    res.redirect(`${CLIENT_URL}/success`);
 });
 
 const failPayment = catchAsync(async (req, res) => {
-    res.redirect("http://localhost:5173/fail");
+    res.redirect(`${CLIENT_URL}/fail`);
 });
 
 const cancelPayment = catchAsync(async (req, res) => {
-    res.redirect("http://localhost:5173/cancel");
-
+    res.redirect(`${CLIENT_URL}/cancel`);
 });
 
 

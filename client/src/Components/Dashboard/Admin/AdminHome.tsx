@@ -22,13 +22,15 @@ const AdminStatistics: React.FC = () => {
   });
 
 
-  const { data: products = [] } = useQuery({
+  const { data: productsData } = useQuery({
     queryKey: ["allProduct"],
     queryFn: async () => {
       const res = await axiosSecure.get("/products");
-      return res.data.data;
+      return res.data;
     },
   });
+
+  const totalProducts = productsData?.meta?.total || 0;
 
   const { data: PaymentHistoryData = [], isLoading } = useQuery<PaymentHistory[]>({
     queryKey: ["PaymentHistoryData"],
@@ -106,7 +108,7 @@ const AdminStatistics: React.FC = () => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wide truncate">Products</p>
-              <p className="text-base sm:text-xl font-black text-gray-950 mt-0.5 truncate">{products.length}</p>
+              <p className="text-base sm:text-xl font-black text-gray-950 mt-0.5 truncate">{totalProducts}</p>
             </div>
           </div>
 

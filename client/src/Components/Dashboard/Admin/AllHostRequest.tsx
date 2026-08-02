@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
-import { FiInbox, FiSearch, FiX } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { FiInbox, FiSearch, FiX } from "react-icons/fi";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
 import Heading from "../../../Shared/Heading/Heading";
@@ -10,12 +10,13 @@ import LoadingSpinner from "../../../Shared/Loading";
 import Pagination from "../../../Shared/Pagination/Pagination";
 
 // Subcomponents
+import { AllHostRequestsStats } from "./components/AllHostRequestsStats";
 import { SellerRequestDetailsModal } from "./components/SellerRequestDetailsModal";
 import { SellerRequestsCards } from "./components/SellerRequestsCards";
 import { SellerRequestsTable } from "./components/SellerRequestsTable";
 
 
-interface SellerDetails {
+export interface SellerDetails {
   sellerName: string;
   sellerEmail: string;
   sellerPhoto: string;
@@ -138,7 +139,12 @@ const AllHostRequest: React.FC = () => {
         <Heading title={"All Seller Requests"} subtitle={"Manage and verify applicant seller requests and documents."} />
       </div>
 
-      <div className="w-full bg-white rounded-2xl border border-gray-150 mb-8">
+      {/* Host Applications Stats */}
+      <div className="mb-8">
+        <AllHostRequestsStats requests={sellerData} />
+      </div>
+
+      <div className="w-full bg-white rounded-2xl border border-gray-155 mb-8">
         {/* Filter Toolbar */}
         <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white">
           <div className="flex w-full sm:w-80 gap-2">
@@ -296,7 +302,7 @@ const AllHostRequest: React.FC = () => {
                     toast.error("Please enter a reason for declining the application.");
                     return;
                   }
-                  
+
                   // Set loading
                   setConfirmDialog(prev => prev ? { ...prev, loading: true } : null);
                   const loadToast = toast.loading("Processing request...");

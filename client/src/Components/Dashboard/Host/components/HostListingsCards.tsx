@@ -1,6 +1,6 @@
+import { Edit, Eye, Send, Trash2 } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Eye, Edit, Trash2 } from "lucide-react";
 import { ApprovalStatus } from "../../../../constants/enums";
 import { Listing } from "../MyAddedProduct";
 
@@ -8,12 +8,14 @@ interface HostListingsCardsProps {
   listings: Listing[];
   onSelectBooking: (listing: Listing) => void;
   onDelete: (id: string) => void;
+  onPublish?: (listing: Listing) => void;
 }
 
 export const HostListingsCards: React.FC<HostListingsCardsProps> = ({
   listings,
   onSelectBooking,
   onDelete,
+  onPublish,
 }) => {
   return (
     <div className="grid grid-cols-1 gap-4 md:hidden">
@@ -68,6 +70,8 @@ export const HostListingsCards: React.FC<HostListingsCardsProps> = ({
                     ? "bg-green-50 text-green-700 border-green-200"
                     : listing.adminIsApproved === ApprovalStatus.PENDING
                     ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                    : listing.adminIsApproved === ApprovalStatus.DRAFT
+                    ? "bg-gray-50 text-gray-700 border-gray-200"
                     : "bg-red-50 text-red-700 border-red-200"
                 }`}
               >
@@ -75,24 +79,36 @@ export const HostListingsCards: React.FC<HostListingsCardsProps> = ({
                   ? "Approved"
                   : listing.adminIsApproved === ApprovalStatus.PENDING
                   ? "Pending"
+                  : listing.adminIsApproved === ApprovalStatus.DRAFT
+                  ? "Draft"
                   : "Rejected"}
               </span>
             </div>
           </div>
 
           {/* Card Footer Actions */}
-          <div className="p-4 border-t border-gray-100 flex items-center gap-2 bg-white">
+          <div className="p-4 border-t border-gray-100 flex flex-wrap items-center gap-2 bg-white">
+            {listing.adminIsApproved === ApprovalStatus.DRAFT && onPublish && (
+              <button
+                type="button"
+                onClick={() => onPublish(listing)}
+                className="flex-1 min-w-[80px] py-2 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-500 text-blue-600 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Publish</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={() => onSelectBooking(listing)}
-              className="flex-1 py-2 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+              className="flex-1 min-w-[80px] py-2 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition"
             >
               <Eye className="w-3.5 h-3.5" />
               <span>View</span>
             </button>
             <Link
               to={`/dashboard/update-product/${listing._id}`}
-              className="flex-1 py-2 rounded-xl border border-orange-100 bg-orange-50 hover:bg-orange-500 text-orange-600 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition"
+              className="flex-1 min-w-[80px] py-2 rounded-xl border border-orange-100 bg-orange-50 hover:bg-orange-500 text-orange-600 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition"
             >
               <Edit className="w-3.5 h-3.5" />
               <span>Edit</span>
@@ -100,7 +116,7 @@ export const HostListingsCards: React.FC<HostListingsCardsProps> = ({
             <button
               type="button"
               onClick={() => onDelete(listing._id)}
-              className="flex-1 py-2 rounded-xl border border-red-100 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition"
+              className="flex-1 min-w-[80px] py-2 rounded-xl border border-red-100 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Delete</span>

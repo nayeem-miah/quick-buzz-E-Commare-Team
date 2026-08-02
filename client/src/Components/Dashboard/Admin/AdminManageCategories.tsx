@@ -6,6 +6,7 @@ import UseAxiosSecure from '../../../Hooks/UseAxiosSecure';
 import DeleteConfirmModal from '../../../Shared/DeleteConfirmModal';
 import LoadingSpinner from '../../../Shared/Loading';
 import { Category } from '../../../types/category.type';
+import { ManageCategoriesStats } from './components/ManageCategoriesStats';
 
 const AdminManageCategories: React.FC = () => {
   const axiosSecure = UseAxiosSecure();
@@ -137,6 +138,9 @@ const AdminManageCategories: React.FC = () => {
             <FiPlus size={16} /> Add New Category
           </button>
         </div>
+
+        {/* Categories Stats */}
+        <ManageCategoriesStats categories={categories} />
 
         {/* Filters and Search Bar */}
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center">

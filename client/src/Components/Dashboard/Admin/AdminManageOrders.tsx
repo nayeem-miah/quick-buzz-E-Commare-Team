@@ -9,6 +9,7 @@ import LoadingSpinner from "../../../Shared/Loading";
 import Pagination from "../../../Shared/Pagination/Pagination";
 import { OrderStatus } from "../../../constants/enums";
 import { Order } from "../../../types/order";
+import { ManageOrdersStats } from "./components/ManageOrdersStats";
 
 const STATUS_OPTIONS = [
   { value: "all", label: "All Statuses" },
@@ -98,9 +99,12 @@ const AdminManageOrders: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">Manage Orders</h1>
-          <p className="text-sm text-gray-500 mt-1">View, track, and update all customer orders in the system.</p>
+          <p className="text-sm text-gray-500 mt-1">View status, filter and process all product orders.</p>
         </div>
       </div>
+
+      {/* Orders Stats */}
+      <ManageOrdersStats orders={orders} />
 
       <div className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm">
         {/* Filter Toolbar */}

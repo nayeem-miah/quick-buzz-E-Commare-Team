@@ -1,7 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { FiTrash2 } from "react-icons/fi";
 import { ApprovalStatus } from "../../../../constants/enums";
 import { Listing } from "../../../../types/listing.type";
 
@@ -18,7 +17,7 @@ export const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
   onStatusChange,
   onDelete,
 }) => {
-  const navigate = useNavigate();
+
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
@@ -110,7 +109,7 @@ export const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                   {selectedBooking.description || "No description provided."}
                 </p>
               </div>
-              
+
               {selectedBooking.tags && (
                 <div>
                   <h5 className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2">Tags</h5>
@@ -136,19 +135,13 @@ export const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
         <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => { onClose(); navigate(`/dashboard/update-product/${selectedBooking._id}`); }}
-              className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-orange-600 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all shadow-sm"
-            >
-              <FiEdit size={16} /> Edit
-            </button>
-            <button
               onClick={() => { onClose(); onDelete(selectedBooking._id); }}
               className="px-5 py-2.5 bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all shadow-sm"
             >
               <FiTrash2 size={16} /> Delete
             </button>
           </div>
-          
+
           <div className="flex items-center gap-3">
             {selectedBooking.adminIsApproved !== ApprovalStatus.REJECTED && (
               <button

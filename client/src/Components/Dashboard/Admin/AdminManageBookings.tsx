@@ -14,6 +14,7 @@ import { ManageBookingsTable } from "./components/ManageBookingsTable";
 import { ProductDetailsModal } from "./components/ProductDetailsModal";
 import Pagination from "../../../Shared/Pagination/Pagination";
 import DeleteConfirmModal from "../../../Shared/DeleteConfirmModal";
+import { ManageBookingsStats } from "./components/ManageBookingsStats";
 
 interface Category {
   _id?: string;
@@ -51,6 +52,25 @@ const AdminManageBookings: React.FC = () => {
   useEffect(() => {
     setPage(1);
   }, [statusFilter, categoryFilter]);
+
+  /* Fetch overall product stats */
+  const { data: statsData, refetch: refetchStats } = useQuery({
+    queryKey: ["adminProductStats"],
+    queryFn: async () => {
+      const [allRes, pendingRes, approvedRes, rejectedRes] = await Promise.all([
+        axiosSecure.get("/products", { params: { size: 1 } }),
+        axiosSecure.get("/products", { params: { status: "pending", size: 1 } }),
+        axiosSecure.get("/products", { params: { status: "approve", size: 1 } }),
+        axiosSecure.get("/products", { params: { status: "rejected", size: 1 } }),
+      ]);
+      return {
+        total: allRes.data?.meta?.total || 0,
+        pending: pendingRes.data?.meta?.total || 0,
+        approved: approvedRes.data?.meta?.total || 0,
+        rejected: rejectedRes.data?.meta?.total || 0,
+      };
+    },
+  });
 
   /* Fetch products with pagination, search, and filters */
   const { data, isLoading, refetch } = useQuery({
@@ -99,6 +119,7 @@ const AdminManageBookings: React.FC = () => {
       const res = await axiosSecure.delete(`/products/${deleteTarget.id}`);
       if (res.data.data.deletedCount > 0) {
         await refetch();
+        refetchStats();
         toast.success("Product has been deleted.");
         setDeleteTarget(null);
       } else {
@@ -115,6 +136,7 @@ const AdminManageBookings: React.FC = () => {
     axiosSecure.patch(`/products/admin-product/${product._id}`, { status }).then((res) => {
       if (res.data.data.modifiedCount > 0) {
         refetch();
+        refetchStats();
         toast.success(`Product marked as ${status}!`);
 
         // update modal state if open
@@ -137,6 +159,13 @@ const AdminManageBookings: React.FC = () => {
     <div className="w-full px-4 md:px-8 py-8 space-y-8 animate-fadeIn">
       <div className="space-y-6">
         <ManageBookingsHeader />
+
+        <ManageBookingsStats
+          total={statsData?.total || 0}
+          approved={statsData?.approved || 0}
+          pending={statsData?.pending || 0}
+          rejected={statsData?.rejected || 0}
+        />
 
         {/* Filters and Search Bar */}
         <ManageBookingsFilters
