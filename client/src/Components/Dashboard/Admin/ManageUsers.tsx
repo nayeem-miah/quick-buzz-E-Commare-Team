@@ -11,6 +11,7 @@ import Pagination from '../../../Shared/Pagination/Pagination';
 import { User } from '../../../types/user';
 import { ManageUsersCards } from './components/ManageUsersCards';
 import { ManageUsersTable } from './components/ManageUsersTable';
+import { ManageUsersStats } from './components/ManageUsersStats';
 
 const ROLES = ['All', 'User', 'Host', 'Admin'];
 const ROLE_OPTIONS = [
@@ -160,6 +161,9 @@ const ManageUsers: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Users Stats */}
+      <ManageUsersStats users={users} />
 
       <div className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm">
         <div className="p-5 border-b border-gray-100 flex flex-col md:flex-row gap-4 justify-between items-center">

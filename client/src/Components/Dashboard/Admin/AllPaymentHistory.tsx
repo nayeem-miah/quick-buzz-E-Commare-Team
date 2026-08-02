@@ -2,17 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
 import { FiInbox, FiSearch } from "react-icons/fi";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
-import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
 import CustomDatePicker from "../../../Shared/DatePicker/CustomDatePicker";
+import CustomDropdown from "../../../Shared/Dropdown/CustomDropdown";
 import LoadingSpinner from "../../../Shared/Loading";
 import Pagination from "../../../Shared/Pagination/Pagination";
 
-import { PaymentHistory } from "../../../types/payment";
 import { PaymentStatus } from "../../../constants/enums";
+import { PaymentHistory } from "../../../types/payment";
 
 // Subcomponents
-import { AllPaymentHistoryTable } from "./components/AllPaymentHistoryTable";
 import { AllPaymentHistoryCards } from "./components/AllPaymentHistoryCards";
+import { AllPaymentHistoryStats } from "./components/AllPaymentHistoryStats";
+import { AllPaymentHistoryTable } from "./components/AllPaymentHistoryTable";
 import { PaymentDetailsModal } from "./components/PaymentDetailsModal";
 
 const STATUS_OPTIONS = [
@@ -121,6 +122,9 @@ const AllPaymentHistory: React.FC = () => {
         </div>
       </div>
 
+      {/* Payment Stats */}
+      <AllPaymentHistoryStats payments={PaymentHistoryData} />
+
       <div className="w-full bg-white rounded-2xl border border-gray-100">
         {/* Filter Toolbar */}
         <div className="p-5 border-b border-gray-100 flex flex-col xl:flex-row gap-4 justify-between items-center bg-white">
@@ -147,7 +151,7 @@ const AllPaymentHistory: React.FC = () => {
               className="w-full sm:w-40"
               buttonClassName="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all shadow-sm"
             />
-            
+
             <CustomDropdown
               value={methodFilter}
               onChange={(val) => setMethodFilter(val)}
