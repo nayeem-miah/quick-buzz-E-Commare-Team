@@ -1,6 +1,5 @@
 import React from "react";
-import { FiEdit, FiEye, FiTrash2 } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { FiEye, FiTrash2 } from "react-icons/fi";
 import { ApprovalStatus } from "../../../../constants/enums";
 import { Listing } from "../../../../types/listing.type";
 
@@ -17,8 +16,6 @@ export const ManageBookingsCards: React.FC<ManageBookingsCardsProps> = ({
   onDetailsClick,
   onDelete,
 }) => {
-  const navigate = useNavigate();
-
   return (
     <div className="md:hidden flex flex-col gap-4 p-4">
       {products.map((listing: Listing) => (
@@ -29,7 +26,7 @@ export const ManageBookingsCards: React.FC<ManageBookingsCardsProps> = ({
             </div>
             <div className="flex-1">
               <h4 className="font-semibold text-gray-900 line-clamp-2">{listing?.productTitle}</h4>
-              <p className="text-sm text-gray-500">{listing?.brandName}</p>
+              <p className="text-sm text-gray-505">{listing?.brandName}</p>
               <p className="text-lg font-bold text-gray-900 mt-1">৳{listing?.price}</p>
             </div>
           </div>
@@ -52,13 +49,7 @@ export const ManageBookingsCards: React.FC<ManageBookingsCardsProps> = ({
               <button onClick={() => onDetailsClick(listing)} className="p-2 bg-gray-50 text-gray-500 rounded-lg">
                 <FiEye size={16} />
               </button>
-              <button
-                onClick={() => navigate(`/dashboard/update-product/${listing._id}`)}
-                className="p-2 bg-gray-50 text-gray-500 rounded-lg"
-              >
-                <FiEdit size={16} />
-              </button>
-              <button onClick={() => onDelete(listing?._id)} className="p-2 bg-gray-50 text-red-500 rounded-lg">
+              <button onClick={() => onDelete(listing?._id)} className="p-2 bg-gray-50 text-red-505 rounded-lg">
                 <FiTrash2 size={16} />
               </button>
             </div>

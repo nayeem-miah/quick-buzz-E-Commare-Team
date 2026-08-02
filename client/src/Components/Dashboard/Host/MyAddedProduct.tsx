@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
+import { Package } from "lucide-react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
-import LoadingSpinner from "../../../Shared/Loading";
-import { ApprovalStatus } from "../../../constants/enums";
-import { HostListingsHeader } from "./components/HostListingsHeader";
-import { HostListingsStats } from "./components/HostListingsStats";
-import { HostListingsFilters } from "./components/HostListingsFilters";
-import { HostListingsTable } from "./components/HostListingsTable";
-import { HostListingsCards } from "./components/HostListingsCards";
-import { HostListingsModal } from "./components/HostListingsModal";
-import Pagination from "../../../Shared/Pagination/Pagination";
-import { Package } from "lucide-react";
 import DeleteConfirmModal from "../../../Shared/DeleteConfirmModal";
+import LoadingSpinner from "../../../Shared/Loading";
+import Pagination from "../../../Shared/Pagination/Pagination";
+import { ApprovalStatus } from "../../../constants/enums";
+import { HostListingsCards } from "./components/HostListingsCards";
+import { HostListingsFilters } from "./components/HostListingsFilters";
+import { HostListingsHeader } from "./components/HostListingsHeader";
+import { HostListingsModal } from "./components/HostListingsModal";
+import { HostListingsStats } from "./components/HostListingsStats";
+import { HostListingsTable } from "./components/HostListingsTable";
 
 export interface Listing {
   _id: string;
@@ -80,8 +81,8 @@ const MyAddedProduct: React.FC = () => {
 
     setIsDeleting(true);
     try {
-      const res = await axiosPublic.delete(`/pro/${deleteTarget._id}`);
-      if (res.data.deletedCount > 0) {
+      const res = await axiosPublic.delete(`/products/${deleteTarget._id}`);
+      if (res.data.data?.deletedCount > 0) {
         await refetch();
         toast.success("Your product has been deleted.");
         setDeleteTarget(null);
@@ -92,6 +93,38 @@ const MyAddedProduct: React.FC = () => {
       toast.error("Failed to delete product.");
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handlePublish = async (listing: Listing) => {
+    try {
+      const productData = {
+        productTitle: listing.productTitle,
+        brandName: listing.brandName,
+        price: listing.price,
+        discount: (listing as any).discount || 0,
+        quantity: listing.quantity || 0,
+        tags: listing.tags,
+        category: listing.category,
+        description: listing.description,
+        productImage: listing.productImage,
+        productImages: (listing as any).productImages || [listing.productImage],
+        hostEmail: listing.hostEmail,
+        hostName: listing.hostName,
+        hostPhoto: listing.hostPhoto,
+        adminIsApproved: ApprovalStatus.PENDING,
+      };
+
+      const res = await axiosPublic.patch(`/products/${listing._id}`, productData);
+      if (res.data.success || res.data.statusCode === 201 || res.data.statusCode === 200) {
+        toast.success(`Product "${listing.productTitle}" is now submitted for admin approval!`);
+        refetch();
+      } else {
+        toast.error("Failed to submit product.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred while submitting the product.");
     }
   };
 
@@ -181,6 +214,7 @@ const MyAddedProduct: React.FC = () => {
             listings={paginatedListings}
             onSelectBooking={setSelectedBooking}
             onDelete={handleDelete}
+            onPublish={handlePublish}
           />
 
           {/* Mobile Card View */}
@@ -188,6 +222,7 @@ const MyAddedProduct: React.FC = () => {
             listings={paginatedListings}
             onSelectBooking={setSelectedBooking}
             onDelete={handleDelete}
+            onPublish={handlePublish}
           />
 
           {/* Pagination Controls */}

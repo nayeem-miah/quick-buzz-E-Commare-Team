@@ -1,6 +1,6 @@
+import { Edit, Eye, Send, Trash2 } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Eye, Edit, Trash2 } from "lucide-react";
 import { ApprovalStatus } from "../../../../constants/enums";
 import { Listing } from "../MyAddedProduct";
 
@@ -8,12 +8,14 @@ interface HostListingsTableProps {
   listings: Listing[];
   onSelectBooking: (listing: Listing) => void;
   onDelete: (id: string) => void;
+  onPublish?: (listing: Listing) => void;
 }
 
 export const HostListingsTable: React.FC<HostListingsTableProps> = ({
   listings,
   onSelectBooking,
   onDelete,
+  onPublish,
 }) => {
   return (
     <div className="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -68,6 +70,8 @@ export const HostListingsTable: React.FC<HostListingsTableProps> = ({
                       ? "bg-green-50 text-green-700 border-green-200"
                       : listing.adminIsApproved === ApprovalStatus.PENDING
                       ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                      : listing.adminIsApproved === ApprovalStatus.DRAFT
+                      ? "bg-gray-50 text-gray-700 border-gray-200"
                       : "bg-red-50 text-red-700 border-red-200"
                   }`}
                 >
@@ -75,11 +79,23 @@ export const HostListingsTable: React.FC<HostListingsTableProps> = ({
                     ? "Approved"
                     : listing.adminIsApproved === ApprovalStatus.PENDING
                     ? "Pending"
+                    : listing.adminIsApproved === ApprovalStatus.DRAFT
+                    ? "Draft"
                     : "Rejected"}
                 </span>
               </td>
               <td className="py-5 px-6">
                 <div className="flex items-center justify-center gap-2">
+                  {listing.adminIsApproved === ApprovalStatus.DRAFT && onPublish && (
+                    <button
+                      type="button"
+                      onClick={() => onPublish(listing)}
+                      className="p-2 rounded-xl border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white transition duration-200"
+                      title="Publish Product"
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => onSelectBooking(listing)}

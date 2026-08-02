@@ -1,6 +1,5 @@
 import React from "react";
-import { FiEdit, FiEye, FiTrash2 } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { FiEye, FiTrash2 } from "react-icons/fi";
 import { ApprovalStatus } from "../../../../constants/enums";
 import { Listing } from "../../../../types/listing.type";
 
@@ -17,7 +16,6 @@ export const ManageBookingsTable: React.FC<ManageBookingsTableProps> = ({
   onDetailsClick,
   onDelete,
 }) => {
-  const navigate = useNavigate();
 
   return (
     <div className="hidden md:block overflow-x-auto w-full">
@@ -79,13 +77,6 @@ export const ManageBookingsTable: React.FC<ManageBookingsTableProps> = ({
                     title="View Details"
                   >
                     <FiEye size={18} />
-                  </button>
-                  <button
-                    onClick={() => navigate(`/dashboard/update-product/${listing._id}`)}
-                    className="p-2 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors"
-                    title="Edit"
-                  >
-                    <FiEdit size={18} />
                   </button>
                   <button
                     onClick={() => onDelete(listing?._id)}
