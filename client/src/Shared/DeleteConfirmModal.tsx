@@ -1,6 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { AlertTriangle, Trash2, X } from "lucide-react";
+import { AlertTriangle, X } from "lucide-react";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -8,6 +8,8 @@ interface DeleteConfirmModalProps {
   message?: string;
   itemName?: string;
   isDeleting?: boolean;
+  confirmText?: string;
+  loadingText?: string;
   onClose: () => void;
   onConfirm: () => void;
 }
@@ -18,6 +20,8 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
   message = "This action cannot be undone.",
   itemName,
   isDeleting = false,
+  confirmText = "Delete",
+  loadingText,
   onClose,
   onConfirm,
 }) => {
@@ -79,8 +83,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
             disabled={isDeleting}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-orange-500/25 transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-orange-300"
           >
-            <Trash2 className="h-4 w-4" />
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isDeleting ? loadingText || `${confirmText}...` : confirmText}
           </button>
         </div>
       </div>

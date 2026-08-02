@@ -49,17 +49,17 @@ export const ManageUsersCards: React.FC<ManageUsersCardsProps> = ({
 
             <div className="flex items-center justify-between mt-1">
               {user.status === "suspended" ? (
-                <div className="flex items-center gap-1.5 text-xs font-medium text-rose-600 bg-rose-50/50 px-2.5 py-1 rounded-full border border-rose-100/50">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                <div className="flex items-center gap-1.5 text-xs font-medium text-red-600 bg-red-50 px-2.5 py-1 rounded-full border border-red-100">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                   Suspended
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-55/50 px-2.5 py-1 rounded-full border border-emerald-100/50">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   Active
                 </div>
               )}
-              <div className="text-xs text-gray-550 flex items-center gap-1">
+              <div className="text-xs text-gray-500 flex items-center gap-1">
                 <FiClock className="text-gray-400" />{" "}
                 {user.timestamp ? new Date(user.timestamp).toLocaleDateString() : "N/A"}
               </div>
@@ -83,7 +83,7 @@ export const ManageUsersCards: React.FC<ManageUsersCardsProps> = ({
                 {user.status === "suspended" ? (
                   <button
                     onClick={() => onToggleSuspend(user)}
-                    className="p-2 text-gray-500 hover:text-emerald-600 bg-gray-50 hover:bg-emerald-50 rounded-lg transition-colors"
+                    className="p-2 text-gray-400 hover:text-emerald-700 bg-gray-50 hover:bg-emerald-50 rounded-lg transition-colors"
                     title="Activate User"
                   >
                     <FiUserCheck />
@@ -91,7 +91,7 @@ export const ManageUsersCards: React.FC<ManageUsersCardsProps> = ({
                 ) : (
                   <button
                     onClick={() => onToggleSuspend(user)}
-                    className="p-2 text-gray-500 hover:text-rose-600 bg-gray-50 hover:bg-rose-50 rounded-lg transition-colors"
+                    className="p-2 text-gray-400 hover:text-red-600 bg-gray-50 hover:bg-red-50 rounded-lg transition-colors"
                     title="Suspend User"
                   >
                     <FiUserX />

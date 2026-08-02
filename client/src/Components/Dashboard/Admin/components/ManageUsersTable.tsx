@@ -31,7 +31,7 @@ export const ManageUsersTable: React.FC<ManageUsersTableProps> = ({
           <col className="w-[12%]" />
         </colgroup>
         <thead>
-          <tr className="bg-gray-50/40 border-b border-gray-100 text-gray-505 text-xs font-semibold uppercase tracking-wider">
+          <tr className="bg-gray-50/40 border-b border-gray-100 text-gray-500 text-xs font-semibold uppercase tracking-wider">
             <th className="py-3 px-6 font-semibold">User</th>
             <th className="py-3 px-6 font-semibold">Status</th>
             <th className="py-3 px-6 font-semibold">Role</th>
@@ -59,19 +59,19 @@ export const ManageUsersTable: React.FC<ManageUsersTableProps> = ({
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="truncate flex-1">
-                      <p className="text-sm font-bold text-gray-955 truncate" title={user.name}>{user.name}</p>
-                      <p className="text-xs text-gray-550 truncate" title={user.email}>{user.email}</p>
+                      <p className="text-sm font-bold text-gray-900 truncate" title={user.name}>{user.name}</p>
+                      <p className="text-xs text-gray-500 truncate" title={user.email}>{user.email}</p>
                     </div>
                   </div>
                 </td>
                 <td className="py-3 px-6">
                   {user.status === "suspended" ? (
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-rose-600 bg-rose-50/50 px-2.5 py-1 rounded-full border border-rose-100/50 w-max">
-                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-red-600 bg-red-50 px-2.5 py-1 rounded-full border border-red-100 w-max">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                       Suspended
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50/50 px-2.5 py-1 rounded-full border border-emerald-100/50 w-max">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 w-max">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                       Active
                     </div>
@@ -99,7 +99,7 @@ export const ManageUsersTable: React.FC<ManageUsersTableProps> = ({
                     {user.status === "suspended" ? (
                       <button
                         onClick={() => onToggleSuspend(user)}
-                        className="p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"
                         title="Activate User"
                       >
                         <FiUserCheck className="text-base" />
@@ -107,7 +107,7 @@ export const ManageUsersTable: React.FC<ManageUsersTableProps> = ({
                     ) : (
                       <button
                         onClick={() => onToggleSuspend(user)}
-                        className="p-1.5 text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Suspend User"
                       >
                         <FiUserX className="text-base" />
