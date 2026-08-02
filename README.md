@@ -38,6 +38,13 @@ The platform is designed around three primary user archetypes, each with customi
 * **Transaction Clearance:** Review of delivery verification, manual clearance of escrow funds to vendor accounts, and processing cancellations/refunds.
 * **Audit Trail & System Logs:** Complete database-backed operational logging tracking state changes, roles, and administrative interventions.
 
+### 4. QuickBuzz AI Shopping Assistant (Chatbot)
+* **Interactive Floating UI:** Styled, floating interactive chat window with smooth micro-animations and custom styling.
+* **Google Gemini AI Integration:** Leverages the Google Gemini REST API (`gemini-flash-latest` model) for low-latency contextual product suggestions.
+* **Database-Driven Recommendations:** Queries active, approved catalog listings from MongoDB to generate tailored suggestions.
+* **Inline Product Linking:** Custom markdown parser automatically converts product recommendation IDs to interactive React Router links inside the chat bubble.
+* **State Persistence & History Control:** Automatically saves conversation state in `localStorage` across page navigation and includes a custom modal to clear chat history.
+
 ---
 
 ## Technology Stack
@@ -105,6 +112,9 @@ Quick-Buzz/
    # Mail Notification Engine
    EMAIL_USER=your_nodemailer_email_username
    EMAIL_PASS=your_nodemailer_email_app_password
+
+   # Google Gemini AI Integration
+   GEMINI_API_KEY=your_gemini_api_key_from_google_ai_studio
    ```
 3. Boot up the local development server:
    ```bash
