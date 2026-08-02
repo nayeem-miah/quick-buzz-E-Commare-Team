@@ -33,8 +33,9 @@ export default function Carousel(): JSX.Element {
   const images = [bgimg5, bgimg6, bgimg1, bgimg2, bgimg4, bgimg3];
 
   return (
-    <div className="max-w-screen-2xl relative h-[22rem] sm:h-[26rem] md:h-[30rem] lg:h-[34rem] xl:h-[38rem] overflow-hidden">
+    <div className="max-w-screen-2xl w-full grid">
       {/* Background Images Slider */}
+      <div className="col-start-1 row-start-1 w-full h-full z-0 overflow-hidden">
       <Swiper
         spaceBetween={0}
         centeredSlides={true}
@@ -48,10 +49,10 @@ export default function Carousel(): JSX.Element {
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper h-full"
+        className="mySwiper w-full h-full"
       >
         {images.map((img, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide key={index} className="w-full h-full">
             <div
               className="w-full h-full bg-center bg-cover"
               style={{
@@ -61,11 +62,12 @@ export default function Carousel(): JSX.Element {
           </SwiperSlide>
         ))}
       </Swiper>
+      </div>
 
       {/* Static Overlay Content */}
-      <div className="absolute inset-0 flex items-center justify-center bg-black/45 z-10 pointer-events-none">
+      <div className="col-start-1 row-start-1 w-full flex items-center justify-center bg-black/45 z-10 pointer-events-none min-h-[24rem] sm:min-h-[26rem] md:min-h-[30rem] lg:min-h-[34rem] xl:min-h-[38rem] pt-20 pb-10">
         <div className="text-center px-4 sm:px-6 md:px-8 lg:px-10 w-full max-w-4xl pointer-events-auto">
-          <h1 className="text-3xl font-extrabold leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+          <h1 className="text-[clamp(1.75rem,5vw,3.75rem)] font-extrabold leading-tight text-white">
             <Typewriter
               options={{
                 strings: ['Welcome to Quick Buzz', 'Your One-Stop Online Store'],
@@ -106,30 +108,30 @@ export default function Carousel(): JSX.Element {
               </div>
               <input
                 type="text"
-                placeholder="Search mobile, airpods, laptop..."
+                placeholder="Search products..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-transparent border-0 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-0 text-sm sm:text-base pr-3"
+                className="flex-1 min-w-0 bg-transparent border-0 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-0 text-sm sm:text-base pr-3"
               />
               <button
                 type="submit"
-                className="bg-orange-500 text-white font-semibold text-sm sm:text-base px-6 py-2.5 sm:py-3 rounded-full hover:bg-orange-600 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
+                className="flex-shrink-0 bg-orange-500 text-white font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-full hover:bg-orange-600 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
               >
                 Search
               </button>
             </div>
           </form>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-6">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
             <a
               href="/product"
-              className="rounded-xl bg-orange-400 px-5 py-3 font-semibold text-gray-950 shadow-sm shadow-orange-200 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-500"
+              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-600"
             >
               View Products
             </a>
             <a
               href="/contact"
-              className="rounded-xl bg-orange-400 px-5 py-3 font-semibold text-gray-950 shadow-sm shadow-orange-200 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-500"
+              className="rounded-xl border-2 border-orange-400 bg-transparent px-6 py-3 font-semibold text-orange-400 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-500 hover:text-white"
             >
               Contact Now
             </a>

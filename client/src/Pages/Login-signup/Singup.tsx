@@ -30,8 +30,9 @@ const Signup: React.FC = () => {
       await axiosPublic.post('/users', userInfo);
       toast.success('Google Sign-In Successful');
       window.setTimeout(() => navigate('/'), 800);
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Google Sign-In Failed';
+      toast.error(message);
     }
   };
 
@@ -61,8 +62,9 @@ const Signup: React.FC = () => {
       setLoading(false);
       toast.success('Account created successfully.');
       window.setTimeout(() => navigate(location?.state ? location.state : '/'), 900);
-    } catch (err: any) {
-      toast.error(err.message || 'Signup failed.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Signup failed.';
+      toast.error(message);
     } finally {
       setLoading(false);
     }

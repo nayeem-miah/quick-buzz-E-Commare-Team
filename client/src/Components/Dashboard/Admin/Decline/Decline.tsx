@@ -3,7 +3,10 @@ import useAxiosPublic from "../../../../Hooks/UsePublic";
 import toast from "react-hot-toast";
 
 interface SellerData {
-  sellData: any;
+  sellData: {
+    _id: string;
+    [key: string]: unknown;
+  };
 }
 const Decline: React.FC<SellerData> = ({ sellData }) => {
   const axiosPublic = useAxiosPublic();

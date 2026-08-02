@@ -86,11 +86,11 @@ const Card: React.FC<CardProps> = ({
 
         <div className="mt-2 flex min-h-7 flex-wrap items-baseline gap-2">
           <span className="text-base font-bold text-gray-950 sm:text-lg">
-            ${price.toFixed(2)}
+            ৳{price.toLocaleString()}
           </span>
           {originalPrice > price && (
             <span className="text-xs font-medium text-gray-400 line-through sm:text-sm">
-              ${originalPrice.toFixed(2)}
+              ৳{originalPrice.toLocaleString()}
             </span>
           )}
         </div>

@@ -17,6 +17,7 @@ import logo from "../../../src/assets/Image/logo2.png";
 import useAuth from "../../Hooks/UseAuth";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import LoadingSpinner from "../../Shared/Loading";
+import NotificationDropdown from "../../Shared/Navbar/NotificationDropdown";
 
 const Sidebar: React.FC = () => {
   const { logOut, user } = useAuth();
@@ -41,14 +42,14 @@ const Sidebar: React.FC = () => {
   };
 
   const activeClass = "bg-orange-50 text-orange-600 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-bold";
-  const inactiveClass = "text-gray-600 hover:bg-gray-50 hover:text-orange-500 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-medium";
+  const inactiveClass = "text-gray-600 hover:bg-gray-50 hover:text-gray-900 flex items-center px-4 py-2.5 my-1.5 rounded-xl transition-all duration-300 font-medium";
 
   return (
     <>
       {/* Mobile Sidebar Backdrop Overlay */}
       {isActive && (
         <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-20 md:hidden transition-all duration-300"
+          className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40 md:hidden transition-all duration-300"
           onClick={handleToggle}
         />
       )}
@@ -66,17 +67,20 @@ const Sidebar: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={handleToggle}
-          className="mobile-menu-button p-2 rounded-lg text-gray-600 focus:outline-none focus:bg-gray-50"
-        >
-          <AiOutlineBars className="h-6 w-6" />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationDropdown />
+          <button
+            onClick={handleToggle}
+            className="mobile-menu-button p-2 rounded-lg text-gray-600 focus:outline-none focus:bg-gray-50"
+          >
+            <AiOutlineBars className="h-6 w-6" />
+          </button>
+        </div>
       </div>
 
       {/* Sidebar */}
       <div
-        className={`z-30 fixed flex flex-col justify-between overflow-y-auto bg-white w-64 space-y-6 px-3 py-6 inset-y-0 left-0 transform ${
+        className={`z-50 fixed flex flex-col justify-between overflow-y-auto bg-white w-64 space-y-6 px-3 py-6 inset-y-0 left-0 transform ${
           isActive ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition duration-300 ease-in-out border-r border-gray-100 h-screen`}
       >
@@ -94,7 +98,7 @@ const Sidebar: React.FC = () => {
               {singleUser?.role === "admin" && (
                 <>
                   <NavLink to="/dashboard" end className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
-                    <BsGraphUp className="w-5 h-5 text-gray-400 group-hover:text-orange-500" />
+                    <BsGraphUp className="w-5 h-5 text-gray-400 group-hover:text-gray-900" />
                     <span className="mx-4">Statistics</span>
                   </NavLink>
 
@@ -138,14 +142,14 @@ const Sidebar: React.FC = () => {
                     <span className="mx-4">Add Product</span>
                   </NavLink>
 
-                  <NavLink to="host-manage-booking" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
-                    <TbBrandBooking className="w-5 h-5 text-gray-400" />
-                    <span className="mx-4">Manage Booking</span>
-                  </NavLink>
-
                   <NavLink to="my-host-listings" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
                     <FaListAlt className="w-5 h-5 text-gray-400" />
                     <span className="mx-4">My Listings</span>
+                  </NavLink>
+
+                  <NavLink to="host-orders" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FiPackage className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">My Orders</span>
                   </NavLink>
                 </>
               )}

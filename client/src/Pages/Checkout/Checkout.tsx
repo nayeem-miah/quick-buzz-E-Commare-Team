@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -10,34 +10,33 @@ import LoadingSpinner from "../../Shared/Loading";
 import { ShippingAddressForm } from "./components/ShippingAddressForm";
 import { PaymentMethodSelector } from "./components/PaymentMethodSelector";
 import { OrderSummarySidebar } from "./components/OrderSummarySidebar";
-import { ShippingAddress } from "../../types/order";
+import { ShippingAddress, CheckoutItem } from "../../types/order";
+import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 
 const Checkout: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { singleUser } = useFetchSingleUser(user?.email as string);
 
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>(() => {
-    const saved = localStorage.getItem("quickbuzz_shipping_address");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Error parsing shipping address:", e);
-      }
-    }
-    return {
-      name: user?.displayName || "",
-      phone: "",
-      address: "",
-      city: ""
-    };
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
+    name: user?.displayName || "",
+    phone: "",
+    address: "",
+    city: ""
   });
+
+  // Sync shipping address from DB once loaded
+  useEffect(() => {
+    if (singleUser?.shippingAddress) {
+      setShippingAddress(singleUser.shippingAddress);
+    }
+  }, [singleUser]);
 
   const [paymentMethod, setPaymentMethod] = useState<string>("Cash on Delivery");
 
-  const { data: cartItems = [], isLoading } = useQuery({
+  const { data: cartItems = [], isLoading } = useQuery<CheckoutItem[]>({
     queryKey: ["cart", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/cart/${user?.email}`);
@@ -47,12 +46,12 @@ const Checkout: React.FC = () => {
   });
 
   const subtotal = cartItems.reduce(
-    (total: number, item: any) => total + (item.price || 0) * (item.quantity || 1),
+    (total: number, item: CheckoutItem) => total + (item.price || 0) * (item.quantity || 1),
     0
   );
 
   const discount = cartItems.reduce(
-    (total: number, item: any) =>
+    (total: number, item: CheckoutItem) =>
       total + (item.price || 0) * ((item.discount || 0) / 100) * (item.quantity || 1),
     0
   );
@@ -80,14 +79,15 @@ const Checkout: React.FC = () => {
     setIsSubmitting(true);
     const orderPayload = {
       email: user?.email,
-      items: cartItems.map((item: any) => ({
-        product_id: item.product_id,
+      items: cartItems.map((item: CheckoutItem) => ({
+        product_id: item.product_id || item._id,
         productTitle: item.productTitle,
         productImage: item.productImage,
         brandName: item.brandName,
         quantity: item.quantity,
         price: item.price,
-        discount: item.discount
+        discount: item.discount,
+        hostEmail: item.hostEmail
       })),
       total_amount: totalPrice,
       shipping_address: shippingAddress,
@@ -106,9 +106,9 @@ const Checkout: React.FC = () => {
           navigate("/success");
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Failed to place order");
+      toast.error("Failed to place order");
     } finally {
       setIsSubmitting(false);
     }

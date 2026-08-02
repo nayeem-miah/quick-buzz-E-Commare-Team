@@ -1,13 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { MdDeleteForever, MdLocalGroceryStore } from "react-icons/md";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
+
+interface CartItem {
+  _id: string;
+  price?: number;
+  discount?: number;
+  quantity?: number;
+  productTitle?: string;
+  productImage?: string;
+  brandName?: string;
+}
 
 const MyAddedCart: React.FC = () => {
   const axiosPublic = useAxiosPublic();
@@ -16,14 +26,16 @@ const MyAddedCart: React.FC = () => {
 
   // Local quantity state
   const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+  const [deletingItemTitle, setDeletingItemTitle] = useState<string>("");
 
   // Query data
   const {
     data: allsave = [],
     isLoading,
     refetch,
-  } = useQuery({
-    queryKey: ["allsave"],
+  } = useQuery<CartItem[]>({
+    queryKey: ["allsave", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/cart/${user?.email}`);
       return res.data.data;
@@ -31,12 +43,12 @@ const MyAddedCart: React.FC = () => {
   });
 
   const getQuantity = (id: string) => {
-    const item = allsave.find((i: any) => i._id === id);
+    const item = allsave.find((i: CartItem) => i._id === id);
     return quantities[id] !== undefined ? quantities[id] : (item?.quantity || 1);
   };
 
   const updateQuantity = async (id: string, amount: number) => {
-    const item = allsave.find((i: any) => i._id === id);
+    const item = allsave.find((i: CartItem) => i._id === id);
     if (!item) return;
 
     const currentQty = getQuantity(id);
@@ -58,12 +70,12 @@ const MyAddedCart: React.FC = () => {
 
   // Subtotal & Discount calculations
   const subtotal = allsave.reduce(
-    (total: number, save: any) => total + (save.price || 0) * getQuantity(save._id),
+    (total: number, save: CartItem) => total + (save.price || 0) * getQuantity(save._id),
     0
   );
 
   const discount = allsave.reduce(
-    (total: number, save: any) =>
+    (total: number, save: CartItem) =>
       total +
       (save.price || 0) *
         ((save.discount || 0) / 100) *
@@ -78,39 +90,25 @@ const MyAddedCart: React.FC = () => {
   }
 
   /* My added product is deleted */
-  const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#f97316",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic
-          .delete(`/cart/${id}`)
-          .then(() => {
-            refetch();
-            queryClient.invalidateQueries({ queryKey: ["allsave"] });
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your cart item has been deleted.",
-              icon: "success",
-              confirmButtonColor: "#f97316",
-            });
-          })
-          .catch((error) => {
-            console.error("Delete error:", error.response?.data || error.message);
-            Swal.fire({
-              title: "Error",
-              text: "Failed to delete the item. Please check your connection or try again.",
-              icon: "error",
-            });
-          });
-      }
-    });
+  const handleDelete = (id: string, title: string) => {
+    setDeletingItemTitle(title);
+    setDeletingItemId(id);
+  };
+
+  const confirmDelete = () => {
+    if (!deletingItemId) return;
+    axiosPublic
+      .delete(`/cart/${deletingItemId}`)
+      .then(() => {
+        refetch();
+        queryClient.invalidateQueries({ queryKey: ["allsave"] });
+        toast.success("Item removed from cart");
+        setDeletingItemId(null);
+      })
+      .catch((error) => {
+        console.error("Delete error:", error.response?.data || error.message);
+        toast.error("Failed to remove item. Please try again.");
+      });
   };
 
   // Render Empty State
@@ -156,7 +154,7 @@ const MyAddedCart: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             {/* Cart Items List */}
             <div className="lg:col-span-2 space-y-4">
-              {allsave.map((save: any) => {
+              {allsave.map((save: CartItem) => {
                 const qty = getQuantity(save._id);
                 return (
                   <div
@@ -178,12 +176,12 @@ const MyAddedCart: React.FC = () => {
                         </p>
                         <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
                           <span className="text-sm font-bold text-orange-500">
-                            ${(save?.price * (1 - (save?.discount || 0) / 100)).toFixed(2)}
+                            ৳{((save?.price || 0) * (1 - (save?.discount || 0) / 100)).toLocaleString()}
                           </span>
-                          {save?.discount > 0 && (
+                          {(save?.discount || 0) > 0 && (
                             <>
                               <span className="text-xs text-gray-400 line-through">
-                                ${save?.price}
+                                ৳{(save?.price || 0).toLocaleString()}
                               </span>
                               <span className="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
                                 {save?.discount}% Off
@@ -218,7 +216,7 @@ const MyAddedCart: React.FC = () => {
                       {/* Action buttons */}
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handleDelete(save?._id)}
+                          onClick={() => handleDelete(save?._id, save?.productTitle || "")}
                           className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
                           title="Remove Item"
                         >
@@ -240,11 +238,11 @@ const MyAddedCart: React.FC = () => {
               <div className="space-y-3.5 text-sm">
                 <div className="flex justify-between text-gray-500">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-gray-800">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-gray-800">৳{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>Discount</span>
-                  <span className="font-semibold text-red-500">-${discount.toFixed(2)}</span>
+                  <span className="font-semibold text-red-500">-৳{discount.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>Shipping</span>
@@ -254,7 +252,7 @@ const MyAddedCart: React.FC = () => {
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-900">Total Price</span>
                   <span className="text-xl font-black text-orange-500">
-                    ${totalPrice.toFixed(2)}
+                    ৳{totalPrice.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -270,6 +268,43 @@ const MyAddedCart: React.FC = () => {
           </div>
         </div>
       )}
+      {deletingItemId &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={() => setDeletingItemId(null)}
+          >
+            <div
+              className="relative bg-white rounded-3xl border border-gray-100 shadow-2xl w-full max-w-sm flex flex-col p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 mx-auto mb-4">
+                <MdDeleteForever size={28} />
+              </div>
+              <h3 className="text-lg font-extrabold text-gray-900 text-center">Remove Item?</h3>
+              <p className="text-sm text-gray-500 text-center mt-2">
+                Are you sure you want to remove <span className="font-semibold text-gray-800">"{deletingItemTitle}"</span> from your cart?
+              </p>
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setDeletingItemId(null)}
+                  className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm rounded-xl transition duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  className="flex-1 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm rounded-xl transition duration-200 shadow-md shadow-orange-500/20"
+                >
+                  Yes, Remove
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

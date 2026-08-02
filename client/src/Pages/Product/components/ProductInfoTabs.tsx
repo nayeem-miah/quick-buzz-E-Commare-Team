@@ -12,6 +12,8 @@ interface ProductInfoTabsProps {
   reviewRating: number;
   reviewText: string;
   isSubmittingReview: boolean;
+  eligibility: { isEligible: boolean; reason: string; alreadyReviewed?: boolean };
+  onReviewImageChange: (file: File | null) => void;
   onTabChange: (tab: ProductInfoTab) => void;
   onRatingChange: (rating: number) => void;
   onReviewTextChange: (value: string) => void;
@@ -31,6 +33,8 @@ const ProductInfoTabs = ({
   reviewRating,
   reviewText,
   isSubmittingReview,
+  eligibility,
+  onReviewImageChange,
   onTabChange,
   onRatingChange,
   onReviewTextChange,
@@ -62,6 +66,8 @@ const ProductInfoTabs = ({
           rating={reviewRating}
           reviewText={reviewText}
           isSubmitting={isSubmittingReview}
+          eligibility={eligibility}
+          onReviewImageChange={onReviewImageChange}
           onRatingChange={onRatingChange}
           onReviewTextChange={onReviewTextChange}
           onSubmit={onReviewSubmit}

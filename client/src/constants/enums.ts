@@ -15,11 +15,18 @@ export enum PaymentStatus {
 export enum ApprovalStatus {
   PENDING = "pending",
   APPROVED = "approve",
-  REJECTED = "rejected"
+  REJECTED = "rejected",
+  DRAFT = "draft"
 }
 
 export enum UserRole {
   USER = "user",
   ADMIN = "admin",
   SELLER = "seller"
+}
+
+export enum PaymentMethod {
+  COD = "Cash on Delivery",
+  ONLINE = "SSLCommerz",
+  CARD = "Card"
 }

@@ -55,7 +55,7 @@ const ProductDetailsPage = () => {
   const { data: relatedData = [] } = useQuery<ProductItem[]>({
     queryKey: ['related-products', product?.category, product?._id],
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/products?category=${product?.category}&page=1&size=5`);
+      const { data } = await axiosPublic.get(`/products?category=${encodeURIComponent(product?.category || '')}&page=1&size=5`);
       return data.data || [];
     },
     enabled: !!product?.category,
@@ -68,6 +68,18 @@ const ProductDetailsPage = () => {
     [relatedData, product?._id],
   );
 
+  const [reviewImage, setReviewImage] = useState<File | null>(null);
+
+  const { data: eligibility = { isEligible: false, reason: 'Login to Review' } } = useQuery({
+    queryKey: ['review-eligibility', id, user?.email],
+    queryFn: async () => {
+      if (!user?.email) return { isEligible: false, reason: 'Login to Review' };
+      const { data } = await axiosPublic.get(`/review/eligibility/${id}`);
+      return data.data || { isEligible: false, reason: 'Login to Review' };
+    },
+    enabled: !!id,
+  });
+
   if (isLoading) return <LoadingSpinner />;
   if (isError || !product) return <div className="p-8 text-center text-red-500">Error: {error?.message || 'Product not found'}</div>;
 
@@ -75,7 +87,7 @@ const ProductDetailsPage = () => {
   const discount = toNumber(product.discount);
   const originalPrice = discount > 0 ? price / (1 - discount / 100) : 0;
   const total = price * quantity;
-  const images = getProductImages(product.productImage);
+  const images = getProductImages(product.productImage, product.productImages);
   const averageRating = getAverageRating(reviews);
   const shortDescription = getShortDescription(product.description);
   const isActionDisabled = singleUser?.role === 'admin' || singleUser?.role === 'Host';
@@ -111,10 +123,27 @@ const ProductDetailsPage = () => {
 
     setIsSubmittingReview(true);
     try {
+      let imageUrl = '';
+      if (reviewImage) {
+        const formData = new FormData();
+        formData.append('image', reviewImage);
+        
+        const uploadRes = await axiosPublic.post('/upload/image', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        
+        if (uploadRes.data?.success && uploadRes.data?.data?.display_url) {
+          imageUrl = uploadRes.data.data.display_url;
+        } else {
+          toast.error('Image upload failed, submitting review without image.');
+        }
+      }
+
       const res = await axiosPublic.post('/review', {
         rating: reviewRating,
         productid: id,
         review: reviewText,
+        imageUrl,
         name: user?.displayName,
         photo: user?.photoURL,
         email: user?.email,
@@ -125,7 +154,9 @@ const ProductDetailsPage = () => {
         toast.success('Thank you for your feedback!');
         setReviewRating(0);
         setReviewText('');
+        setReviewImage(null);
         queryClient.invalidateQueries({ queryKey: ['product-reviews', id] });
+        queryClient.invalidateQueries({ queryKey: ['review-eligibility', id, user?.email] });
       } else {
         toast.error('Please try again.');
       }
@@ -183,6 +214,8 @@ const ProductDetailsPage = () => {
           reviewRating={reviewRating}
           reviewText={reviewText}
           isSubmittingReview={isSubmittingReview}
+          eligibility={eligibility}
+          onReviewImageChange={setReviewImage}
           onTabChange={setActiveTab}
           onRatingChange={setReviewRating}
           onReviewTextChange={setReviewText}

@@ -5,9 +5,202 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  accent-color: #f97316;
+}
+
 /* Set Roboto globally */
 html,
 body {
   @apply font-sans;
   overflow-x: hidden;
+  accent-color: #f97316;
 }
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+/* Global Form Controls Accent Color & Date Picker styling */
+input {
+  accent-color: #f97316;
+}
+
+input[type="date"] {
+  accent-color: #f97316 !important;
+  color-scheme: light !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(53%) sepia(87%) saturate(1637%) hue-rotate(357deg) brightness(98%) contrast(98%);
+  transition: opacity 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.8;
+}
+
+/* ==============================
+   react-date-range Calendar Theme
+   ============================== */
+.custom-date-picker .rdrCalendarWrapper {
+  font-family: inherit;
+  border-radius: 1rem;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.custom-date-picker .rdrDateDisplayWrapper {
+  display: none;
+}
+
+.custom-date-picker .rdrMonthAndYearPickers select {
+  font-weight: 700;
+  color: #111827;
+  font-size: 0.875rem;
+}
+
+.custom-date-picker .rdrMonthAndYearPickers select:hover {
+  background-color: #fff7ed;
+}
+
+.custom-date-picker .rdrNextPrevButton {
+  background: #fff7ed;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+
+.custom-date-picker .rdrNextPrevButton:hover {
+  background: #f97316;
+}
+
+.custom-date-picker .rdrNextPrevButton:hover i {
+  border-color: transparent #ffffff transparent transparent;
+}
+
+.custom-date-picker .rdrPprevButton:hover i {
+  border-color: transparent transparent transparent #ffffff;
+}
+
+.custom-date-picker .rdrDayToday .rdrDayNumber span:after {
+  background: #f97316;
+}
+
+.custom-date-picker .rdrDay:not(.rdrDayPassive) .rdrDayNumber span {
+  color: #111827;
+  font-weight: 600;
+}
+
+.custom-date-picker .rdrDay:not(.rdrDayDisabled):not(.rdrDayPassive):hover .rdrDayNumber span {
+  color: #f97316;
+}
+
+.custom-date-picker .rdrSelected,
+.custom-date-picker .rdrStartEdge,
+.custom-date-picker .rdrEndEdge {
+  background: #f97316;
+}
+
+.custom-date-picker .rdrDayStartPreview,
+.custom-date-picker .rdrDayInPreview,
+.custom-date-picker .rdrDayEndPreview {
+  border-color: #f97316;
+}
+
+.custom-date-picker .rdrDayHovered .rdrDayNumber:after {
+  background: #fff7ed;
+}
+
+.custom-date-picker .rdrDayNumber span {
+  font-size: 0.8125rem;
+}
+
+.custom-date-picker .rdrWeekDay {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.custom-date-picker .rdrMonthText,
+.custom-date-picker .rdrYearPicker {
+  font-size: 0.875rem;
+}
+
+/* Mobile: scale down calendar to fit small screens */
+@media (max-width: 480px) {
+  .custom-date-picker .rdrCalendarWrapper {
+    font-size: 11px;
+    transform-origin: top left;
+  }
+
+  .custom-date-picker .rdrMonth {
+    width: 272px !important;
+  }
+
+  .custom-date-picker .rdrDayNumber {
+    font-size: 11px;
+  }
+}
+
+/* ==============================
+   SweetAlert2 Custom Theme
+   ============================== */
+.swal-themed-popup {
+  border-radius: 1.5rem !important;
+  padding: 1.75rem 2rem !important;
+  border: 1px solid #f3f4f6 !important;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.12), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+}
+
+.swal-themed-title {
+  color: #111827 !important;
+  font-size: 1.125rem !important;
+  font-weight: 800 !important;
+  padding: 0 0 0.25rem !important;
+}
+
+.swal-themed-text {
+  color: #6b7280 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+}
+
+.swal-themed-danger-confirm {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border-radius: 0.75rem !important;
+  padding: 0.625rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 6px -1px rgb(239 68 68 / 0.35) !important;
+  transition: background-color 0.2s ease;
+}
+
+.swal-themed-danger-confirm:hover {
+  background-color: #dc2626 !important;
+}
+
+.swal-themed-cancel {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+  border-radius: 0.75rem !important;
+  padding: 0.625rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  transition: background-color 0.2s ease;
+}
+
+.swal-themed-cancel:hover {
+  background-color: #e5e7eb !important;
+}
+

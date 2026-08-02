@@ -24,9 +24,16 @@ const UserRole = {
   SELLER: "seller"
 };
 
+const PaymentMethod = {
+  COD: "Cash on Delivery",
+  ONLINE: "SSLCommerz",
+  CARD: "Card"
+};
+
 module.exports = {
   OrderStatus,
   PaymentStatus,
   ApprovalStatus,
-  UserRole
+  UserRole,
+  PaymentMethod
 };

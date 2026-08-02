@@ -4,10 +4,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface CategoryBoxProps {
   label: string;
-  icon: React.ElementType;
+  icon: string;
 }
 
-const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
+const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon }) => {
   const [params] = useSearchParams();
   const category = params.get('category');
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({ label, icon: Icon }) => {
       }`}
     >
       <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-50">
-        <Icon size={18} />
+        <img src={icon} alt={label} className="w-5 h-5 opacity-80" />
       </div>
       <span className="text-xs font-medium">{label}</span>
     </button>

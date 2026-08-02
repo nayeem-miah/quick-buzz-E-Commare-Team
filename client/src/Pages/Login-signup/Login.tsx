@@ -63,8 +63,8 @@ const Signin: React.FC = () => {
       await signIn(loginEmail, loginPassword);
       navigate(from);
       toast.success('Login Successful');
-    } catch (err: any) {
-      toast.error(getAuthErrorMessage(err));
+    } catch (err: unknown) {
+      toast.error(getAuthErrorMessage(err as { code?: string; message?: string }));
       setLoading(false);
     }
   };
@@ -84,8 +84,8 @@ const Signin: React.FC = () => {
     try {
       await resetPassword(email);
       toast.success('Password reset email sent.');
-    } catch (err: any) {
-      toast.error(getAuthErrorMessage(err));
+    } catch (err: unknown) {
+      toast.error(getAuthErrorMessage(err as { code?: string; message?: string }));
       setLoading(false);
     }
   };
@@ -102,8 +102,8 @@ const Signin: React.FC = () => {
       axiosPublic.post('/users', userInfo);
       navigate(from);
       toast.success('Google Sign-In Successful');
-    } catch (err: any) {
-      toast.error(getAuthErrorMessage(err));
+    } catch (err: unknown) {
+      toast.error(getAuthErrorMessage(err as { code?: string; message?: string }));
       setLoading(false);
     }
   };

@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useQuery } from "@tanstack/react-query";
-import Heading from "../../../Shared/Heading/Heading";
-import Swal from "sweetalert2";
-import { MdDeleteForever } from "react-icons/md";
+import toast from "react-hot-toast";
 import useAuth from "../../../Hooks/UseAuth";
+import useAxiosPublic from "../../../Hooks/UsePublic";
 import LoadingSpinner from "../../../Shared/Loading";
-import { Link } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
-import NoData from "../../../Shared/NoDataFound/NoData";
+import { ApprovalStatus } from "../../../constants/enums";
+import { HostListingsHeader } from "./components/HostListingsHeader";
+import { HostListingsStats } from "./components/HostListingsStats";
+import { HostListingsFilters } from "./components/HostListingsFilters";
+import { HostListingsTable } from "./components/HostListingsTable";
+import { HostListingsCards } from "./components/HostListingsCards";
+import { HostListingsModal } from "./components/HostListingsModal";
+import Pagination from "../../../Shared/Pagination/Pagination";
+import { Package } from "lucide-react";
+import DeleteConfirmModal from "../../../Shared/DeleteConfirmModal";
 
-interface Listing {
+export interface Listing {
   _id: string;
   productTitle: string;
   productImage: string;
@@ -23,223 +28,193 @@ interface Listing {
   price: number;
   tags: string;
   description: string;
+  quantity?: number;
+  createdAt?: string;
+  feedback?: string;
+  rejectionReason?: string;
 }
 
 const MyAddedProduct: React.FC = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Listing | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const {
-    data = [],
+    data: productsData = [],
     isLoading,
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["allProduct"],
+    queryKey: ["allProduct", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/products/host-product/${user?.email}`);
       return res.data.data;
     },
+    enabled: !!user?.email,
   });
 
-  // handle delete
+  const products: Listing[] = productsData || [];
+
+  // Summary counts
+  const totalListings = products.length;
+  const approvedCount = products.filter((p: Listing) => p.adminIsApproved === ApprovalStatus.APPROVED).length;
+  const pendingCount = products.filter((p: Listing) => p.adminIsApproved === ApprovalStatus.PENDING).length;
+  const rejectedCount = products.filter((p: Listing) => p.adminIsApproved === ApprovalStatus.REJECTED).length;
+
+  // Handle delete
   const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic.delete(`/pro/${id}`).then((res) => {
-          if (res.data.deletedCount > 0) {
-            refetch();
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
-          }
-        });
-      }
-    });
+    const product = products.find((item) => item._id === id) || null;
+    setDeleteTarget(product || ({ _id: id, productTitle: "Selected product" } as Listing));
   };
 
-  // modal code
-  const [selectedBooking, setSelectedBooking] = useState<Listing | null>(null);
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+
+    setIsDeleting(true);
+    try {
+      const res = await axiosPublic.delete(`/pro/${deleteTarget._id}`);
+      if (res.data.deletedCount > 0) {
+        await refetch();
+        toast.success("Your product has been deleted.");
+        setDeleteTarget(null);
+      } else {
+        toast.error("Product could not be deleted.");
+      }
+    } catch {
+      toast.error("Failed to delete product.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const closeModal = () => {
     setSelectedBooking(null);
   };
-  if (isLoading)
+
+  // Filter listings
+  const filteredListings = products.filter((item: Listing) => {
+    const matchesSearch =
+      (item.productTitle?.toLowerCase() || "").includes(search.toLowerCase()) ||
+      (item.brandName?.toLowerCase() || "").includes(search.toLowerCase()) ||
+      (item.category?.toLowerCase() || "").includes(search.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "approve" && item.adminIsApproved === ApprovalStatus.APPROVED) ||
+      (statusFilter === "pending" && item.adminIsApproved === ApprovalStatus.PENDING) ||
+      (statusFilter === "rejected" && item.adminIsApproved === ApprovalStatus.REJECTED);
+
+    return matchesSearch && matchesStatus;
+  });
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredListings.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedListings = filteredListings.slice(startIndex, startIndex + itemsPerPage);
+
+  if (isLoading) return <LoadingSpinner />;
+  if (isError)
     return (
-      <div>
-        <LoadingSpinner />
+      <div className="text-center py-10 text-red-500 font-semibold">
+        Error loading listings...
       </div>
     );
-  if (isError) return <div>error...{isError}</div>;
+
   return (
-    <div>
-      <div className="">
-        <Heading title={"My added product"} subtitle={""} />
-        {data.length === 0 ? (
-          <NoData />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-              <thead className="bg-gray-800 text-white">
-                <tr>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    Title
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    Image
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    price
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    status
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    delete
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    edit
-                  </th>
-                  <th className="py-3 px-4 text-sm font-medium text-left">
-                    Details
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((listing: Listing) => (
-                  <tr
-                    key={listing._id}
-                    className="border-b hover:bg-gray-50 transition duration-300"
-                  >
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.productTitle.slice(0, 20)}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      <img
-                        src={listing?.productImage}
-                        alt={"no image founded"}
-                        className="w-16 h-16 object-cover rounded-md"
-                      />
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      ${listing?.price}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {listing?.adminIsApproved}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      <button
-                        onClick={() => {
-                          handleDelete(listing?._id);
-                        }}
-                        className="px-4 py-2   text-2xl rounded-lg hover:text-red-700 transition duration-300 focus:outline-none"
-                      >
-                        <MdDeleteForever />
-                      </button>
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      <Link to={`/updated-product/${listing._id}`}>
-                        <button className="px-4 py-2   text-2xl rounded-lg hover:text-green-700 transition duration-300 focus:outline-none">
-                          <FaEdit />
-                        </button>
-                      </Link>
-                    </td>
+    <div className="w-full px-4 md:px-8 py-8 space-y-8 animate-fadeIn">
+      {/* Header Section */}
+      <HostListingsHeader />
 
-                    <td className="py-4 px-4 text-sm">
-                      <Link to={`/product/${listing._id}`}>
-                        <button
-                          // onClick={() => handleDetailsClick(listing)}
-                          className="  px-4  py-2 text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/30 rounded-md transition-all duration-300
-                       hover:-translate-y-0.5"
-                        >
-                          Details
-                        </button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      {/* Summary Stat Cards */}
+      <HostListingsStats
+        totalListings={totalListings}
+        approvedCount={approvedCount}
+        pendingCount={pendingCount}
+        rejectedCount={rejectedCount}
+      />
 
-        {/* Modal */}
-        {selectedBooking && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                my added product
-              </h3>
-              <div className="space-y-2">
-                <div>
-                  <strong>Image:</strong>
-                  <img
-                    src={selectedBooking.productImage}
-                    alt={selectedBooking.productTitle}
-                    className="w-full h-48 object-cover mt-2 rounded-md"
-                  />
-                </div>
-                <p>
-                  <strong>Title:</strong> {selectedBooking?.productTitle}
-                </p>
-                <p>
-                  <strong>adminIsApproved:</strong>{" "}
-                  {selectedBooking?.adminIsApproved}
-                </p>
-                <p>
-                  <strong>price:</strong> {selectedBooking?.price}
-                </p>
-                <p>
-                  <strong>brandName:</strong> {selectedBooking?.brandName}
-                </p>
-                <p>
-                  <strong>category:</strong> {selectedBooking?.category}
-                </p>
+      {/* Search & Filter Controls */}
+      <HostListingsFilters
+        search={search}
+        setSearch={setSearch}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        onFilterChange={() => setCurrentPage(1)}
+      />
 
-                <p>
-                  <strong>hostEmail:</strong> {selectedBooking?.hostEmail}
-                </p>
-                <p className="flex  items-center gap-4">
-                  <strong>hostName:</strong> {selectedBooking?.hostName}
-                  <img
-                    className="h-10 w-10 rounded-full"
-                    src={selectedBooking?.hostPhoto}
-                    alt=""
-                  />
-                </p>
+      {/* Listings Section */}
+      {filteredListings.length === 0 ? (
+        /* Empty State */
+        <div className="flex flex-col items-center justify-center py-16 bg-white border border-dashed border-gray-200 rounded-2xl shadow-sm text-center">
+          <span className="p-3 bg-orange-50 rounded-xl text-orange-500 mb-3">
+            <Package className="w-6 h-6" />
+          </span>
+          <h3 className="text-sm font-bold text-gray-800">No listings found</h3>
+          <p className="text-xs text-gray-400 max-w-sm mt-1 mx-auto px-4">
+            We couldn't find any products matching your search or filters. Try adjusting them or add a new listing.
+          </p>
+          {(search || statusFilter !== "all") && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setStatusFilter("all");
+                setCurrentPage(1);
+              }}
+              className="mt-4 px-4 py-2 text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-xl transition border border-orange-100"
+            >
+              Clear Filters
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          {/* Desktop Table View */}
+          <HostListingsTable
+            listings={paginatedListings}
+            onSelectBooking={setSelectedBooking}
+            onDelete={handleDelete}
+          />
 
-                <p>
-                  <strong>price:</strong> {selectedBooking?.price}
-                </p>
-                <p>
-                  <strong>tags:</strong> {selectedBooking?.tags}
-                </p>
-                <p>
-                  <strong>description:</strong> {selectedBooking?.description}
-                </p>
-              </div>
-              <div className="mt-6 text-end">
-                <button
-                  onClick={closeModal}
-                  className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300 focus:outline-none"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+          {/* Mobile Card View */}
+          <HostListingsCards
+            listings={paginatedListings}
+            onSelectBooking={setSelectedBooking}
+            onDelete={handleDelete}
+          />
+
+          {/* Pagination Controls */}
+          <Pagination
+            page={currentPage}
+            totalPages={totalPages}
+            setPage={setCurrentPage}
+            size={itemsPerPage}
+            totalItems={filteredListings.length}
+          />
+        </>
+      )}
+
+      {/* Details Modal */}
+      <HostListingsModal
+        selectedBooking={selectedBooking}
+        onClose={closeModal}
+        onDelete={handleDelete}
+      />
+
+      <DeleteConfirmModal
+        isOpen={!!deleteTarget}
+        itemName={deleteTarget?.productTitle}
+        isDeleting={isDeleting}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

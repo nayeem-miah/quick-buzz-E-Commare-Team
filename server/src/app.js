@@ -12,6 +12,7 @@ const CartRoutes = require("./routes/cart.route");
 const OrderRoutes = require("./routes/order.route");
 const UploadRoutes = require("./routes/upload.route");
 const CategoryRoutes = require("./routes/category.route");
+const NotificationRoutes = require("./routes/notification.route");
 const sendResponse = require("./utils/sendResponse");
 
 const app = express();
@@ -28,7 +29,20 @@ app.get("/", (req, res) => {
     })
 });
 
+const jwt = require("jsonwebtoken");
+
 // ROUTES
+app.post("/api/v1/jwt", (req, res) => {
+    const user = req.body;
+    const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET || "default_secret", { expiresIn: "1d" });
+    res.json({
+        success: true,
+        statusCode: 200,
+        message: "Token generated success",
+        token
+    });
+});
+
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", ProductRoutes);
 app.use("/api/v1/payments", paymentRoutes);
@@ -39,6 +53,7 @@ app.use("/api/v1/cart", CartRoutes);
 app.use("/api/v1/orders", OrderRoutes);
 app.use("/api/v1/upload", UploadRoutes);
 app.use("/api/v1/categories", CategoryRoutes);
+app.use("/api/v1/notifications", NotificationRoutes);
 
 
 // global error

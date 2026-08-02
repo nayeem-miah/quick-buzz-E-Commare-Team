@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
+import { TrendingUp } from "lucide-react";
+import CustomDropdown from "../../../../Shared/Dropdown/CustomDropdown";
 import {
   Bar,
   BarChart,
@@ -17,6 +19,13 @@ interface BookingData {
   tran_date: string;
   totalPrice: number;
 }
+
+const FILTER_OPTIONS = [
+  { value: "7days", label: "Last 7 Days" },
+  { value: "30days", label: "Last 30 Days" },
+  { value: "thismonth", label: "This Month" },
+  { value: "all", label: "All Time" },
+];
 
 const EnhancedBarChart: React.FC = () => {
   const [data, setData] = useState<{ date: string; price: number }[]>([]);
@@ -36,11 +45,10 @@ const EnhancedBarChart: React.FC = () => {
       const bookings = bookingsData.filter((item) => item.status === PaymentStatus.SUCCESS);
       setAllBookings(bookings);
 
-      if (bookings.length === 0) {
-        setError("No booking data available! Bar chart cannot be displayed.");
-      }
-    } catch (error: any) {
-      setError("Error fetching data: " + (error.message || "Unknown error"));
+      // No bookings is handled inline in the UI rather than setting a hard error
+    } catch (error: unknown) {
+      const errMessage = error instanceof Error ? error.message : "Unknown error";
+      setError("Error fetching data: " + errMessage);
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
@@ -95,69 +103,78 @@ const EnhancedBarChart: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 overflow-visible">
         <h3 className="text-lg font-bold text-gray-800">Sales Overview</h3>
-        <select
+        <CustomDropdown
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block px-3 py-2 outline-none"
-        >
-          <option value="7days">Last 7 Days</option>
-          <option value="30days">Last 30 Days</option>
-          <option value="thismonth">This Month</option>
-          <option value="all">All Time</option>
-        </select>
+          onChange={(val) => setFilter(val)}
+          options={FILTER_OPTIONS}
+          className="w-40"
+          buttonClassName="w-full bg-white border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer transition-all shadow-sm"
+        />
       </div>
 
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart
-          data={data}
-          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#f97316" stopOpacity={0.9} />
-              <stop offset="95%" stopColor="#fdba74" stopOpacity={0.4} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-          <XAxis
-            dataKey="date"
-            stroke="#9ca3af"
-            tick={{ fontSize: 12, fill: '#6b7280' }}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            stroke="#9ca3af"
-            tick={{ fontSize: 12, fill: '#6b7280' }}
-            tickFormatter={(value) => `$${value}`}
-            tickLine={false}
-            axisLine={false}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "#ffffff",
-              borderRadius: '12px',
-              border: "1px solid #f3f4f6",
-              boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-            }}
-            itemStyle={{ fontWeight: "600", color: "#f97316" }}
-            labelStyle={{ fontWeight: "600", color: "#374151", marginBottom: '4px' }}
-            cursor={{ fill: "#fff7ed" }}
-          />
-          <Bar
-            dataKey="price"
-            name="Revenue"
-            fill="url(#barGradient)"
-            barSize={24}
-            animationBegin={200}
-            animationDuration={1000}
-            animationEasing="ease-in-out"
-            radius={[4, 4, 0, 0]}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+      {allBookings.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-orange-50 flex items-center justify-center mb-4">
+            <TrendingUp className="w-8 h-8 text-orange-500" />
+          </div>
+          <h4 className="text-base font-bold text-gray-900 mb-1">No Sales Data Yet</h4>
+          <p className="text-sm text-gray-500 max-w-xs">
+            Once you receive successful payments, your revenue analytics will be beautifully charted here.
+          </p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={350}>
+          <BarChart
+            data={data}
+            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#f97316" stopOpacity={0.9} />
+                <stop offset="95%" stopColor="#fdba74" stopOpacity={0.4} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+            <XAxis
+              dataKey="date"
+              stroke="#9ca3af"
+              tick={{ fontSize: 12, fill: '#6b7280' }}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              stroke="#9ca3af"
+              tick={{ fontSize: 12, fill: '#6b7280' }}
+              tickFormatter={(value) => `৳${value}`}
+              tickLine={false}
+              axisLine={false}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#ffffff",
+                borderRadius: '12px',
+                border: "1px solid #f3f4f6",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+              }}
+              itemStyle={{ fontWeight: "600", color: "#f97316" }}
+              labelStyle={{ fontWeight: "600", color: "#374151", marginBottom: '4px' }}
+              cursor={{ fill: "#fff7ed" }}
+            />
+            <Bar
+              dataKey="price"
+              name="Revenue"
+              fill="url(#barGradient)"
+              barSize={24}
+              animationBegin={200}
+              animationDuration={1000}
+              animationEasing="ease-in-out"
+              radius={[4, 4, 0, 0]}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };

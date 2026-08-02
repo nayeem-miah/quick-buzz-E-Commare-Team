@@ -1,7 +1,5 @@
-import { ReactNode } from "react";
-
 export interface PaymentHistory {
-  date: ReactNode;
+  date?: string | number | Date;
   id: number;
   cus_name: string;
   cus_email: string;

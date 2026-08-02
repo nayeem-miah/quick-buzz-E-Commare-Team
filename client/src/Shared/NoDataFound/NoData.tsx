@@ -1,33 +1,27 @@
+import { PackageOpen } from "lucide-react";
 import React from "react";
-import NoDataImg from '../../assets/Image/noData.webp'
 
 interface NoDataProps {
-  message?: string; // Custom message to display
-  actionText?: string; // Optional button text
-  onActionClick?: () => void; // Optional action button handler
-  illustration?: string; // Optional illustration URL
+  message?: string;
+  actionText?: string;
+  onActionClick?: () => void;
 }
 
 const NoData: React.FC<NoDataProps> = ({
   message = "No data available.",
   actionText,
   onActionClick,
-
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-80 p-6 bg-white rounded-lg shadow-md">
-    
-        <img
-          src={NoDataImg}
-          alt="No data"
-          className="w-40 h-40 mb-4 object-contain"
-        />
-   
-      <p className="text-gray-600 text-lg font-medium">{message}</p>
+    <div className="flex flex-col items-center justify-center h-80 p-10 bg-white rounded-2xl border border-gray-100 shadow-sm text-center">
+      <div className="w-16 h-16 rounded-2xl bg-orange-50 flex items-center justify-center mb-5">
+        <PackageOpen className="w-7 h-7 text-orange-500" />
+      </div>
+      <p className="text-gray-500 text-sm font-semibold">{message}</p>
       {actionText && onActionClick && (
         <button
           onClick={onActionClick}
-          className="mt-4 px-5 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="mt-5 px-5 py-2.5 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-sm font-bold rounded-xl transition-all duration-200 shadow-md shadow-orange-500/30"
         >
           {actionText}
         </button>

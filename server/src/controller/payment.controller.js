@@ -1,12 +1,16 @@
 const { default: axios } = require("axios");
-const { PaymentCollection, OrderCollection, CartCollection } = require("../module/module");
+const { PaymentCollection, OrderCollection, CartCollection, UserCollection, OrderItemCollection, OrderStatusHistoryCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb");
 const sendResponse = require("../utils/sendResponse");
 const { PaymentStatus, ApprovalStatus, OrderStatus } = require("../constants/enums");
+const { sendOrderConfirmationEmail } = require("../utils/sendMail");
+const createNotification = require("../utils/createNotification");
+const { updateHostWallet, getItemTotal } = require("./order.controller");
 
 const getAllPayment = catchAsync(async (req, res) => {
     const result = await PaymentCollection.aggregate([
+        { $sort: { _id: -1 } },
         {
             $lookup: {
                 from: "order_items",
@@ -19,6 +23,14 @@ const getAllPayment = catchAsync(async (req, res) => {
 
     const formatted = result.map(payment => {
         const hasOrderItems = payment.orderItems && payment.orderItems.length > 0;
+        const orderStatus = hasOrderItems && payment.orderItems[0].status
+            ? payment.orderItems[0].status
+            : (payment.status === PaymentStatus.SUCCESS ? OrderStatus.PROCESSING : OrderStatus.PENDING);
+
+        const trackingId = hasOrderItems && payment.orderItems[0].tracking_id
+            ? payment.orderItems[0].tracking_id
+            : "";
+
         return {
             _id: payment._id,
             order_id: payment.order_id,
@@ -34,7 +46,9 @@ const getAllPayment = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
-            productTitle: hasOrderItems 
+            orderStatus,
+            trackingId,
+            productTitle: hasOrderItems
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
             productImage: hasOrderItems
@@ -76,15 +90,24 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
                     { "orderItems.hostEmail": hostEmail }
                 ]
             }
-        }
+        },
+        { $sort: { _id: -1 } }
     ]).toArray();
 
     const formatted = result.map(payment => {
-        const relevantItems = payment.orderItems 
+        const relevantItems = payment.orderItems
             ? payment.orderItems.filter(item => item.hostEmail === hostEmail)
             : [];
         const hasOrderItems = relevantItems.length > 0;
         const hostItemsTotal = relevantItems.reduce((sum, item) => sum + (item.price * (1 - (item.discount || 0) / 100) * item.quantity), 0);
+
+        const orderStatus = hasOrderItems && relevantItems[0].status
+            ? relevantItems[0].status
+            : (payment.status === PaymentStatus.SUCCESS ? OrderStatus.PROCESSING : OrderStatus.PENDING);
+
+        const trackingId = hasOrderItems && relevantItems[0].tracking_id
+            ? relevantItems[0].tracking_id
+            : "";
 
         return {
             _id: payment._id,
@@ -101,7 +124,9 @@ const getPaymentByHostEmail = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
-            productTitle: hasOrderItems 
+            orderStatus,
+            trackingId,
+            productTitle: hasOrderItems
                 ? relevantItems.map(item => item.productTitle)
                 : (payment.hostName || []),
             productImage: hasOrderItems
@@ -130,6 +155,7 @@ const getSinglePayment = catchAsync(async (req, res) => {
 
     const result = await PaymentCollection.aggregate([
         { $match: query },
+        { $sort: { _id: -1 } },
         {
             $lookup: {
                 from: "order_items",
@@ -142,6 +168,14 @@ const getSinglePayment = catchAsync(async (req, res) => {
 
     const formatted = result.map(payment => {
         const hasOrderItems = payment.orderItems && payment.orderItems.length > 0;
+        const orderStatus = hasOrderItems && payment.orderItems[0].status
+            ? payment.orderItems[0].status
+            : (payment.status === PaymentStatus.SUCCESS ? OrderStatus.PROCESSING : OrderStatus.PENDING);
+
+        const trackingId = hasOrderItems && payment.orderItems[0].tracking_id
+            ? payment.orderItems[0].tracking_id
+            : "";
+
         return {
             _id: payment._id,
             order_id: payment.order_id,
@@ -157,7 +191,9 @@ const getSinglePayment = catchAsync(async (req, res) => {
             date: payment.date || payment.tran_date,
             tran_date: payment.tran_date || payment.date,
             hostIsApproved: payment.hostIsApproved || ApprovalStatus.PENDING,
-            productTitle: hasOrderItems 
+            orderStatus,
+            trackingId,
+            productTitle: hasOrderItems
                 ? payment.orderItems.map(item => item.productTitle)
                 : (payment.hostName || []),
             productImage: hasOrderItems
@@ -253,6 +289,41 @@ const createPayment = catchAsync(async (req, res) => {
 
 });
 
+const processSuccessfulOrderPayment = async (orderId) => {
+    if (!orderId) return;
+    const orderIdObj = typeof orderId === "string" ? new ObjectId(orderId) : orderId;
+    const orderItems = await OrderItemCollection.find({ order_id: orderIdObj }).toArray();
+    const unprocessedItems = orderItems.filter(item => (item.status || OrderStatus.PENDING) === OrderStatus.PENDING);
+
+    if (unprocessedItems.length > 0) {
+        await OrderItemCollection.updateMany(
+            { order_id: orderIdObj, $or: [{ status: { $exists: false } }, { status: OrderStatus.PENDING }] },
+            { $set: { status: OrderStatus.PROCESSING } }
+        );
+
+        const hostGroups = {};
+        for (const item of unprocessedItems) {
+            const email = item.hostEmail;
+            if (!email) continue;
+            const total = getItemTotal(item);
+            hostGroups[email] = (hostGroups[email] || 0) + total;
+
+            await OrderStatusHistoryCollection.insertOne({
+                order_id: orderIdObj,
+                old_status: item.status || OrderStatus.PENDING,
+                new_status: OrderStatus.PROCESSING,
+                changed_by_user_id: "system/payment-gateway",
+                changed_by_role: "system",
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        for (const [email, amount] of Object.entries(hostGroups)) {
+            await updateHostWallet(email, amount, 0);
+        }
+    }
+};
+
 const successPayment = catchAsync(async (req, res) => {
     const successData = req.body;
 
@@ -287,14 +358,68 @@ const successPayment = catchAsync(async (req, res) => {
                 { _id: paymentRecord.order_id },
                 { $set: { status: OrderStatus.PROCESSING } }
             );
+            await processSuccessfulOrderPayment(paymentRecord.order_id);
         }
 
         // Clear user cart
         if (paymentRecord.cus_email) {
             await CartCollection.deleteMany({ email: paymentRecord.cus_email });
         }
+
+        // Send order confirmation email
+        sendOrderConfirmationEmail(
+            paymentRecord.cus_email,
+            paymentRecord.cus_name,
+            paymentRecord.order_id,
+            paymentRecord.amount || paymentRecord.totalPrice,
+            paymentRecord.payment_method || "Card"
+        ).catch(err => console.error("Email send failed:", err));
+
+        try {
+            await createNotification(paymentRecord.cus_email, {
+                title: "Payment Successful! 💳",
+                message: `Thank you! Your payment of BDT ${paymentRecord.amount || paymentRecord.totalPrice} for Order ID: ${paymentRecord.order_id} was successful.`,
+                type: "success",
+                actionUrl: "/dashboard/my-orders"
+            });
+        } catch (err) {
+            console.error("Failed to send payment success notification to buyer:", err);
+        }
+
+        try {
+            const orderIdObj = typeof paymentRecord.order_id === "string" ? new ObjectId(paymentRecord.order_id) : paymentRecord.order_id;
+            const orderItems = await OrderItemCollection.find({ order_id: orderIdObj }).toArray();
+            const uniqueHostEmails = [...new Set(orderItems.map(item => item.hostEmail).filter(Boolean))];
+            for (const hostEmail of uniqueHostEmails) {
+                const hostItems = orderItems.filter(item => item.hostEmail === hostEmail);
+                const itemsSummary = hostItems.map(item => `${item.productTitle} (Qty: ${item.quantity})`).join(", ");
+                await createNotification(hostEmail, {
+                    title: "New Paid Order Received! 📦",
+                    message: `You have received a new paid order for: ${itemsSummary} from ${paymentRecord.cus_name}.`,
+                    type: "info",
+                    actionUrl: "/dashboard"
+                });
+            }
+        } catch (err) {
+            console.error("Failed to send payment success notification to hosts:", err);
+        }
+
+        try {
+            const admins = await UserCollection.find({ role: "admin" }).toArray();
+            for (const admin of admins) {
+                if (admin.email) {
+                    await createNotification(admin.email, {
+                        title: "New Payment Completed 💳",
+                        message: `A payment of BDT ${paymentRecord.amount || paymentRecord.totalPrice} was completed by ${paymentRecord.cus_name} for Order ID: ${paymentRecord.order_id}.`,
+                        type: "info",
+                        actionUrl: "/dashboard/manage-bookings"
+                    });
+                }
+            }
+        } catch (err) {
+            console.error("Failed to send payment success notification to admins:", err);
+        }
     } else {
-        // Fallback for older legacy payment entries
         await PaymentCollection.updateOne(
             { transactionId: successData.tran_id },
             {

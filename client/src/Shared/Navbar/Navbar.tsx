@@ -8,6 +8,7 @@ import useAuth from "../../Hooks/UseAuth";
 import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import useAxiosPublic from "../../Hooks/UsePublic";
 import MenuDropdown from "./MenuDropdawn";
+import NotificationDropdown from "./NotificationDropdown";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,10 +29,10 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white bg-opacity-80 backdrop-blur-lg shadow-sm border-b border-gray-100 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-2 lg:py-1 flex justify-between items-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-1 sm:py-1.5 flex justify-between items-center">
         {/* Left: Logo */}
         <Link to={"/"} className="flex-shrink-0 flex items-center">
-          <img className="lg:w-36 w-32 h-auto object-contain" src={logo} alt="Logo" />
+          <img className="w-24 sm:w-28 lg:w-36 h-auto object-contain" src={logo} alt="Logo" />
         </Link>
 
         {/* Center: Desktop NavLinks */}
@@ -78,7 +79,7 @@ const Navbar: React.FC = () => {
           </NavLink>
         </div>
 
-        {/* Right: Cart and Dropdown (Desktop) or Hamburger + Cart (Mobile) */}
+        {/* Right: Cart, Notifications and Dropdown (Desktop) or Hamburger + Cart + Notifications (Mobile) */}
         <div className="flex items-center gap-3">
           {/* Cart Icon (Desktop) */}
           <div className="hidden md:block">
@@ -95,6 +96,11 @@ const Navbar: React.FC = () => {
                 )}
               </Link>
             )}
+          </div>
+
+          {/* Notifications Icon (Desktop) */}
+          <div className="hidden md:block">
+            <NotificationDropdown />
           </div>
 
           {/* Profile Dropdown (Desktop) */}
@@ -117,6 +123,11 @@ const Navbar: React.FC = () => {
                 )}
               </Link>
             )}
+          </div>
+
+          {/* Notifications Icon (Mobile) */}
+          <div className="block md:hidden flex items-center">
+            <NotificationDropdown />
           </div>
 
           {/* Hamburger Icon (Mobile) */}

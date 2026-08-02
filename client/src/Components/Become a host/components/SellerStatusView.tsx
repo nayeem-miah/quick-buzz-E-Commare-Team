@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { FaCheckCircle, FaClock, FaTimesCircle } from "react-icons/fa";
 import { ImSpinner } from "react-icons/im";
-import useAxiosPublic from "../../../Hooks/UsePublic";
 import { useNavigate } from "react-router-dom";
-import { FaClock, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import useAxiosPublic from "../../../Hooks/UsePublic";
 import { ApprovalStatus } from "../../../constants/enums";
+
 
 interface SellerRequest {
   _id: string;

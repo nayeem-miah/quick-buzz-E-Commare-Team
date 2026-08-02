@@ -1,20 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { FiEdit2, FiShoppingBag, FiDollarSign, FiClock, FiCheckCircle, FiEye } from "react-icons/fi";
+import { FiCheckCircle, FiClock, FiDollarSign, FiEdit2, FiEye, FiShoppingBag } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import useAuth from "../../../Hooks/UseAuth";
 import useAxiosPublic from "../../../Hooks/UsePublic";
 import Card from "../../../Pages/Product/Card";
+import { ProductItem } from "../../../Pages/Product/types";
 import LoadingSpinner from "../../../Shared/Loading";
 import NoData from "../../../Shared/NoDataFound/NoData";
-import { OrderStatus, ApprovalStatus } from "../../../constants/enums";
+import { ApprovalStatus, OrderStatus } from "../../../constants/enums";
+
+interface UserHomeOrder {
+  _id: string;
+  status: string;
+  total_amount: number;
+  date: string;
+}
+
 const UserHome: React.FC = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
 
   // recommended-for-you-product
-  const { data: recommended = [], isLoading } = useQuery({
+  const { data: recommended = [], isLoading: recommendedLoading } = useQuery<ProductItem[]>({
     queryKey: ["recommended"],
     queryFn: async () => {
       const res = await axiosPublic.get("/products/recommended-for-you-product");
@@ -23,7 +32,7 @@ const UserHome: React.FC = () => {
   });
 
   // Fetch user orders for metrics
-  const { data: orders = [] } = useQuery({
+  const { data: orders = [], isLoading } = useQuery<UserHomeOrder[]>({
     queryKey: ["userOrders", user?.email],
     queryFn: async () => {
       const res = await axiosPublic.get(`/orders/user/${user?.email}`);
@@ -32,19 +41,19 @@ const UserHome: React.FC = () => {
     enabled: !!user?.email
   });
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || recommendedLoading) return <LoadingSpinner />;
 
   const totalOrders = orders.length;
   const totalSpent = orders
-    .filter((order: any) => order.status !== OrderStatus.CANCELLED)
-    .reduce((sum: number, order: any) => sum + (order.total_amount || 0), 0);
+    .filter((order: UserHomeOrder) => order.status !== OrderStatus.CANCELLED)
+    .reduce((sum: number, order: UserHomeOrder) => sum + (order.total_amount || 0), 0);
   const pendingOrders = orders.filter(
-    (order: any) => order.status === OrderStatus.PENDING || order.status === OrderStatus.PROCESSING
+    (order: UserHomeOrder) => order.status === OrderStatus.PENDING || order.status === OrderStatus.PROCESSING
   ).length;
-  const completedOrders = orders.filter((order: any) => order.status === OrderStatus.DELIVERED).length;
+  const completedOrders = orders.filter((order: UserHomeOrder) => order.status === OrderStatus.DELIVERED).length;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="container max-w-8xl mx-auto px-4 py-8">
       {/* Welcome Section */}
       <div className="mb-8 text-center md:text-left animate-fadeIn">
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
@@ -57,43 +66,43 @@ const UserHome: React.FC = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-orange-50 text-orange-500 rounded-xl">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <div className="p-2.5 sm:p-3 bg-orange-50 text-orange-500 rounded-xl flex-shrink-0">
             <FiShoppingBag size={20} />
           </div>
-          <div>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Total Orders</p>
-            <p className="text-lg font-black text-gray-950 mt-0.5">{totalOrders}</p>
+          <div className="min-w-0">
+            <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider truncate">Total Orders</p>
+            <p className="text-base sm:text-lg font-black text-gray-950 mt-0.5">{totalOrders}</p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-orange-50 text-orange-500 rounded-xl">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <div className="p-2.5 sm:p-3 bg-orange-50 text-orange-500 rounded-xl flex-shrink-0">
             <FiDollarSign size={20} />
           </div>
-          <div>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Total Spent</p>
-            <p className="text-lg font-black text-gray-950 mt-0.5">${totalSpent.toFixed(2)}</p>
+          <div className="min-w-0">
+            <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider truncate">Total Spent</p>
+            <p className="text-base sm:text-lg font-black text-gray-950 mt-0.5">৳{totalSpent.toLocaleString()}</p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-orange-50 text-orange-500 rounded-xl">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <div className="p-2.5 sm:p-3 bg-orange-50 text-orange-500 rounded-xl flex-shrink-0">
             <FiClock size={20} />
           </div>
-          <div>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Pending</p>
-            <p className="text-lg font-black text-gray-950 mt-0.5">{pendingOrders}</p>
+          <div className="min-w-0">
+            <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider truncate">Pending</p>
+            <p className="text-base sm:text-lg font-black text-gray-950 mt-0.5">{pendingOrders}</p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-orange-50 text-orange-500 rounded-xl">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <div className="p-2.5 sm:p-3 bg-orange-50 text-orange-500 rounded-xl flex-shrink-0">
             <FiCheckCircle size={20} />
           </div>
-          <div>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Completed</p>
-            <p className="text-lg font-black text-gray-950 mt-0.5">{completedOrders}</p>
+          <div className="min-w-0">
+            <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider truncate">Completed</p>
+            <p className="text-base sm:text-lg font-black text-gray-950 mt-0.5">{completedOrders}</p>
           </div>
         </div>
       </div>
@@ -105,7 +114,7 @@ const UserHome: React.FC = () => {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-bold text-gray-950">Your Profile</h2>
               <Link
-                to="/edit-profile"
+                to="/profile"
                 className="flex items-center gap-1.5 text-xs font-semibold text-orange-500 hover:text-orange-600 transition"
               >
                 <FiEdit2 size={14} /> Edit Profile
@@ -166,43 +175,83 @@ const UserHome: React.FC = () => {
         {orders.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-6">No orders placed yet.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-100">
-              <tbody className="divide-y divide-gray-100">
-                {orders.slice(0, 3).map((order: any) => (
-                  <tr key={order._id} className="hover:bg-gray-50/50 transition duration-200">
-                    <td className="py-3.5 text-sm font-semibold text-gray-950">
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto w-full">
+              <table className="min-w-full divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100">
+                  {orders.slice(0, 3).map((order: UserHomeOrder) => (
+                    <tr key={order._id} className="hover:bg-gray-50/50 transition duration-200">
+                      <td className="py-3.5 pr-4 text-sm font-semibold text-gray-950">
+                        #{order._id.substring(order._id.length - 8)}
+                      </td>
+                      <td className="py-3.5 px-4 text-xs text-gray-500">
+                        {new Date(order.date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
+                      </td>
+                      <td className="py-3.5 px-4 text-sm font-bold text-gray-950">
+                        ৳{order.total_amount?.toLocaleString()}
+                      </td>
+                      <td className="py-3.5 px-4 text-xs">
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
+                          order.status === OrderStatus.DELIVERED
+                            ? "bg-green-50 text-green-700 border-green-200"
+                            : order.status === OrderStatus.CANCELLED
+                            ? "bg-red-50 text-red-700 border-red-200"
+                            : "bg-orange-50 text-orange-700 border-orange-200"
+                        }`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="py-3.5 pl-4 text-right">
+                        <Link to={`/dashboard/order/${order._id}`}>
+                          <button className="px-3 py-1 bg-orange-50 hover:bg-orange-500 text-orange-600 hover:text-white rounded-lg text-xs font-semibold transition border border-orange-100 flex items-center gap-1.5 ml-auto">
+                            <FiEye size={12} /> Details
+                          </button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden flex flex-col gap-4">
+              {orders.slice(0, 3).map((order: UserHomeOrder) => (
+                <div key={order._id} className="bg-gray-50/40 rounded-xl p-4 border border-gray-100 flex flex-col gap-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-bold text-gray-900">
                       #{order._id.substring(order._id.length - 8)}
-                    </td>
-                    <td className="py-3.5 text-xs text-gray-500">
+                    </span>
+                    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
+                      order.status === OrderStatus.DELIVERED
+                        ? "bg-green-50 text-green-700 border-green-200"
+                        : order.status === OrderStatus.CANCELLED
+                        ? "bg-red-50 text-red-700 border-red-200"
+                        : "bg-orange-50 text-orange-700 border-orange-200"
+                    }`}>
+                      {order.status}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <div className="text-gray-500 font-medium">
                       {new Date(order.date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
-                    </td>
-                    <td className="py-3.5 text-sm font-bold text-gray-950">
-                      ${order.total_amount?.toFixed(2)}
-                    </td>
-                    <td className="py-3.5 text-xs">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
-                        order.status === OrderStatus.DELIVERED
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : order.status === OrderStatus.CANCELLED
-                          ? "bg-red-50 text-red-700 border-red-200"
-                          : "bg-orange-50 text-orange-700 border-orange-200"
-                      }`}>
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="py-3.5 text-right">
-                      <Link to={`/dashboard/order/${order._id}`}>
-                        <button className="px-3 py-1 bg-orange-50 hover:bg-orange-500 text-orange-600 hover:text-white rounded-lg text-xs font-semibold transition border border-orange-100 flex items-center gap-1.5 ml-auto">
-                          <FiEye size={12} /> Details
-                        </button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                    <div className="font-bold text-gray-950 text-sm">
+                      ৳{order.total_amount?.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="border-t border-gray-100/80 pt-2.5 flex justify-end">
+                    <Link to={`/dashboard/order/${order._id}`} className="w-full">
+                      <button className="w-full py-2 bg-orange-50 hover:bg-orange-500 text-orange-600 hover:text-white rounded-lg text-xs font-semibold transition border border-orange-100 flex items-center justify-center gap-1.5">
+                        <FiEye size={12} /> Details
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -216,7 +265,7 @@ const UserHome: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {recommended?.map(
-              (product: any) =>
+              (product: ProductItem) =>
                 product?.adminIsApproved === ApprovalStatus.APPROVED && (
                   <Card product={product} key={product._id} />
                 )

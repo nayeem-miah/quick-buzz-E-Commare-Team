@@ -1,7 +1,10 @@
-const { ProductCollection, PaymentCollection } = require("../module/module");
+const { ProductCollection, PaymentCollection, UserCollection } = require("../module/module");
 const catchAsync = require("../utils/catchAsync");
 const { ObjectId } = require("mongodb")
 const { ApprovalStatus } = require("../constants/enums");
+const { sendProductStatusEmail } = require("../utils/sendMail");
+const createNotification = require("../utils/createNotification");
+
 
 const getallProduct = catchAsync(async (req, res) => {
 
@@ -10,8 +13,9 @@ const getallProduct = catchAsync(async (req, res) => {
     let query = {};
 
     // Category filter
-    if (category && category !== "all" && category !== "null") {
-        query.category = category;
+    if (category && category !== "all" && category !== "null" && category !== "undefined") {
+        const cleanCategory = category.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        query.category = { $regex: new RegExp(`^${cleanCategory}$`, "i") };
     }
 
     // Status filter
@@ -34,6 +38,7 @@ const getallProduct = catchAsync(async (req, res) => {
 
     // Fetch records
     const products = await ProductCollection.find(query)
+        .sort({ _id: -1 })
         .skip(skip)
         .limit(pageSize)
         .toArray();
@@ -58,6 +63,21 @@ const getallProduct = catchAsync(async (req, res) => {
 const addProduct = catchAsync(async (req, res) => {
     const newProduct = req.body;
     const result = await ProductCollection.insertOne(newProduct);
+    try {
+        const admins = await UserCollection.find({ role: "admin" }).toArray();
+        for (const admin of admins) {
+            if (admin.email) {
+                await createNotification(admin.email, {
+                    title: "New Product Added 📦",
+                    message: `${newProduct.productTitle} has been submitted by ${newProduct.hostName || "a Host"} and is pending approval.`,
+                    type: "info",
+                    actionUrl: "/dashboard/manage-bookings"
+                });
+            }
+        }
+    } catch (err) {
+        console.error("Failed to notify admins of new product request:", err);
+    }
 
     res.json({
         statusCode: 201,
@@ -143,7 +163,7 @@ const recommendedProduct = catchAsync(async (req, res) => {
 const hostProductByEmail = catchAsync(async (req, res) => {
     const email = req.params.email;
     const query = { hostEmail: email };
-    const result = await ProductCollection.find(query).toArray();
+    const result = await ProductCollection.find(query).sort({ _id: -1 }).toArray();
 
 
     res.json({
@@ -169,6 +189,8 @@ const updateProduct = catchAsync(async (req, res) => {
             category: productData.category,
             description: productData?.description,
             productImage: productData.productImage,
+            productImages: productData.productImages,
+            quantity: productData.quantity,
             hostEmail: productData?.hostEmail,
             hostName: productData?.hostName,
             hostPhoto: productData?.hostPhoto,
@@ -205,16 +227,45 @@ const hostManageProduct = catchAsync(async (req, res) => {
     })
 });
 
+
 const adminManageProduct = catchAsync(async (req, res) => {
     const id = req.params.id;
+    const { status } = req.body;
     const filter = { _id: new ObjectId(id) };
+
+    // Fetch product details first
+    const product = await ProductCollection.findOne(filter);
+
     const updatedDoc = {
         $set: {
-            adminIsApproved: ApprovalStatus.APPROVED,
+            adminIsApproved: status || ApprovalStatus.APPROVED,
         },
     };
     const result = await ProductCollection.updateOne(filter, updatedDoc);
 
+    // Send email and notify host
+    if (product && product.hostEmail) {
+        sendProductStatusEmail(
+            product.hostEmail,
+            product.hostName,
+            product.productTitle,
+            status || ApprovalStatus.APPROVED
+        ).catch(err => console.error("Email send failed:", err));
+
+        // Dispatch in-app notification to host
+        try {
+            const isApproved = (status || ApprovalStatus.APPROVED) === ApprovalStatus.APPROVED;
+            const approvalWord = isApproved ? "Approved" : "Rejected";
+            await createNotification(product.hostEmail, {
+                title: `Product Listing ${approvalWord} 📦`,
+                message: `Your product "${product.productTitle}" has been ${approvalWord.toLowerCase()} by the admin.`,
+                type: isApproved ? "success" : "warning",
+                actionUrl: "/dashboard/my-host-listings"
+            });
+        } catch (err) {
+            console.error("Failed to notify host of product status update:", err);
+        }
+    }
 
     res.json({
         statusCode: 201,

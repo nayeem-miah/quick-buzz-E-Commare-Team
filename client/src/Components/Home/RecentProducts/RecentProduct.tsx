@@ -4,21 +4,10 @@ import Card from '../../../Pages/Product/Card';
 import Heading from '../../../Shared/Heading/Heading';
 import LoadingSpinner from '../../../Shared/Loading';
 import NoData from '../../../Shared/NoDataFound/NoData';
-
-interface Product {
-  _id: number;
-  brandName: string;
-  productImage: string;
-  name: string;
-  price: number;
-  description: string;
-  adminIsApproved: string;
-  discount: number;
-  productTitle: string;
-}
+import { ProductItem } from '../../../Pages/Product/types';
 
 type ChildComponentProps = {
-  recentData: any;
+  recentData: ProductItem[];
   isLoading: boolean;
 };
 
@@ -39,7 +28,7 @@ const RecentProduct: React.FC<ChildComponentProps> = ({
       ) : (
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {recentData?.map(
-            (product: Product) =>
+            (product: ProductItem) =>
               product?.adminIsApproved === 'approve' && (
                 <Card product={product} key={product._id} />
               ),

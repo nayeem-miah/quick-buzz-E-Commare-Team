@@ -56,9 +56,9 @@ const ProductPurchasePanel = ({
     </button>
 
     <div className="mt-6 flex flex-wrap items-baseline gap-3">
-      <span className="text-4xl font-bold text-gray-950">${price.toFixed(2)}</span>
+      <span className="text-4xl font-bold text-gray-950">৳{price.toLocaleString()}</span>
       {originalPrice > price && (
-        <span className="text-lg font-medium text-gray-400 line-through">${originalPrice.toFixed(2)}</span>
+        <span className="text-lg font-medium text-gray-400 line-through">৳{originalPrice.toLocaleString()}</span>
       )}
     </div>
 
@@ -73,6 +73,24 @@ const ProductPurchasePanel = ({
     <p className="mt-5 border-t border-gray-100 pt-5 text-sm leading-6 text-gray-600">
       {shortDescription}
     </p>
+
+    {product.tags && (
+      <div className="mt-4 flex flex-wrap gap-2">
+        {(typeof product.tags === 'string'
+          ? product.tags.split(',')
+          : Array.isArray(product.tags)
+          ? product.tags
+          : []
+        ).map((tag: any, index: number) => {
+          const cleanTag = String(tag).trim();
+          return cleanTag ? (
+            <span key={index} className="rounded-lg bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700 border border-orange-100">
+              #{cleanTag}
+            </span>
+          ) : null;
+        })}
+      </div>
+    )}
 
     <div className="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-gray-50 p-4">
       <div>
@@ -89,7 +107,7 @@ const ProductPurchasePanel = ({
       </div>
       <div className="text-right">
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Total</p>
-        <p className="mt-2 text-2xl font-bold text-gray-950">${total.toFixed(2)}</p>
+        <p className="mt-2 text-2xl font-bold text-gray-950">৳{total.toLocaleString()}</p>
       </div>
     </div>
 

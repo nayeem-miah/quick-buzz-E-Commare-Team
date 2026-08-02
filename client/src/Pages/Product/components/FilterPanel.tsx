@@ -37,14 +37,14 @@ const FilterPanel = ({
       <div className="space-y-6 pt-5">
         <CheckboxList
           title="Brand"
-          options={brands.slice(0, 8)}
+          options={brands}
           selected={filters.brands}
           onToggle={(value) => toggleListFilter('brands', value)}
         />
 
         <CheckboxList
           title="Category"
-          options={productCategories.slice(0, 8)}
+          options={productCategories}
           selected={filters.categories}
           onToggle={(value) => toggleListFilter('categories', value)}
         />

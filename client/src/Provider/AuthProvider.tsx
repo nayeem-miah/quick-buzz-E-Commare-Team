@@ -14,6 +14,8 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 import auth from "../Firebase/FireBase.config";
+import axios from "axios";
+import { API_BASE_URL } from "../utils/api";
 
 interface AuthContextType {
   user: User | null;
@@ -105,7 +107,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setLoading(false);
+      if (currentUser?.email) {
+        const userInfo = { email: currentUser.email };
+        axios.post(`${API_BASE_URL}/api/v1/jwt`, userInfo)
+          .then((res) => {
+            if (res.data.token) {
+              localStorage.setItem("access-token", res.data.token);
+            }
+            setLoading(false);
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+      } else {
+        localStorage.removeItem("access-token");
+        setLoading(false);
+      }
     });
     return () => {
       unsubscribe();

@@ -8,6 +8,18 @@ import useFetchSingleUser from "../../Hooks/UseFindSingleUser";
 import { Link } from "react-router-dom";
 import { ImSpinner } from "react-icons/im";
 import LoadingSpinner from "../../Shared/Loading";
+
+interface ReviewItem {
+  _id?: string;
+  id?: string;
+  photo?: string;
+  name?: string;
+  comment?: string;
+  review?: string;
+  rating?: number;
+  date?: string;
+  timestamp?: string;
+}
 import { FaStar } from "react-icons/fa";
 
 const Review: React.FC<{ id: string }> = ({ id }) => {
@@ -163,7 +175,7 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
           </div>
           
           <div className="space-y-8">
-            {reviewdata?.length > 0 ? reviewdata.map((item: any) => (
+            {reviewdata?.length > 0 ? reviewdata.map((item: ReviewItem) => (
               <div key={item._id || item.id} className="pb-8 border-b border-gray-50 last:border-0 last:pb-0">
                 <div className="flex items-start gap-5">
                   <img src={item.photo} alt={item.name} className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm shrink-0" />
@@ -174,7 +186,7 @@ const Review: React.FC<{ id: string }> = ({ id }) => {
                         <div className="flex items-center gap-3 mt-1.5">
                           <div className="flex text-yellow-400 text-sm">
                             {Array.from({ length: 5 }, (_, index) => (
-                              <FaStar key={index} className={index < item.rating ? "text-yellow-400 drop-shadow-sm" : "text-gray-200"} />
+                              <FaStar key={index} className={index < (item.rating ?? 0) ? "text-yellow-400 drop-shadow-sm" : "text-gray-200"} />
                             ))}
                           </div>
                           <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md">{item.timestamp}</span>

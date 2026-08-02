@@ -10,10 +10,10 @@ import ErrorPage from "./ErrorPage";
 import Signin from "../Pages/Login-signup/Login";
 import Signup from "../Pages/Login-signup/Singup";
 import PrivateRoute from "./PribetRoute";
+import RoleProtectedRoute from "./RoleProtectedRoute";
 import Profile from "../Pages/DashboardPage/Profile";
 import HostAddProduct from "../Components/Dashboard/Host/HostAddProduct";
 import MyAddedProduct from "../Components/Dashboard/Host/MyAddedProduct";
-import ManageBooking from "../Components/Dashboard/Host/ManageBooking";
 import AdminManageBookings from "../Components/Dashboard/Admin/AdminManageBookings";
 import AdminManageCategories from "../Components/Dashboard/Admin/AdminManageCategories";
 import AllPaymentHistory from "../Components/Dashboard/Admin/AllPaymentHistory";
@@ -24,13 +24,13 @@ import UpdateProduct from "../Components/Dashboard/Host/UpdateProduct/UpdateProd
 import BecomeAHost from "../Pages/Become a host/BecomeAHost";
 import SellerRequest from "../Components/Dashboard/User/SellerRequest";
 import AllHostRequest from "../Components/Dashboard/Admin/AllHostRequest";
-import UpdateProfile from "../Pages/Dashboard/UpdateProfile";
 import Fail from "../Components/SSLCommarze/Fail";
 import Cancel from "../Components/SSLCommarze/Cancel";
 import Success from "../Components/SSLCommarze/Success";
 import SellerDataUpdated from "../Components/Dashboard/User/SellerDataUpdated/SellerDataUpdated";
 import RoleBasedDashboard from "../Components/Dashboard/RoleBasedDashboard/RoleBasedDashboard";
 import HostHome from "../Components/Dashboard/Host/HostHome";
+import HostOrders from "../Components/Dashboard/Host/HostOrders";
 import { API_BASE_URL } from "../utils/api";
 import Checkout from "../Pages/Checkout/Checkout";
 import MyOrders from "../Components/Dashboard/User/MyOrders";
@@ -110,7 +110,6 @@ const router = createBrowserRouter([
   },
   { path: "/login", element: <Signin /> },
   { path: "/signup", element: <Signup /> },
-  // fail success and cancel
   {
     path: "/success",
     element: (
@@ -136,10 +135,6 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "edit-profile",
-    element: <UpdateProfile></UpdateProfile>,
-  },
-  {
     path: "/dashboard",
     element: (
       <PrivateRoute>
@@ -160,61 +155,125 @@ const router = createBrowserRouter([
       // Admin routes
       {
         path: "manage-users",
-        element: <ManageUsers />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["admin"]}>
+            <ManageUsers />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "manage-bookings",
-        element: <AdminManageBookings />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["admin"]}>
+            <AdminManageBookings />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "manage-categories",
-        element: <AdminManageCategories />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["admin"]}>
+            <AdminManageCategories />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "all-payment-history",
-        element: <AllPaymentHistory />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["admin"]}>
+            <AllPaymentHistory />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "all-host-request",
-        element: <AllHostRequest />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["admin"]}>
+            <AllHostRequest />
+          </RoleProtectedRoute>
+        ),
       },
       // Host routes
       {
         path: "host-add-product",
-        element: <HostAddProduct />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["Host"]}>
+            <HostAddProduct />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "overview",
-        element: <HostHome />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["Host"]}>
+            <HostHome />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "my-host-listings",
-        element: <MyAddedProduct />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["Host"]}>
+            <MyAddedProduct />
+          </RoleProtectedRoute>
+        ),
       },
       {
-        path: "host-manage-booking",
-        element: <ManageBooking />,
+        path: "host-orders",
+        element: (
+          <RoleProtectedRoute allowedRoles={["Host"]}>
+            <HostOrders />
+          </RoleProtectedRoute>
+        ),
+      },
+      {
+        path: "update-product/:id",
+        element: (
+          <RoleProtectedRoute allowedRoles={["Host"]}>
+            <UpdateProduct />
+          </RoleProtectedRoute>
+        ),
       },
       // User routes
       {
         path: "my-listings",
-        element: <MyAddedCart />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["user"]}>
+            <MyAddedCart />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "seller-request",
-        element: <SellerRequest />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["user"]}>
+            <SellerRequest />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "my-payment-history",
-        element: <UserPaymentHistory />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["user"]}>
+            <UserPaymentHistory />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "my-orders",
-        element: <MyOrders />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["user"]}>
+            <MyOrders />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "order/:id",
-        element: <OrderDetails />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["user"]}>
+            <OrderDetails />
+          </RoleProtectedRoute>
+        ),
       },
     ],
   },
