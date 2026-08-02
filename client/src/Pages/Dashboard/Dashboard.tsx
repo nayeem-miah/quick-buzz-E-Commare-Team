@@ -122,6 +122,11 @@ const Sidebar: React.FC = () => {
                     <span className="mx-4">All payment history</span>
                   </NavLink>
 
+                  <NavLink to="manage-orders" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                    <FiPackage className="w-5 h-5 text-gray-400" />
+                    <span className="mx-4">Manage Orders</span>
+                  </NavLink>
+
                   <NavLink to="all-host-request" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
                     <RiGitClosePullRequestFill className="w-5 h-5 text-gray-400" />
                     <span className="mx-4">All Host Request</span>
