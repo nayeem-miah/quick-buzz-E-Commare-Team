@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 import bgimg5 from "../../../assets/banner/banne pic 5.jpg";
 import bgimg2 from "../../../assets/banner/banner pic 2.jpg";
@@ -12,14 +12,16 @@ import bgimg6 from "../../../assets/banner/banner pic 6.jpg";
 import bgimg1 from "../../../assets/banner/banner1.jpg";
 
 // Import required modules
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 
 import { JSX, useState } from "react";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "typewriter-effect";
 
 export default function Carousel(): JSX.Element {
   const [search, setSearch] = useState("");
+  const [swiper, setSwiper] = useState<any>(null);
   const navigate = useNavigate();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -33,44 +35,78 @@ export default function Carousel(): JSX.Element {
   const images = [bgimg5, bgimg6, bgimg1, bgimg2, bgimg4, bgimg3];
 
   return (
-    <div className="max-w-screen-2xl w-full grid">
+    <div className="max-w-screen-2xl w-full grid relative group/banner overflow-hidden">
+      {/* CSS Overrides for Premium Swiper Bullets */}
+      <style>{`
+        .mySwiper .swiper-pagination-bullet {
+          background: rgba(255, 255, 255, 0.5) !important;
+          opacity: 1 !important;
+          width: 8px;
+          height: 8px;
+          transition: all 0.3s ease;
+        }
+        .mySwiper .swiper-pagination-bullet-active {
+          background: #f97316 !important;
+          width: 24px !important;
+          border-radius: 9999px !important;
+        }
+      `}</style>
+
       {/* Background Images Slider */}
       <div className="col-start-1 row-start-1 w-full h-full z-0 overflow-hidden">
-      <Swiper
-        spaceBetween={0}
-        centeredSlides={true}
-        loop={true}
-        autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper w-full h-full"
-      >
-        {images.map((img, index) => (
-          <SwiperSlide key={index} className="w-full h-full">
-            <div
-              className="w-full h-full bg-center bg-cover"
-              style={{
-                backgroundImage: `url(${img})`,
-              }}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        <Swiper
+          onSwiper={setSwiper}
+          spaceBetween={0}
+          centeredSlides={true}
+          loop={true}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={false}
+          modules={[Autoplay, Pagination]}
+          className="mySwiper w-full h-full"
+        >
+          {images.map((img, index) => (
+            <SwiperSlide key={index} className="w-full h-full">
+              <div
+                className="w-full h-full bg-center bg-cover scale-105 animate-pulse-slow"
+                style={{
+                  backgroundImage: `url(${img})`,
+                }}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
 
+      {/* Custom Sleek Navigation Buttons */}
+      <button
+        onClick={() => swiper?.slidePrev()}
+        className="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-orange-500 backdrop-blur-md border border-white/10 text-white hidden md:flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer md:opacity-0 md:group-hover/banner:opacity-100 shadow-lg shadow-black/20 focus:outline-none"
+        aria-label="Previous slide"
+      >
+        <FiChevronLeft className="text-2xl" />
+      </button>
+
+      <button
+        onClick={() => swiper?.slideNext()}
+        className="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-orange-500 backdrop-blur-md border border-white/10 text-white hidden md:flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer md:opacity-0 md:group-hover/banner:opacity-100 shadow-lg shadow-black/20 focus:outline-none"
+        aria-label="Next slide"
+      >
+        <FiChevronRight className="text-2xl" />
+      </button>
+
       {/* Static Overlay Content */}
-      <div className="col-start-1 row-start-1 w-full flex items-center justify-center bg-black/45 z-10 pointer-events-none min-h-[24rem] sm:min-h-[26rem] md:min-h-[30rem] lg:min-h-[34rem] xl:min-h-[38rem] pt-20 pb-10">
+      <div className="col-start-1 row-start-1 w-full flex items-center justify-center bg-black/50 z-10 pointer-events-none min-h-[24rem] sm:min-h-[26rem] md:min-h-[30rem] lg:min-h-[34rem] xl:min-h-[38rem] pt-20 pb-10">
         <div className="text-center px-4 sm:px-6 md:px-8 lg:px-10 w-full max-w-4xl pointer-events-auto">
-          <h1 className="text-[clamp(1.75rem,5vw,3.75rem)] font-extrabold leading-tight text-white">
+          <h1 className="text-[clamp(1.75rem,5vw,3.75rem)] font-extrabold leading-tight text-white drop-shadow-md">
             <Typewriter
               options={{
-                strings: ['Welcome to Quick Buzz', 'Your One-Stop Online Store'],
+                strings: ["Welcome to Quick Buzz", "Your One-Stop Online Store"],
                 autoStart: true,
                 loop: true,
                 delay: 80,
@@ -78,10 +114,10 @@ export default function Carousel(): JSX.Element {
               }}
             />
           </h1>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-200 mt-3">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-200 mt-3 font-medium drop-shadow-sm">
             Find fresh deals, trusted gadgets, and everyday essentials in one clean shopping experience.
           </p>
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-gray-300 mt-3 hidden sm:block md:block lg:block">
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-gray-300 mt-3 hidden sm:block md:block lg:block drop-shadow-sm">
             Shop faster with curated products, smooth checkout, and offers made for QuickBuzz customers.
           </p>
 
@@ -89,7 +125,7 @@ export default function Carousel(): JSX.Element {
             onSubmit={handleSearchSubmit}
             className="mx-auto mt-6 max-w-lg sm:max-w-xl w-full px-2"
           >
-            <div className="relative flex items-center bg-white rounded-full p-1 shadow-md border border-orange-200/50 focus-within:ring-2 focus-within:ring-orange-400 focus-within:border-transparent transition-all duration-300">
+            <div className="relative flex items-center bg-white rounded-full p-1 shadow-xl border border-orange-200/50 focus-within:ring-2 focus-within:ring-orange-400 focus-within:border-transparent transition-all duration-300">
               <div className="pl-4 pr-2 text-orange-500 flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -115,23 +151,23 @@ export default function Carousel(): JSX.Element {
               />
               <button
                 type="submit"
-                className="flex-shrink-0 bg-orange-500 text-white font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-full hover:bg-orange-600 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
+                className="flex-shrink-0 bg-orange-500 text-white font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-full hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 active:scale-95 whitespace-nowrap cursor-pointer"
               >
                 Search
               </button>
             </div>
           </form>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
             <a
               href="/product"
-              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-600"
+              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-md shadow-orange-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-lg cursor-pointer"
             >
               View Products
             </a>
             <a
               href="/contact"
-              className="rounded-xl border-2 border-orange-400 bg-transparent px-6 py-3 font-semibold text-orange-400 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-500 hover:text-white"
+              className="rounded-xl border-2 border-orange-400 bg-transparent px-6 py-3 font-semibold text-orange-400 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-500 hover:text-white cursor-pointer"
             >
               Contact Now
             </a>

@@ -1,0 +1,33 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "dev-nayeem",
+    "dev-nayeem-app",
+    "dev-nayeem-modify@2026",
+    "dev-nayeem2",
+    "dev-rakib",
+    "dev-rakib2",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "dev-nayeem": "main",
+    "dev-nayeem-app": "dev-nayeem",
+    "dev-nayeem-modify@2026": "dev-nayeem",
+    "dev-nayeem2": "main",
+    "dev-rakib": "main",
+    "dev-rakib2": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "dev-nayeem",
+    "dev-nayeem2",
+    "dev-rakib",
+    "dev-rakib2",
+    "origin",
+    "dev-nayeem-app",
+    "dev-nayeem-modify@2026"
+  ]
+}
